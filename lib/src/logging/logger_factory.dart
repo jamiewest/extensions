@@ -1,9 +1,13 @@
 import 'package:extensions/src/logging/support_external_scope.dart';
+import 'package:extensions/src/options/options.dart';
+import 'package:extensions/src/options/options_monitor.dart';
 
 import '../../dependency_injection.dart';
 import '../shared/disposable.dart';
 import 'log_level.dart';
 import 'logger.dart';
+import 'logger_factory_options.dart';
+import 'logger_filter_options.dart';
 import 'logger_information.dart';
 import 'logger_provider.dart';
 import 'logging_service_collection_extensions.dart';
@@ -17,14 +21,41 @@ class LoggerFactory implements Disposable {
   final List<_ProviderRegistration> _providerRegistrations;
   // LoggerFactoryScopeProvider _scopeProvider;
   bool _isDisposed = false;
+  late Disposable _changeTokenRegistration;
+  LoggerFilterOptions? _filterOptions;
+  LoggerFactoryOptions? _factoryOptions;
 
-  LoggerFactory(Iterable<LoggerProvider> providers)
-      : _loggers = <String, Logger>{},
+  LoggerFactory([
+    Iterable<LoggerProvider>? providers,
+    OptionsMonitor<LoggerFilterOptions>? filterOption,
+    Options<LoggerFactoryOptions>? options,
+  ])  : _loggers = <String, Logger>{},
         _providerRegistrations = <_ProviderRegistration>[] {
-    for (var provider in providers) {
-      _addProviderRegistration(provider, false);
+    _factoryOptions = options == null || options.value == null
+        ? LoggerFactoryOptions()
+        : options.value;
+
+    if (providers != null) {
+      for (var provider in providers) {
+        _addProviderRegistration(provider, false);
+      }
+    }
+
+    if (filterOption != null) {
+      _changeTokenRegistration =
+          filterOption.onChange((a, [b]) => _refreshFilters(a));
+      _refreshFilters(filterOption.currentValue);
     }
   }
+
+  void _refreshFilters(LoggerFilterOptions filterOptions) {
+    _filterOptions = filterOptions;
+    for (var registeredLogger in _loggers.entries) {
+      var logger = registeredLogger.value;
+    }
+  }
+
+  //factory LoggerFactory() => LoggerFactory._(List<LoggerProvider>.empty());
 
   /// Creates a new [Logger] instance.
   Logger createLogger(String categoryName) {

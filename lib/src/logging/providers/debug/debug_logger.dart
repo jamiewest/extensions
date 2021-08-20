@@ -1,15 +1,17 @@
-import 'package:extensions/src/logging/null_scope.dart';
+import 'dart:developer' as developer;
 
 import '../../../shared/disposable.dart';
 import '../../event_id.dart';
 import '../../log_level.dart';
 import '../../logger.dart';
+import '../../null_scope.dart';
 
 /// A logger that writes messages in the debug output window only when a
 /// debugger is attached.
 class DebugLogger implements Logger {
   final String _name;
 
+  /// Initializes a new instance of the [DebugLogger] class.
   DebugLogger(String name) : _name = name;
 
   @override
@@ -30,17 +32,17 @@ class DebugLogger implements Logger {
       return;
     }
 
-    var message = formatter(state, exception);
-    if (message.isEmpty) {
+    var formattedMessage = formatter(state, exception);
+    if (formattedMessage.isEmpty) {
       return;
     }
 
-    var m = '${logLevel.toString()}: $message';
+    var message = '${logLevel.toString()}: $formattedMessage';
 
     if (exception != null) {
-      m = m + exception.toString();
+      message = '$message\n\n$exception';
     }
 
-    print(m);
+    developer.log(message, name: _name);
   }
 }
