@@ -21,6 +21,6 @@ class NullLogger implements Logger {
     EventId? eventId,
     TState? state,
     Exception? exception,
-    LogFormatter? formatter,
+    LogFormatter<TState>? formatter,
   }) {}
 }

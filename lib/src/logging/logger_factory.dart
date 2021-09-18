@@ -1,8 +1,6 @@
-import 'package:extensions/src/logging/support_external_scope.dart';
-import 'package:extensions/src/options/options.dart';
-import 'package:extensions/src/options/options_monitor.dart';
-
 import '../../dependency_injection.dart';
+import '../options/options.dart';
+import '../options/options_monitor.dart';
 import '../shared/disposable.dart';
 import 'log_level.dart';
 import 'logger.dart';
@@ -10,7 +8,8 @@ import 'logger_factory_options.dart';
 import 'logger_filter_options.dart';
 import 'logger_information.dart';
 import 'logger_provider.dart';
-import 'logging_service_collection_extensions.dart';
+import 'logging_builder.dart'
+    show LoggingServiceCollectionExtensions, ConfigureLoggingBuilder;
 
 class _Logger extends Logger with LoggerMixin {}
 
@@ -68,12 +67,15 @@ class LoggerFactory implements Disposable {
       var messageLoggers = <MessageLogger>[];
 
       for (var loggerInformation in logger.loggers!) {
-        messageLoggers.add(MessageLogger(
+        messageLoggers.add(
+          MessageLogger(
             loggerInformation.logger,
             loggerInformation.category,
             loggerInformation.providerType.toString(),
             LogLevel.trace,
-            (a, b, c) => true));
+            (a, b, c) => true,
+          ),
+        );
       }
 
       logger.messageLoggers = messageLoggers;

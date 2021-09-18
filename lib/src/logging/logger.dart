@@ -3,7 +3,6 @@ import 'package:tuple/tuple.dart';
 import '../shared/disposable.dart';
 import 'event_id.dart';
 import 'log_level.dart';
-import 'logger_factory.dart';
 import 'logger_information.dart';
 
 /// Function to create a `String` message of the `state` and `exception`.
@@ -16,19 +15,13 @@ typedef LogFormatter<TState> = String Function(
 ///
 /// Aggregates most logging patterns to a single method.
 class Logger {
-  // late Logger _logger;
-
-  // Logger(LoggerFactory factory) {
-  //   _logger = factory.createLogger(runtimeType.toString());
-  // }
-
   /// Writes a log entry.
   external void log<TState>({
     required LogLevel logLevel,
     required EventId eventId,
     required TState state,
     Exception? exception,
-    required LogFormatter formatter,
+    required LogFormatter<TState> formatter,
   });
 
   /// Checks if the given [logLevel] is enabled.
@@ -49,7 +42,7 @@ mixin LoggerMixin on Logger {
     required EventId eventId,
     required TState state,
     Exception? exception,
-    required LogFormatter formatter,
+    required LogFormatter<TState> formatter,
   }) {
     var loggers = messageLoggers;
     if (loggers == null) {
@@ -80,7 +73,7 @@ mixin LoggerMixin on Logger {
     EventId eventId,
     Logger logger,
     Exception? exception,
-    LogFormatter formatter,
+    LogFormatter<TState> formatter,
     List<Exception>? exceptions,
     TState state,
   ) {

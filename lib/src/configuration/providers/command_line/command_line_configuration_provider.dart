@@ -6,11 +6,13 @@ import 'dart:collection';
 
 import '../../configuration_provider.dart';
 
+/// A command line based [ConfigurationProvider].
 class CommandLineConfigurationProvider extends ConfigurationProvider
     with ConfigurationProviderMixin {
   LinkedHashMap<String, String>? _switchMappings;
   final Iterable<String> _args;
 
+  /// Initializes a new instance.
   CommandLineConfigurationProvider(
     Iterable<String> args,
     LinkedHashMap<String, String>? switchMappings,

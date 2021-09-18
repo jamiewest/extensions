@@ -1,19 +1,24 @@
 import 'log_level.dart';
-import 'logger.dart';
+
+typedef ConfigureFilter = bool Function(
+  String name,
+  String category,
+  LogLevel level,
+);
 
 /// Defines a rule used to filter log messages.
 class LoggerFilterRule {
   final String _providerName;
   final String _categoryName;
   final LogLevel? _logLevel;
-  final LogFormatter _filter;
+  final ConfigureFilter _filter;
 
   /// Creates a new [LoggerFilterRule] instance
   LoggerFilterRule(
     String providerName,
     String categoryName,
     LogLevel? logLevel,
-    LogFormatter filter,
+    ConfigureFilter filter,
   )   : _providerName = providerName,
         _categoryName = categoryName,
         _logLevel = logLevel,
@@ -30,7 +35,7 @@ class LoggerFilterRule {
 
   /// Gets the filter delegate that would be applied to messages
   /// that passed the [LogLevel].
-  LogFormatter get filter => _filter;
+  ConfigureFilter get filter => _filter;
 
   @override
   String toString() =>

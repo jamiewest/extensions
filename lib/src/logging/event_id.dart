@@ -9,6 +9,9 @@ class EventId {
     this.name,
   );
 
+  /// Initializes an empty instance of [EventId].
+  factory EventId.empty() => const EventId(0, null);
+
   /// The numeric identifer for this event.
   final int id;
 

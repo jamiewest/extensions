@@ -21,12 +21,18 @@ void main(List<String> args) {
   var sp = services.buildServiceProvider();
 
   var loggerFactory = sp.getService<LoggerFactory>();
+
   var logger = loggerFactory.createLogger('test');
-  logger.log<String>(
-      logLevel: LogLevel.information,
-      eventId: EventId(1, 'test'),
-      state: 'test',
-      formatter: (s, d) => s as String);
+
+  final x = 'hehehe';
+
+  logger.logCritical('Waddup $x');
+
+  // logger.log<String>(
+  //     logLevel: LogLevel.information,
+  //     eventId: EventId(1, 'test'),
+  //     state: 'test',
+  //     formatter: (s, d) => s as String);
 
   exemplifyScoping(sp, 'Scope 1');
   exemplifyScoping(sp, 'Scope 2');

@@ -26,7 +26,7 @@ class DebugLogger implements Logger {
     required EventId eventId,
     required TState state,
     Exception? exception,
-    required LogFormatter formatter,
+    required LogFormatter<TState> formatter,
   }) {
     if (!isEnabled(logLevel)) {
       return;
@@ -37,6 +37,8 @@ class DebugLogger implements Logger {
       return;
     }
 
+    // TODO: Capitalize the first letter after the period.
+    // ex. LogLevel.information -> LogLevel.Information
     var message = '${logLevel.toString()}: $formattedMessage';
 
     if (exception != null) {
