@@ -1,3 +1,5 @@
+import 'package:extensions/src/hosting/hosted_service.dart';
+
 import '../service_descriptor.dart';
 import '../service_provider.dart';
 import '../service_provider_factory.dart';
@@ -104,6 +106,13 @@ class CallSiteFactory implements ServiceProviderIsService {
 
   ServiceCallSite? _tryCreateExact(
       Type serviceType, CallSiteChain callSiteChain) {
+    if (_descriptorLookup.keys
+            .where((e) => e.runtimeType == serviceType)
+            .length >
+        1) {
+      return null;
+    }
+
     if (_descriptorLookup.containsKey(serviceType)) {
       var descriptor = _descriptorLookup[serviceType];
       return tryCreateExact(
@@ -133,13 +142,17 @@ class CallSiteFactory implements ServiceProviderIsService {
         var t = reg.stringMatch(name);
         x = t?.substring(1, t.length - 1);
         // TODO: Remove this.
-        print(x);
+        //print(x);
       }
 
       var cacheLocation = CallSiteResultCacheLocation.root;
       var callSites = <ServiceCallSite>[];
+      // var descriptors = _descriptors
+      //     .where((element) => element.serviceType.toString() == x)
+      //     .toList();
+
       var descriptors = _descriptors
-          .where((element) => element.serviceType.toString() == x)
+          .where((e) => e.implementationType.hashCode == serviceType.hashCode)
           .toList();
 
       if (descriptors.isNotEmpty) {
@@ -150,8 +163,10 @@ class CallSiteFactory implements ServiceProviderIsService {
         var descriptor = descriptors[i];
         // Last service should get slot 0
         var slot = descriptors.length - i - 1;
-        var callSite =
-            tryCreateExact(descriptor, itemType!, callSiteChain, slot);
+        // var callSite =
+        //     tryCreateExact(descriptor, itemType!, callSiteChain, slot);
+        var callSite = tryCreateExact(
+            descriptor, descriptors[i].serviceType, callSiteChain, slot);
         assert(callSite != null);
         //cacheLocation =
         //    getCommonCacheLocation(cacheLocation, callSite.cache.location);

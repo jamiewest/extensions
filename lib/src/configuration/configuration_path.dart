@@ -1,3 +1,4 @@
+// ignore: avoid_classes_with_only_static_members
 /// Utility methods and constants for manipulating Configuration paths
 class ConfigurationPath {
   /// The delimiter ":" used to separate individual keys in a path.

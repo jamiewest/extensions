@@ -9,6 +9,8 @@ extension DebugLoggerFactoryExtensions on LoggingBuilder {
   LoggingBuilder addDebug() {
     services.tryAddIterable(
       ServiceDescriptor.singleton<LoggerProvider>(
+        implementationType:
+            DebugLoggerProvider, // This should not have to be here, it should be reasoned from the factory
         implementationFactory: (sp) => DebugLoggerProvider(),
       ),
     );

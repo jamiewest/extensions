@@ -45,10 +45,20 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
     Object? implementationInstance,
     Type? implementationType,
   }) {
-    var descriptor = ServiceDescriptor(
-      serviceType: TService,
-      factory: implementationFactory,
-    );
+    // TODO: Check the inputs and throw an error if an instance or factory
+    // is not provided.
+    ServiceDescriptor descriptor;
+    if (implementationFactory != null) {
+      descriptor = ServiceDescriptor(
+        serviceType: TService,
+        factory: implementationFactory,
+      );
+    } else {
+      descriptor = ServiceDescriptor(
+        serviceType: TService,
+        instance: implementationInstance,
+      );
+    }
 
     add(descriptor);
     return this;

@@ -1,6 +1,3 @@
-import '../shared/async_disposable.dart';
-import '../shared/disposable.dart';
-import '../shared/type_helpers.dart';
 import './service_lookup/call_site_visitor.dart';
 import './service_lookup/constant_call_site.dart';
 import './service_lookup/factory_call_site.dart';
@@ -8,6 +5,9 @@ import './service_lookup/iterable_call_site.dart';
 import './service_lookup/service_call_site.dart';
 import './service_lookup/service_provider_call_site.dart';
 import './service_lookup/service_scope_factory_call_site.dart';
+import '../shared/async_disposable.dart';
+import '../shared/disposable.dart';
+import '../shared/type_helpers.dart';
 import 'service_collection.dart';
 import 'service_descriptor.dart';
 import 'service_lookup/call_site_chain.dart';
@@ -135,17 +135,20 @@ class ServiceProvider implements Disposable, AsyncDisposable {
 
     var serviceProviderEngineScope = _root;
 
-    var a = typeOf<Iterable<T>>();
+    //var a = typeOf<Iterable<T>>();
 
+    // Changed a to T.
     var realizedService =
-        _realizedServices.putIfAbsent(a, () => _createServiceAccessor!(a));
-    _onResolve(a, serviceProviderEngineScope);
+        _realizedServices.putIfAbsent(T, () => _createServiceAccessor!(T));
+    _onResolve(T, serviceProviderEngineScope);
     var result = realizedService!.call(serviceProviderEngineScope);
-    //sassert(result != null || callSiteFactory.isService<Iterable<T>>());
+    //assert(result != null || callSiteFactory.isService<Iterable<T>>());
 
-    if (result is List) {}
-
-    return (result as List).map((e) => e as T);
+    if (result is List) {
+      return result.map((e) => e as T);
+    } else {
+      return [result as T];
+    }
   }
 
   T _getServiceInternal<T>([ServiceScope? scope]) => _getService<T>(
@@ -158,8 +161,11 @@ class ServiceProvider implements Disposable, AsyncDisposable {
       throw Exception('Object disposed exception');
     }
 
-    var realizedService =
-        _realizedServices.putIfAbsent(T, () => _createServiceAccessor!(T));
+    var realizedService = _realizedServices.putIfAbsent(
+      T,
+      () => _createServiceAccessor!(T),
+    );
+
     _onResolve(T, serviceProviderEngineScope);
     var result = realizedService!.call(serviceProviderEngineScope);
     assert(result != null || _callSiteFactory.isService(serviceType: T));
@@ -442,7 +448,7 @@ class ServiceProviderEngineScope
         }
       } on Exception catch (e) {
         // TODO: Catch this error.
-        print(e.toString());
+        //print(e.toString());
       }
     }
   }
