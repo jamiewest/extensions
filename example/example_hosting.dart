@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:extensions/hosting.dart';
 import 'package:extensions/logging.dart';
 import 'package:extensions/src/shared/cancellation_token.dart';
@@ -8,16 +10,41 @@ class App {
 
   static Host get host => _host ??= _buildHost();
 
-  static Host _buildHost() => _host =
-          Host.createDefaultBuilder().configureServices((context, services) {
-        services.addHostedService<ExampleHostedService>(
-          (services) => ExampleHostedService(),
+  static Host _buildHost() => _host = Host.createDefaultBuilder()
+      .configureServices((context, services) {
+        services.addHostedService<ExampleBackgroundService>(
+          (services) => ExampleBackgroundService(),
         );
-      }).build();
+      })
+      .useConsoleLifetime()
+      .build();
 }
 
 Future<void> main([List<String>? args]) async {
-  await App.host.start();
+  await App.host.run();
+}
+
+class ExampleBackgroundService extends BackgroundService {
+  late Logger _logger;
+  ExampleBackgroundService() {
+    _logger = App.host.services
+        .getService<LoggerFactory>()
+        .createLogger('ExampleBackgroundService');
+  }
+
+  @override
+  Future<void> execute(CancellationToken stoppingToken) {
+    _logger.logInformation('Starting');
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (stoppingToken.isCancellationRequested) {
+        _logger.logInformation('Cancelling');
+        timer.cancel();
+      }
+      _logger.logInformation('Woot');
+    });
+
+    return Future.value(null);
+  }
 }
 
 class ExampleHostedService implements HostedService {

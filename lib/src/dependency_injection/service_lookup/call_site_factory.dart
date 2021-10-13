@@ -105,7 +105,9 @@ class CallSiteFactory implements ServiceProviderIsService {
   }
 
   ServiceCallSite? _tryCreateExact(
-      Type serviceType, CallSiteChain callSiteChain) {
+    Type serviceType,
+    CallSiteChain callSiteChain,
+  ) {
     if (_descriptorLookup.keys
             .where((e) => e.runtimeType == serviceType)
             .length >

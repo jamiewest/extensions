@@ -64,10 +64,23 @@ extension HostingLoggerExtensions on Logger {
   }
 
   void backgroundServiceFaulted(Exception ex) {
-    if (isEnabled(LogLevel.debug)) {
+    if (isEnabled(LogLevel.error)) {
       logError(
         'BackgroundService failed',
-        //eventId: LoggerEventIds.backgroundServiceFaulted,
+        eventId: LoggerEventIds.backgroundServiceFaulted,
+        exception: ex,
+      );
+    }
+  }
+
+  void backgroundServiceStoppingHost(Exception ex) {
+    if (isEnabled(LogLevel.critical)) {
+      logCritical(
+        '''The HostOptions.backgroundServiceExceptionBehavior is configured 
+        to StopHost. A BackgroundService has thrown an unhandled exception, 
+        and the Host instance is stopping. To avoid this behavior, configure 
+        this to Ignore; however the BackgroundService will not be restarted.''',
+        eventId: LoggerEventIds.backgroundServiceStoppingHost,
         exception: ex,
       );
     }

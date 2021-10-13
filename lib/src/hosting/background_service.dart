@@ -1,19 +1,21 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
+
 import '../shared/cancellation_token.dart';
 import '../shared/disposable.dart';
 import 'hosted_service.dart';
 
 /// Base class for implementing a long running [HostedService].
 abstract class BackgroundService implements HostedService, Disposable {
-  Future? _executeFuture;
+  CancelableOperation? _executeOperation;
   CancellationTokenSource? _stoppingCts;
 
-  /// Gets the Future that executes the background operation.
-  Future<void> get executeFuture => _executeFuture!;
+  /// Gets the [CancelableOperation] that executes the background operation.
+  CancelableOperation? get executeOperation => _executeOperation;
 
   /// This method is called when the [HostedService] starts. The
-  /// implementation should return a task that represents the
+  /// implementation should return a future that represents the
   /// lifetime of the long running operation(s) being performed.
   Future<void> execute(CancellationToken stoppingToken);
 
@@ -25,26 +27,46 @@ abstract class BackgroundService implements HostedService, Disposable {
     _stoppingCts =
         CancellationTokenSource.createLinkedTokenSource([cancellationToken]);
 
-    // Store the task we're executing
-    _executeFuture = execute(_stoppingCts!.token);
+    // Store the operation we're executing
+    _executeOperation = CancelableOperation.fromFuture(
+      execute(_stoppingCts!.token),
+    );
 
-    await _executeFuture;
+    // If the operation is completed then return it, this will bubble cancellation
+    // and failure to the caller
+    if (_executeOperation != null) {
+      if (_executeOperation!.isCompleted) {
+        return _executeOperation!.value;
+      }
+    }
+
+    // Otherwise it's running
+    return Future.value(null);
   }
 
   /// Triggered when the application host is performing a graceful shutdown.
   @override
-  Future<void> stop(CancellationToken cancellationToken) {
+  Future<void> stop(CancellationToken cancellationToken) async {
     // Stop called without start
-    if (_executeFuture == null) {
+    if (_executeOperation == null) {
       return Future.value(null);
     }
 
     try {
       // Signal cancellation to the executing method
       _stoppingCts!.cancel();
-    } finally {}
+    } finally {
+      // Wait until the future completes or the stop token triggers
+      var c = Completer();
+      cancellationToken.register((o) {
+        c.complete();
+      });
 
-    return Future.value(null);
+      await Future.any([
+        _executeOperation!.value,
+        c.future,
+      ]);
+    }
   }
 
   @override

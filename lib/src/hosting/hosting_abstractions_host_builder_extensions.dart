@@ -12,4 +12,10 @@ extension HostingAbstractionsHostBuilderExtensions on HostBuilder {
     await host.start(cancellationToken);
     return host;
   }
+
+  void startSync({
+    CancellationToken? cancellationToken,
+  }) {
+    start(cancellationToken: cancellationToken);
+  }
 }

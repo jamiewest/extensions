@@ -1,21 +1,20 @@
-/*
-  Omitted `ContentRootFileProvider` property.
-*/
+import '../file_providers/file_provider.dart';
 
 /// Provides information about the hosting environment
 /// an application is running in.
 abstract class HostEnvironment {
-  /// The name of the environment. The host automatically
+  /// Gets or sets the name of the environment. The host automatically
   /// sets this property to the value of the of the
-  /// "environment" key as specified in configuration.
+  /// `environment` key as specified in configuration.
   String? environmentName;
 
-  /// The name of the application. This property is
-  /// automatically set by the host to the assembly
-  /// containing the application entry point.
+  /// Gets or sets the name of the application.
   String? applicationName;
 
-  /// The absolute path to the directory that contains
+  /// Gets or sets the absolute path to the directory that contains
   /// the application content files.
   String? contentRootPath;
+
+  /// Gets or sets an [FileProvider] pointing at [contentRootPath].
+  FileProvider? contentRootFileProvider;
 }

@@ -74,6 +74,7 @@ class CommandLineConfigurationProvider extends ConfigurationProvider
           key = currentArg.substring(keyStartIndex);
         }
 
+        // TODO: Determine if this is needed.
         var previousKey = enumerator.current;
         if (!enumerator.moveNext()) {
           // ignore missing values.
@@ -89,15 +90,15 @@ class CommandLineConfigurationProvider extends ConfigurationProvider
             // If the switch starts with a single "-" and it
             // isn't in given mappings , it is an invalid usage
           } else if (keyStartIndex == 1) {
-            throw Exception(
-                'The short switch \'$currentArg\' is not defined in the switch mappings.');
+            throw Exception('''The short switch '$currentArg' 
+                is not defined in the switch mappings.''');
           } else {
             key = currentArg.substring(keyStartIndex, separator);
           }
           value = currentArg.substring(separator + 1);
         } else if (keyStartIndex == 1) {
-          throw Exception(
-              'The short switch \'$currentArg\' is not defined in the switch mappings.');
+          throw Exception('''The short switch '$currentArg' is 
+              not defined in the switch mappings.''');
         } else {
           key = currentArg.substring(keyStartIndex, separator);
         }

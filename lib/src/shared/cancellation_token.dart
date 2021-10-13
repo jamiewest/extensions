@@ -242,7 +242,7 @@ class CancellationTokenSource extends Disposable {
     List<Exception>? exceptionsList;
 
     try {
-      for (var callback in _registeredCallbacks) {
+      for (var callback in _registeredCallbacks.reversed) {
         callback.callback(callback.state);
       }
     } on Exception catch (e) {

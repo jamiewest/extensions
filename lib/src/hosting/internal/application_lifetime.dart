@@ -13,15 +13,24 @@ class ApplicationLifetime implements HostApplicationLifetime {
 
   ApplicationLifetime(Logger logger) : _logger = logger;
 
+  /// Triggered when the application host has fully started and is about to wait
+  /// for a graceful shutdown.
   @override
   CancellationToken get applicationStarted => _startedSource.token;
 
+  /// Triggered when the application host is performing a graceful shutdown.
+  /// Request may still be in flight. Shutdown will block until this event
+  /// completes.
   @override
   CancellationToken get applicationStopping => _stoppingSource.token;
 
+  /// Triggered when the application host is performing a graceful shutdown.
+  /// All requests should be complete at this point. Shutdown will block
+  /// until this event completes.
   @override
   CancellationToken get applicationStopped => _stoppedSource.token;
 
+  /// Signals the ApplicationStopping event and blocks until it completes.
   @override
   void stopApplication() {
     try {
@@ -48,6 +57,7 @@ class ApplicationLifetime implements HostApplicationLifetime {
     }
   }
 
+  /// Signals the ApplicationStopped event and blocks until it completes.
   void notifyStopped() {
     try {
       _executeHandlers(_stoppedSource);

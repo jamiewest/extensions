@@ -1,3 +1,4 @@
+// ignore: avoid_classes_with_only_static_members
 /// Constants for HostBuilder configuration keys.
 class HostDefaults {
   /// The configuration key used to set the application name.

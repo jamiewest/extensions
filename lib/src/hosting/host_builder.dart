@@ -1,5 +1,3 @@
-import 'package:extensions/src/logging/logging_builder.dart';
-
 import '../../configuration.dart';
 import '../../dependency_injection.dart';
 import '../configuration/configuration_builder.dart';
@@ -9,6 +7,7 @@ import '../dependency_injection/service_provider.dart';
 import '../dependency_injection/service_provider_factory.dart';
 import '../logging/logger.dart';
 import '../logging/logger_factory.dart';
+import '../logging/logging_builder.dart';
 import '../logging/providers/debug/debug_logger.dart';
 import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';
@@ -25,6 +24,7 @@ import 'internal/configure_container_adapter.dart';
 import 'internal/console_lifetime.dart';
 import 'internal/console_lifetime_options.dart';
 import 'internal/hosting_environment.dart';
+import 'internal/null_lifetime.dart';
 import 'internal/service_factory_adapter.dart';
 
 typedef ConfigureServicesDelegate = void Function(
@@ -147,7 +147,7 @@ class HostBuilder {
   /// This can only be called once.
   Host build() {
     if (_hostBuilt) {
-      // Throw an error here.
+      throw Exception('Build can only be called once.');
     }
     _hostBuilt = true;
 
@@ -176,6 +176,9 @@ class HostBuilder {
       ..applicationName = _hostConfiguration?[HostDefaults.applicationKey]
       ..environmentName = _hostConfiguration?[HostDefaults.environmentKey] ??
           Environments.production;
+
+    // TODO: Set the application name.
+    // TODO: Set the default file provider.
   }
 
   void _createHostBuilderContext() {
@@ -196,7 +199,7 @@ class HostBuilder {
   }
 
   void _createServiceProvider() {
-    var x = ApplicationLifetime(DebugLogger('asdf'));
+    var applicationLifetime = ApplicationLifetime(DebugLogger(''));
 
     var services = ServiceCollection()
       ..addSingleton<HostEnvironment>(
@@ -213,44 +216,40 @@ class HostBuilder {
             s.getService<HostApplicationLifetime>() as ApplicationLifetime,
       )
       ..addSingleton<HostApplicationLifetime>(
-        implementationInstance: x,
+        implementationInstance: applicationLifetime,
       )
-      ..addSingleton<HostLifetime>(
-        implementationFactory: (s) => ConsoleLifetime(
-          _appServices!.getRequiredService<Options<ConsoleLifetimeOptions>>(),
-          _appServices!.getRequiredService<HostEnvironment>(),
-          _appServices!.getRequiredService<ApplicationLifetime>(),
-          _appServices!.getRequiredService<Options<HostOptions>>(),
-          _appServices!.getRequiredService<LoggerFactory>(),
-        ),
-      )
+      // ..addSingleton<HostLifetime>(
+      //   implementationFactory: (s) => ConsoleLifetime(
+      //     _appServices!.getRequiredService<Options<ConsoleLifetimeOptions>>(),
+      //     _appServices!.getRequiredService<HostEnvironment>(),
+      //     _appServices!.getRequiredService<ApplicationLifetime>(),
+      //     _appServices!.getRequiredService<Options<HostOptions>>(),
+      //     _appServices!.getRequiredService<LoggerFactory>(),
+      //   ),
+      // )
+      ..addSingleton<HostLifetime>(implementationFactory: (s) => NullLifetime())
       ..tryAdd(
         ServiceDescriptor.singleton<Host>(
           implementationFactory: (s) => Host(
             _appServices as ServiceProvider,
+            _appServices!.getRequiredService<HostEnvironment>(),
             _appServices!.getRequiredService<HostApplicationLifetime>(),
-            _appServices?.getRequiredService<LoggerFactory>().createLogger('d')
-                as Logger,
+            _appServices
+                ?.getRequiredService<LoggerFactory>()
+                .createLogger('Host') as Logger,
             _appServices?.getRequiredService<HostLifetime>() as HostLifetime,
             _appServices!.getRequiredService<Options<HostOptions>>(),
           ),
         ),
-      );
-
-    services
-        //.addOptions<HostOptions>(() => HostOptions())
-        .configure<HostOptions>(() => HostOptions(), (options) {
-      options.initialize(_hostConfiguration!);
-    });
-
-    services
-        //.addOptions<ConsoleLifetimeOptions>(() => ConsoleLifetimeOptions())
-        .configure<ConsoleLifetimeOptions>(() => ConsoleLifetimeOptions(),
-            (options) {
-      options.suppressStatusMessages = false;
-    });
-
-    services.addLogging();
+      )
+      ..configure<HostOptions>(() => HostOptions(), (options) {
+        options.initialize(_hostConfiguration!);
+      })
+      ..configure<ConsoleLifetimeOptions>(() => ConsoleLifetimeOptions(),
+          (options) {
+        options.suppressStatusMessages = false;
+      })
+      ..addLogging();
 
     for (var configureServicesAction in _configureServicesActions) {
       configureServicesAction(_hostBuilderContext!, services);

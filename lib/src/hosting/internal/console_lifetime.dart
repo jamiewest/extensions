@@ -56,7 +56,9 @@ class ConsoleLifetime extends HostLifetime {
         this,
       );
       _applicationLifetime.applicationStopping.register(
-          (state) => (state as ConsoleLifetime)._onApplicationStopping(), this);
+        (state) => (state as ConsoleLifetime)._onApplicationStopping(),
+        this,
+      );
     }
 
     ProcessSignal.sigint.watch().listen((signal) {

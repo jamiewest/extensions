@@ -1,9 +1,17 @@
 import '../configuration/configuration.dart';
+import 'background_service.dart';
+import 'background_service_exception_behavior.dart';
+import 'host.dart';
 
-/// Options for `Host`.
+/// Options for [Host].
 class HostOptions {
-  /// The default timeout for `Host.Stop(cancellationToken)`.
+  /// The default timeout for [Host.Stop(cancellationToken)].
   Duration shutdownTimeout = const Duration(seconds: 5);
+
+  /// The behavior the [Host] will follow when any of
+  /// its [BackgroundService] instances throw an unhandled exception.
+  BackgroundServiceExceptionBehavior backgroundServiceExceptionBehavior =
+      BackgroundServiceExceptionBehavior.stopHost;
 
   // TODO: This needs to be visible from within this library only.
   void initialize(Configuration configuration) {
