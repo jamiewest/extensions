@@ -72,9 +72,11 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
   }
 }
 
+typedef LifeCycleCallback = void Function();
+
 class _LifecycleRegister {
-  final HashSet<Function> _callbacks = HashSet<Function>();
-  void register(Function callback) {
+  final HashSet<LifeCycleCallback> _callbacks = HashSet<LifeCycleCallback>();
+  void register(LifeCycleCallback callback) {
     _callbacks.add(callback);
   }
 

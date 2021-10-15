@@ -1,11 +1,11 @@
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
 import 'package:extensions/logging.dart';
-import 'package:extensions_flutter/src/flutter_lifetime.dart';
-import 'package:extensions_flutter/src/flutter_lifetime_options.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
+import 'flutter_lifetime.dart';
+import 'flutter_lifetime_options.dart';
 
 extension FlutterServiceCollectionExtensions on ServiceCollection {
   ServiceCollection addFlutter(

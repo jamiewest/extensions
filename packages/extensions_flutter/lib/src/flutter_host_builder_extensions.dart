@@ -1,7 +1,8 @@
 import 'package:extensions/hosting.dart';
-import 'package:extensions_flutter/src/flutter_lifetime_options.dart';
-import 'package:extensions_flutter/src/flutter_service_collection_extensions.dart';
 import 'package:flutter/widgets.dart';
+
+import 'flutter_lifetime_options.dart';
+import 'flutter_service_collection_extensions.dart';
 
 extension FlutterHostBuilderExtensions on HostBuilder {
   HostBuilder useFlutterLifetime(

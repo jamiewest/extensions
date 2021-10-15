@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:extensions/hosting.dart';
-import 'package:extensions/logging.dart';
-import 'package:extensions/src/shared/cancellation_token.dart';
-import 'package:extensions_flutter/src/flutter_application_lifetime.dart';
-import 'package:extensions_flutter/src/flutter_lifetime_options.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
+import 'flutter_application_lifetime.dart';
 import 'flutter_lifecycle_observer.dart';
+import 'flutter_lifetime_options.dart';
 
 class FlutterLifetime extends HostLifetime {
   final Logger _logger;
@@ -24,10 +22,10 @@ class FlutterLifetime extends HostLifetime {
     _lifetime.applicationStarted.register((state) => _onStarted());
     _lifetime.applicationStopping.register((state) => _onStopping());
     _lifetime.applicationStopped.register((state) => _onStopped());
-    _lifetime.applicationPaused.register(() => _onPaused());
-    _lifetime.applicationResumed.register(() => _onResumed());
-    _lifetime.applicationInactive.register(() => _onInactive());
-    _lifetime.applicationDetached.register(() => _onDetached());
+    _lifetime.applicationPaused.register(_onPaused);
+    _lifetime.applicationResumed.register(_onResumed);
+    _lifetime.applicationInactive.register(_onInactive);
+    _lifetime.applicationDetached.register(_onDetached);
   }
 
   Widget app;
