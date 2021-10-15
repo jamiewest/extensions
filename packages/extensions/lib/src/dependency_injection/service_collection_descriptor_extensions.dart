@@ -11,8 +11,6 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     var count = length;
     for (var i = 0; i < count; i++) {
       if (this[i].serviceType.hashCode == descriptor.serviceType.hashCode) {
-        //print(
-        //    '${this[i].serviceType.toString()} (${this[i].serviceType.hashCode.toString()}) == ${descriptor.serviceType.toString()} (${descriptor.serviceType.hashCode.toString()})');
         return;
       }
     }

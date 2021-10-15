@@ -110,7 +110,8 @@ void main() {
       //         "--Key4", "Value4",
       //         "/Key5", "Value5"
       //     };
-      // var switchMappings = new Dictionary<string, string>(StringComparer.Ordinal)
+      // var switchMappings = new Dictionary<string, string>
+      // (StringComparer.Ordinal)
       //     {
       //         { "--KEY1", "LongKey1" },
       //         { "--key1", "SuperLongKey1" },
@@ -133,7 +134,8 @@ void main() {
       // }
 
       // var expectedMsg = new ArgumentException(SR.
-      //     Format(SR.Error_DuplicatedKeyInSwitchMappings, expectedDup), "switchMappings").Message;
+      //     Format(SR.Error_DuplicatedKeyInSwitchMappings, expectedDup),
+      // "switchMappings").Message;
 
       // // Act
       // var exception = Assert.Throws<ArgumentException>(
@@ -152,13 +154,15 @@ void main() {
       //         "--Key4", "Value4",
       //         "/Key5", "Value5"
       //     };
-      // var switchMappings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+      // var switchMappings = new Dictionary<string,
+      // string>(StringComparer.OrdinalIgnoreCase)
       //     {
       //         { "-K1", "LongKey1" },
       //         { "--Key2", "SuperLongKey2" },
       //         { "/Key3", "AnotherSuperLongKey3" }
       //     };
-      // var expectedMsg = new ArgumentException(SR.Format(SR.Error_InvalidSwitchMapping,"/Key3"),
+      // var expectedMsg = new ArgumentException(SR.Format
+      // (SR.Error_InvalidSwitchMapping,"/Key3"),
       //     "switchMappings").Message;
 
       // var exception = Assert.Throws<ArgumentException>(
@@ -171,7 +175,8 @@ void main() {
       // string[] args = null;
       // var expectedMsg = new ArgumentNullException("args").Message;
 
-      // var exception = Assert.Throws<ArgumentNullException>(() => new CommandLineConfigurationProvider(args));
+      // var exception = Assert.Throws<ArgumentNullException>(() =>
+      //new CommandLineConfigurationProvider(args));
 
       // Assert.Equal(expectedMsg, exception.Message);
     });

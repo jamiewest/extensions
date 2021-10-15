@@ -112,7 +112,6 @@ class ServiceDescriptor {
     } else if (implementationInstance != null) {
       return implementationType.runtimeType;
     } else if (implementationFactory != null) {
-      // TODO: This looks wrong...
       return implementationFactory.runtimeType;
     }
     assert(false, '''

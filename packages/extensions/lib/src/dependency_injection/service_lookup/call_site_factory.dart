@@ -1,5 +1,3 @@
-import 'package:extensions/src/hosting/hosted_service.dart';
-
 import '../service_descriptor.dart';
 import '../service_provider.dart';
 import '../service_provider_factory.dart';
@@ -117,21 +115,6 @@ class CallSiteFactory implements ServiceProviderIsService {
 
     if (_descriptorLookup.containsKey(serviceType)) {
       var descriptor = _descriptorLookup[serviceType];
-      // var descriptors =
-      //     _descriptorLookup.entries.where((x) => x.key == serviceType);
-
-      // print(descriptors.toString());
-
-      // var descriptor =
-      //     List<MapEntry<Type, ServiceDescriptorCacheItem?>>.from(descriptors)
-      //         .reversed
-      //         .last
-      //         .value;
-
-      // print(
-      //     '${serviceType.toString()} => ${descriptor!.last.getImplementationType().toString()}');
-
-      //print(descriptor!.last.toString());
 
       return tryCreateExact(
         descriptor!.last,
@@ -152,16 +135,15 @@ class CallSiteFactory implements ServiceProviderIsService {
     try {
       callSiteChain.add(serviceType);
 
-      var name = serviceType.toString();
-      var reg = RegExp(r'\<([^)]+)\>');
+      // var name = serviceType.toString();
+      // var reg = RegExp(r'\<([^)]+)\>');
 
-      String? x;
-      if (name.contains('Iterable')) {
-        var t = reg.stringMatch(name);
-        x = t?.substring(1, t.length - 1);
-        // TODO: Remove this.
-        //print(x);
-      }
+      // String? x;
+      // if (name.contains('Iterable')) {
+      //   var t = reg.stringMatch(name);
+      //   x = t?.substring(1, t.length - 1);
+      //print(x);
+      // }
 
       var cacheLocation = CallSiteResultCacheLocation.root;
       var callSites = <ServiceCallSite>[];

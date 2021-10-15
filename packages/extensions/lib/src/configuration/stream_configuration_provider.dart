@@ -27,8 +27,7 @@ abstract class StreamConfigurationProvider extends ConfigurationProvider {
         'StreamConfigurationProviders cannot be loaded more than once.',
       );
     }
-    loadStream(
-        _source.stream!); // TODO: Find better way to avoid late null check.
+    loadStream(_source.stream!);
     _loaded = true;
   }
 }

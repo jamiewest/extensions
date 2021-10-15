@@ -1,16 +1,14 @@
-import '../dependency_injection/service_collection_service_extensions.dart';
-import '../dependency_injection/service_provider_service_extensions.dart';
-import 'internal/console_lifetime.dart';
-import '../logging/logger_factory.dart';
-import '../options/options.dart';
-
 import '../configuration/configuration_builder.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
 import '../dependency_injection/service_collection.dart';
+import '../dependency_injection/service_collection_service_extensions.dart';
 import '../dependency_injection/service_provider_options.dart';
+import '../dependency_injection/service_provider_service_extensions.dart';
+import '../logging/logger_factory.dart';
 import '../logging/logging_builder.dart';
 import '../logging/providers/debug/debug_logger_factory_extensions.dart';
+import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';
 import 'host.dart';
 import 'host_builder.dart';
@@ -20,6 +18,7 @@ import 'host_environment.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
 import 'internal/application_lifetime.dart';
+import 'internal/console_lifetime.dart';
 import 'internal/console_lifetime_options.dart';
 
 extension HostingHostBuilderExtensions on HostBuilder {
@@ -104,22 +103,24 @@ extension HostingHostBuilderExtensions on HostBuilder {
   }
 
   HostBuilder useConsoleLifetime([ConsoleLifetimeOptions? options]) =>
-      configureServices((collection) {
-        collection.addSingleton<HostLifetime>(
-          implementationFactory: (s) => ConsoleLifetime(
-            s.getRequiredService<Options<ConsoleLifetimeOptions>>(),
-            s.getRequiredService<HostEnvironment>(),
-            s.getRequiredService<ApplicationLifetime>(),
-            s.getRequiredService<Options<HostOptions>>(),
-            s.getRequiredService<LoggerFactory>(),
-          ),
-        )..configure<ConsoleLifetimeOptions>(() => ConsoleLifetimeOptions(),
-              (options) {
-            options.suppressStatusMessages = false;
-          });
-      });
-
-  // HostBuilder runConsole(ConsoleLifetimeOptions options, CancellationToken token,) {
-
-  // }
+      configureServices(
+        (collection) {
+          collection
+              .addSingleton<HostLifetime>(
+            implementationFactory: (s) => ConsoleLifetime(
+              s.getRequiredService<Options<ConsoleLifetimeOptions>>(),
+              s.getRequiredService<HostEnvironment>(),
+              s.getRequiredService<ApplicationLifetime>(),
+              s.getRequiredService<Options<HostOptions>>(),
+              s.getRequiredService<LoggerFactory>(),
+            ),
+          )
+              .configure<ConsoleLifetimeOptions>(
+            () => ConsoleLifetimeOptions(),
+            (options) {
+              options.suppressStatusMessages = false;
+            },
+          );
+        },
+      );
 }

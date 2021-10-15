@@ -1,6 +1,7 @@
 import '../dependency_injection/service_collection_service_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
 import '../options/configure_options.dart';
+import '../options/options_service_collection_extensions.dart';
 import 'log_level.dart';
 import 'logger_factory_options.dart';
 import 'logger_filter_options.dart';
@@ -37,7 +38,7 @@ extension LoggingBuilderExtensions on LoggingBuilder {
 
   /// configure the `builder` with the [LoggerFactoryOptions].
   LoggingBuilder configure(ConfigureLoggerFactoryOptions action) {
-    // services.configure(action);
+    services.configure(() => LoggerFactoryOptions(), action);
     return this;
   }
 }
@@ -45,5 +46,7 @@ extension LoggingBuilderExtensions on LoggingBuilder {
 class _DefaultLoggerLevelConfigureOptions
     extends ConfigureOptions<LoggerFilterOptions> {
   _DefaultLoggerLevelConfigureOptions(LogLevel level)
-      : super((options) => options.minLevel = level);
+      : super(
+          (options) => options.minLevel = level,
+        );
 }

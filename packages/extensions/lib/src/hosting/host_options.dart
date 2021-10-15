@@ -13,13 +13,11 @@ class HostOptions {
   BackgroundServiceExceptionBehavior backgroundServiceExceptionBehavior =
       BackgroundServiceExceptionBehavior.stopHost;
 
-  // TODO: This needs to be visible from within this library only.
   void initialize(Configuration configuration) {
     var timeoutSeconds = configuration['shutdownTimeoutSeconds'];
     if (timeoutSeconds != null) {
       if (timeoutSeconds.isNotEmpty) {
-        shutdownTimeout = Duration(
-            seconds: int.parse(timeoutSeconds)); // TODO: Should be tryParse.
+        shutdownTimeout = Duration(seconds: int.parse(timeoutSeconds));
       }
     }
   }

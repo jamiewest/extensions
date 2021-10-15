@@ -11,3 +11,7 @@ export 'src/options/options_service_collection_extensions.dart';
 export 'src/options/options_snapshot.dart';
 export 'src/options/post_configure_options.dart';
 export 'src/options/validate_options_result.dart';
+
+export 'src/shared/async_disposable.dart';
+export 'src/shared/cancellation_token.dart';
+export 'src/shared/disposable.dart';

@@ -6,8 +6,7 @@ import 'configuration_provider_test_base.dart';
 void main() {
   group('ConfigurationProviderMemoryTest', () {
     test('NullValuesAreIncludedInTheConfig', () {
-      var x = ConfigurationProviderMemoryTest();
-      x.test();
+      ConfigurationProviderMemoryTest().test();
     });
   });
 }

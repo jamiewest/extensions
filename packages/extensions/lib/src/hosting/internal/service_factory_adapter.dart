@@ -60,7 +60,8 @@ class ServiceFactoryAdapter<TContainerBuilder>
   @override
   ServiceProvider createServiceProvider(Object containerBuilder) {
     if (_serviceProviderFactory == null) {
-      // throw new InvalidOperationException(SR.CreateBuilderCallBeforeCreateServiceProvider);
+      // throw new InvalidOperationException
+      // (SR.CreateBuilderCallBeforeCreateServiceProvider);
     }
 
     return _serviceProviderFactory!.createServiceProvider(

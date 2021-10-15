@@ -14,7 +14,7 @@ void main() {
         'Inventory:Provider': 'MySql',
       });
 
-      var envConfigSrc = EnvironmentVariablesConfigurationProvider(null)
+      var envConfigSrc = EnvironmentVariablesConfigurationProvider()
         ..loadInternal(dict);
 
       expect(envConfigSrc.get('defaultconnection:ConnectionString'),

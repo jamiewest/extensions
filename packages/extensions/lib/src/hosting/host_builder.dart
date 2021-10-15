@@ -8,7 +8,6 @@ import '../dependency_injection/service_provider_factory.dart';
 import '../logging/logger.dart';
 import '../logging/logger_factory.dart';
 import '../logging/logging_builder.dart';
-import '../logging/providers/debug/debug_logger.dart';
 import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';
 import 'environments.dart';
@@ -21,8 +20,6 @@ import 'host_lifetime.dart';
 import 'host_options.dart';
 import 'internal/application_lifetime.dart';
 import 'internal/configure_container_adapter.dart';
-import 'internal/console_lifetime.dart';
-import 'internal/console_lifetime_options.dart';
 import 'internal/hosting_environment.dart';
 import 'internal/null_lifetime.dart';
 import 'internal/service_factory_adapter.dart';
@@ -176,9 +173,6 @@ class HostBuilder {
       ..applicationName = _hostConfiguration?[HostDefaults.applicationKey]
       ..environmentName = _hostConfiguration?[HostDefaults.environmentKey] ??
           Environments.production;
-
-    // TODO: Set the application name.
-    // TODO: Set the default file provider.
   }
 
   void _createHostBuilderContext() {

@@ -7,7 +7,6 @@ import './service_lookup/service_provider_call_site.dart';
 import './service_lookup/service_scope_factory_call_site.dart';
 import '../shared/async_disposable.dart';
 import '../shared/disposable.dart';
-import '../shared/type_helpers.dart';
 import 'service_collection.dart';
 import 'service_descriptor.dart';
 import 'service_lookup/call_site_chain.dart';
@@ -447,8 +446,7 @@ class ServiceProviderEngineScope
           }
         }
       } on Exception catch (e) {
-        // TODO: Catch this error.
-        //print(e.toString());
+        print(e.toString());
       }
     }
   }

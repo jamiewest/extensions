@@ -26,9 +26,6 @@ class CancellationChangeToken implements ChangeToken {
       try {
         callback(state);
       } catch (e) {
-        // TODO: This should be checking for an equivalent of ObjectDisposedException.
-        // Reset the flag so that we can indicate to future
-        // callers that this wouldn't work.
         _activeChangeCallbacks = false;
       }
     });

@@ -40,12 +40,12 @@
 //         );
 
 //         sb
-//           ..write(format.substring(scanIndex, openBraceIndex - scanIndex + 1))
+//          ..write(format.substring(scanIndex, openBraceIndex - scanIndex + 1))
 //           ..write(_valueNames.length.toString());
 //         _valueNames.add(format.substring(
 //             openBraceIndex + 1, formatDelimiterIndex - openBraceIndex - 1));
 //         sb.write(format.substring(
-//             formatDelimiterIndex, closeBraceIndex - formatDelimiterIndex + 1));
+//           formatDelimiterIndex, closeBraceIndex - formatDelimiterIndex + 1));
 //         scanIndex = closeBraceIndex + 1;
 //       }
 //     }

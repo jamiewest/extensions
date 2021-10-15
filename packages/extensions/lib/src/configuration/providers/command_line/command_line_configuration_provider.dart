@@ -74,7 +74,7 @@ class CommandLineConfigurationProvider extends ConfigurationProvider
           key = currentArg.substring(keyStartIndex);
         }
 
-        // TODO: Determine if this is needed.
+        // ignore: unused_local_variable
         var previousKey = enumerator.current;
         if (!enumerator.moveNext()) {
           // ignore missing values.

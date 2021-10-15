@@ -45,8 +45,6 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
     Object? implementationInstance,
     Type? implementationType,
   }) {
-    // TODO: Check the inputs and throw an error if an instance or factory
-    // is not provided.
     ServiceDescriptor descriptor;
     if (implementationFactory != null) {
       descriptor = ServiceDescriptor(

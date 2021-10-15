@@ -44,17 +44,6 @@ mixin ConfigurationProviderMixin on ConfigurationProvider {
     hashCode: (k) => k.toLowerCase().hashCode,
   );
 
-  // ConfigurationProvider()
-  //     : _reloadToken = ConfigurationReloadToken(),
-  //       data = LinkedHashMap<String, String?>(
-  //         equals: (a, b) => a.toLowerCase() == b.toLowerCase(),
-  //         hashCode: (k) => k.toLowerCase().hashCode,
-  //       );
-
-  // /// The configuration key value pairs for this provider.
-  // /// TODO: Make this internal.
-  // LinkedHashMap<String, String?> data;
-
   @override
   List<dynamic> tryGet(String key) {
     if (data.containsKey(key)) {

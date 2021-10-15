@@ -32,8 +32,8 @@ abstract class BackgroundService implements HostedService, Disposable {
       execute(_stoppingCts!.token),
     );
 
-    // If the operation is completed then return it, this will bubble cancellation
-    // and failure to the caller
+    // If the operation is completed then return it, this will bubble
+    // cancellation and failure to the caller
     if (_executeOperation != null) {
       if (_executeOperation!.isCompleted) {
         return _executeOperation!.value;

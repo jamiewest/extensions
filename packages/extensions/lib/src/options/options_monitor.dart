@@ -73,5 +73,5 @@ class _ChangeTrackerDisposable<TOptions> implements Disposable {
       _listener.call(options, name);
 
   @override
-  void dispose() => _monitor.onChange((options, [name]) => null);
+  void dispose() => _monitor.onChange((options, [name]) {});
 }

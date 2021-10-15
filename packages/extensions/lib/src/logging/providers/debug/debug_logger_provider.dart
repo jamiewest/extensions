@@ -1,4 +1,4 @@
-import 'package:extensions/logging.dart';
+import '../../../../logging.dart';
 
 import 'debug_logger.dart';
 

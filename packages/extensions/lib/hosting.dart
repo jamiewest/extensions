@@ -23,3 +23,6 @@ export 'src/hosting/hosting_host_builder_extensions.dart';
 export 'src/hosting/internal/application_lifetime.dart';
 export 'src/hosting/internal/hosting_environment.dart';
 export 'src/hosting/service_collection_hosted_service_extensions.dart';
+export 'src/shared/async_disposable.dart';
+export 'src/shared/cancellation_token.dart';
+export 'src/shared/disposable.dart';

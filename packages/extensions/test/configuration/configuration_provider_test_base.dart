@@ -11,25 +11,24 @@ abstract class ConfigurationProviderTestBase {
   }
 
   void hasDebugView() {
-    var configRoot =
-        buildConfigRoot([loadThroughProvider(TestSection.testConfig)]);
-    // TODO: was using .Single()
-    var providerTag = configRoot.providers.first.toString();
-    var expected = '''
-Key1=Value1 ({providerTag})
-Section1:
-  Key2=Value12 ({providerTag})
-  Section2:
-    Key3=Value123 ({providerTag})
-    Key3a:
-      0=ArrayValue0 ({providerTag})
-      1=ArrayValue1 ({providerTag})
-      2=ArrayValue2 ({providerTag})
-Section3:
-  Section4:
-    Key4=Value344 ({providerTag})
+//     var configRoot =
+//         buildConfigRoot([loadThroughProvider(TestSection.testConfig)]);
+//     var providerTag = configRoot.providers.first.toString();
+//     var expected = '''
+// Key1=Value1 ({providerTag})
+// Section1:
+//   Key2=Value12 ({providerTag})
+//   Section2:
+//     Key3=Value123 ({providerTag})
+//     Key3a:
+//       0=ArrayValue0 ({providerTag})
+//       1=ArrayValue1 ({providerTag})
+//       2=ArrayValue2 ({providerTag})
+// Section3:
+//   Section4:
+//     Key4=Value344 ({providerTag})
 
-    ''';
+//     ''';
   }
 
   void assertDebugView(ConfigurationRoot config, String expected) {
@@ -199,10 +198,9 @@ Section3:
   ConfigurationRoot buildConfigRoot(
     List<Tuple2<ConfigurationProvider, Function>> providers,
   ) {
-    var root = ConfigurationRoot(
-        providers.map((e) => e.item1 as ConfigurationProvider).toList());
+    var root = ConfigurationRoot(providers.map((e) => e.item1).toList());
 
-    for (var initializer in providers.map((e) => e.item2 as Function)) {
+    for (var initializer in providers.map((e) => e.item2)) {
       initializer();
     }
 
@@ -215,7 +213,7 @@ Section3:
     List<MapEntry<String, String?>> values,
   ) {
     for (var tuple in section.values!
-        .expand((e) => e.item2.expand(e.item1 as String))
+        .expand((e) => e.item2.expand(e.item1))
         .map((e) => Tuple2<String, String?>(e.item1, e.item2))) {
       values.add(MapEntry<String, String?>(
         '$sectionName${tuple.item1}',
