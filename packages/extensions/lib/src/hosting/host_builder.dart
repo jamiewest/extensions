@@ -215,9 +215,9 @@ class HostBuilder {
       ..addSingleton<HostLifetime>(implementationFactory: (s) => NullLifetime())
       ..tryAdd(
         ServiceDescriptor.singleton<Host>(
-          implementationFactory: (s) => Host(
+          implementationFactory: (_) => Host(
             _appServices as ServiceProvider,
-            _appServices!.getRequiredService<HostEnvironment>(),
+            _hostingEnvironment!,
             _appServices!.getRequiredService<HostApplicationLifetime>(),
             _appServices
                 ?.getRequiredService<LoggerFactory>()
@@ -248,5 +248,7 @@ class HostBuilder {
 
     _appServices =
         _serviceProviderFactory?.createServiceProvider(containerBuilder!);
+
+    _appServices!.getService<Configuration>();
   }
 }

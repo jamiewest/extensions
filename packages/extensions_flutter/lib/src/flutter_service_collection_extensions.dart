@@ -7,24 +7,27 @@ import 'flutter_application_lifetime.dart';
 import 'flutter_lifetime.dart';
 import 'flutter_lifetime_options.dart';
 
+typedef RootWidgetFactory = Widget Function(ServiceProvider sp);
+
 extension FlutterServiceCollectionExtensions on ServiceCollection {
   ServiceCollection addFlutter(
-    Widget app,
+    RootWidgetFactory app,
     FlutterLifetimeOptions options,
   ) {
+    addSingleton<Widget>(implementationFactory: (s) => app(s));
     addSingleton<HostApplicationLifetime>(
       implementationFactory: (s) => FlutterApplicationLifetime(
         s.getService<LoggerFactory>().createLogger('ApplicationLifetime'),
       ),
     );
     addSingleton<HostLifetime>(
-      implementationFactory: (services) => FlutterLifetime(
-        app: app,
+      implementationFactory: (s) => FlutterLifetime(
+        app: s.getRequiredService<Widget>(),
         options: options,
-        logger: services
+        logger: s
             .getRequiredService<LoggerFactory>()
             .createLogger('FlutterHostedService'),
-        lifetime: services.getRequiredService<HostApplicationLifetime>(),
+        lifetime: s.getRequiredService<HostApplicationLifetime>(),
       ),
     );
     return this;
