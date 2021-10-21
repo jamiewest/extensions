@@ -1,3 +1,7 @@
-## 0.0.1
+## 0.3.1
 
-* TODO: Describe initial release.
+* Updates.
+
+## 0.3.0
+
+* Initial release.
