@@ -60,7 +60,7 @@ jobs:
       - uses: dart-lang/setup-dart@v1.0
         with:
           sdk: ${{ matrix.sdk }}
-      - id: install
+      - id: Install
         name: Install dependencies
         working-directory: ./packages/extensions
         run: dart pub get
