@@ -14,7 +14,7 @@ abstract class ConfigurationProvider {
   List<dynamic> tryGet(String key);
 
   /// Sets a configuration value for the specified key.
-  void set(String key, String value);
+  void set(String key, String? value);
 
   /// Returns a change token if this provider supports change
   /// tracking, null otherwise.
@@ -54,7 +54,7 @@ mixin ConfigurationProviderMixin on ConfigurationProvider {
 
   /// Sets a value for a given key.
   @override
-  void set(String key, String value) => data[key] = value;
+  void set(String key, String? value) => data[key] = value;
 
   /// Returns a [ChangeToken] that can be used to listen when this provider
   /// is reloaded.

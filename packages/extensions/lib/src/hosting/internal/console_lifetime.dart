@@ -63,8 +63,6 @@ class ConsoleLifetime extends HostLifetime {
 
     ProcessSignal.sigint.watch().listen((signal) {
       _onProcessExit();
-
-      Timer(hostOptions.shutdownTimeout, () => exit(0));
     });
 
     //ProcessSignal.sigquit.watch().listen((signal) {

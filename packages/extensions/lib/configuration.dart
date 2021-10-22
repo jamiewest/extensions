@@ -3,6 +3,16 @@
 /// Configuration is performed using one or more configuration providers.
 /// Configuration providers read configuration data from key-value pairs
 /// using a variety of configuration sources:
+///
+/// ## Example
+/// ```dart
+/// void main(List<String>? args) {
+///   var configurationBuilder = ConfigurationBuilder();
+///   configurationBuilder.addInMemoryCollection(
+///     { 'connection_timeout', '100' }
+///   )
+/// }
+/// ```
 library configuration;
 
 export 'src/configuration/chained_builder_extensions.dart';

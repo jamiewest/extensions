@@ -35,7 +35,7 @@ class ChainedConfigurationProvider
 
   /// Sets a configuration value for the specified key.
   @override
-  void set(String key, String value) => _config?[key] = value;
+  void set(String key, String? value) => _config?[key] = value;
 
   /// Returns a change token if this provider supports change
   /// tracking, null otherwise.

@@ -110,8 +110,8 @@ class Host implements Disposable, AsyncDisposable {
 
     cancellationToken ??= CancellationToken.none;
 
-    // var cts = CancellationTokenSource(_options.shutdownTimeout);
-    var cts = CancellationTokenSource();
+    var cts = CancellationTokenSource(_options.shutdownTimeout);
+    //var cts = CancellationTokenSource();
     var linkedCts = CancellationTokenSource.createLinkedTokenSource(
         [cts.token, cancellationToken]);
 

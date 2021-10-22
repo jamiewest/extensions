@@ -7,16 +7,6 @@ import 'configuration_section.dart';
 import 'internal_configuration_root_extensions.dart';
 
 /// Represents the root of an [Configuration] hierarchy.
-// abstract class ConfigurationRoot implements IConfiguration {
-//   /// Force the configuration values to be reloaded from the underlying
-//   /// [IConfigurationProvider]s.
-//   void reload();
-
-//   /// The [ConfigurationProvider]s for this configuration.
-//   Iterable<ConfigurationProvider> get providers;
-// }
-
-/// Represents the root of an [Configuration] hierarchy.
 class ConfigurationRoot implements Configuration, Disposable {
   final List<ConfigurationProvider> _providers;
   List<Disposable>? _changeTokenRegistrations;
@@ -102,6 +92,34 @@ class ConfigurationRoot implements Configuration, Disposable {
       if (provider is Disposable) {
         (provider as Disposable).dispose();
       }
+    }
+  }
+
+  static String? getConfiguration(
+    List<ConfigurationProvider> providers,
+    String key,
+  ) {
+    for (var i = providers.length - 1; i >= 0; i--) {
+      var provider = providers[i];
+      var value = provider.tryGet(key);
+      if (value[0] as bool) {
+        return value[1] as String;
+      }
+      return null;
+    }
+  }
+
+  static void setConfiguration(
+    List<ConfigurationProvider> providers,
+    String key,
+    String? value,
+  ) {
+    if (providers.isEmpty) {
+      throw Exception('InvalidOperationException(SR.Error_NoSources)');
+    }
+
+    for (var provider in providers) {
+      provider.set(key, value);
     }
   }
 }
