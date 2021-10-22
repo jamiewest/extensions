@@ -12,32 +12,63 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  # Check code formatting and static analysis on a single OS (linux)
+  # against Dart dev.
+  analyze:
     runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        sdk: [dev]
 
     steps:
       - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matix.sdk }}
 
-      # Note: This workflow uses the latest stable version of the Dart SDK.
-      # You can specify other versions if desired, see documentation here:
-      # https://github.com/dart-lang/setup-dart/blob/main/README.md
-      # - uses: dart-lang/setup-dart@v1
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
-
+      - id: Install
       - name: Install dependencies
         working-directory: ./packages/extensions
         run: dart pub get
 
-      # Uncomment this step to verify the use of 'dart format' on each commit.
-      # - name: Verify formatting
-      #   run: dart format --output=none --set-exit-if-changed .
+      - name: Check formatting
+        working-directory: ./packages/extensions
+        run: dart format --output=none --set-exit-if-changed .
+        if: always() && steps.install.outcome == 'success'
 
-      # Consider passing '--fatal-infos' for slightly stricter analysis.
-      - name: Analyze project source
-        run: dart analyze
+      - name: Analyze code
+        working-directory: ./packages/extensions
+        run: dart analyze --fatal-infos
+        if: always() && steps.install.outcome == 'success'
 
-      # Your project will need to have tests in test/ and a dependency on
-      # package:test for this step to succeed. Note that Flutter projects will
-      # want to change this to 'flutter test'.
-      - name: Run tests
-        run: dart test
+  # Run tests on a matrix consisting of two dimensions:
+  # 1. OS: ubuntu-latest, (macos-latest, windows-latest)
+  # 2. release channel: dev
+  test:
+    needs: analyze
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Add macos-latest and/or windows-latest if relevant for this package.
+        os: [ubuntu-latest]
+        sdk: [2.14.0, dev]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dart-lang/setup-dart@v1.0
+        with:
+          sdk: ${{ matrix.sdk }}
+      - id: Install
+        name: Install dependencies
+        working-directory: ./packages/extensions
+        run: dart pub get
+      - name: Run VM tests
+        working-directory: ./packages/extensions
+        run: dart test --platform vm
+        if: always() && steps.install.outcome == 'success'
+      - name: Run Chrome tests
+        working-directory: ./packages/extensions
+        run: dart test --platform chrome
+        if: always() && steps.install.outcome == 'success'
