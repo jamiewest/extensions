@@ -44,7 +44,7 @@ extension LoggingBuilderExtensions on LoggingBuilder {
 }
 
 class _DefaultLoggerLevelConfigureOptions
-    extends ConfigureOptions<LoggerFilterOptions> {
+    extends ConfigureOptionsBase<LoggerFilterOptions> {
   _DefaultLoggerLevelConfigureOptions(LogLevel level)
       : super(
           (options) => options.minLevel = level,

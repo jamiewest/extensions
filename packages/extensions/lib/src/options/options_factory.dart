@@ -5,21 +5,21 @@ import 'validate_options.dart';
 
 /// Used to create [TOptions] instances.
 class OptionsFactory<TOptions> {
-  final Iterable<IConfigureOptions<TOptions>> _setups;
-  final Iterable<IPostConfigureOptions<TOptions>> _postConfigures;
+  final Iterable<ConfigureOptions<TOptions>> _setups;
+  final Iterable<PostConfigureOptions<TOptions>> _postConfigures;
   final Iterable<ValidateOptions<TOptions>>? _validations;
   final OptionsImplementationFactory<TOptions> _factory;
 
   /// Initializes a new instance with the specified options configurations.
   OptionsFactory(
     OptionsImplementationFactory<TOptions> factory, {
-    Iterable<IConfigureOptions<TOptions>>? setups,
-    Iterable<IPostConfigureOptions<TOptions>>? postConfigureOptions,
+    Iterable<ConfigureOptions<TOptions>>? setups,
+    Iterable<PostConfigureOptions<TOptions>>? postConfigureOptions,
     Iterable<ValidateOptions<TOptions>>? validations,
   })  : _factory = factory,
-        _setups = setups ?? List<IConfigureOptions<TOptions>>.empty(),
+        _setups = setups ?? List<ConfigureOptions<TOptions>>.empty(),
         _postConfigures = postConfigureOptions ??
-            List<IPostConfigureOptions<TOptions>>.empty(),
+            List<PostConfigureOptions<TOptions>>.empty(),
         _validations = validations ?? List<ValidateOptions<TOptions>>.empty();
 
   /// Returns a configured [TOptions] instance with the given [name].
@@ -27,7 +27,7 @@ class OptionsFactory<TOptions> {
     var options = _createInstance(name);
 
     for (var setup in _setups) {
-      if (setup is IConfigureNamedOptions<TOptions>) {
+      if (setup is ConfigureNamedOptions<TOptions>) {
         setup.configureNamed(name, options);
       } else if (name == Options.defaultName) {
         setup.configure(options);

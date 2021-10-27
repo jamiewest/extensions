@@ -3,8 +3,7 @@ import 'package:extensions_flutter/extensions_flutter.dart';
 
 Future<void> main() async {
   var h = Host.createDefaultBuilder()
-      .useFlutterLifetime((s) => MyApp(host: s.getRequiredService<Host>()),
-          FlutterLifetimeOptions())
+      .useFlutterLifetime((s) => const MyApp(), FlutterLifetimeOptions())
       .build();
 
   await h.run();
@@ -13,10 +12,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({
     Key? key,
-    required this.host,
   }) : super(key: key);
-
-  final Host host;
 
   @override
   Widget build(BuildContext context) {

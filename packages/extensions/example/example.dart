@@ -1,4 +1,5 @@
 import 'package:extensions/hosting.dart';
+import 'package:extensions/src/hosting/hosting_host_builder_extensions_io.dart';
 
 Future<void> main(List<String> args) async =>
     await Host.createDefaultBuilder(args)
@@ -12,7 +13,7 @@ Future<void> main(List<String> args) async =>
             ),
           ),
         )
-        .useConsoleLifetime()
+        .useConsoleLifetime(null)
         .build()
         .run();
 

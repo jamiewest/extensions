@@ -2,15 +2,15 @@ typedef ConfigureAction<TOptions> = void Function(TOptions options);
 
 /// Represents something that configures the [TOptions] type.
 /// Note: These are run before all `PostConfigureOptions`.
-abstract class IConfigureOptions<TOptions> {
+abstract class ConfigureOptions<TOptions> {
   /// Invoked to configure a [TOptions] instance.
   void configure(TOptions options);
 }
 
-/// Implementation of [IConfigureOptions].
-class ConfigureOptions<TOptions extends Object>
-    implements IConfigureOptions<TOptions> {
-  ConfigureOptions(this.action);
+/// Implementation of [ConfigureOptions].
+class ConfigureOptionsBase<TOptions extends Object>
+    implements ConfigureOptions<TOptions> {
+  ConfigureOptionsBase(this.action);
 
   /// The configuration action.
   final ConfigureAction<TOptions> action;

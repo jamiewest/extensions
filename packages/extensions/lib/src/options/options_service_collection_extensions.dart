@@ -1,5 +1,9 @@
-import '../../dependency_injection.dart';
 import '../../options.dart';
+import '../dependency_injection/service_collection.dart';
+import '../dependency_injection/service_collection_descriptor_extensions.dart';
+import '../dependency_injection/service_collection_service_extensions.dart';
+import '../dependency_injection/service_descriptor.dart';
+import '../dependency_injection/service_provider_service_extensions.dart';
 import 'options_cache.dart';
 import 'options_manager.dart';
 import 'unnamed_options_manager.dart';
@@ -45,7 +49,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ServiceDescriptor.transient<OptionsFactory<TOptions>>(
         implementationFactory: (sp) => OptionsFactory<TOptions>(
           instance,
-          setups: sp.getServices<IConfigureOptions<TOptions>>(),
+          setups: sp.getServices<ConfigureOptions<TOptions>>(),
           postConfigureOptions:
               sp.getServices<PostConfigureOptions<TOptions>>(),
           validations: sp.getServices<ValidateOptions<TOptions>>(),
@@ -68,8 +72,24 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ConfigureOptionsAction<TOptions> configureOptions,
       {String? name}) {
     addOptions<TOptions>(instance);
-    addSingleton<IConfigureOptions<TOptions>>(
-      implementationInstance: ConfigureNamedOptions<TOptions>(
+    addSingleton<ConfigureOptions<TOptions>>(
+      implementationInstance: ConfigureNamedOptions0<TOptions>(
+        name,
+        configureOptions,
+      ),
+    );
+    return this;
+  }
+
+  /// Registers an action used to configure a particular type of options.
+  ServiceCollection postConfigure<TOptions>(
+    String name,
+    OptionsImplementationFactory<TOptions> instance,
+    PostConfigureActionT0<TOptions> configureOptions,
+  ) {
+    addOptions<TOptions>(instance);
+    addSingleton<PostConfigureOptions<TOptions>>(
+      implementationInstance: PostConfigureOptions0<TOptions>(
         name,
         configureOptions,
       ),
