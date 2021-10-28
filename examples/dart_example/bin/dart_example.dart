@@ -3,9 +3,9 @@ import 'package:uuid/uuid.dart';
 
 Future<void> main(List<String> arguments) async {
   var services = ServiceCollection()
-    ..addLogging((b) {
-      b.addDebug();
-    })
+    // ..addLogging((b) {
+    //   b.addDebug();
+    // })
     ..tryAddTransient<TransientOperation>((services) => DefaultOperation())
     ..tryAddScoped<ScopedOperation>((services) => DefaultOperation())
     ..tryAddSingleton<SingletonOperation>(
@@ -19,19 +19,19 @@ Future<void> main(List<String> arguments) async {
 
   var sp = services.buildServiceProvider();
 
-  var loggerFactory = sp.getService<LoggerFactory>();
+  // var loggerFactory = sp.getService<LoggerFactory>();
 
-  var logger = loggerFactory.createLogger('test');
+  // var logger = loggerFactory.createLogger('test');
 
-  final x = 'hehehe';
+  // final x = 'hehehe';
 
-  logger.logCritical('Waddup $x');
+  // logger.logCritical('Waddup $x');
 
-  // logger.log<String>(
-  //     logLevel: LogLevel.information,
-  //     eventId: EventId(1, 'test'),
-  //     state: 'test',
-  //     formatter: (s, d) => s as String);
+  // // logger.log<String>(
+  // //     logLevel: LogLevel.information,
+  // //     eventId: EventId(1, 'test'),
+  // //     state: 'test',
+  // //     formatter: (s, d) => s as String);
 
   exemplifyScoping(sp, 'Scope 1');
   exemplifyScoping(sp, 'Scope 2');
@@ -47,14 +47,14 @@ void exemplifyScoping(ServiceProvider services, String scope) {
       .getRequiredService<OperationLogger>()
       .logOperations('$scope-Call 2 .GetRequiredService<OperationLogger>()');
   print('---');
-  provider
-      .getRequiredService<OperationLogger>()
-      .logOperations('$scope-Call 1 .GetRequiredService<OperationLogger>()');
-  print('...');
-  provider
-      .getRequiredService<OperationLogger>()
-      .logOperations('$scope-Call 2 .GetRequiredService<OperationLogger>()');
-  print('---');
+  // provider
+  //     .getRequiredService<OperationLogger>()
+  //     .logOperations('$scope-Call 1 .GetRequiredService<OperationLogger>()');
+  // print('...');
+  // provider
+  //     .getRequiredService<OperationLogger>()
+  //     .logOperations('$scope-Call 2 .GetRequiredService<OperationLogger>()');
+  // print('---');
 }
 
 abstract class Operation {

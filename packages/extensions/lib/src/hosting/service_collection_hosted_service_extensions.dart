@@ -1,6 +1,7 @@
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_descriptor_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
+import '../dependency_injection/service_lifetime.dart';
 import 'hosted_service.dart';
 
 extension ServiceCollectionHostedServiceExtensions on ServiceCollection {
@@ -9,9 +10,10 @@ extension ServiceCollectionHostedServiceExtensions on ServiceCollection {
     ImplementationFactory<THostedService> implementationFactory,
   ) {
     tryAddIterable(
-      ServiceDescriptor.singleton<THostedService>(
-        implementationType: HostedService,
+      ServiceDescriptor.describe<HostedService>(
+        implementationType: THostedService,
         implementationFactory: (s) => implementationFactory(s),
+        lifetime: ServiceLifetime.singleton,
       ),
     );
 
