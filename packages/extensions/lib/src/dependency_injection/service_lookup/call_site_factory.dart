@@ -65,8 +65,8 @@ class CallSiteFactory implements ServiceProviderIsService {
     CallSiteChain callSiteChain,
     bool isIterable,
   ) {
-    if (_callSiteCache.containsKey(serviceType)) {
-      var site = _callSiteCache[serviceType];
+    if (_callSiteCache.containsKey(ServiceCacheKey(serviceType, defaultslot))) {
+      var site = _callSiteCache[ServiceCacheKey(serviceType, defaultslot)];
       if (site != null) {
         return site;
       } else {
@@ -76,6 +76,23 @@ class CallSiteFactory implements ServiceProviderIsService {
       return createCallSite(serviceType, callSiteChain, isIterable);
     }
   }
+
+  // ServiceCallSite? getCallSiteFromType(
+  //   Type serviceType,
+  //   CallSiteChain callSiteChain,
+  //   bool isIterable,
+  // ) {
+  //   if (_callSiteCache.containsKey(serviceType)) {
+  //     var site = _callSiteCache[serviceType];
+  //     if (site != null) {
+  //       return site;
+  //     } else {
+  //       return createCallSite(serviceType, callSiteChain, isIterable);
+  //     }
+  //   } else {
+  //     return createCallSite(serviceType, callSiteChain, isIterable);
+  //   }
+  // }
 
   ServiceCallSite? getCallSite(
     ServiceDescriptor serviceDescriptor,

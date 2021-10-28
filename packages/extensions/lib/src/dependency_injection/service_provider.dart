@@ -362,7 +362,9 @@ class ServiceProviderEngineScope
         _disposed = false;
 
   Map<ServiceCacheKey, Object> get resolvedServices => _resolvedServices;
+
   bool get isRootScope => this == _rootProvider._root;
+
   ServiceProvider get rootProvider => _rootProvider;
 
   @override
