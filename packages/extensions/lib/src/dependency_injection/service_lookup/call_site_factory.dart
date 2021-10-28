@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../service_descriptor.dart';
 import '../service_provider.dart';
 import '../service_provider_factory.dart';
@@ -14,7 +16,8 @@ import 'service_call_site.dart';
 class CallSiteFactory implements ServiceProviderIsService {
   final int defaultslot = 0;
   final Iterable<ServiceDescriptor> _descriptors;
-  final Map<Type, ServiceCallSite> _callSiteCache = <Type, ServiceCallSite>{};
+  final Map<ServiceCacheKey, ServiceCallSite> _callSiteCache =
+      <ServiceCacheKey, ServiceCallSite>{};
   final Map<Type, ServiceDescriptorCacheItem?> _descriptorLookup =
       <Type, ServiceDescriptorCacheItem?>{};
 
@@ -25,39 +28,52 @@ class CallSiteFactory implements ServiceProviderIsService {
 
   void populate() {
     for (var descriptor in _descriptors) {
-      var cacheKey = descriptor.serviceType;
-      ServiceDescriptorCacheItem? cacheItem;
+      var serviceType = descriptor.serviceType;
+      var cacheKey = serviceType;
+      ServiceDescriptorCacheItem cacheItem;
       if (_descriptorLookup.containsKey(cacheKey)) {
-        cacheItem = _descriptorLookup[cacheKey];
-        if (cacheItem != null) {
-          cacheItem = cacheItem.add(descriptor);
-        } else {
-          cacheItem = ServiceDescriptorCacheItem().add(descriptor);
-        }
+        cacheItem = _descriptorLookup[cacheKey]!;
       } else {
-        cacheItem = ServiceDescriptorCacheItem().add(descriptor);
+        cacheItem = ServiceDescriptorCacheItem();
       }
-      _descriptorLookup[cacheKey] = cacheItem;
+
+      _descriptorLookup[cacheKey] = cacheItem.add(descriptor);
+
+      // var cacheKey = descriptor.serviceType;
+      // ServiceDescriptorCacheItem? cacheItem;
+      // if (_descriptorLookup.containsKey(cacheKey)) {
+      //   cacheItem = _descriptorLookup[cacheKey];
+      //   if (cacheItem != null) {
+      //     cacheItem = cacheItem.add(descriptor);
+      //   } else {
+      //     cacheItem = ServiceDescriptorCacheItem().add(descriptor);
+      //   }
+      // } else {
+      //   cacheItem = ServiceDescriptorCacheItem().add(descriptor);
+      // }
+
+      // _descriptorLookup[cacheKey] = cacheItem;
     }
   }
 
   void add(Type type, ServiceCallSite serviceCallSite) {
-    _callSiteCache[type] = serviceCallSite;
+    _callSiteCache[ServiceCacheKey(type, defaultslot)] = serviceCallSite;
   }
 
   ServiceCallSite? getCallSiteFromType(
     Type serviceType,
     CallSiteChain callSiteChain,
+    bool isIterable,
   ) {
     if (_callSiteCache.containsKey(serviceType)) {
       var site = _callSiteCache[serviceType];
       if (site != null) {
         return site;
       } else {
-        return createCallSite(serviceType, callSiteChain);
+        return createCallSite(serviceType, callSiteChain, isIterable);
       }
     } else {
-      return createCallSite(serviceType, callSiteChain);
+      return createCallSite(serviceType, callSiteChain, isIterable);
     }
   }
 
@@ -82,23 +98,14 @@ class CallSiteFactory implements ServiceProviderIsService {
   ServiceCallSite? createCallSite(
     Type serviceType,
     CallSiteChain callSiteChain,
+    bool isIterable,
   ) {
     callSiteChain.checkCircularDependency(serviceType);
 
-    var callSite = _tryCreateExact(serviceType, callSiteChain) ??
-        tryCreateIterable(serviceType, callSiteChain);
+    var callSite = isIterable
+        ? tryCreateIterable(serviceType, callSiteChain)
+        : _tryCreateExact(serviceType, callSiteChain);
 
-    // if (_descriptorLookup.containsKey(serviceType)) {
-    //   var descriptor = _descriptorLookup[serviceType];
-    //   callSite = tryCreateExact(
-    //         descriptor!.last,
-    //         serviceType,
-    //         callSiteChain,
-    //         defaultslot,
-    //       ) ??
-    //       tryCreateIterable(serviceType, callSiteChain);
-    //   _callSiteCache[serviceType] = callSite!;
-    // }
     return callSite;
   }
 
@@ -106,18 +113,11 @@ class CallSiteFactory implements ServiceProviderIsService {
     Type serviceType,
     CallSiteChain callSiteChain,
   ) {
-    if (_descriptorLookup.keys
-            .where((e) => e.runtimeType == serviceType)
-            .length >
-        1) {
-      return null;
-    }
-
     if (_descriptorLookup.containsKey(serviceType)) {
-      var descriptor = _descriptorLookup[serviceType];
+      var descriptor = _descriptorLookup[serviceType]!;
 
       return tryCreateExact(
-        descriptor!.last,
+        descriptor.last,
         serviceType,
         callSiteChain,
         defaultslot,
@@ -130,61 +130,100 @@ class CallSiteFactory implements ServiceProviderIsService {
     Type serviceType,
     CallSiteChain callSiteChain,
   ) {
-    Type? itemType;
+    var callSiteKey = ServiceCacheKey(serviceType, defaultslot);
+    if (_callSiteCache.containsKey(callSiteKey)) {
+      return _callSiteCache[callSiteKey];
+    }
+
+    var itemType = serviceType;
 
     try {
       callSiteChain.add(serviceType);
 
-      // var name = serviceType.toString();
-      // var reg = RegExp(r'\<([^)]+)\>');
-
-      // String? x;
-      // if (name.contains('Iterable')) {
-      //   var t = reg.stringMatch(name);
-      //   x = t?.substring(1, t.length - 1);
-      //print(x);
-      // }
-
       var cacheLocation = CallSiteResultCacheLocation.root;
       var callSites = <ServiceCallSite>[];
-      // var descriptors = _descriptors
-      //     .where((element) => element.serviceType.toString() == x)
-      //     .toList();
 
-      var descriptors = _descriptors
-          .where((e) => e.implementationType.hashCode == serviceType.hashCode)
-          .toList();
+      if (_descriptorLookup.containsKey(itemType)) {
+        var descriptors = _descriptorLookup[itemType];
+        for (var i = 0; i < descriptors!.length; i++) {
+          var descriptor = descriptors[i];
 
-      if (descriptors.isNotEmpty) {
-        itemType = descriptors.first.serviceType;
-      }
-
-      for (var i = 0; i < descriptors.length; i++) {
-        var descriptor = descriptors[i];
-        // Last service should get slot 0
-        var slot = descriptors.length - i - 1;
-        // var callSite =
-        //     tryCreateExact(descriptor, itemType!, callSiteChain, slot);
-        var callSite = tryCreateExact(
-            descriptor, descriptors[i].serviceType, callSiteChain, slot);
-        assert(callSite != null);
-        //cacheLocation =
-        //    getCommonCacheLocation(cacheLocation, callSite.cache.location);
-        callSites.add(callSite!);
+          // Last service should get slot 0
+          var slot = descriptors.length - i - 1;
+          var callSite = tryCreateExact(
+            descriptor,
+            itemType,
+            callSiteChain,
+            slot,
+          );
+          assert(callSite != null);
+          cacheLocation = _getCommonCacheLocation(
+            cacheLocation,
+            callSite!.cache.location,
+          );
+          callSites.add(callSite);
+        }
       }
 
       var resultCache = ResultCache.none;
       if ((cacheLocation == CallSiteResultCacheLocation.scope) ||
           (cacheLocation == CallSiteResultCacheLocation.root)) {
-        resultCache =
-            ResultCache(cacheLocation, ServiceCacheKey(itemType, defaultslot));
+        resultCache = ResultCache(
+          cacheLocation,
+          ServiceCacheKey(itemType, defaultslot),
+        );
       }
 
-      return IterableCallSite(resultCache, itemType ?? Object, callSites);
+      return _callSiteCache[callSiteKey] = IterableCallSite(
+        resultCache,
+        itemType,
+        callSites,
+      );
     } finally {
       callSiteChain.remove(serviceType);
     }
   }
+
+  // var descriptors = _descriptors
+  //     .where((e) => e.implementationType.hashCode == serviceType.hashCode)
+  //     .toList();
+
+  // if (descriptors.isNotEmpty) {
+  //   itemType = descriptors.first.serviceType;
+  // }
+
+  // for (var i = 0; i < descriptors.length; i++) {
+  //   var descriptor = descriptors[i];
+  //   // Last service should get slot 0
+  //   var slot = descriptors.length - i - 1;
+  //   // var callSite =
+  //   //     tryCreateExact(descriptor, itemType!, callSiteChain, slot);
+  //   var callSite = tryCreateExact(
+  //       descriptor, descriptors[i].serviceType, callSiteChain, slot);
+  //   assert(callSite != null);
+  //   //cacheLocation =
+  //   //    getCommonCacheLocation(cacheLocation, callSite.cache.location);
+  //   callSites.add(callSite!);
+  //     }
+
+  //     var resultCache = ResultCache.none;
+  //     if ((cacheLocation == CallSiteResultCacheLocation.scope) ||
+  //         (cacheLocation == CallSiteResultCacheLocation.root)) {
+  //       resultCache =
+  //           ResultCache(cacheLocation, ServiceCacheKey(itemType, defaultslot));
+  //     }
+
+  //     return IterableCallSite(resultCache, itemType ?? Object, callSites);
+  //   } finally {
+  //     callSiteChain.remove(serviceType);
+  //   }
+  // }
+
+  CallSiteResultCacheLocation _getCommonCacheLocation(
+    CallSiteResultCacheLocation locationA,
+    CallSiteResultCacheLocation locationB,
+  ) =>
+      CallSiteResultCacheLocation.values[max(locationA.value, locationB.value)];
 
   ServiceCallSite? tryCreateExact(
     ServiceDescriptor descriptor,
@@ -193,6 +232,11 @@ class CallSiteFactory implements ServiceProviderIsService {
     int slot,
   ) {
     if (serviceType == descriptor.serviceType) {
+      var callSiteKey = ServiceCacheKey(serviceType, slot);
+      if (_callSiteCache.containsKey(callSiteKey)) {
+        return _callSiteCache[callSiteKey];
+      }
+
       ServiceCallSite callSite;
       var lifetime = ResultCache.fromServiceLifetime(
         descriptor.lifetime,
@@ -211,10 +255,10 @@ class CallSiteFactory implements ServiceProviderIsService {
           descriptor.implementationFactory!,
         );
       } else {
-        throw Exception('SR.InvalidServiceDescriptor');
+        throw Exception('Invalid service descriptor');
       }
 
-      return callSite;
+      return _callSiteCache[callSiteKey] = callSite;
     }
     return null;
   }
@@ -244,6 +288,16 @@ class ServiceDescriptorCacheItem {
     }
     assert(_item != null);
     return _item!;
+  }
+
+  ServiceDescriptor operator [](int index) {
+    if (index >= length) {
+      // throw error
+    }
+    if (index == 0) {
+      return _item!;
+    }
+    return _items![index - 1];
   }
 
   int get length {

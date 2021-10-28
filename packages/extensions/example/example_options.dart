@@ -11,8 +11,8 @@ Future<void> main(List<String> args) async =>
                 (options) => options.option = 'Ahahaha',
                 name: 'custom_options',
               )
-              ..configure<MyOptions1>(
-                () => MyOptions1(),
+              ..configure<MyOptions>(
+                () => MyOptions(),
                 (options) => options.option = 'Bahahaha',
                 name: 'custom_options1',
               )

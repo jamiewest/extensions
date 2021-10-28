@@ -24,6 +24,7 @@ import 'service_scope_factory.dart';
 /// @nodoc
 typedef CreateServiceAccessor = CreateServiceAccessorInner? Function(
   Type type,
+  bool isIterable,
 );
 
 /// @nodoc
@@ -51,11 +52,9 @@ class ServiceProvider implements Disposable, AsyncDisposable {
         _realizedServices = <Type, CreateServiceAccessorInner?>{},
         _disposed = false,
         __callSiteFactory = CallSiteFactory(serviceDescriptors) {
-    _createServiceAccessor = (serviceType) {
+    _createServiceAccessor = (serviceType, isIterable) {
       var callSite = __callSiteFactory.getCallSiteFromType(
-        serviceType,
-        CallSiteChain(),
-      );
+          serviceType, CallSiteChain(), isIterable);
       if (callSite != null) {
         _onCreate(callSite);
 
@@ -137,8 +136,8 @@ class ServiceProvider implements Disposable, AsyncDisposable {
     //var a = typeOf<Iterable<T>>();
 
     // Changed a to T.
-    var realizedService =
-        _realizedServices.putIfAbsent(T, () => _createServiceAccessor!(T));
+    var realizedService = _realizedServices.putIfAbsent(
+        T, () => _createServiceAccessor!(T, true));
     _onResolve(T, serviceProviderEngineScope);
     var result = realizedService!.call(serviceProviderEngineScope);
     //assert(result != null || callSiteFactory.isService<Iterable<T>>());
@@ -162,7 +161,7 @@ class ServiceProvider implements Disposable, AsyncDisposable {
 
     var realizedService = _realizedServices.putIfAbsent(
       T,
-      () => _createServiceAccessor!(T),
+      () => _createServiceAccessor!(T, false),
     );
 
     _onResolve(T, serviceProviderEngineScope);
