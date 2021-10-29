@@ -1,4 +1,4 @@
-import 'package:extensions/src/logging/activity_tracking_options.dart';
+import 'activity_tracking_options.dart';
 
 import 'logger_factory.dart';
 

@@ -12,6 +12,8 @@ dependencies:
 
   cupertino_icons: ^1.0.2
 
+  flutter_riverpod: ^1.0.0-dev.11
+
   extensions_flutter:
     path: ../../packages/extensions_flutter
 

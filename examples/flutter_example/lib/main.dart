@@ -1,34 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:extensions_flutter/extensions_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final hostProvider = Provider(
+  (_) => Host.createDefaultBuilder()
+      .configureAppConfiguration((context, configuration) {
+        configuration.addInMemoryCollection(
+          <String, String>{'test': 'value'}.entries,
+        );
+      })
+      .useFlutterLifetime(
+          const ProviderScope(child: MyApp()), FlutterLifetimeOptions())
+      .build(),
+);
 
 Future<void> main() async {
-  var h = Host.createDefaultBuilder()
-      .useFlutterLifetime((s) => const MyApp(), FlutterLifetimeOptions())
-      .build();
-
-  await h.run();
+  final hostContainer = ProviderContainer();
+  await hostContainer.read(hostProvider).run();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final host = ref.watch(hostProvider);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(
+        title: 'Flutter Demo Home Page',
+        logger: host.services
+            .getRequiredService<LoggerFactory>()
+            .createLogger('test'),
+        config: host.services.getRequiredService<Configuration>(),
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({
+    Key? key,
+    required this.title,
+    required this.logger,
+    required this.config,
+  }) : super(key: key);
   final String title;
+
+  final Logger logger;
+
+  final Configuration config;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -38,6 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
+    widget.logger.logInformation('ahahaha ${_counter.toString()}');
+    widget.logger.logCritical(widget.config['test']);
     setState(() {
       _counter++;
     });

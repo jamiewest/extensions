@@ -1,6 +1,9 @@
 import '../../dependency_injection.dart';
 import '../dependency_injection/service_collection.dart';
+import '../options/configure_options.dart';
+import 'log_level.dart';
 import 'logger_factory.dart';
+import 'logger_filter_options.dart';
 import 'logger_provider.dart';
 
 /// An interface for configuring logging providers.
@@ -25,10 +28,24 @@ extension LoggingServiceCollectionExtensions on ServiceCollection {
         services.getServices<LoggerProvider>(),
       ),
     ));
+
+    tryAddIterable(
+      ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>>(
+        instance: _DefaultLoggerLevelConfigureOptions(LogLevel.information),
+      ),
+    );
+
     if (configure != null) {
       configure(LoggingBuilder._(this));
     }
 
     return this;
   }
+}
+
+class _DefaultLoggerLevelConfigureOptions
+    extends ConfigureOptionsBase<LoggerFilterOptions> {
+  _DefaultLoggerLevelConfigureOptions(
+    LogLevel level,
+  ) : super((options) => options.minLevel = level);
 }

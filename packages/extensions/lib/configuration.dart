@@ -7,10 +7,13 @@
 /// ## Example
 /// ```dart
 /// void main(List<String>? args) {
-///   var configurationBuilder = ConfigurationBuilder();
+///   var builder = ConfigurationBuilder();
 ///   configurationBuilder.addInMemoryCollection(
 ///     { 'connection_timeout', '100' }
 ///   )
+///
+///   var config = builder.build();
+///   print(config['connection_timeout']);
 /// }
 /// ```
 library configuration;

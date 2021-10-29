@@ -20,7 +20,7 @@ typedef FilterAction = bool Function(
 typedef ConfigureOptionsAction = void Function(LoggerFilterOptions options);
 
 /// Extension methods for setting up logging services in an [ServiceCollection].
-extension FilterLoggingBuilderExtension on LoggingBuilder {
+extension FilterLoggingBuilderExtensions on LoggingBuilder {
   /// Adds a log filter to the factory.
   LoggingBuilder addFilter({
     String? category,

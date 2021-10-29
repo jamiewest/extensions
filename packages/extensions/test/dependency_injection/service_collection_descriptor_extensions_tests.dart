@@ -10,7 +10,7 @@ void main() {
       // Arrange
       var serviceCollection = ServiceCollection();
       var descriptor = ServiceDescriptor.singleton<FakeService>(
-        instance: FakeService(),
+        instance: FakeServiceImplementation(),
       );
 
       // Act
@@ -26,7 +26,7 @@ void main() {
       // Arrange
       var serviceCollection = ServiceCollection();
       var descriptor1 = ServiceDescriptor.singleton<FakeService>(
-        instance: FakeService(),
+        instance: FakeServiceImplementation(),
       );
       var descriptor2 = ServiceDescriptor.transient<FactoryService>(
         implementationFactory: (s) => TransientFactoryService(),
@@ -49,7 +49,7 @@ void main() {
       // Arrange
       var serviceCollection = ServiceCollection();
       var descriptor1 = ServiceDescriptor.singleton<FakeService>(
-        instance: FakeService(),
+        instance: FakeServiceImplementation(),
       );
       var descriptor2 = ServiceDescriptor.transient<FactoryService>(
         implementationFactory: (s) => TransientFactoryService(),

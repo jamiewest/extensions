@@ -10,7 +10,6 @@ export 'src/logging/logger_factory_options.dart';
 export 'src/logging/logger_provider.dart';
 export 'src/logging/logging_builder.dart';
 export 'src/logging/logging_builder_extensions.dart';
-export 'src/logging/logging_service_collection_extensions.dart';
 // Providers
 export 'src/logging/providers/debug/debug_logger.dart';
 export 'src/logging/providers/debug/debug_logger_factory_extensions.dart';

@@ -15,6 +15,6 @@ Future<void> main(List<String> args) async =>
         .run();
 ```
 
-Extensions is a derived work of the [dotnet/runtime](https://github.com/dotnet/runtime) 
+Extensions is a derived work of the [dotnet/runtime](https://github.com/dotnet/runtime) extensions namespace. 
 
 

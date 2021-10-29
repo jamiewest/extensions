@@ -1,7 +1,7 @@
 import 'package:extensions/src/shared/disposable.dart';
 
-class FakeService implements Disposable {
-  FakeService() : disposed = false;
+class FakeServiceImplementation implements FakeEveryService, Disposable {
+  FakeServiceImplementation() : disposed = false;
   PocoClass? value;
 
   bool? disposed;
@@ -15,5 +15,9 @@ class FakeService implements Disposable {
     disposed = true;
   }
 }
+
+abstract class FakeService {}
+
+abstract class FakeEveryService implements FakeService {}
 
 class PocoClass {}

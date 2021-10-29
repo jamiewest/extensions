@@ -19,7 +19,6 @@ Future<void> main(List<String> args) async =>
               ..addHostedService<MyService>(
                 (services) => MyService(
                   services.getRequiredService<OptionsSnapshot<MyOptions>>(),
-                  //services.getRequiredService<OptionsSnapshot<MyOptions1>>(),
                 ),
               );
           },
