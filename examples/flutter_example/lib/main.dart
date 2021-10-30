@@ -2,8 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:extensions_flutter/extensions_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'connectivity_background_service.dart';
+
 final hostProvider = Provider(
   (_) => Host.createDefaultBuilder()
+      .configureServices((context, services) {
+        services.addHostedService<ConnectivityBackgroundService>(
+          (services) => ConnectivityBackgroundService(
+            services
+                .getRequiredService<LoggerFactory>()
+                .createLogger('connectivity'),
+          ),
+        );
+      })
       .configureAppConfiguration((context, configuration) {
         configuration.addInMemoryCollection(
           <String, String>{'test': 'value'}.entries,

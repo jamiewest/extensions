@@ -1,3 +1,5 @@
+import 'package:tuple/tuple.dart';
+
 import '../../dependency_injection.dart';
 import '../options/options.dart';
 import '../options/options_monitor.dart';
@@ -97,6 +99,15 @@ class LoggerFactory implements Disposable {
 
     return loggers;
   }
+
+  // Tuple2<List<MessageLogger>, List<ScopeLogger>> _applyFilters(
+  //   List<LoggerInformation> loggers,
+  // ) {
+  //   var messageLoggers = <MessageLogger>[];
+  //   var scopeLoggers = _filterOptions!.captureScopes ? <ScopeLogger>[] : null;
+
+  //   for (var loggerInformation in loggers) {}
+  // }
 
   /// Adds an [LoggerProvider] to the logging system.
   void addProvider(LoggerProvider provider) {

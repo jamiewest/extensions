@@ -1,5 +1,6 @@
 import '../../logging.dart';
 import '../dependency_injection/service_collection.dart';
+import '../options/options_service_collection_extensions.dart';
 import 'logger_filter_options.dart';
 import 'logger_filter_rule.dart';
 import 'logging_builder.dart';
@@ -12,48 +13,57 @@ typedef CategoryLevelFilterAction = bool Function(
 typedef LevelFilterAction = bool Function(LogLevel level);
 
 typedef FilterAction = bool Function(
-  String type,
   String category,
   LogLevel level,
 );
 
 typedef ConfigureOptionsAction = void Function(LoggerFilterOptions options);
 
-/// Extension methods for setting up logging services in an [ServiceCollection].
-extension FilterLoggingBuilderExtensions on LoggingBuilder {
+extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
   /// Adds a log filter to the factory.
-  LoggingBuilder addFilter({
+  LoggerFilterOptions addFilter({
     String? category,
-    LogLevel? level,
+    LevelFilterAction? levelFilter,
   }) {
+    _addRule(
+      category: category!,
+      filter: (name, category, level) => levelFilter!(level),
+    );
     return this;
   }
 
-  // LoggingBuilder configureFilter(
-  //   ConfigureOptionsAction configure,
-  // ) {
-  //   services.configure<LoggerFilterOptions>(
-  //     () => LoggerFilterOptions(),
-  //     (options) => options..
-  //   );
-  //   return this;
-  // }
-
-  LoggerFilterOptions _addRule(
-    LoggerFilterOptions options,
-    String type,
-    String category,
+  void _addRule({
+    required String category,
     LogLevel? level,
-    ConfigureFilter filter,
-  ) {
-    options.rules.add(
+    required ConfigureFilter filter,
+  }) {
+    rules.add(
       LoggerFilterRule(
-        type,
+        'type',
         category,
         level,
         filter,
       ),
     );
-    return options;
+  }
+}
+
+/// Extension methods for setting up logging services in an [ServiceCollection].
+extension FilterLoggingBuilderExtensions on LoggingBuilder {
+  LoggingBuilder addFilter(String category, FilterAction filter) =>
+      configureFilter(
+        (options) => options.addFilter(
+          levelFilter: (level) => filter(category, level),
+        ),
+      );
+
+  LoggingBuilder configureFilter(
+    ConfigureOptionsAction configure,
+  ) {
+    services.configure<LoggerFilterOptions>(
+      () => LoggerFilterOptions(),
+      (options) => configure,
+    );
+    return this;
   }
 }
