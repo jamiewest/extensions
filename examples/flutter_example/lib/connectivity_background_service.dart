@@ -10,7 +10,7 @@ class ConnectivityBackgroundService extends BackgroundService {
   ConnectivityBackgroundService(Logger logger) : _logger = logger;
 
   @override
-  Future<void> execute(CancellationToken stoppingToken) async {
+  Future<void> execute(CancellationToken stoppingToken) {
     _logger.logDebug('Starting connectivity service');
 
     _subscription = Connectivity()
@@ -22,6 +22,8 @@ class ConnectivityBackgroundService extends BackgroundService {
         _logger.logInformation('Connected to wifi');
       }
     });
+
+    return Future.value(null);
   }
 
   @override

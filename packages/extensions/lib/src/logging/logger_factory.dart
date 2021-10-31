@@ -1,3 +1,4 @@
+import 'package:extensions/src/logging/logger_rule_selector.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../dependency_injection.dart';
@@ -20,7 +21,7 @@ class _Logger extends Logger with LoggerMixin {}
 class LoggerFactory implements Disposable {
   final Map<String, Logger> _loggers;
   final List<_ProviderRegistration> _providerRegistrations;
-  // LoggerFactoryScopeProvider _scopeProvider;
+  //LoggerFactoryScopeProvider _scopeProvider;
   bool _isDisposed = false;
   late Disposable _changeTokenRegistration;
   LoggerFilterOptions? _filterOptions;
@@ -100,14 +101,48 @@ class LoggerFactory implements Disposable {
     return loggers;
   }
 
-  // Tuple2<List<MessageLogger>, List<ScopeLogger>> _applyFilters(
-  //   List<LoggerInformation> loggers,
-  // ) {
-  //   var messageLoggers = <MessageLogger>[];
-  //   var scopeLoggers = _filterOptions!.captureScopes ? <ScopeLogger>[] : null;
+  Tuple2<List<MessageLogger>, List<ScopeLogger>> _applyFilters(
+    List<LoggerInformation> loggers,
+  ) {
+    var messageLoggers = <MessageLogger>[];
+    var scopeLoggers = _filterOptions!.captureScopes ? <ScopeLogger>[] : null;
 
-  //   for (var loggerInformation in loggers) {}
-  // }
+    for (var loggerInformation in loggers) {
+      var result = LoggerRuleSelector.select(
+        _filterOptions!,
+        loggerInformation.providerType,
+        loggerInformation.category,
+      );
+
+      var minLevel = result.item1;
+      if (minLevel != null) {
+        if (minLevel != LogLevel.critical) {
+          continue;
+        }
+      }
+
+      var filter = result.item2;
+
+      messageLoggers.add(
+        MessageLogger(
+          loggerInformation.logger,
+          loggerInformation.category,
+          loggerInformation.providerType.runtimeType.toString(),
+          minLevel,
+          filter,
+        ),
+      );
+
+      // TODO: Create LoggerFactoryScopeProvider
+      if (!loggerInformation.externalScope) {
+        scopeLoggers?.add(ScopeLogger(null, null));
+      }
+    }
+    return Tuple2<List<MessageLogger>, List<ScopeLogger>>(
+      messageLoggers,
+      scopeLoggers!,
+    );
+  }
 
   /// Adds an [LoggerProvider] to the logging system.
   void addProvider(LoggerProvider provider) {

@@ -55,16 +55,16 @@ class MessageLogger {
 }
 
 class ScopeLogger {
-  final Logger _logger;
+  final Logger? _logger;
   final ExternalScopeProvider? _externalScopeProvider;
 
   ScopeLogger(
-    Logger logger,
-    ExternalScopeProvider externalScopeProvider,
+    Logger? logger,
+    ExternalScopeProvider? externalScopeProvider,
   )   : _logger = logger,
         _externalScopeProvider = externalScopeProvider;
 
-  Logger get logger => _logger;
+  Logger? get logger => _logger;
 
   ExternalScopeProvider? get externalScopeProvider => _externalScopeProvider;
 
@@ -72,7 +72,7 @@ class ScopeLogger {
     if (_externalScopeProvider != null) {
       return _externalScopeProvider!.push(state);
     }
-    return logger.beginScope<TState>(state);
+    return logger!.beginScope<TState>(state);
   }
 }
 

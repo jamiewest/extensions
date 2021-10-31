@@ -3,6 +3,7 @@ import '../dependency_injection/service_collection.dart';
 import '../options/options_service_collection_extensions.dart';
 import 'logger_filter_options.dart';
 import 'logger_filter_rule.dart';
+import 'logger_information.dart';
 import 'logging_builder.dart';
 
 typedef CategoryLevelFilterAction = bool Function(
@@ -27,7 +28,7 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
   }) {
     _addRule(
       category: category!,
-      filter: (name, category, level) => levelFilter!(level),
+      filter: (name, category, level) => levelFilter!(level!),
     );
     return this;
   }
@@ -35,7 +36,7 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
   void _addRule({
     required String category,
     LogLevel? level,
-    required ConfigureFilter filter,
+    required MessageLoggerFilter filter,
   }) {
     rules.add(
       LoggerFilterRule(
