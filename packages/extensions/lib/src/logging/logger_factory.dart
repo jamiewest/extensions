@@ -1,16 +1,15 @@
-import 'package:extensions/src/logging/logger_rule_selector.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../dependency_injection.dart';
 import '../options/options.dart';
 import '../options/options_monitor.dart';
 import '../shared/disposable.dart';
-import 'log_level.dart';
 import 'logger.dart';
 import 'logger_factory_options.dart';
 import 'logger_filter_options.dart';
 import 'logger_information.dart';
 import 'logger_provider.dart';
+import 'logger_rule_selector.dart';
 import 'logging_builder.dart'
     show LoggingServiceCollectionExtensions, ConfigureLoggingBuilder;
 
@@ -19,20 +18,21 @@ class _Logger extends Logger with LoggerMixin {}
 /// Represents a type used to configure the logging system and
 /// create instances of [Logger] from the registered [LoggerProvider]s.
 class LoggerFactory implements Disposable {
-  final Map<String, Logger> _loggers;
-  final List<_ProviderRegistration> _providerRegistrations;
-  //LoggerFactoryScopeProvider _scopeProvider;
-  bool _isDisposed = false;
-  late Disposable _changeTokenRegistration;
+  final Map<String, Logger> _loggers = <String, Logger>{};
+  final List<_ProviderRegistration> _providerRegistrations =
+      <_ProviderRegistration>[];
+  bool _disposed = false;
+  Disposable? _changeTokenRegistration;
   LoggerFilterOptions? _filterOptions;
+  //LoggerFactoryScopeProvider _scopeProvider;
   LoggerFactoryOptions? _factoryOptions;
 
+  /// Creates a new [LoggerFactory] instance.
   LoggerFactory([
     Iterable<LoggerProvider>? providers,
     OptionsMonitor<LoggerFilterOptions>? filterOption,
     Options<LoggerFactoryOptions>? options,
-  ])  : _loggers = <String, Logger>{},
-        _providerRegistrations = <_ProviderRegistration>[] {
+  ]) {
     _factoryOptions = options == null || options.value == null
         ? LoggerFactoryOptions()
         : options.value;
@@ -50,16 +50,32 @@ class LoggerFactory implements Disposable {
     }
   }
 
+  /// Creates new instance of [LoggerFactory] configured using provided
+  /// [configure] delegate.
+  static LoggerFactory create(ConfigureLoggingBuilder configure) {
+    var serviceCollection = ServiceCollection()..addLogging();
+    var serviceProvider = serviceCollection.buildServiceProvider();
+    var loggerFactory = serviceProvider.getService<LoggerFactory>();
+
+    return _DisposingLoggerFactory(
+      loggerFactory,
+      serviceProvider,
+      serviceProvider.getServices<LoggerProvider>(),
+    );
+  }
+
   void _refreshFilters(LoggerFilterOptions filterOptions) {
     _filterOptions = filterOptions;
     for (var registeredLogger in _loggers.entries) {
-      var logger = registeredLogger.value;
+      var logger = registeredLogger.value as _Logger;
+      var result = _applyFilters(logger.loggers!);
+      logger
+        ..messageLoggers = result.item1
+        ..scopeLoggers = result.item2;
     }
   }
 
-  //factory LoggerFactory() => LoggerFactory._(List<LoggerProvider>.empty());
-
-  /// Creates a new [Logger] instance.
+  /// Creates a new [Logger] instance with the given [categoryName].
   Logger createLogger(String categoryName) {
     var logger = _Logger();
     if (_loggers.containsKey(categoryName)) {
@@ -67,21 +83,10 @@ class LoggerFactory implements Disposable {
     } else {
       logger.loggers = _createLoggers(categoryName).toList();
 
-      var messageLoggers = <MessageLogger>[];
-
-      for (var loggerInformation in logger.loggers!) {
-        messageLoggers.add(
-          MessageLogger(
-            loggerInformation.logger,
-            loggerInformation.category,
-            loggerInformation.providerType.toString(),
-            LogLevel.trace,
-            (a, b, c) => true,
-          ),
-        );
-      }
-
-      logger.messageLoggers = messageLoggers;
+      var result = _applyFilters(logger.loggers!);
+      logger
+        ..messageLoggers = result.item1
+        ..scopeLoggers = result.item2;
 
       _loggers[categoryName] = logger;
     }
@@ -114,12 +119,12 @@ class LoggerFactory implements Disposable {
         loggerInformation.category,
       );
 
-      var minLevel = result.item1;
-      if (minLevel != null) {
-        if (minLevel != LogLevel.critical) {
-          continue;
-        }
-      }
+      // var minLevel = result.item1;
+      // if (minLevel != null) {
+      //   if (minLevel != LogLevel.critical) {
+      //     continue;
+      //   }
+      // }
 
       var filter = result.item2;
 
@@ -128,7 +133,7 @@ class LoggerFactory implements Disposable {
           loggerInformation.logger,
           loggerInformation.category,
           loggerInformation.providerType.runtimeType.toString(),
-          minLevel,
+          result.item1!,
           filter,
         ),
       );
@@ -158,6 +163,11 @@ class LoggerFactory implements Disposable {
         existingLogger.key,
       );
       logger.loggers = loggerInformation;
+
+      var result = _applyFilters(logger.loggers!);
+      logger
+        ..messageLoggers = result.item1
+        ..scopeLoggers = result.item2;
     }
   }
 
@@ -175,16 +185,22 @@ class LoggerFactory implements Disposable {
 
   @override
   void dispose() {
-    // TODO: implement dispose
-  }
+    if (!_disposed) {
+      _disposed = true;
 
-  /// TODO: Check if loggerFactory could be null.s
-  static LoggerFactory create(ConfigureLoggingBuilder configure) {
-    var serviceCollection = ServiceCollection()..addLogging();
-    var serviceProvider = serviceCollection.buildServiceProvider();
-    var loggerfactory = serviceProvider.getService<LoggerFactory>();
-    return _DisposingLoggerFactory(loggerfactory, serviceProvider,
-        serviceProvider.getServices<LoggerProvider>());
+      _changeTokenRegistration?.dispose();
+
+      for (var registration in _providerRegistrations) {
+        try {
+          if (registration.shouldDispose) {
+            registration.provider.dispose();
+          }
+          // ignore: empty_catches
+        } catch (e) {
+          // Swallow exceptions on dispose
+        }
+      }
+    }
   }
 }
 

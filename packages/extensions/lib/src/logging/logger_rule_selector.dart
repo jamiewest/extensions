@@ -39,7 +39,7 @@ class LoggerRuleSelector {
       minLevel = current.logLevel;
     }
 
-    return Tuple2<LogLevel, MessageLoggerFilter>(minLevel!, filter!);
+    return Tuple2<LogLevel?, MessageLoggerFilter?>(minLevel, filter);
   }
 
   static bool isBetter(

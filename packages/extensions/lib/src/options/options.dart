@@ -3,7 +3,7 @@ import 'options_wrapper.dart';
 /// Used to retrieve configured [TOptions] instances.
 abstract class Options<TOptions> {
   /// The default configured [TOptions] instance.
-  TOptions get value;
+  TOptions? get value;
 
   /// the default name used for options instances: ''.
   static const String defaultName = '';

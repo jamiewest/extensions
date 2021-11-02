@@ -19,7 +19,7 @@ class OptionsMonitor<TOptions> implements Disposable {
     OptionsMonitorCache<TOptions> cache,
   )   : _factory = factory,
         _cache = cache {
-    for (var source in sources as List<OptionsChangeTokenSource<TOptions>>) {
+    for (var source in sources.toList()) {
       var registration = ChangeToken.onStateChange(
         () => source.getChangeToken(),
         _invokeChanged,

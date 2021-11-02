@@ -1,6 +1,9 @@
+import 'package:extensions/src/options/options_service_collection_extensions.dart';
+
 import '../../dependency_injection.dart';
 import '../dependency_injection/service_collection.dart';
 import '../options/configure_options.dart';
+import '../options/options_monitor.dart';
 import 'log_level.dart';
 import 'logger_factory.dart';
 import 'logger_filter_options.dart';
@@ -22,10 +25,19 @@ typedef ConfigureLoggingBuilder = void Function(LoggingBuilder builder);
 /// Extension methods for setting up logging services in a [ServiceCollection].
 extension LoggingServiceCollectionExtensions on ServiceCollection {
   /// Adds logging services to the specified [ServiceCollection].
-  ServiceCollection addLogging([ConfigureLoggingBuilder? configure]) {
+  ServiceCollection addLogging([ConfigureLoggingBuilder? configure1]) {
+    // addOptions<LoggerFilterOptions>(
+    //   () => LoggerFilterOptions(),
+    // );
+
+    configure<LoggerFilterOptions>(() => LoggerFilterOptions(), (options) {
+      //options.minLevel = LogLevel.information;
+    });
+
     tryAdd(ServiceDescriptor.singleton<LoggerFactory>(
       implementationFactory: (services) => LoggerFactory(
         services.getServices<LoggerProvider>(),
+        services.getService<OptionsMonitor<LoggerFilterOptions>>(),
       ),
     ));
 
@@ -35,8 +47,8 @@ extension LoggingServiceCollectionExtensions on ServiceCollection {
       ),
     );
 
-    if (configure != null) {
-      configure(LoggingBuilder._(this));
+    if (configure1 != null) {
+      configure1(LoggingBuilder._(this));
     }
 
     return this;

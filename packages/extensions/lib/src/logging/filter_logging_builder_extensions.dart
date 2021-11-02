@@ -18,7 +18,7 @@ typedef FilterAction = bool Function(
   LogLevel level,
 );
 
-typedef ConfigureOptionsAction = void Function(LoggerFilterOptions options);
+typedef ConfigureOptionsAction1 = void Function(LoggerFilterOptions options);
 
 extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
   /// Adds a log filter to the factory.
@@ -59,7 +59,7 @@ extension FilterLoggingBuilderExtensions on LoggingBuilder {
       );
 
   LoggingBuilder configureFilter(
-    ConfigureOptionsAction configure,
+    ConfigureOptionsAction1 configure,
   ) {
     services.configure<LoggerFilterOptions>(
       () => LoggerFilterOptions(),
