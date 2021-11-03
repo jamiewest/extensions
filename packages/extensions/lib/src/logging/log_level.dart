@@ -30,3 +30,26 @@ enum LogLevel {
   /// should not write any messages.
   none,
 }
+
+extension LogLevelExtensions on LogLevel {
+  int get value {
+    switch (this) {
+      case LogLevel.trace:
+        return 0;
+      case LogLevel.debug:
+        return 1;
+      case LogLevel.information:
+        return 2;
+      case LogLevel.warning:
+        return 3;
+      case LogLevel.error:
+        return 4;
+      case LogLevel.critical:
+        return 5;
+      case LogLevel.none:
+        return 6;
+      default:
+        return 6;
+    }
+  }
+}

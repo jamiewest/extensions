@@ -47,7 +47,7 @@ class MessageLogger {
     }
 
     if (_filter != null) {
-      return _filter!(_providerTypeFullName, _category, _minLevel);
+      return _filter!(_providerTypeFullName, _category, level);
     }
 
     return true;

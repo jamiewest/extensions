@@ -43,7 +43,7 @@ class Host implements Disposable, AsyncDisposable {
         _applicationLifetime = applicationLifetime as ApplicationLifetime,
         _logger = logger,
         _hostLifetime = hostLifetime,
-        _options = options.value;
+        _options = options.value!;
 
   // The programs configured services.
   ServiceProvider get services => _services;

@@ -7,7 +7,7 @@ class ValidationHostedService implements HostedService {
   Map<Type, Function> _validators;
 
   ValidationHostedService(Options<ValidatorOptions> validatorOptions)
-      : _validators = validatorOptions.value.validators;
+      : _validators = validatorOptions.value!.validators;
 
   @override
   Future<void> start(CancellationToken cancellationToken) {

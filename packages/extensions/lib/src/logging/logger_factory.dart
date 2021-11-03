@@ -133,7 +133,7 @@ class LoggerFactory implements Disposable {
           loggerInformation.logger,
           loggerInformation.category,
           loggerInformation.providerType.runtimeType.toString(),
-          result.item1!,
+          result.item1,
           filter,
         ),
       );

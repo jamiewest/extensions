@@ -3,9 +3,6 @@ import 'package:extensions/src/hosting/hosting_host_builder_extensions_io.dart';
 
 Future<void> main(List<String> args) async =>
     await Host.createDefaultBuilder(args)
-        // .configureLogging(
-        //   (context, logging) => logging.setMinimumLevel(LogLevel.critical),
-        // )
         .configureServices(
           (_, services) => services.addHostedService<ExampleHostedService>(
             (services) => ExampleHostedService(

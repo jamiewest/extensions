@@ -68,7 +68,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     var count = length;
     for (var i = 0; i < count; i++) {
       var service = this[i];
-      if (service.serviceType == descriptor.serviceType &&
+      if (service.serviceType.hashCode == descriptor.serviceType.hashCode &&
           service.getImplementationType() == implementationType) {
         // Already added
         return;

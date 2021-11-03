@@ -24,7 +24,7 @@ class LoggerRuleSelector {
     // 4. If there are multiple rules use last
     // 5. If there are no applicable rules use global minimal level
 
-    var providerAlias = providerType.runtimeType.toString();
+    var providerAlias = providerType.toString();
     LoggerFilterRule? current;
     for (var rule in options.rules) {
       if (isBetter(rule, current, providerAlias, category) ||

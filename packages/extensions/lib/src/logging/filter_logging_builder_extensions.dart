@@ -14,6 +14,7 @@ typedef CategoryLevelFilterAction = bool Function(
 typedef LevelFilterAction = bool Function(LogLevel level);
 
 typedef FilterAction = bool Function(
+  String provider,
   String category,
   LogLevel level,
 );
@@ -23,26 +24,22 @@ typedef ConfigureOptionsAction1 = void Function(LoggerFilterOptions options);
 extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
   /// Adds a log filter to the factory.
   LoggerFilterOptions addFilter({
-    String? category,
-    LevelFilterAction? levelFilter,
+    required MessageLoggerFilter levelFilter,
   }) {
     _addRule(
-      category: category!,
-      filter: (name, category, level) => levelFilter!(level!),
+      filter: levelFilter,
     );
     return this;
   }
 
   void _addRule({
-    required String category,
-    LogLevel? level,
     required MessageLoggerFilter filter,
   }) {
     rules.add(
       LoggerFilterRule(
-        'type',
-        category,
-        level,
+        null,
+        null,
+        null,
         filter,
       ),
     );
@@ -51,19 +48,18 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
 
 /// Extension methods for setting up logging services in an [ServiceCollection].
 extension FilterLoggingBuilderExtensions on LoggingBuilder {
-  LoggingBuilder addFilter(String category, FilterAction filter) =>
-      configureFilter(
+  LoggingBuilder addFilter(MessageLoggerFilter filter) => _configureFilter(
         (options) => options.addFilter(
-          levelFilter: (level) => filter(category, level),
+          levelFilter: filter,
         ),
       );
 
-  LoggingBuilder configureFilter(
+  LoggingBuilder _configureFilter(
     ConfigureOptionsAction1 configure,
   ) {
     services.configure<LoggerFilterOptions>(
       () => LoggerFilterOptions(),
-      (options) => configure,
+      (options) => configure(options),
     );
     return this;
   }

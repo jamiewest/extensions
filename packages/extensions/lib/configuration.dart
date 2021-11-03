@@ -6,14 +6,18 @@
 ///
 /// ## Example
 /// ```dart
+/// import 'package:extensions/configuration.dart';
+///
 /// void main(List<String>? args) {
 ///   var builder = ConfigurationBuilder();
+///   // Adds a memory collection to the configuration system.
 ///   configurationBuilder.addInMemoryCollection(
-///     { 'connection_timeout', '100' }
-///   )
+///   {
+///       'Logging:LogLevel:Default', 'Warning',
+///   });
 ///
 ///   var config = builder.build();
-///   print(config['connection_timeout']);
+///   print(config['Logging:LogLevel:Default']);
 /// }
 /// ```
 library configuration;

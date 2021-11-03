@@ -4,11 +4,17 @@
 /// to their service lifetime.
 ///
 /// ```dart
-/// var serviceCollection = ServiceCollection();
-/// serviceCollection.addSingleton<MyService>();
+/// import 'package:extensions/dependency_injection.dart';
 ///
-/// var services = serviceCollection.buildServiceProvider();
-/// var myService = services.getRequiredService<MyService>();
+/// void main(List<String>? args) {
+///   var serviceCollection = ServiceCollection();
+///   serviceCollection.addSingleton<MyService>(
+///     implementationInstance: MyService(),
+///   );
+///
+///   var services = serviceCollection.buildServiceProvider();
+///   var myService = services.getRequiredService<MyService>();
+/// }
 /// ```
 library dependency_injection;
 
