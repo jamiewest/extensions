@@ -37,14 +37,18 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type> {
 
   @override
   Type visitRootCache(
-      ServiceCallSite callSite, CallSiteValidatorState argument) {
+    ServiceCallSite callSite,
+    CallSiteValidatorState argument,
+  ) {
     argument.singleton = callSite;
     return visitCallSiteMain(callSite, argument);
   }
 
   @override
   Type visitScopeCache(
-      ServiceCallSite callSite, CallSiteValidatorState argument) {
+    ServiceCallSite callSite,
+    CallSiteValidatorState argument,
+  ) {
     if (callSite is ServiceScopeFactoryCallSite) {
       //return null;
     }

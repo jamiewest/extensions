@@ -54,7 +54,10 @@ class ServiceProvider implements Disposable, AsyncDisposable {
         __callSiteFactory = CallSiteFactory(serviceDescriptors) {
     _createServiceAccessor = (serviceType, isIterable) {
       var callSite = __callSiteFactory.getCallSiteFromType(
-          serviceType, CallSiteChain(), isIterable);
+        serviceType,
+        CallSiteChain(),
+        isIterable,
+      );
       if (callSite != null) {
         _onCreate(callSite);
 
@@ -133,9 +136,6 @@ class ServiceProvider implements Disposable, AsyncDisposable {
 
     var serviceProviderEngineScope = _root;
 
-    //var a = typeOf<Iterable<T>>();
-
-    // Changed a to T.
     var realizedService = _realizedServices.putIfAbsent(
         T, () => _createServiceAccessor!(T, true));
     _onResolve(T, serviceProviderEngineScope);
