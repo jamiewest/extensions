@@ -329,12 +329,12 @@ class TestKeyValue {
 
   String? asString() => _value != null ? _value as String? : null;
 
-  Iterable<Tuple2<String, String>> expand(String key) sync* {
+  Iterable<Tuple2<String, String?>> expand(String key) sync* {
     if (asList() == null) {
-      yield Tuple2<String, String>(key, asString()!);
+      yield Tuple2<String, String?>(key, asString());
     } else {
       for (var i = 0; i < asList()!.length; i++) {
-        yield Tuple2<String, String>('$key:$i', asList()![i]!);
+        yield Tuple2<String, String?>('$key:$i', asList()![i]);
       }
     }
   }

@@ -53,7 +53,7 @@ class LoggerFactory implements Disposable {
   /// Creates new instance of [LoggerFactory] configured using provided
   /// [configure] delegate.
   static LoggerFactory create(ConfigureLoggingBuilder configure) {
-    var serviceCollection = ServiceCollection()..addLogging();
+    var serviceCollection = ServiceCollection()..addLogging(configure);
     var serviceProvider = serviceCollection.buildServiceProvider();
     var loggerFactory = serviceProvider.getService<LoggerFactory>();
 
