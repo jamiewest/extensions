@@ -22,7 +22,7 @@ jobs:
         with:
           sdk: ${{ matix.sdk }}
       - id: Install
-      - name: Install dependencies
+        name: Install dependencies
         working-directory: ./packages/extensions
         run: dart pub get
       - name: Check formatting
