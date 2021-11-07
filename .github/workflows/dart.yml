@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: ${{ matix.sdk }}
+          sdk: ${{ matrix.sdk }}
       - id: Install
         name: Install dependencies
         working-directory: ./packages/extensions
