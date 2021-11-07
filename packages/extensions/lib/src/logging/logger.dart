@@ -87,7 +87,6 @@ mixin LoggerMixin on Logger {
       );
     } catch (e) {
       exceptions ??= <Exception>[];
-      // TODO: Catch the correct exception here.
       exceptions.add(e as Exception);
     }
   }
@@ -160,7 +159,5 @@ mixin LoggerMixin on Logger {
 
 class Scope implements Disposable {
   @override
-  void dispose() {
-    // TODO: implement dispose
-  }
+  void dispose() {}
 }

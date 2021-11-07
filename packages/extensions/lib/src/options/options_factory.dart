@@ -42,7 +42,7 @@ class OptionsFactory<TOptions> {
       var failures = List<String>.empty();
       for (var validate in _validations!) {
         var result = validate.validate(name, options);
-        if (result != null && result.failed) {
+        if (result.failed) {
           failures.addAll(result.failures);
         }
       }

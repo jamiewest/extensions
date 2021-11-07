@@ -182,21 +182,21 @@ abstract class ConfigurationProviderTestBase {
     expect(sections[0].value, equals(value344));
   }
 
-  Tuple2<ConfigurationProvider, Function> loadThroughProvider(
+  Tuple2<ConfigurationProvider, Function()> loadThroughProvider(
     TestSection testConfig,
   );
 
-  static Tuple2<ConfigurationProvider, Function> loadUsingMemoryProvider(
+  static Tuple2<ConfigurationProvider, Function()> loadUsingMemoryProvider(
       TestSection testConfig) {
     var values = <MapEntry<String, String?>>[];
     sectionToValues(testConfig, '', values);
 
-    return Tuple2<ConfigurationProvider, Function>(
+    return Tuple2<ConfigurationProvider, Function()>(
         MemoryConfigurationProvider(MemoryConfigurationSource(values)), () {});
   }
 
   ConfigurationRoot buildConfigRoot(
-    List<Tuple2<ConfigurationProvider, Function>> providers,
+    List<Tuple2<ConfigurationProvider, Function()>> providers,
   ) {
     var root = ConfigurationRoot(providers.map((e) => e.item1).toList());
 

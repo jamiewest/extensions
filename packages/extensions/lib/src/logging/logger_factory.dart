@@ -1,11 +1,9 @@
 import 'package:tuple/tuple.dart';
 
 import '../../dependency_injection.dart';
-import '../options/options.dart';
 import '../options/options_monitor.dart';
 import '../shared/disposable.dart';
 import 'logger.dart';
-import 'logger_factory_options.dart';
 import 'logger_filter_options.dart';
 import 'logger_information.dart';
 import 'logger_provider.dart';
@@ -25,18 +23,12 @@ class LoggerFactory implements Disposable {
   Disposable? _changeTokenRegistration;
   LoggerFilterOptions? _filterOptions;
   //LoggerFactoryScopeProvider _scopeProvider;
-  LoggerFactoryOptions? _factoryOptions;
 
   /// Creates a new [LoggerFactory] instance.
   LoggerFactory([
     Iterable<LoggerProvider>? providers,
     OptionsMonitor<LoggerFilterOptions>? filterOption,
-    Options<LoggerFactoryOptions>? options,
   ]) {
-    _factoryOptions = options == null || options.value == null
-        ? LoggerFactoryOptions()
-        : options.value;
-
     if (providers != null) {
       for (var provider in providers) {
         _addProviderRegistration(provider, false);
@@ -138,7 +130,6 @@ class LoggerFactory implements Disposable {
         ),
       );
 
-      // TODO: Create LoggerFactoryScopeProvider
       if (!loggerInformation.externalScope) {
         scopeLoggers?.add(ScopeLogger(null, null));
       }

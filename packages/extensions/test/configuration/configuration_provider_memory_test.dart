@@ -20,7 +20,7 @@ class ConfigurationProviderMemoryTest extends ConfigurationProviderTestBase {
   }
 
   @override
-  Tuple2<ConfigurationProvider, Function> loadThroughProvider(
+  Tuple2<ConfigurationProvider, Function()> loadThroughProvider(
     TestSection testConfig,
   ) =>
       ConfigurationProviderTestBase.loadUsingMemoryProvider(testConfig);

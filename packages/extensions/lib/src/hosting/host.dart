@@ -8,7 +8,6 @@ import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
-import 'host_environment.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
 import 'hosted_service.dart';
@@ -22,24 +21,17 @@ class Host implements Disposable, AsyncDisposable {
   final HostLifetime _hostLifetime;
   final ApplicationLifetime _applicationLifetime;
   final HostOptions _options;
-  final HostEnvironment _hostEnvironment;
-  // TODO: PhysicalFileProvider is an io specific class, find a way to make
-  // it conditional based on the platform.
-  // PhysicalFileProvider _defaultProvider;
   Iterable<HostedService>? _hostedServices;
   bool _stopCalled = false;
   final ServiceProvider _services;
 
   Host(
     ServiceProvider services,
-    HostEnvironment hostEnvironment,
-    // PhysicalFileProvider defaultProvider,
     HostApplicationLifetime applicationLifetime,
     Logger logger,
     HostLifetime hostLifetime,
     Options<HostOptions> options,
   )   : _services = services,
-        _hostEnvironment = hostEnvironment,
         _applicationLifetime = applicationLifetime as ApplicationLifetime,
         _logger = logger,
         _hostLifetime = hostLifetime,
@@ -89,9 +81,6 @@ class Host implements Disposable, AsyncDisposable {
     } on Exception catch (e) {
       // When the host is being stopped, it cancels the background services.
       // This isn't an error condition, so don't log it as an error.
-
-      // TODO: When the host is being stopped, figure out if an exception
-      // is thrown when the future is cancelled.
       if (_stopCalled && backgroundService.executeOperation!.isCanceled) {
         return;
       }
@@ -106,6 +95,7 @@ class Host implements Disposable, AsyncDisposable {
 
   /// Attempts to gracefully stop the program.
   Future<void> stop([CancellationToken? cancellationToken]) async {
+    _stopCalled = true;
     _logger.stopping();
 
     cancellationToken ??= CancellationToken.none;

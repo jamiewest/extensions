@@ -37,8 +37,6 @@ class DebugLogger implements Logger {
       return;
     }
 
-    // TODO: Capitalize the first letter after the period.
-    // ex. LogLevel.information -> LogLevel.Information
     var message = '${logLevel.toString()}: $formattedMessage';
 
     if (exception != null) {

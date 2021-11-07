@@ -217,7 +217,6 @@ class HostBuilder {
         ServiceDescriptor.singleton<Host>(
           implementationFactory: (_) => Host(
             _appServices as ServiceProvider,
-            _hostingEnvironment!,
             _appServices!.getRequiredService<HostApplicationLifetime>(),
             _appServices
                 ?.getRequiredService<LoggerFactory>()

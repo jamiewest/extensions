@@ -46,7 +46,8 @@ class CompositeChangeToken extends ChangeToken {
   }
 
   @override
-  Disposable? registerChangeCallback(Function callback, [Object? state]) {
+  Disposable? registerChangeCallback(Function(Object? state) callback,
+      [Object? state]) {
     _ensureCallbacksInitialized();
     return _cancellationTokenSource!.token.register((state) {
       callback(state);
