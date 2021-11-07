@@ -3,8 +3,6 @@ include: package:lints/recommended.yaml
 analyzer:
   strong-mode:
     implicit-casts: false
-  enable-experiment:
-  - non-nullable
 
 linter:
   rules:
