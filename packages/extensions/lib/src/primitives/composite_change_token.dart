@@ -1,6 +1,6 @@
 import 'cancellation_token.dart';
-import 'disposable.dart';
 import 'change_token.dart';
+import 'disposable.dart';
 
 /// An [ChangeToken] which represents one or more [ChangeToken] instances.
 class CompositeChangeToken extends ChangeToken {

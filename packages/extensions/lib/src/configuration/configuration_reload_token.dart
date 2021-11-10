@@ -1,5 +1,5 @@
-import '../primitives/change_token.dart';
 import '../primitives/cancellation_token.dart';
+import '../primitives/change_token.dart';
 import '../primitives/disposable.dart';
 
 /// Implements [ChangeToken].

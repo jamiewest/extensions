@@ -13,8 +13,8 @@ import 'validate_options.dart';
 
 /// Used to configure [TOptions] instances.
 class OptionsBuilder<TOptions> {
-  final String _defaultValidationFailureMessage =
-      'A validation error has occurred.';
+  // final String _defaultValidationFailureMessage =
+  //     'A validation error has occurred.';
 
   final String _name;
 

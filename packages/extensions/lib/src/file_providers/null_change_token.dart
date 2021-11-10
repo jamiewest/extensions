@@ -1,6 +1,6 @@
 import '../primitives/change_token.dart';
-import '../primitives/empty_disposable.dart';
 import '../primitives/disposable.dart';
+import '../primitives/empty_disposable.dart';
 
 /// An empty change token that doesn't raise any change callbacks.
 class NullChangeToken implements ChangeToken {
