@@ -2,7 +2,7 @@ import 'package:tuple/tuple.dart';
 
 import '../../dependency_injection.dart';
 import '../options/options_monitor.dart';
-import '../shared/disposable.dart';
+import '../primitives/disposable.dart';
 import 'logger.dart';
 import 'logger_filter_options.dart';
 import 'logger_information.dart';

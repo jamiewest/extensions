@@ -1,4 +1,4 @@
-import '../shared/disposable.dart';
+import '../primitives/disposable.dart';
 
 import 'external_scope_provider.dart';
 import 'log_level.dart';

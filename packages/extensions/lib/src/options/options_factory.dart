@@ -1,6 +1,9 @@
-import '../../options.dart';
+import 'configure_named_options.dart';
 import 'configure_options.dart';
+import 'options.dart';
+import 'options_service_collection_extensions.dart';
 import 'options_validation_exception.dart';
+import 'post_configure_options.dart';
 import 'validate_options.dart';
 
 /// Used to create [TOptions] instances.

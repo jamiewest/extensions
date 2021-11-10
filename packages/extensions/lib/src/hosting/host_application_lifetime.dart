@@ -1,4 +1,4 @@
-import '../shared/cancellation_token.dart';
+import '../primitives/cancellation_token.dart';
 
 /// Allows consumers to be notified of application lifetime events.
 /// This interface is not intended to be user-replaceable.

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import '../shared/async_disposable.dart';
-import '../shared/cancellation_token.dart';
+import '../primitives/async_disposable.dart';
+import '../primitives/cancellation_token.dart';
 import 'host.dart';
 import 'host_application_lifetime.dart';
 

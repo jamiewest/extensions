@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 
-import '../shared/cancellation_token.dart';
-import '../shared/disposable.dart';
+import '../primitives/cancellation_token.dart';
+import '../primitives/disposable.dart';
 import 'hosted_service.dart';
 
 /// Base class for implementing a long running [HostedService].

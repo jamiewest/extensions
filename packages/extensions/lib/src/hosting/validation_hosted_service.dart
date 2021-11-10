@@ -1,5 +1,5 @@
 import '../options/options.dart';
-import '../shared/cancellation_token.dart';
+import '../primitives/cancellation_token.dart';
 import 'hosted_service.dart';
 import 'validator_options.dart';
 

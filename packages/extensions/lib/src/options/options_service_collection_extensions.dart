@@ -1,11 +1,20 @@
-import '../../options.dart';
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_descriptor_extensions.dart';
 import '../dependency_injection/service_collection_service_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
 import '../dependency_injection/service_provider_service_extensions.dart';
+import 'configure_named_options.dart';
+import 'configure_options.dart';
+import 'options.dart';
+import 'options_builder.dart';
 import 'options_cache.dart';
+import 'options_change_token_source.dart';
+import 'options_factory.dart';
 import 'options_manager.dart';
+import 'options_monitor.dart';
+import 'options_monitor_cache.dart';
+import 'options_snapshot.dart';
+import 'post_configure_options.dart';
 import 'unnamed_options_manager.dart';
 import 'validate_options.dart';
 
@@ -15,9 +24,10 @@ typedef OptionsImplementationFactory<T> = T Function();
 /// Extension methods for adding options services to the DI container.
 extension OptionsServiceCollectionExtensions on ServiceCollection {
   /// Adds services required for using options.
-  ServiceCollection addOptions<TOptions>(
-    OptionsImplementationFactory<TOptions> instance,
-  ) {
+  OptionsBuilder<TOptions> addOptions<TOptions>(
+    OptionsImplementationFactory<TOptions> instance, {
+    String name = Options.defaultName,
+  }) {
     tryAdd(
       ServiceDescriptor.singleton<Options<TOptions>>(
         implementationFactory: (sp) => UnnamedOptionsManager<TOptions>(
@@ -63,7 +73,10 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ),
     );
 
-    return this;
+    return OptionsBuilder<TOptions>(
+      this,
+      name,
+    );
   }
 
   /// Registers an action used to configure a particular type of options.

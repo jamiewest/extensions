@@ -1,4 +1,4 @@
-import 'package:extensions/src/shared/disposable.dart';
+import 'package:extensions/src/primitives/disposable.dart';
 
 class FakeServiceImplementation implements FakeEveryService, Disposable {
   FakeServiceImplementation() : disposed = false;

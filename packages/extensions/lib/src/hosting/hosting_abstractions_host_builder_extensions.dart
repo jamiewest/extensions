@@ -1,4 +1,4 @@
-import '../shared/cancellation_token.dart';
+import '../primitives/cancellation_token.dart';
 
 import 'host.dart';
 import 'host_builder.dart';

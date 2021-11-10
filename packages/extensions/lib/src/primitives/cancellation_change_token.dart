@@ -1,5 +1,5 @@
-import '../shared/cancellation_token.dart';
-import '../shared/disposable.dart';
+import 'cancellation_token.dart';
+import 'disposable.dart';
 import 'change_token.dart';
 
 /// A [ChangeToken] implementation using [CancellationToken].

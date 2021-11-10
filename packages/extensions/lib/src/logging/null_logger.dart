@@ -1,4 +1,4 @@
-import '../shared/disposable.dart';
+import '../primitives/disposable.dart';
 import 'event_id.dart';
 import 'log_level.dart';
 import 'logger.dart';

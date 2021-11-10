@@ -3,7 +3,7 @@ import '../dependency_injection/service_provider_service_extensions.dart';
 import '../logging/logger_factory.dart';
 import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';
-import '../shared/cancellation_token.dart';
+import '../primitives/cancellation_token.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
 import 'host_environment.dart';

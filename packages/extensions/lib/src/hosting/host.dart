@@ -1,9 +1,9 @@
 import '../dependency_injection/service_provider.dart';
 import '../logging/logger.dart';
 import '../options/options.dart';
-import '../shared/async_disposable.dart';
-import '../shared/cancellation_token.dart';
-import '../shared/disposable.dart';
+import '../primitives/async_disposable.dart';
+import '../primitives/cancellation_token.dart';
+import '../primitives/disposable.dart';
 import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
 import 'host_application_lifetime.dart';

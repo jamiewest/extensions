@@ -6,7 +6,7 @@ import '../../logging/logger.dart';
 import '../../logging/logger_extensions.dart';
 import '../../logging/logger_factory.dart';
 import '../../options/options.dart';
-import '../../shared/cancellation_token.dart';
+import '../../primitives/cancellation_token.dart';
 import '../host_application_lifetime.dart';
 import '../host_environment.dart';
 import '../host_lifetime.dart';

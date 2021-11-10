@@ -22,6 +22,7 @@
 /// ```
 library configuration;
 
+export 'primitives.dart';
 export 'src/configuration/chained_builder_extensions.dart';
 export 'src/configuration/chained_configuration_provider.dart';
 export 'src/configuration/chained_configuration_source.dart';
@@ -45,7 +46,3 @@ export 'src/configuration/providers/command_line/command_line_configuration_prov
 export 'src/configuration/providers/command_line/command_line_configuration_source.dart';
 export 'src/configuration/stream_configuration_provider.dart';
 export 'src/configuration/stream_configuration_source.dart';
-
-export 'src/shared/async_disposable.dart';
-export 'src/shared/cancellation_token.dart';
-export 'src/shared/disposable.dart';

@@ -1,4 +1,4 @@
-import '../shared/cancellation_token.dart';
+import '../primitives/cancellation_token.dart';
 
 abstract class HostLifetime {
   /// Called at the start of `Host.start(cancellationToken)` which

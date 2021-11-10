@@ -18,6 +18,7 @@
 /// ```
 library dependency_injection;
 
+export 'primitives.dart';
 export 'src/dependency_injection/service_collection.dart';
 export 'src/dependency_injection/service_collection_descriptor_extensions.dart';
 export 'src/dependency_injection/service_collection_service_extensions.dart';
@@ -27,6 +28,3 @@ export 'src/dependency_injection/service_provider.dart';
 export 'src/dependency_injection/service_provider_factory.dart';
 export 'src/dependency_injection/service_provider_options.dart';
 export 'src/dependency_injection/service_provider_service_extensions.dart';
-export 'src/shared/async_disposable.dart';
-export 'src/shared/cancellation_token.dart';
-export 'src/shared/disposable.dart';

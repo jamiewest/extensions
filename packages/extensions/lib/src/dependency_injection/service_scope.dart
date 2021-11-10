@@ -1,4 +1,4 @@
-import '../shared/disposable.dart';
+import '../primitives/disposable.dart';
 import 'service_provider.dart';
 
 /// The [dispose()] method ends the scope lifetime. Once dispose

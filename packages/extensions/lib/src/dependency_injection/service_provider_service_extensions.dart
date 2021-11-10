@@ -1,3 +1,5 @@
+import '../../configuration.dart';
+import 'async_service_scope.dart';
 import 'service_provider.dart';
 import 'service_scope.dart';
 import 'service_scope_factory.dart';
@@ -22,4 +24,15 @@ extension ServiceProviderServiceExtensions on ServiceProvider {
   /// Creates a new [ServiceScope] that can be used to resolve scoped services.
   ServiceScope createScope() =>
       getRequiredService<ServiceScopeFactory>().createScope();
+
+  /// Creates a new [AsyncServiceScope] that can be used to resolve scoped
+  /// services.
+  AsyncDisposable createAsyncScope() => AsyncServiceScope(createScope());
+}
+
+/// Extension methods for getting services from a [ServiceScopeFactory].
+extension ServiceScopeFactoryExtensions on ServiceScopeFactory {
+  /// Creates a new [AsyncServiceScope] that can be used to resolve scoped
+  /// services.
+  AsyncDisposable createAsyncScope() => AsyncServiceScope(createScope());
 }

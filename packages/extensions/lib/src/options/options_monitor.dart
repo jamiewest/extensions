@@ -1,7 +1,7 @@
 import '../../options.dart';
 import '../primitives/change_token.dart';
 
-import '../shared/disposable.dart';
+import '../primitives/disposable.dart';
 
 typedef OnChangeListener<TOptions> = void Function(TOptions options,
     [String? name]);
