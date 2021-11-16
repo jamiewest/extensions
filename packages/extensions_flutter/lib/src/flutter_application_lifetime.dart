@@ -81,7 +81,7 @@ class _LifecycleRegister {
   }
 
   void notify() {
-    for (var callback in _callbacks) {
+    for (var callback in _callbacks.toList().reversed) {
       callback.call();
     }
   }

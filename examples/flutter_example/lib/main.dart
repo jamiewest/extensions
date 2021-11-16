@@ -37,7 +37,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final host = ref.watch(hostProvider);
+    final host = ref.read(hostProvider);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
