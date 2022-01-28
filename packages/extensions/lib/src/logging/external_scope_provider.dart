@@ -10,7 +10,10 @@ abstract class ExternalScopeProvider {
   /// Executes callback for each currently active scope objects in order
   /// of creation. All callbacks are guaranteed to be called inline from
   /// this method.
-  void forEachScope<TState>(ScopeCallback<TState> callback, TState state);
+  void forEachScope<TState>(
+    ScopeCallback<TState> callback,
+    TState state,
+  );
 
   /// Adds scope object to the list
   Disposable push(Object? state);

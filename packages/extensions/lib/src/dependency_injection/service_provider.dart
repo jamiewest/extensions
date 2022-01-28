@@ -396,9 +396,7 @@ class ServiceProviderEngineScope
     }
 
     if (_disposed) {
-      if (service is Disposable) {
-        service.dispose();
-      }
+      service.dispose();
     }
 
     _disposables ??= <Object>[];

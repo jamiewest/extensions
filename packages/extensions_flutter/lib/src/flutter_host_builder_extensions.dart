@@ -7,9 +7,9 @@ import 'flutter_lifetime_options.dart';
 
 extension FlutterHostBuilderExtensions on HostBuilder {
   HostBuilder useFlutterLifetime(
-    Widget app,
-    FlutterLifetimeOptions options,
-  ) {
+    Widget app, {
+    FlutterLifetimeOptions? options,
+  }) {
     configureServices((context, services) {
       services
         ..addSingleton<Widget>(implementationInstance: app)
@@ -20,13 +20,13 @@ extension FlutterHostBuilderExtensions on HostBuilder {
         )
         ..addSingleton<HostLifetime>(
           implementationFactory: (s) => FlutterLifetime(
-            app: s.getRequiredService<Widget>(),
-            options: options,
-            logger: s
-                .getRequiredService<LoggerFactory>()
-                .createLogger('FlutterHostedService'),
-            lifetime: s.getRequiredService<HostApplicationLifetime>(),
-          ),
+              app: s.getRequiredService<Widget>(),
+              options: options,
+              logger: s
+                  .getRequiredService<LoggerFactory>()
+                  .createLogger('Hosting.Lifetime'),
+              lifetime: s.getRequiredService<HostApplicationLifetime>(),
+              environment: s.getRequiredService<HostEnvironment>()),
         );
     });
     return this;
@@ -34,9 +34,12 @@ extension FlutterHostBuilderExtensions on HostBuilder {
 
   /// Enables Flutter support and builds and starts the host.
   Future<void> runFlutter(
-    Widget app,
-    FlutterLifetimeOptions options,
-    CancellationToken cancellationToken,
-  ) =>
-      useFlutterLifetime(app, options).build().run(cancellationToken);
+    Widget app, {
+    FlutterLifetimeOptions? options,
+    CancellationToken? cancellationToken,
+  }) =>
+      useFlutterLifetime(
+        app,
+        options: options,
+      ).build().run(cancellationToken);
 }

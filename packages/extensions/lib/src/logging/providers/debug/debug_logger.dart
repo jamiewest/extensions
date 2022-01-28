@@ -37,7 +37,7 @@ class DebugLogger implements Logger {
       return;
     }
 
-    var message = '${logLevel.toString()}: $formattedMessage';
+    var message = '${logLevel.name}: $formattedMessage';
 
     if (exception != null) {
       message = '$message\n\n$exception';

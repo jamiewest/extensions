@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:extensions/hosting.dart';
-import 'package:extensions/logging.dart';
 
 class FlutterApplicationLifetime extends ApplicationLifetime {
   final Logger _logger;

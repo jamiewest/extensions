@@ -1,92 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:extensions_flutter/extensions_flutter.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'connectivity_background_service.dart';
-
-final hostProvider = Provider(
-  (_) => Host.createDefaultBuilder()
-      .configureServices((context, services) {
-        services.addHostedService<ConnectivityBackgroundService>(
-          (services) => ConnectivityBackgroundService(
-            services
-                .getRequiredService<LoggerFactory>()
-                .createLogger('connectivity'),
-          ),
-        );
-      })
-      .configureAppConfiguration((context, configuration) {
-        configuration.addInMemoryCollection(
-          <String, String>{'test': 'value'}.entries,
-        );
-      })
-      .useFlutterLifetime(
-          const ProviderScope(child: MyApp()), FlutterLifetimeOptions())
-      .build(),
-);
-
-Future<void> main() async {
-  final hostContainer = ProviderContainer();
-  await hostContainer.read(hostProvider).run();
+class CounterManager {
+  CounterManager() : counter = ValueNotifier(0);
+  ValueNotifier<int> counter;
 }
 
-class MyApp extends ConsumerWidget {
+final host = Host.createDefaultBuilder()
+    .useFlutterLifetime(
+  const MyApp(),
+  FlutterLifetimeOptions(),
+)
+    .configureServices((context, services) {
+  services.addSingleton<CounterManager>(
+      implementationFactory: (_) => CounterManager());
+}).build();
+
+Future<void> main() async => await host.run();
+
+class MyApp extends StatelessWidget {
   const MyApp({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final host = ref.read(hostProvider);
+  Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(
-        title: 'Flutter Demo Home Page',
-        logger: host.services
-            .getRequiredService<LoggerFactory>()
-            .createLogger('test'),
-        config: host.services.getRequiredService<Configuration>(),
-      ),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage());
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({
-    Key? key,
-    required this.title,
-    required this.logger,
-    required this.config,
-  }) : super(key: key);
-  final String title;
-
-  final Logger logger;
-
-  final Configuration config;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    widget.logger.logInformation('ahahaha ${_counter.toString()}');
-    widget.logger.logCritical(widget.config['test']);
-    setState(() {
-      _counter++;
-    });
-  }
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final counter = host.services.getRequiredService<CounterManager>().counter;
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Test'),
       ),
       body: Center(
         child: Column(
@@ -95,15 +51,18 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            ValueListenableBuilder<int>(
+              valueListenable: counter,
+              builder: (BuildContext context, int value, Widget? child) => Text(
+                '${counter.value}',
+                style: Theme.of(context).textTheme.headline4,
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () => counter.value++,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

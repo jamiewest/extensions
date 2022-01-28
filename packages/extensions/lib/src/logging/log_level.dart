@@ -52,4 +52,9 @@ extension LogLevelExtensions on LogLevel {
         return 6;
     }
   }
+
+  String get name {
+    var s = toString().split('.');
+    return '${s.first}.${s.last[0].toUpperCase()}${s.last.substring(1)}';
+  }
 }

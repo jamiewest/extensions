@@ -1,6 +1,5 @@
 library hosting;
 
-// Bringing in all the things.
 export 'configuration.dart';
 export 'dependency_injection.dart';
 export 'logging.dart';
