@@ -9,7 +9,7 @@ class CounterManager {
 final host = Host.createDefaultBuilder()
     .useFlutterLifetime(
   const MyApp(),
-  FlutterLifetimeOptions(),
+  //FlutterLifetimeOptions(),
 )
     .configureServices((context, services) {
   services.addSingleton<CounterManager>(

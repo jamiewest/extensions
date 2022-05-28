@@ -28,3 +28,4 @@ export 'src/dependency_injection/service_provider.dart';
 export 'src/dependency_injection/service_provider_factory.dart';
 export 'src/dependency_injection/service_provider_options.dart';
 export 'src/dependency_injection/service_provider_service_extensions.dart';
+export 'src/dependency_injection/service_scope_factory.dart';

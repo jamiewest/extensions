@@ -13,6 +13,9 @@ export 'src/logging/logger_provider.dart';
 export 'src/logging/logging_builder.dart';
 export 'src/logging/logging_builder_extensions.dart';
 // Providers
+export 'src/logging/providers/console/console_logger.dart';
+export 'src/logging/providers/console/console_logger_factory_extensions.dart';
+export 'src/logging/providers/console/console_logger_provider.dart';
 export 'src/logging/providers/debug/debug_logger.dart';
 export 'src/logging/providers/debug/debug_logger_factory_extensions.dart';
 export 'src/logging/providers/debug/debug_logger_provider.dart';
