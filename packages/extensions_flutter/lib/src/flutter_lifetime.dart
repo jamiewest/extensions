@@ -42,18 +42,18 @@ class FlutterLifetime extends HostLifetime {
           () async {
             runApp(
               FlutterLifecycleObserver(
-                child: app,
                 lifetime: _lifetime,
+                child: app,
               ),
             );
           },
           (o, s) => _handleError,
         ) ??
-        Future.value(null);
+        Future.value();
   }
 
   @override
-  Future<void> stop(CancellationToken cancellationToken) => Future.value(null);
+  Future<void> stop(CancellationToken cancellationToken) => Future.value();
 
   /// Handles errors caught by the Flutter framework.
   ///

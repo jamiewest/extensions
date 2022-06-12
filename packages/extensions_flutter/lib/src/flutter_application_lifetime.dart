@@ -4,22 +4,22 @@ import 'package:extensions/hosting.dart';
 
 class FlutterApplicationLifetime extends ApplicationLifetime {
   final Logger _logger;
-  final _pausedSource = _LifecycleRegister();
-  final _resumedSource = _LifecycleRegister();
-  final _inactiveSource = _LifecycleRegister();
-  final _detachedSource = _LifecycleRegister();
+  final _pausedSource = LifecycleRegister();
+  final _resumedSource = LifecycleRegister();
+  final _inactiveSource = LifecycleRegister();
+  final _detachedSource = LifecycleRegister();
 
   FlutterApplicationLifetime(Logger logger)
       : _logger = logger,
         super(logger);
 
-  _LifecycleRegister get applicationPaused => _pausedSource;
+  LifecycleRegister get applicationPaused => _pausedSource;
 
-  _LifecycleRegister get applicationResumed => _resumedSource;
+  LifecycleRegister get applicationResumed => _resumedSource;
 
-  _LifecycleRegister get applicationInactive => _inactiveSource;
+  LifecycleRegister get applicationInactive => _inactiveSource;
 
-  _LifecycleRegister get applicationDetached => _detachedSource;
+  LifecycleRegister get applicationDetached => _detachedSource;
 
   void notifyPaused() {
     try {
@@ -65,7 +65,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
-  void _executeHandlers(_LifecycleRegister register) {
+  void _executeHandlers(LifecycleRegister register) {
     // Run the cancellation token callbacks
     register.notify();
   }
@@ -73,7 +73,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
 
 typedef LifeCycleCallback = void Function();
 
-class _LifecycleRegister {
+class LifecycleRegister {
   final HashSet<LifeCycleCallback> _callbacks = HashSet<LifeCycleCallback>();
   void register(LifeCycleCallback callback) {
     _callbacks.add(callback);
