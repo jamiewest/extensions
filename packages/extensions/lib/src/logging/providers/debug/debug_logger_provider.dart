@@ -1,5 +1,5 @@
-import '../../../../logging.dart';
-
+import '../../logger.dart';
+import '../../logger_provider.dart';
 import 'debug_logger.dart';
 
 /// The provider for the [DebugLogger].

@@ -6,6 +6,7 @@ import '../primitives/cancellation_token.dart';
 import '../primitives/disposable.dart';
 import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
+import 'host_application_builder.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
 import 'host_lifetime.dart';
@@ -151,4 +152,8 @@ class Host implements Disposable, AsyncDisposable {
     var builder = HostBuilder();
     return builder.configureDefaults(args);
   }
+
+  static HostApplicationBuilder createApplicationBuilder(
+          [List<String>? args]) =>
+      HostApplicationBuilder();
 }

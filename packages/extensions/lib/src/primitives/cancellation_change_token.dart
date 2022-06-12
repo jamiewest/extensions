@@ -21,13 +21,14 @@ class CancellationChangeToken implements ChangeToken {
 
   @override
   Disposable? registerChangeCallback(void Function(Object? state) callback,
-      [Object? state]) {
-    token.register((state) {
-      try {
-        callback(state);
-      } catch (e) {
-        _activeChangeCallbacks = false;
-      }
-    });
-  }
+          [Object? state]) =>
+      token.register(
+        (state) {
+          try {
+            callback(state);
+          } catch (e) {
+            _activeChangeCallbacks = false;
+          }
+        },
+      );
 }

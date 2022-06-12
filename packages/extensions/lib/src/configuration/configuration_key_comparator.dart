@@ -22,7 +22,7 @@ int configurationKeyComparator(String? x, String? y) {
       // Both are strings
       result = x.toLowerCase().compareTo(y.toLowerCase());
     } else if (xIsInt && yIsInt) {
-      result = value1! - value2!;
+      result = value1 - value2;
     } else {
       // Only one of them is int
       result = xIsInt ? -1 : 1;

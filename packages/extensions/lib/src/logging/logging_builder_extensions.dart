@@ -38,7 +38,7 @@ extension LoggingBuilderExtensions on LoggingBuilder {
 
   /// configure the `builder` with the [LoggerFactoryOptions].
   LoggingBuilder configure(ConfigureLoggerFactoryOptions action) {
-    services.configure(() => LoggerFactoryOptions(), action);
+    services.configure(LoggerFactoryOptions.new, action);
     return this;
   }
 }

@@ -18,7 +18,7 @@ void main() {
             implementationFactory: (sp) => FakeOptionsFactory(),
           )
           .configure<FakeOptions>(
-            () => FakeOptions(),
+            FakeOptions.new,
             (options) => options.message = 'Ignored',
           )
           .buildServiceProvider();

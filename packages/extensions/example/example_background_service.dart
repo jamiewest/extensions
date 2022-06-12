@@ -17,6 +17,6 @@ class MyBackgroundService extends BackgroundService {
   @override
   Future<void> execute(CancellationToken stoppingToken) {
     print('hmmmmm');
-    return Future.value(null);
+    return Future.value();
   }
 }

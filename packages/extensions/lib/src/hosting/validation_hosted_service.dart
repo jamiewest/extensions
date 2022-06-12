@@ -31,7 +31,7 @@ class ValidationHostedService implements HostedService {
       // throw AggregateException(exceptions);
     }
 
-    return Future.value(null);
+    return Future.value();
   }
 
   @override

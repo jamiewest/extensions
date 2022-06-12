@@ -139,7 +139,7 @@ mixin LoggerMixin on Logger {
     Logger logger,
     List<Exception>? exceptions,
   ) {
-    var _exceptions = <Exception>[];
+    var newExceptions = <Exception>[];
 
     try {
       if (logger.isEnabled(logLevel)) {
@@ -147,13 +147,13 @@ mixin LoggerMixin on Logger {
       }
     } on Exception catch (ex) {
       if (exceptions == null) {
-        _exceptions.add(ex);
+        newExceptions.add(ex);
       } else {
-        _exceptions = exceptions;
+        newExceptions = exceptions;
       }
     }
 
-    return Tuple2<bool, List<Exception>?>(true, _exceptions);
+    return Tuple2<bool, List<Exception>?>(true, newExceptions);
   }
 }
 

@@ -28,7 +28,7 @@ class CommandLineConfigurationProvider extends ConfigurationProvider
   /// Loads the configuration data from the command line args.
   @override
   void load() {
-    var _data = LinkedHashMap<String, String>(
+    var data = LinkedHashMap<String, String>(
       equals: (a, b) => a.toLowerCase() == b.toLowerCase(),
       hashCode: (k) => k.toLowerCase().hashCode,
     );
@@ -107,10 +107,10 @@ class CommandLineConfigurationProvider extends ConfigurationProvider
       }
       // Override value when key is duplicated.
       // So we always have the last argument win.
-      _data[key] = value;
+      data[key] = value;
     }
 
-    data = _data;
+    data = data;
   }
 
   LinkedHashMap<String, String> _getValidatedSwitchMappingsCopy(

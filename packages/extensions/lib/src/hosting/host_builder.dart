@@ -1,3 +1,5 @@
+import 'package:path/path.dart' as p;
+
 import '../../configuration.dart';
 import '../../dependency_injection.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
@@ -222,7 +224,7 @@ class HostBuilder {
           ),
         ),
       )
-      ..configure<HostOptions>(() => HostOptions(), (options) {
+      ..configure<HostOptions>(HostOptions.new, (options) {
         options.initialize(_hostConfiguration!);
       })
       ..addLogging();
@@ -246,4 +248,89 @@ class HostBuilder {
 
     _appServices!.getService<Configuration>();
   }
+}
+
+void populateServiceCollection(
+  ServiceCollection services,
+  HostBuilderContext hostBuilderContext,
+  HostEnvironment hostingEnvironment,
+  Configuration appConfiguration,
+  ServiceProvider Function() serviceProviderGetter,
+) {
+  services
+    ..addSingleton<HostEnvironment>(
+      implementationInstance: hostingEnvironment,
+    )
+    ..addSingleton<HostBuilderContext>(
+      implementationInstance: hostBuilderContext,
+    )
+    ..addSingleton<Configuration>(
+      implementationInstance: appConfiguration,
+    )
+    ..addSingleton<ApplicationLifetime>(
+      implementationFactory: (s) =>
+          s.getService<HostApplicationLifetime>() as ApplicationLifetime,
+    )
+    ..addSingleton<HostApplicationLifetime>(
+      implementationFactory: (s) => ApplicationLifetime(
+        s.getService<LoggerFactory>().createLogger('ApplicationLifetime'),
+      ),
+    )
+    ..addSingleton<HostLifetime>(implementationFactory: (s) => NullLifetime())
+    ..tryAdd(
+      ServiceDescriptor.singleton<Host>(
+        implementationFactory: (_) {
+          var appServices = serviceProviderGetter();
+
+          return Host(
+            appServices,
+            appServices.getRequiredService<HostApplicationLifetime>(),
+            appServices
+                .getRequiredService<LoggerFactory>()
+                .createLogger('Host'),
+            appServices.getRequiredService<HostLifetime>(),
+            appServices.getRequiredService<Options<HostOptions>>(),
+          );
+        },
+      ),
+    )
+    ..configure<HostOptions>(HostOptions.new, (options) {
+      options.initialize(hostBuilderContext.configuration!);
+    })
+    ..addLogging();
+}
+
+HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
+  var hostingEnvironment = HostingEnvironment()
+    ..applicationName = hostConfiguration[HostDefaults.applicationKey]
+    ..environmentName = hostConfiguration[HostDefaults.environmentKey] ??
+        Environments.production
+    ..contentRootPath = resolveContentRootPath(
+        hostConfiguration[HostDefaults.contentRootKey], 'AppContext.base');
+
+  if (hostingEnvironment.applicationName == null) {
+    // Set the application name to the current assembly name?
+  }
+
+  return hostingEnvironment;
+}
+
+String resolveContentRootPath(String? contentRootPath, String basePath) {
+  if (contentRootPath == null) {
+    return basePath;
+  }
+  if (p.isRootRelative(contentRootPath)) {
+    return contentRootPath;
+  }
+  return p.join(p.absolute(basePath), contentRootPath);
+}
+
+Host resolveHost(ServiceProvider serviceProvider) {
+  // resolve configuration explicitly once to mark it as resolved within the
+  // service provider, ensuring it will be properly disposed with the provider
+  serviceProvider.getService<Configuration>();
+
+  var host = serviceProvider.getRequiredService<Host>();
+
+  return host;
 }

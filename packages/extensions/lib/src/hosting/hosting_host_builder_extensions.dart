@@ -73,7 +73,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
               configureOptions) =>
       configureServices(
         (context, collection) => collection.configure<HostOptions>(
-          () => HostOptions(),
+          HostOptions.new,
           (h) => configureOptions(context, h),
         ),
       );

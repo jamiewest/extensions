@@ -8,10 +8,10 @@ import '../../null_scope.dart';
 /// A logger that writes messages in the debug output window only when a
 /// debugger is attached.
 class ConsoleLogger implements Logger {
-  final String _name;
+  final String loggerName;
 
   /// Initializes a new instance of the [ConsoleLogger] class.
-  ConsoleLogger(String name) : _name = name;
+  ConsoleLogger(String name) : loggerName = name;
 
   @override
   Disposable beginScope<TState>(TState state) => NullScope.instance;

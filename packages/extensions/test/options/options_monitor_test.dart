@@ -27,7 +27,7 @@ class OptionsMonitorTest {
               implementationFactory: (sp) => FakeOptionsFactory(),
             )
             .configure<FakeOptions>(
-              () => FakeOptions(),
+              FakeOptions.new,
               (options) => options.message = 'Ignored',
             )
             .buildServiceProvider();
@@ -41,7 +41,7 @@ class OptionsMonitorTest {
 
       test('CanClearNamedOptions', () {
         var services = ServiceCollection()
-          ..addOptions<FakeOptions>(() => FakeOptions())
+          ..addOptions<FakeOptions>(FakeOptions.new)
           ..addSingleton<ConfigureOptions<FakeOptions>>(
             implementationFactory: (sp) => _CountIncrement(this),
           );

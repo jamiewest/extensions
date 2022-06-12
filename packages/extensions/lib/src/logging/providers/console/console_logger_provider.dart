@@ -1,7 +1,5 @@
 import '../../../../logging.dart';
 
-import 'console_logger.dart';
-
 /// The provider for the [ConsoleLogger].
 class ConsoleLoggerProvider implements LoggerProvider {
   @override

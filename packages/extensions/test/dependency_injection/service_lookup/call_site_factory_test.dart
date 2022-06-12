@@ -1,5 +1,4 @@
 import 'package:extensions/hosting.dart';
-import 'package:extensions/src/dependency_injection/service_collection.dart';
 import 'package:test/test.dart';
 
 import '../fakes/fake_service.dart';

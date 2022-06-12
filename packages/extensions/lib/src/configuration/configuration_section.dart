@@ -48,8 +48,8 @@ class ConfigurationSection implements Configuration {
 
   /// Sets the value corresponding to a configuration key.
   @override
-  void operator []=(String key, dynamic value) {
-    _root[ConfigurationPath.combine([path, key])] = value as String;
+  void operator []=(String key, String? value) {
+    _root[ConfigurationPath.combine([path, key])] = value;
   }
 
   /// Gets a configuration sub-section with the specified key.

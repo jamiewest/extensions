@@ -1,6 +1,5 @@
 import '../../options.dart';
 
-
 typedef OnChangeListener<TOptions> = void Function(TOptions options,
     [String? name]);
 
@@ -29,9 +28,9 @@ class OptionsMonitor<TOptions> implements Disposable {
   }
 
   void _invokeChanged(String? name) {
-    var _name = name ?? Options.defaultName;
-    _cache.tryRemove(_name);
-    var options = get(_name);
+    var newName = name ?? Options.defaultName;
+    _cache.tryRemove(newName);
+    var options = get(newName);
     if (_onChange != null) {
       _onChange!.call(options, name);
     }
@@ -45,8 +44,8 @@ class OptionsMonitor<TOptions> implements Disposable {
 
   /// Returns a configured [TOptions] instance with the given [name].
   TOptions get(String? name) {
-    var _name = name ?? Options.defaultName;
-    return _cache.getOrAdd(_name, () => _factory.create(_name));
+    var newName = name ?? Options.defaultName;
+    return _cache.getOrAdd(newName, () => _factory.create(newName));
   }
 
   /// Registers a listener to be called whenever a named [TOptions] changes.

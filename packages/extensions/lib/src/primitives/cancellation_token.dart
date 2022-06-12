@@ -102,9 +102,9 @@ typedef CallbackRegistration = void Function(Object? state);
 
 class CancellationTokenRegistration extends Disposable {
   final int _id;
-  final _CancellationCallbackInfo? _node;
+  final CancellationCallbackInfo? _node;
 
-  CancellationTokenRegistration(int id, _CancellationCallbackInfo? node)
+  CancellationTokenRegistration(int id, CancellationCallbackInfo? node)
       : _id = id,
         _node = node;
 
@@ -154,7 +154,7 @@ class CancellationTokenSource extends Disposable {
 
   // Wether this [CancellationTokenSource] has been disposed.
   bool _disposed;
-  final List<_CancellationCallbackInfo> _registeredCallbacks;
+  final List<CancellationCallbackInfo> _registeredCallbacks;
 
   Registrations? _registrations;
 
@@ -163,7 +163,7 @@ class CancellationTokenSource extends Disposable {
   final int _notifyingCompleteState = 2;
 
   CancellationTokenSource([Duration? delay])
-      : _registeredCallbacks = <_CancellationCallbackInfo>[],
+      : _registeredCallbacks = <CancellationCallbackInfo>[],
         _state = 0,
         _disposed = false {
     if (delay != null) {
@@ -266,7 +266,7 @@ class CancellationTokenSource extends Disposable {
 
   CancellationTokenRegistration register(CancellationCallback callback,
       [Object? state]) {
-    final callbackInfo = _CancellationCallbackInfo(
+    final callbackInfo = CancellationCallbackInfo(
       id: _registrations!.nextAvailableId++,
       callback: callback,
       stateForCallback: state,
@@ -321,8 +321,8 @@ class LinkedNCancellationTokenSource extends CancellationTokenSource {
   }
 }
 
-class Registrations with ListMixin<_CancellationCallbackInfo> {
-  final List<_CancellationCallbackInfo> _nodes = <_CancellationCallbackInfo>[];
+class Registrations with ListMixin<CancellationCallbackInfo> {
+  final List<CancellationCallbackInfo> _nodes = <CancellationCallbackInfo>[];
 
   int nextAvailableId = 1;
 
@@ -332,7 +332,7 @@ class Registrations with ListMixin<_CancellationCallbackInfo> {
   /// The associated source.
   final CancellationTokenSource source;
 
-  bool unregister(int id, _CancellationCallbackInfo node) {
+  bool unregister(int id, CancellationCallbackInfo node) {
     if (id == 0) {
       return false;
     }
@@ -348,23 +348,23 @@ class Registrations with ListMixin<_CancellationCallbackInfo> {
   set length(int value) => _nodes.length = value;
 
   @override
-  _CancellationCallbackInfo operator [](int index) => _nodes[index];
+  CancellationCallbackInfo operator [](int index) => _nodes[index];
 
   @override
-  void operator []=(int index, _CancellationCallbackInfo value) =>
+  void operator []=(int index, CancellationCallbackInfo value) =>
       _nodes[index] = value;
 }
 
 typedef CancellationCallback = void Function(Object? state);
 
-class _CancellationCallbackInfo {
+class CancellationCallbackInfo {
   final Registrations registrations;
   final CancellationCallback _callback;
   final CancellationTokenSource? _cancellationTokenSource;
   final Object? _stateForCallback;
   final int id;
 
-  _CancellationCallbackInfo({
+  CancellationCallbackInfo({
     required this.id,
     required CancellationCallback callback,
     required this.registrations,

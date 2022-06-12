@@ -8,7 +8,7 @@ abstract class Configuration {
   String? operator [](String key);
 
   /// Sets a configuration value;
-  void operator []=(String key, dynamic value);
+  void operator []=(String key, String? value);
 
   /// Gets a configuration sub-section with the specified key.
   ///

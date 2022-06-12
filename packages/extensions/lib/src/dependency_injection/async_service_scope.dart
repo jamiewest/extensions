@@ -24,6 +24,6 @@ class AsyncServiceScope implements ServiceScope, AsyncDisposable {
     }
     _serviceScope.dispose();
 
-    return Future.value(null);
+    return Future.value();
   }
 }

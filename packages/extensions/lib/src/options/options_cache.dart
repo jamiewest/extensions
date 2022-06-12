@@ -19,14 +19,14 @@ class OptionsCache<TOptions> implements OptionsMonitorCache<TOptions> {
   /// with [createOptions].
   @override
   TOptions getOrAdd(String? name, CreateOptions<TOptions> createOptions) {
-    var _name = name ?? Options.defaultName;
-    return _cache.putIfAbsent(_name, () => createOptions.call());
+    var newName = name ?? Options.defaultName;
+    return _cache.putIfAbsent(newName, () => createOptions.call());
   }
 
   /// Gets a named options instance, if available.
   Tuple2<bool, TOptions> tryGetValue(String? name) {
     if (_cache.containsKey(name)) {
-      return Tuple2<bool, TOptions>(true, _cache[name]!);
+      return Tuple2<bool, TOptions>(true, _cache[name] as TOptions);
     }
     return Tuple2<bool, TOptions>(false, _factory.call());
   }

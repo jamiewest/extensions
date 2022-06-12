@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import '../primitives/async_disposable.dart';
 import '../primitives/cancellation_token.dart';
 import 'host.dart';
 import 'host_application_lifetime.dart';
@@ -31,11 +30,7 @@ extension HostingAbstractionsHostExtensions on Host {
       await start(token);
       await waitForShutdown(token);
     } finally {
-      if (this is AsyncDisposable) {
-        await disposeAsync();
-      } else {
-        dispose();
-      }
+      await disposeAsync();
     }
   }
 

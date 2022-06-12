@@ -18,7 +18,8 @@ export 'src/hosting/host_lifetime.dart';
 export 'src/hosting/hosted_service.dart';
 export 'src/hosting/hosting_abstractions_host_builder_extensions.dart';
 export 'src/hosting/hosting_abstractions_host_extensions.dart';
-export 'src/hosting/hosting_host_builder_extensions.dart';
+export 'src/hosting/hosting_host_builder_extensions.dart'
+    show HostingHostBuilderExtensions;
 export 'src/hosting/internal/application_lifetime.dart';
 export 'src/hosting/internal/hosting_environment.dart';
 export 'src/hosting/service_collection_hosted_service_extensions.dart';

@@ -57,7 +57,7 @@ extension FilterLoggingBuilderExtensions on LoggingBuilder {
     ConfigureOptionsAction1 configure,
   ) {
     services.configure<LoggerFilterOptions>(
-      () => LoggerFilterOptions(),
+      LoggerFilterOptions.new,
       (options) => configure(options),
     );
     return this;

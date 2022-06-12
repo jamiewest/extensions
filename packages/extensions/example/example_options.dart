@@ -7,12 +7,12 @@ Future<void> main(List<String> args) async =>
           (context, services) {
             services
               ..configure<MyOptions>(
-                () => MyOptions(),
+                MyOptions.new,
                 (options) => options.option = 'Ahahaha',
                 name: 'custom_options',
               )
               ..configure<MyOptions>(
-                () => MyOptions(),
+                MyOptions.new,
                 (options) => options.option = 'Bahahaha',
                 name: 'custom_options1',
               )
@@ -48,9 +48,9 @@ class MyService extends HostedService {
   Future<void> start(CancellationToken cancellationToken) {
     print(options.get('custom_options')?.option);
     print(options.get('custom_options1')?.option);
-    return Future.value(null);
+    return Future.value();
   }
 
   @override
-  Future<void> stop(CancellationToken cancellationToken) => Future.value(null);
+  Future<void> stop(CancellationToken cancellationToken) => Future.value();
 }

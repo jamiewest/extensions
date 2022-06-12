@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import '../../../hosting.dart';
 import '../../logging/logger.dart';
 import '../../logging/logger_extensions.dart';
 import '../../logging/logger_factory.dart';
@@ -77,7 +76,7 @@ class ConsoleLifetime extends HostLifetime {
       exit(0);
     });
 
-    return Future.value(null);
+    return Future.value();
   }
 
   void _onApplicationStarted() {

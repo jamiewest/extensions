@@ -1,5 +1,4 @@
 import '../../dependency_injection.dart';
-import '../dependency_injection/service_collection.dart';
 import '../options/options_monitor.dart';
 import '../options/options_service_collection_extensions.dart';
 import 'log_level.dart';
@@ -24,7 +23,7 @@ class LoggingBuilder {
 extension LoggingServiceCollectionExtensions on ServiceCollection {
   /// Adds logging services to the specified [ServiceCollection].
   ServiceCollection addLogging([ConfigureLoggingBuilder? configure]) {
-    this.configure<LoggerFilterOptions>(() => LoggerFilterOptions(), (options) {
+    this.configure<LoggerFilterOptions>(LoggerFilterOptions.new, (options) {
       options.minLevel = LogLevel.information;
     });
 

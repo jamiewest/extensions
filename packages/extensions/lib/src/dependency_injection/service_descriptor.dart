@@ -88,22 +88,22 @@ class ServiceDescriptor {
 
   @override
   String toString() {
-    String? _lifetime =
+    String? newlifetime =
         // ignore: lines_longer_than_80_chars
         'ServiceType: ${serviceType.toString()} Lifetime: ${lifetime.toString()} ';
 
     if (implementationType != null) {
       // ignore: lines_longer_than_80_chars
-      return '${_lifetime}ImplementationType: ${implementationType.toString()}';
+      return '${newlifetime}ImplementationType: ${implementationType.toString()}';
     }
 
     if (implementationFactory != null) {
       // ignore: lines_longer_than_80_chars
-      return '${_lifetime}ImplementationFactory: ${implementationFactory?.toString()}';
+      return '${newlifetime}ImplementationFactory: ${implementationFactory?.toString()}';
     }
 
     // ignore: lines_longer_than_80_chars
-    return '${_lifetime}ImplementationInstance: ${implementationInstance.toString()}';
+    return '${newlifetime}ImplementationInstance: ${implementationInstance.toString()}';
   }
 
   Type? getImplementationType() {

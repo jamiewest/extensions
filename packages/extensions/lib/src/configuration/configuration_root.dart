@@ -41,7 +41,7 @@ class ConfigurationRoot implements Configuration, Disposable {
 
   /// Sets the value corresponding to a configuration key.
   @override
-  void operator []=(String key, dynamic value) {
+  void operator []=(String key, String? value) {
     if (_providers.isEmpty) {
       throw Exception('SR.Error_NoSources');
     }
@@ -105,8 +105,8 @@ class ConfigurationRoot implements Configuration, Disposable {
       if (value[0] as bool) {
         return value[1] as String;
       }
-      return null;
     }
+    return null;
   }
 
   static void setConfiguration(

@@ -17,12 +17,12 @@ class OptionsManager<TOptions>
 
   @override
   TOptions get(String? name) {
-    var _name = name ?? Options.defaultName;
-    var x = _cache.tryGetValue(_name);
+    var newName = name ?? Options.defaultName;
+    var x = _cache.tryGetValue(newName);
 
     if (!x.item1) {
       var localFactory = _factory;
-      var localName = _name;
+      var localName = newName;
       var options = _cache.getOrAdd(name, () => localFactory.create(localName));
       return options;
     }

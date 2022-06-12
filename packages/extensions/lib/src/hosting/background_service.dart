@@ -41,7 +41,7 @@ abstract class BackgroundService implements HostedService, Disposable {
     }
 
     // Otherwise it's running
-    return Future.value(null);
+    return Future.value();
   }
 
   /// Triggered when the application host is performing a graceful shutdown.
@@ -49,7 +49,7 @@ abstract class BackgroundService implements HostedService, Disposable {
   Future<void> stop(CancellationToken cancellationToken) async {
     // Stop called without start
     if (_executeOperation == null) {
-      return Future.value(null);
+      return Future.value();
     }
 
     try {
