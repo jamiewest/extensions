@@ -1,7 +1,6 @@
 import '../configuration/configuration_manager.dart';
 import 'host.dart';
 import 'host_application_builder.dart';
-import 'host_defaults.dart';
 
 /// Settings for constructing an [HostApplicationBuilder].
 class HostApplicationBuilderSettings {
@@ -18,7 +17,7 @@ class HostApplicationBuilderSettings {
 
   /// Initial configuration sources to be added to the
   /// [HostApplicationBuilder.configuration]. These sources can influence
-  /// the [HostApplicationBuilder.environment] through the use of [HostDefaults]
+  /// the [HostApplicationBuilder.environment] through the use of 'HostDefaults'
   /// keys. Disposing the built [Host] disposes the [ConfigurationManager].
   ConfigurationManager? configuration;
 

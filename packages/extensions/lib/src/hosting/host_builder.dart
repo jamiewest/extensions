@@ -3,7 +3,6 @@ import 'package:path/path.dart' as p;
 import '../../configuration.dart';
 import '../../dependency_injection.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
-import '../logging/logger.dart';
 import '../logging/logger_factory.dart';
 import '../logging/logging_builder.dart';
 import '../options/options.dart';
@@ -12,7 +11,7 @@ import 'environments.dart';
 import 'host.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder_context.dart';
-import 'host_defaults.dart';
+import 'host_defaults.dart' as host_defaults;
 import 'host_environment.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
@@ -146,16 +145,24 @@ class HostBuilder {
     }
     _hostBuilt = true;
 
-    _buildHostConfiguration();
-    _createHostingEnvironment();
-    _createHostBuilderContext();
-    _buildAppConfiguration();
-    _createServiceProvider();
+    _initializeHostConfiguration();
+    _initializeHostingEnvironment();
+    _initializeHostBuilderContext();
+    _initializeAppConfiguration();
+    _initializeServiceProvider();
 
-    return _appServices?.getRequiredService<Host>() as Host;
+    // _buildHostConfiguration();
+    // _createHostingEnvironment();
+    // _createHostBuilderContext();
+    // _buildAppConfiguration();
+    // _createServiceProvider();
+
+    return resolveHost(_appServices!);
+
+    //return _appServices?.getRequiredService<Host>() as Host;
   }
 
-  void _buildHostConfiguration() {
+  void _initializeHostConfiguration() {
     // Make sure there's some default storage since there are
     // no default providers
     var configBuilder = ConfigurationBuilder().addInMemoryCollection();
@@ -166,21 +173,19 @@ class HostBuilder {
     _hostConfiguration = configBuilder.build();
   }
 
-  void _createHostingEnvironment() {
-    _hostingEnvironment = HostingEnvironment()
-      ..applicationName = _hostConfiguration?[HostDefaults.applicationKey]
-      ..environmentName = _hostConfiguration?[HostDefaults.environmentKey] ??
-          Environments.production;
+  void _initializeHostingEnvironment() {
+    _hostingEnvironment = createHostingEnvironment(_hostConfiguration!);
   }
 
-  void _createHostBuilderContext() {
+  void _initializeHostBuilderContext() {
     _hostBuilderContext = HostBuilderContext(properties)
-      ..hostingEnvironment = _hostingEnvironment
-      ..configuration = _hostConfiguration;
+      ..hostingEnvironment = _hostingEnvironment!
+      ..configuration = _hostConfiguration!;
   }
 
-  void _buildAppConfiguration() {
-    var configBuilder = ConfigurationBuilder();
+  void _initializeAppConfiguration() {
+    var configBuilder = ConfigurationBuilder()
+      ..addConfiguration(_hostConfiguration!, true);
 
     for (var buildAction in _configureAppConfigActions) {
       buildAction(_hostBuilderContext!, configBuilder);
@@ -190,44 +195,16 @@ class HostBuilder {
     _hostBuilderContext!.configuration = _appConfiguration;
   }
 
-  void _createServiceProvider() {
-    var services = ServiceCollection()
-      ..addSingleton<HostEnvironment>(
-        implementationInstance: _hostingEnvironment,
-      )
-      ..addSingleton<HostBuilderContext>(
-        implementationInstance: _hostBuilderContext,
-      )
-      ..addSingleton<Configuration>(
-        implementationInstance: _appConfiguration,
-      )
-      ..addSingleton<ApplicationLifetime>(
-        implementationFactory: (s) =>
-            s.getService<HostApplicationLifetime>() as ApplicationLifetime,
-      )
-      ..addSingleton<HostApplicationLifetime>(
-        implementationFactory: (s) => ApplicationLifetime(
-          s.getService<LoggerFactory>().createLogger('ApplicationLifetime'),
-        ),
-      )
-      ..addSingleton<HostLifetime>(implementationFactory: (s) => NullLifetime())
-      ..tryAdd(
-        ServiceDescriptor.singleton<Host>(
-          implementationFactory: (_) => Host(
-            _appServices as ServiceProvider,
-            _appServices!.getRequiredService<HostApplicationLifetime>(),
-            _appServices
-                ?.getRequiredService<LoggerFactory>()
-                .createLogger('Host') as Logger,
-            _appServices?.getRequiredService<HostLifetime>() as HostLifetime,
-            _appServices!.getRequiredService<Options<HostOptions>>(),
-          ),
-        ),
-      )
-      ..configure<HostOptions>(HostOptions.new, (options) {
-        options.initialize(_hostConfiguration!);
-      })
-      ..addLogging();
+  void _initializeServiceProvider() {
+    var services = ServiceCollection();
+
+    populateServiceCollection(
+      services,
+      _hostBuilderContext!,
+      _hostingEnvironment!,
+      _appConfiguration!,
+      () => _appServices!,
+    );
 
     for (var configureServicesAction in _configureServicesActions) {
       configureServicesAction(_hostBuilderContext!, services);
@@ -245,8 +222,6 @@ class HostBuilder {
 
     _appServices =
         _serviceProviderFactory?.createServiceProvider(containerBuilder!);
-
-    _appServices!.getService<Configuration>();
   }
 }
 
@@ -302,15 +277,14 @@ void populateServiceCollection(
 
 HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
   var hostingEnvironment = HostingEnvironment()
-    ..applicationName = hostConfiguration[HostDefaults.applicationKey]
-    ..environmentName = hostConfiguration[HostDefaults.environmentKey] ??
+    ..applicationName =
+        hostConfiguration[host_defaults.applicationKey] ??= 'application'
+    ..environmentName = hostConfiguration[host_defaults.environmentKey] ??
         Environments.production
     ..contentRootPath = resolveContentRootPath(
-        hostConfiguration[HostDefaults.contentRootKey], 'AppContext.base');
-
-  if (hostingEnvironment.applicationName == null) {
-    // Set the application name to the current assembly name?
-  }
+      hostConfiguration[host_defaults.contentRootKey],
+      p.current,
+    );
 
   return hostingEnvironment;
 }

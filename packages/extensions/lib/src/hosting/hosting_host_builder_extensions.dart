@@ -8,7 +8,7 @@ import '../options/options_service_collection_extensions.dart';
 import 'host.dart';
 import 'host_builder.dart';
 import 'host_builder_context.dart';
-import 'host_defaults.dart';
+import 'host_defaults.dart' as host_defaults;
 import 'host_options.dart';
 
 typedef ConfigureDefaultServiceProvider = void Function(
@@ -25,7 +25,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
         (configBuilder) => configBuilder.addInMemoryCollection(
           [
             MapEntry<String, String>(
-              HostDefaults.environmentKey,
+              host_defaults.environmentKey,
               environment,
             )
           ],
@@ -39,7 +39,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
   HostBuilder useContentRoot(String contentRoot) => configureHostConfiguration(
         (configBuilder) => configBuilder.addInMemoryCollection([
           MapEntry<String, String>(
-            HostDefaults.contentRootKey,
+            host_defaults.contentRootKey,
             contentRoot,
           )
         ]),

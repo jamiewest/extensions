@@ -9,7 +9,7 @@ import '../options/options_service_collection_extensions.dart';
 import '../primitives/cancellation_token.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
-import 'host_defaults.dart';
+import 'host_defaults.dart' as host_defaults;
 import 'host_environment.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
@@ -53,7 +53,7 @@ void applyDefaultHostConfiguration(
   List<String>? args,
 ) {
   hostConfigBuilder.addInMemoryCollection(
-    [MapEntry<String, String>(HostDefaults.contentRootKey, '')],
+    [MapEntry<String, String>(host_defaults.contentRootKey, '')],
   );
 
   // hostConfigBuilder.AddEnvironmentVariables(prefix: "DOTNET_");

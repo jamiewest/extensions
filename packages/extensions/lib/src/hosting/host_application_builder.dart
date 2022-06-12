@@ -9,7 +9,7 @@ import 'host.dart';
 import 'host_application_builder_settings.dart';
 import 'host_builder.dart';
 import 'host_builder_context.dart';
-import 'host_defaults.dart';
+import 'host_defaults.dart' as host_defaults;
 import 'host_environment.dart';
 import 'hosting_host_builder_extensions_io.dart';
 import 'internal/configure_container_adapter.dart';
@@ -44,20 +44,20 @@ class HostApplicationBuilder {
     if (appSettings.applicationName != null) {
       optionList ??= <MapEntry<String, String>>[];
       optionList.add(
-        MapEntry(HostDefaults.applicationKey, appSettings.applicationName!),
+        MapEntry(host_defaults.applicationKey, appSettings.applicationName!),
       );
     }
     if (appSettings.environmentName != null) {
       optionList ??= <MapEntry<String, String>>[];
       optionList.add(
-        MapEntry(HostDefaults.environmentKey, appSettings.environmentName!),
+        MapEntry(host_defaults.environmentKey, appSettings.environmentName!),
       );
     }
     if (appSettings.configurationRootPath != null) {
       optionList ??= <MapEntry<String, String>>[];
       optionList.add(
         MapEntry(
-            HostDefaults.contentRootKey, appSettings.configurationRootPath!),
+            host_defaults.contentRootKey, appSettings.configurationRootPath!),
       );
     }
     if (optionList != null) {
@@ -148,8 +148,8 @@ class HostBuilderAdapter implements HostBuilder {
     var config = _hostApplicationBuilder.configuration;
 
     if (_configureHostConfigActions.isNotEmpty) {
-      var previousApplicationName = config[HostDefaults.applicationKey];
-      var previousEnvironment = config[HostDefaults.environmentKey];
+      var previousApplicationName = config[host_defaults.applicationKey];
+      var previousEnvironment = config[host_defaults.environmentKey];
       //var previousContentRootConfig = config[HostDefaults.contentRootKey];
       //var previousContentRootPath = _hostApplicationBuilder
       //    ._hostBuilderContext.hostingEnvironment?.contentRootPath;
@@ -158,10 +158,10 @@ class HostBuilderAdapter implements HostBuilder {
         configureHostAction(config);
       }
 
-      if (previousApplicationName != config[HostDefaults.applicationKey]) {
+      if (previousApplicationName != config[host_defaults.applicationKey]) {
         // throw error about application name change not supported
       }
-      if (previousEnvironment != config[HostDefaults.environmentKey]) {
+      if (previousEnvironment != config[host_defaults.environmentKey]) {
         // throw error about environment change not supported
       }
       // var currentContentRootConfig = config[HostDefaults.contentRootKey];
