@@ -7,22 +7,32 @@ import 'service_call_site.dart';
 import 'service_provider_call_site.dart';
 import 'service_scope_factory_call_site.dart';
 
-class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type> {
+class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
   final Map<Type, Type> _scopedServices = <Type, Type>{};
 
   void validateCallSite(ServiceCallSite callSite) {
     var scoped = visitCallSite(callSite, CallSiteValidatorState());
-    _scopedServices[callSite.serviceType] = scoped;
+    if (scoped != null) {
+      _scopedServices[callSite.serviceType] = scoped;
+    }
   }
 
   void validateResolution(
     Type serviceType,
     ServiceScope scope,
     ServiceScope rootScope,
-  ) {}
+  ) {
+    if (scope == rootScope && _scopedServices.containsKey(serviceType)) {
+      var scopedService = _scopedServices[serviceType];
+      if (serviceType == scopedService) {
+        throw Exception('DirectScopedResolvedFromRootException');
+      }
+      throw Exception('ScopedResolvedFromRootException');
+    }
+  }
 
   @override
-  Type visitIterable(
+  Type? visitIterable(
     IterableCallSite iterableCallSite,
     CallSiteValidatorState argument,
   ) {
@@ -32,11 +42,11 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type> {
       result ??= scoped;
     }
 
-    return result!;
+    return result;
   }
 
   @override
-  Type visitRootCache(
+  Type? visitRootCache(
     ServiceCallSite callSite,
     CallSiteValidatorState argument,
   ) {
@@ -45,7 +55,7 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type> {
   }
 
   @override
-  Type visitScopeCache(
+  Type? visitScopeCache(
     ServiceCallSite callSite,
     CallSiteValidatorState argument,
   ) {
@@ -58,31 +68,28 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type> {
   }
 
   @override
-  Type visitConstant(
+  Type? visitConstant(
     ConstantCallSite constantCallSite,
     CallSiteValidatorState argument,
-  ) {
-    throw UnimplementedError();
-  }
+  ) =>
+      null;
 
   @override
-  Type visitFactory(
+  Type? visitFactory(
     FactoryCallSite factoryCallSite,
     CallSiteValidatorState argument,
-  ) {
-    throw UnimplementedError();
-  }
+  ) =>
+      null;
 
   @override
-  Type visitServiceProvider(
+  Type? visitServiceProvider(
     ServiceProviderCallSite serviceProviderCallSite,
     CallSiteValidatorState argument,
-  ) {
-    throw UnimplementedError();
-  }
+  ) =>
+      null;
 
   @override
-  Type visitServiceScopeFactory(
+  Type? visitServiceScopeFactory(
     ServiceScopeFactoryCallSite serviceScopeFactoryCallSite,
     CallSiteValidatorState argument,
   ) {

@@ -255,7 +255,8 @@ class HostBuilderAdapter implements HostBuilder {
   }
 
   @override
-  Map get properties => _hostApplicationBuilder._hostBuilderContext.properties;
+  Map<Object, Object> get properties =>
+      _hostApplicationBuilder._hostBuilderContext.properties;
 }
 
 class _LoggingBuilder implements LoggingBuilder {

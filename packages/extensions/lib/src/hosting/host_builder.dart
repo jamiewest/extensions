@@ -65,10 +65,11 @@ class HostBuilder {
   HostBuilderContext? _hostBuilderContext;
   HostEnvironment? _hostingEnvironment;
   ServiceProvider? _appServices;
+  final Map<Object, Object> _properties = <Object, Object>{};
 
   /// A central location for sharing state between components during
   /// the host building process.
-  Map<dynamic, dynamic> get properties => <dynamic, dynamic>{};
+  Map<Object, Object> get properties => _properties;
 
   /// Set up the configuration for the builder itself. This will be used to
   /// initialize the [HostEnvironment] for use later in the build process.
@@ -113,7 +114,7 @@ class HostBuilder {
       _serviceProviderFactory =
           ServiceFactoryAdapter<TContainerBuilder>(implementation);
     } else {
-      if (factory != null && _hostBuilderContext != null) {
+      if (factory != null) {
         _serviceProviderFactory = ServiceFactoryAdapter.builder(
           () => _hostBuilderContext!,
           factory,
@@ -151,15 +152,7 @@ class HostBuilder {
     _initializeAppConfiguration();
     _initializeServiceProvider();
 
-    // _buildHostConfiguration();
-    // _createHostingEnvironment();
-    // _createHostBuilderContext();
-    // _buildAppConfiguration();
-    // _createServiceProvider();
-
     return resolveHost(_appServices!);
-
-    //return _appServices?.getRequiredService<Host>() as Host;
   }
 
   void _initializeHostConfiguration() {
@@ -233,6 +226,9 @@ void populateServiceCollection(
   ServiceProvider Function() serviceProviderGetter,
 ) {
   services
+    ..addSingleton<HostingEnvironment>(
+      implementationInstance: hostingEnvironment,
+    )
     ..addSingleton<HostEnvironment>(
       implementationInstance: hostingEnvironment,
     )

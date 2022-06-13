@@ -5,10 +5,9 @@ import 'host_environment.dart';
 /// Context containing the common services on the [Host]. Some
 /// properties may be null until set by the [Host].
 class HostBuilderContext {
-  final Map<dynamic, dynamic> _properties;
+  final Map<Object, Object> _properties;
 
-  HostBuilderContext(Map<dynamic, dynamic> properties)
-      : _properties = properties;
+  HostBuilderContext(Map<Object, Object> properties) : _properties = properties;
 
   /// The [HostEnvironment] initialized by the [Host].
   HostEnvironment? hostingEnvironment;
@@ -19,5 +18,5 @@ class HostBuilderContext {
 
   /// A central location for sharing state between components
   /// during the host building process.
-  Map<dynamic, dynamic> get properties => _properties;
+  Map<Object, Object> get properties => _properties;
 }
