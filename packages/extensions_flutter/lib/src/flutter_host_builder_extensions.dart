@@ -1,9 +1,8 @@
 import 'package:extensions/hosting.dart';
 import 'package:flutter/widgets.dart';
 
-import 'flutter_application_lifetime.dart';
-import 'flutter_lifetime.dart';
 import 'flutter_lifetime_options.dart';
+import 'flutter_service_collection_extensions.dart';
 
 extension FlutterHostBuilderExtensions on HostBuilder {
   HostBuilder useFlutterLifetime(
@@ -11,23 +10,7 @@ extension FlutterHostBuilderExtensions on HostBuilder {
     FlutterLifetimeOptions? options,
   }) {
     configureServices((context, services) {
-      services
-        ..addSingleton<Widget>(implementationInstance: app)
-        ..addSingleton<HostApplicationLifetime>(
-          implementationFactory: (s) => FlutterApplicationLifetime(
-            s.getService<LoggerFactory>().createLogger('ApplicationLifetime'),
-          ),
-        )
-        ..addSingleton<HostLifetime>(
-          implementationFactory: (s) => FlutterLifetime(
-              app: s.getRequiredService<Widget>(),
-              options: options,
-              logger: s
-                  .getRequiredService<LoggerFactory>()
-                  .createLogger('Hosting.Lifetime'),
-              lifetime: s.getRequiredService<HostApplicationLifetime>(),
-              environment: s.getRequiredService<HostEnvironment>()),
-        );
+      services.addFlutter(app, options: options);
     });
     return this;
   }

@@ -6,15 +6,24 @@ class CounterManager {
   ValueNotifier<int> counter;
 }
 
-final host = Host.createDefaultBuilder()
-    .useFlutterLifetime(
-  const MyApp(),
-  //FlutterLifetimeOptions(),
-)
-    .configureServices((context, services) {
-  services.addSingleton<CounterManager>(
-      implementationFactory: (_) => CounterManager());
-}).build();
+final builder = Host.createApplicationBuilder()
+  //..environment.applicationName = 'AppExample'
+  ..services.addFlutter(const MyApp())
+  ..services.addSingleton<CounterManager>(
+    implementationInstance: CounterManager(),
+  );
+
+final host = builder.build();
+
+// final host = Host.createDefaultBuilder()
+//     .useFlutterLifetime(
+//   const MyApp(),
+//   //FlutterLifetimeOptions(),
+// )
+//     .configureServices((context, services) {
+//   services.addSingleton<CounterManager>(
+//       implementationFactory: (_) => CounterManager());
+// }).build();
 
 Future<void> main() async => await host.run();
 
