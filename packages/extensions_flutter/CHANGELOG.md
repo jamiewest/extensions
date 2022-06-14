@@ -1,3 +1,7 @@
+## 0.3.4
+
+* More updates.
+
 ## 0.3.3
 
 * More updates.
