@@ -1,3 +1,7 @@
+## 0.3.6
+
+* Downgrading `async` package.
+
 ## 0.3.5
 
 * Bug fixes and updates.
