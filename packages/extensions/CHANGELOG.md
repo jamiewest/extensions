@@ -1,18 +1,22 @@
+## 0.3.5
+
+* Bug fixes and updates.
+
 ## 0.3.4
 
-* Still pushing main a lot, getting a bit more stable but needs tests.
+* Bug fixes and updates.
 
 ## 0.3.3
 
-* More updates.
+* Bug fixes and updates.
 
 ## 0.3.2
 
-* Updates.
+* Bug fixes and updates.
 
 ## 0.3.1
 
-* Updates.
+* Bug fixes and updates.
 
 ## 0.3.0
 

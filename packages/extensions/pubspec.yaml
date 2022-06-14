@@ -1,5 +1,5 @@
 name: extensions
-version: 0.3.4
+version: 0.3.5
 description: >-
   A set of APIs for commonly used programming patterns and utilities, 
   such as dependency injection, logging, and configuration.
@@ -12,11 +12,11 @@ environment:
 dependencies:
   async: ^2.9.0
   collection: ^1.16.0
-  path: ^1.8.2
+  path: ^1.8.1
   tuple: ^2.0.0
   uuid: ^3.0.6
   watcher: ^1.0.1
 
 dev_dependencies:
   lints: ^2.0.0
-  test: ^1.21.1
+  test: ^1.16.1
