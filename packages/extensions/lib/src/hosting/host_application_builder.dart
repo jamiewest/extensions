@@ -70,6 +70,8 @@ class HostApplicationBuilder {
       ..hostingEnvironment = hostingEnvironment
       ..configuration = configuration;
 
+    _environment = hostingEnvironment;
+
     populateServiceCollection(
       services,
       _hostBuilderContext,

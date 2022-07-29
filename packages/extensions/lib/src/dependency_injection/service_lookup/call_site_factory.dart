@@ -86,10 +86,18 @@ class CallSiteFactory implements ServiceProviderIsService {
     bool isIterable,
   ) {
     callSiteChain.checkCircularDependency(serviceType);
+    ServiceCallSite? callSite;
 
-    var callSite = isIterable
-        ? tryCreateIterable(serviceType, callSiteChain)
-        : _tryCreateExact(serviceType, callSiteChain);
+    if (isIterable) {
+      callSite = tryCreateIterable(serviceType, callSiteChain);
+    } else {
+      callSite = _tryCreateExact(serviceType, callSiteChain) ??
+          tryCreateIterable(serviceType, callSiteChain);
+    }
+
+    // var callSite = isIterable
+    //     ? tryCreateIterable(serviceType, callSiteChain)
+    //     : _tryCreateExact(serviceType, callSiteChain);
 
     return callSite;
   }

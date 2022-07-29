@@ -24,7 +24,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     ImplementationFactory<TService> implementationFactory,
   ) {
     var descriptor = ServiceDescriptor.transient<TService>(
-      implementationFactory: implementationFactory,
+      implementationFactory,
     );
     tryAdd(descriptor);
   }
@@ -36,7 +36,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     ImplementationFactory<TService> implementationFactory,
   ) {
     var descriptor = ServiceDescriptor.scoped<TService>(
-      implementationFactory: implementationFactory,
+      implementationFactory,
     );
     tryAdd(descriptor);
   }

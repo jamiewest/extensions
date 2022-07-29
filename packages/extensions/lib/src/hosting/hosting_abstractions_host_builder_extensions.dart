@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:cli';
+
 import '../primitives/cancellation_token.dart';
 
 import 'host.dart';
@@ -13,9 +17,8 @@ extension HostingAbstractionsHostBuilderExtensions on HostBuilder {
     return host;
   }
 
-  void startSync({
+  Host startSync({
     CancellationToken? cancellationToken,
-  }) {
-    start(cancellationToken: cancellationToken);
-  }
+  }) =>
+      waitFor(start(cancellationToken: cancellationToken));
 }

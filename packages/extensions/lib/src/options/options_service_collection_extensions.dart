@@ -38,7 +38,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
 
     tryAdd(
       ServiceDescriptor.scoped<OptionsSnapshot<TOptions>>(
-        implementationFactory: (sp) => OptionsManager<TOptions>(
+        (sp) => OptionsManager<TOptions>(
           instance,
           sp.getRequiredService<OptionsFactory<TOptions>>(),
         ),
@@ -57,7 +57,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
 
     tryAdd(
       ServiceDescriptor.transient<OptionsFactory<TOptions>>(
-        implementationFactory: (sp) => OptionsFactory<TOptions>(
+        (sp) => OptionsFactory<TOptions>(
           instance,
           setups: sp.getServices<ConfigureOptions<TOptions>>(),
           postConfigureOptions:

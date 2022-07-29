@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 class CallSiteChain {
   final Map<Type, ChainItemInfo> _callSiteChain;
 
@@ -31,6 +33,12 @@ class CallSiteChain {
   }
 
   void _appendResolutionPath(StringBuffer builder, [Type? currentlyResolving]) {
+    final ordered = SplayTreeMap.from(
+      _callSiteChain,
+      (key1, key2) =>
+          _callSiteChain[key1]!.order.compareTo(_callSiteChain[key2]!.order),
+    );
+
     for (var pair in _callSiteChain.entries) {
       var serviceType = pair.key;
       var implementationType = pair.value.implementationType;

@@ -25,8 +25,8 @@ class ServiceDescriptor {
 
   /// Creates an instance of [ServiceDescriptor] with the specified
   /// [TService], [implementationFactory] and the [ServiceLifetime.transient].
-  static ServiceDescriptor transient<TService>({
-    required ImplementationFactory<TService> implementationFactory,
+  static ServiceDescriptor transient<TService>(
+    ImplementationFactory<TService> implementationFactory, {
     Type? implementationType,
   }) =>
       describe<TService>(
@@ -38,8 +38,8 @@ class ServiceDescriptor {
   /// Creates an instance of [ServiceDescriptor] with the specified
   /// [TService], [implementationFactory], and the [ServiceLifetime.scoped]
   /// lifetime.
-  static ServiceDescriptor scoped<TService>({
-    required ImplementationFactory<TService> implementationFactory,
+  static ServiceDescriptor scoped<TService>(
+    ImplementationFactory<TService> implementationFactory, {
     Type? implementationType,
   }) =>
       describe<TService>(
@@ -88,22 +88,21 @@ class ServiceDescriptor {
 
   @override
   String toString() {
-    String? newlifetime =
-        // ignore: lines_longer_than_80_chars
-        'ServiceType: ${serviceType.toString()} Lifetime: ${lifetime.toString()} ';
+    String? newlifetime = '''ServiceType: ${serviceType.toString()} 
+        Lifetime: ${lifetime.toString()} ''';
 
     if (implementationType != null) {
-      // ignore: lines_longer_than_80_chars
-      return '${newlifetime}ImplementationType: ${implementationType.toString()}';
+      return '''${newlifetime}ImplementationType: 
+      ${implementationType.toString()}''';
     }
 
     if (implementationFactory != null) {
-      // ignore: lines_longer_than_80_chars
-      return '${newlifetime}ImplementationFactory: ${implementationFactory?.toString()}';
+      return '''${newlifetime}ImplementationFactory: 
+      ${implementationFactory?.toString()}''';
     }
 
-    // ignore: lines_longer_than_80_chars
-    return '${newlifetime}ImplementationInstance: ${implementationInstance.toString()}';
+    return '''${newlifetime}ImplementationInstance: 
+    ${implementationInstance.toString()}''';
   }
 
   Type? getImplementationType() {
@@ -115,7 +114,8 @@ class ServiceDescriptor {
       return implementationFactory.runtimeType;
     }
     assert(false, '''
-ImplementationType, ImplementationInstance or ImplementationFactory must be non null''');
+ImplementationType, ImplementationInstance or 
+ImplementationFactory must be non null''');
     return null;
   }
 }

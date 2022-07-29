@@ -274,7 +274,7 @@ void populateServiceCollection(
 HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
   var hostingEnvironment = HostingEnvironment()
     ..applicationName =
-        hostConfiguration[host_defaults.applicationKey] ??= 'application'
+        hostConfiguration[host_defaults.applicationKey] ?? 'application'
     ..environmentName = hostConfiguration[host_defaults.environmentKey] ??
         Environments.production
     ..contentRootPath = resolveContentRootPath(

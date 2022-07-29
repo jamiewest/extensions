@@ -29,7 +29,7 @@ void main() {
         instance: FakeServiceImplementation(),
       );
       var descriptor2 = ServiceDescriptor.transient<FactoryService>(
-        implementationFactory: (s) => TransientFactoryService(),
+        (s) => TransientFactoryService(),
       );
 
       // Act
@@ -52,7 +52,7 @@ void main() {
         instance: FakeServiceImplementation(),
       );
       var descriptor2 = ServiceDescriptor.transient<FactoryService>(
-        implementationFactory: (s) => TransientFactoryService(),
+        (s) => TransientFactoryService(),
       );
 
       // Act

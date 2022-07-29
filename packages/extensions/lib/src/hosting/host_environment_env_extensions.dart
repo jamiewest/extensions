@@ -16,5 +16,6 @@ extension HostEnvironmentEnvExtensions on HostEnvironment {
   bool isProduction() => isEnvironment(Environments.production);
 
   /// Compares the current host environment name against the specified value.
-  bool isEnvironment(String environment) => environmentName == environment;
+  bool isEnvironment(String environment) =>
+      environmentName?.toLowerCase() == environment.toLowerCase();
 }

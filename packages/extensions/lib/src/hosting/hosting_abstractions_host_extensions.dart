@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
+import 'dart:cli';
 
 import '../primitives/cancellation_token.dart';
 import 'host.dart';
@@ -7,7 +10,7 @@ import 'host_application_lifetime.dart';
 extension HostingAbstractionsHostExtensions on Host {
   /// Starts the host synchronously.
   void startSync() {
-    start();
+    waitFor(start());
   }
 
   // Future<void> stop(Duration? timeout) async {
