@@ -6,10 +6,10 @@ Future<void> main(List<String> args) async =>
         .configureServices(
           (_, services) => services.addHostedService<ExampleHostedService>(
             (services) => ExampleHostedService(
-              services
-                  .getRequiredService<LoggerFactory>()
+              (services.getRequiredService<LoggerFactory>() as LoggerFactory)
                   .createLogger('ExampleHostedService'),
-              services.getRequiredService<HostApplicationLifetime>(),
+              services.getRequiredService<HostApplicationLifetime>()
+                  as HostApplicationLifetime,
             ),
           ),
         )

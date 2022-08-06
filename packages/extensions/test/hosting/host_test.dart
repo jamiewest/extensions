@@ -22,15 +22,17 @@ void main() {
           _createBuilder().useEnvironment('WithHostingEnvironment').build();
 
       await host.start();
-      var env = host.services.getService<HostEnvironment>();
+      var env = host.services.getRequiredService<HostEnvironment>()
+          as HostEnvironment;
       expect(env.environmentName, equals('WithHostingEnvironment'));
     });
 
     test('CanCreateApplicationServicesWithAddedServices', () {
       var host = _createBuilder()
           .configureServices(
-            (hostContext, services) => services.addSingleton<FakeService>(
-              implementationInstance: FakeServiceImplementation(),
+            (hostContext, services) =>
+                services.addSingleton<FakeService, FakeService>(
+              (_) => FakeServiceImplementation(),
             ),
           )
           .build();
@@ -40,7 +42,8 @@ void main() {
 
     test('EnvDefaultsToProductionIfNoConfig', () {
       var host = _createBuilder().build();
-      var env = host.services.getService<HostEnvironment>();
+      var env = host.services.getRequiredService<HostEnvironment>()
+          as HostEnvironment;
       expect(env.environmentName, equals(Environments.production));
     });
 
@@ -53,14 +56,16 @@ void main() {
       var config = builder.build();
 
       var host = _createBuilder(config).build();
-      var env = host.services.getService<HostEnvironment>();
+      var env = host.services.getRequiredService<HostEnvironment>()
+          as HostEnvironment;
       expect(env.environmentName, equals(Environments.staging));
     });
 
     test('IsEnvironmentExtensionIsCaseInsensitive', () async {
       var host = _createBuilder().build();
       await host.start();
-      var env = host.services.getRequiredService<HostEnvironment>();
+      var env = host.services.getRequiredService<HostEnvironment>()
+          as HostEnvironment;
       expect(env.isEnvironment(Environments.production), isTrue);
       expect(env.isEnvironment('producTion'), isTrue);
     });
@@ -69,8 +74,9 @@ void main() {
       FakeHostedService service;
       var host = _createBuilder()
           .configureServices(
-            (context, services) => services.addSingleton<HostedService>(
-              implementationInstance: FakeHostedService(),
+            (context, services) =>
+                services.addSingleton<HostedService, HostedService>(
+              (_) => FakeHostedService(),
             ),
           )
           .startSync();

@@ -20,6 +20,7 @@ library dependency_injection;
 
 export 'primitives.dart';
 export 'src/dependency_injection/service_collection.dart';
+export 'src/dependency_injection/service_collection_container_builder_extensions.dart';
 export 'src/dependency_injection/service_collection_descriptor_extensions.dart';
 export 'src/dependency_injection/service_collection_service_extensions.dart';
 export 'src/dependency_injection/service_descriptor.dart';

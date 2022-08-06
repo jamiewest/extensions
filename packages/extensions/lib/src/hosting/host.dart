@@ -1,4 +1,5 @@
 import '../dependency_injection/service_provider.dart';
+import '../dependency_injection/service_provider_service_extensions.dart';
 import '../logging/logger.dart';
 import '../options/options.dart';
 import '../primitives/async_disposable.dart';
@@ -58,7 +59,9 @@ class Host implements Disposable, AsyncDisposable {
     await _hostLifetime.waitForStart(combinedCancellationToken);
 
     //combinedCancellationToken.throwIfCancellatinoRequested();
-    _hostedServices = services.getServices<HostedService>();
+    _hostedServices = (services.getServices<HostedService>() as List)
+        .map((item) => item as HostedService)
+        .toList();
 
     for (var hostedService in _hostedServices!) {
       // Fire HostedService.start

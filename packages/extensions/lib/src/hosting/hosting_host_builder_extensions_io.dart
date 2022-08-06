@@ -26,13 +26,15 @@ extension HostingHostBuilderExtensions on HostBuilder {
     void Function(ConsoleLifetimeOptions options)? configure,
   ) =>
       configureServices((_, collection) => collection
-        ..addSingleton<HostLifetime>(
-          implementationFactory: (sp) => ConsoleLifetime(
-            sp.getRequiredService<Options<ConsoleLifetimeOptions>>(),
-            sp.getRequiredService<HostEnvironment>(),
-            sp.getRequiredService<ApplicationLifetime>(),
-            sp.getRequiredService<Options<HostOptions>>(),
-            sp.getRequiredService<LoggerFactory>(),
+        ..addSingleton<HostLifetime, ConsoleLifetime>(
+          (sp) => ConsoleLifetime(
+            sp.getRequiredService<Options<ConsoleLifetimeOptions>>()
+                as Options<ConsoleLifetimeOptions>,
+            sp.getRequiredService<HostEnvironment>() as HostEnvironment,
+            sp.getRequiredService<ApplicationLifetime>() as ApplicationLifetime,
+            sp.getRequiredService<Options<HostOptions>>()
+                as Options<HostOptions>,
+            sp.getRequiredService<LoggerFactory>() as LoggerFactory,
           ),
         )
         ..configure<ConsoleLifetimeOptions>(

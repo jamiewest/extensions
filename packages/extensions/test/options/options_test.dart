@@ -1,4 +1,5 @@
 import 'package:extensions/src/dependency_injection/service_collection.dart';
+import 'package:extensions/src/dependency_injection/service_collection_container_builder_extensions.dart';
 import 'package:extensions/src/dependency_injection/service_collection_service_extensions.dart';
 import 'package:extensions/src/dependency_injection/service_provider.dart';
 import 'package:extensions/src/dependency_injection/service_provider_service_extensions.dart';
@@ -14,8 +15,9 @@ void main() {
   group('OptionsTest', () {
     test('UsesFactory', () {
       var services = ServiceCollection()
-          .addSingleton<OptionsFactory<FakeOptions>>(
-            implementationFactory: (sp) => FakeOptionsFactory(),
+          .addSingleton<OptionsFactory<FakeOptions>,
+              OptionsFactory<FakeOptions>>(
+            (sp) => FakeOptionsFactory(),
           )
           .configure<FakeOptions>(
             FakeOptions.new,
@@ -23,7 +25,8 @@ void main() {
           )
           .buildServiceProvider();
 
-      var snap = services.getRequiredService<Options<FakeOptions>>();
+      var snap = services.getRequiredService<Options<FakeOptions>>()
+          as Options<FakeOptions>;
       expect(snap.value, equals(FakeOptionsFactory.options));
     });
   });

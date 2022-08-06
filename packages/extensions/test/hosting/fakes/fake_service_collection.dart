@@ -11,15 +11,15 @@ class FakeServiceCollection implements ServiceProvider {
   String? state;
 
   @override
-  T getService<T>() => _inner!.getService<T>();
+  T getService<T>() => _inner!.getRequiredService<T>() as T;
 
-  @override
-  Iterable<T> getServices<T>() => _inner!.getServices<T>();
+  // @override
+  // Iterable<T> getServices<T>() => _inner!.getServices<T>();
 
   void populate(ServiceCollection services) {
     _services = services;
-    _services!
-        .addSingleton<FakeServiceCollection>(implementationInstance: this);
+    _services!.addSingleton<FakeServiceCollection, FakeServiceCollection>(
+        (_) => this);
   }
 
   void build() {
@@ -30,11 +30,11 @@ class FakeServiceCollection implements ServiceProvider {
     fancyMethodCalled = true;
   }
 
-  @override
-  void dispose() {}
+  // @override
+  // void dispose() {}
 
-  @override
-  Future<void> disposeAsync() {
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<void> disposeAsync() {
+  //   throw UnimplementedError();
+  // }
 }

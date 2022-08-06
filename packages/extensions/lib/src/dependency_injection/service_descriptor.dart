@@ -1,80 +1,46 @@
 import 'service_lifetime.dart';
 import 'service_provider.dart';
 
-typedef ImplementationFactory<TService> = TService Function(
+typedef ImplementationFactory<TImplementation> = TImplementation Function(
   ServiceProvider services,
 );
 
 /// Describes a service with its service type, implementation, and lifetime.
 class ServiceDescriptor {
-  final Object? _implementationInstance;
-  final ImplementationFactory? _implementationFactory;
-  final Type? _implementationType;
+  Object? _implementationInstance;
+  Type? _implementationType;
+  ImplementationFactory? _implementationFactory;
+
+  ServiceDescriptor._(
+    this.serviceType,
+    this.lifetime,
+  );
 
   /// Initializes a new instance of [ServiceDescriptor] with the specified
-  /// [implementationType].
-  ServiceDescriptor({
-    required this.serviceType,
-    this.lifetime = ServiceLifetime.singleton,
-    Object? instance,
-    ImplementationFactory? factory,
-    Type? implementationType,
-  })  : _implementationInstance = instance,
-        _implementationFactory = factory,
-        _implementationType = implementationType;
+  /// [instance] and default [ServiceLifetime].
+  factory ServiceDescriptor(
+    Type serviceType,
+    Object instance,
+  ) =>
+      ServiceDescriptor._(
+        serviceType,
+        ServiceLifetime.singleton,
+      )
+        .._implementationType = instance.runtimeType
+        .._implementationInstance = instance;
 
-  /// Creates an instance of [ServiceDescriptor] with the specified
-  /// [TService], [implementationFactory] and the [ServiceLifetime.transient].
-  static ServiceDescriptor transient<TService>(
-    ImplementationFactory<TService> implementationFactory, {
-    Type? implementationType,
-  }) =>
-      describe<TService>(
-        lifetime: ServiceLifetime.transient,
-        implementationFactory: implementationFactory,
-        implementationType: implementationType,
-      );
-
-  /// Creates an instance of [ServiceDescriptor] with the specified
-  /// [TService], [implementationFactory], and the [ServiceLifetime.scoped]
-  /// lifetime.
-  static ServiceDescriptor scoped<TService>(
-    ImplementationFactory<TService> implementationFactory, {
-    Type? implementationType,
-  }) =>
-      describe<TService>(
-        lifetime: ServiceLifetime.scoped,
-        implementationFactory: implementationFactory,
-        implementationType: implementationType,
-      );
-
-  /// Creates an instance of [ServiceDescriptor] with the specified [TService],
-  /// [implementationInstance], and the `ServiceLifetime.singleton` lifetime.
-  static ServiceDescriptor singleton<TService>({
-    TService? instance,
-    ImplementationFactory<TService>? implementationFactory,
-    Type? implementationType,
-  }) =>
-      describe<TService>(
-        implementationInstance: instance,
-        implementationFactory: implementationFactory,
-        implementationType: implementationType,
-      );
-
-  /// Creates an instance of [ServiceDescriptor].
-  static ServiceDescriptor describe<TService>({
-    TService? implementationInstance,
-    ImplementationFactory<TService>? implementationFactory,
-    Type? implementationType,
-    ServiceLifetime lifetime = ServiceLifetime.singleton,
-  }) =>
-      ServiceDescriptor(
-        serviceType: TService,
-        instance: implementationInstance,
-        factory: implementationFactory,
-        lifetime: lifetime,
-        implementationType: implementationType,
-      );
+  factory ServiceDescriptor._factory(
+    Type serviceType,
+    Type implementationType,
+    ImplementationFactory factory,
+    ServiceLifetime lifetime,
+  ) =>
+      ServiceDescriptor._(
+        serviceType,
+        lifetime,
+      )
+        .._implementationType = implementationType
+        .._implementationFactory = factory;
 
   final ServiceLifetime lifetime;
 
@@ -91,11 +57,6 @@ class ServiceDescriptor {
     String? newlifetime = '''ServiceType: ${serviceType.toString()} 
         Lifetime: ${lifetime.toString()} ''';
 
-    if (implementationType != null) {
-      return '''${newlifetime}ImplementationType: 
-      ${implementationType.toString()}''';
-    }
-
     if (implementationFactory != null) {
       return '''${newlifetime}ImplementationFactory: 
       ${implementationFactory?.toString()}''';
@@ -105,17 +66,153 @@ class ServiceDescriptor {
     ${implementationInstance.toString()}''';
   }
 
-  Type? getImplementationType() {
-    if (implementationType != null) {
-      return implementationType!;
-    } else if (implementationInstance != null) {
-      return implementationType.runtimeType;
-    } else if (implementationFactory != null) {
-      return implementationFactory.runtimeType;
-    }
-    assert(false, '''
-ImplementationType, ImplementationInstance or 
-ImplementationFactory must be non null''');
-    return null;
-  }
+  /// Creates an instance of [ServiceDescriptor] with the specified
+  /// [TService], [implementationFactory] and the [ServiceLifetime.transient].
+  static ServiceDescriptor transient<TService, TImplementation>(
+    ImplementationFactory<TImplementation> implementationFactory,
+  ) =>
+      ServiceDescriptor._factory(
+        TService,
+        TImplementation,
+        implementationFactory,
+        ServiceLifetime.transient,
+      );
+
+  /// Creates an instance of [ServiceDescriptor] with the specified
+  /// [TService], [implementationFactory] and the [ServiceLifetime.scoped].
+  static ServiceDescriptor scoped<TService, TImplementation>(
+    ImplementationFactory<TImplementation> implementationFactory,
+  ) =>
+      ServiceDescriptor._factory(
+        TService,
+        TImplementation,
+        implementationFactory,
+        ServiceLifetime.scoped,
+      );
+
+  /// Creates an instance of [ServiceDescriptor] with the specified
+  /// [TService], [implementationFactory] and the [ServiceLifetime.singleton].
+  static ServiceDescriptor singleton<TService, TImplementation>(
+    ImplementationFactory<TImplementation> implementationFactory,
+  ) =>
+      ServiceDescriptor._factory(
+        TService,
+        TImplementation,
+        implementationFactory,
+        ServiceLifetime.singleton,
+      );
 }
+
+// /// Describes a service with its service type, implementation, and lifetime.
+// class ServiceDescriptor {
+//   final Object? _implementationInstance;
+//   final ImplementationFactory? _implementationFactory;
+//   final Type? _implementationType;
+
+//   /// Initializes a new instance of [ServiceDescriptor] with the specified
+//   /// [implementationType].
+//   ServiceDescriptor({
+//     required this.serviceType,
+//     this.lifetime = ServiceLifetime.singleton,
+//     Object? instance,
+//     ImplementationFactory? factory,
+//     Type? implementationType,
+//   })  : _implementationInstance = instance,
+//         _implementationFactory = factory,
+//         _implementationType = implementationType;
+
+//   /// Creates an instance of [ServiceDescriptor] with the specified
+//   /// [TService], [implementationFactory] and the [ServiceLifetime.transient].
+//   static ServiceDescriptor transient<TService>(
+//     ImplementationFactory<TService> implementationFactory, {
+//     Type? implementationType,
+//   }) =>
+//       describe<TService>(
+//           lifetime: ServiceLifetime.transient,
+//           implementationFactory: implementationFactory,
+//           implementationType: implementationType);
+
+//   /// Creates an instance of [ServiceDescriptor] with the specified
+//   /// [TService], [implementationFactory], and the [ServiceLifetime.scoped]
+//   /// lifetime.
+//   static ServiceDescriptor scoped<TService>(
+//     ImplementationFactory<TService> implementationFactory, {
+//     Type? implementationType,
+//   }) =>
+//       describe<TService>(
+//         lifetime: ServiceLifetime.scoped,
+//         implementationFactory: implementationFactory,
+//         implementationType: implementationType,
+//       );
+
+//   /// Creates an instance of [ServiceDescriptor] with the specified [TService],
+//   /// [implementationInstance], and the `ServiceLifetime.singleton` lifetime.
+//   static ServiceDescriptor singleton<TService>({
+//     TService? instance,
+//     ImplementationFactory<TService>? implementationFactory,
+//     Type? implementationType,
+//   }) =>
+//       describe<TService>(
+//         implementationInstance: instance,
+//         implementationFactory: implementationFactory,
+//         implementationType: implementationType,
+//       );
+
+//   /// Creates an instance of [ServiceDescriptor].
+//   static ServiceDescriptor describe<TService>({
+//     TService? implementationInstance,
+//     ImplementationFactory<TService>? implementationFactory,
+//     Type? implementationType,
+//     ServiceLifetime lifetime = ServiceLifetime.singleton,
+//   }) =>
+//       ServiceDescriptor(
+//         serviceType: TService,
+//         instance: implementationInstance,
+//         factory: implementationFactory,
+//         lifetime: lifetime,
+//         implementationType: implementationType,
+//       );
+
+//   final ServiceLifetime lifetime;
+
+//   final Type serviceType;
+
+//   Type? get implementationType => _implementationType;
+
+//   Object? get implementationInstance => _implementationInstance;
+
+//   ImplementationFactory? get implementationFactory => _implementationFactory;
+
+//   @override
+//   String toString() {
+//     String? newlifetime = '''ServiceType: ${serviceType.toString()} 
+//         Lifetime: ${lifetime.toString()} ''';
+
+//     if (implementationType != null) {
+//       return '''${newlifetime}ImplementationType: 
+//       ${implementationType.toString()}''';
+//     }
+
+//     if (implementationFactory != null) {
+//       return '''${newlifetime}ImplementationFactory: 
+//       ${implementationFactory?.toString()}''';
+//     }
+
+//     return '''${newlifetime}ImplementationInstance: 
+//     ${implementationInstance.toString()}''';
+//   }
+
+//   Type? getImplementationType() {
+//     if (implementationType != null) {
+//       return implementationType!;
+//     } else if (implementationInstance != null) {
+//       return implementationType.runtimeType;
+//     } else if (implementationFactory != null) {
+//       return implementationFactory.runtimeType;
+//     }
+//     assert(false, '''
+// ImplementationType, ImplementationInstance or 
+// ImplementationFactory must be non null''');
+//     return null;
+//   }
+// }

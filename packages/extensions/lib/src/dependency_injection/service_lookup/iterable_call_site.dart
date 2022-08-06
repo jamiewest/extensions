@@ -3,22 +3,25 @@ import 'result_cache.dart';
 import 'service_call_site.dart';
 
 class IterableCallSite extends ServiceCallSite {
-  final Type _itemType;
+  final Type _serviceType;
+  final Type? _itemType;
   final Iterable<ServiceCallSite> _serviceCallSites;
 
   IterableCallSite(
     ResultCache cache,
-    Type itemType,
+    Type serviceType,
+    Type? itemType,
     Iterable<ServiceCallSite> serviceCallSites,
   )   : _itemType = itemType,
+        _serviceType = serviceType,
         _serviceCallSites = serviceCallSites,
         super(cache);
 
-  Type get itemType => _itemType;
+  Type? get itemType => _itemType;
   Iterable<ServiceCallSite> get serviceCallSites => _serviceCallSites;
 
   @override
-  Type get serviceType => throw UnimplementedError();
+  Type get serviceType => _serviceType;
 
   @override
   Type? get implementationType => const Iterable.empty().runtimeType;

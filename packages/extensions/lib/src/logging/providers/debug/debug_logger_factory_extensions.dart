@@ -8,12 +8,8 @@ import 'debug_logger_provider.dart';
 extension DebugLoggerFactoryExtensions on LoggingBuilder {
   LoggingBuilder addDebug() {
     services.tryAddIterable(
-      ServiceDescriptor.singleton<LoggerProvider>(
-        implementationType:
-            // This should not have to be here,
-            //it should be reasoned from the factory
-            DebugLoggerProvider,
-        implementationFactory: (sp) => DebugLoggerProvider(),
+      ServiceDescriptor.singleton<LoggerProvider, DebugLoggerProvider>(
+        (sp) => DebugLoggerProvider(),
       ),
     );
     return this;

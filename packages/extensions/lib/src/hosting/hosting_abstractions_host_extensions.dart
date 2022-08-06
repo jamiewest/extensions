@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:cli';
 
+import '../dependency_injection/service_provider_service_extensions.dart';
 import '../primitives/cancellation_token.dart';
 import 'host.dart';
 import 'host_application_lifetime.dart';
@@ -42,7 +43,9 @@ extension HostingAbstractionsHostExtensions on Host {
   Future<void> waitForShutdown([
     CancellationToken? token,
   ]) async {
-    var applicationLifetime = services.getService<HostApplicationLifetime>();
+    var applicationLifetime =
+        services.getRequiredService<HostApplicationLifetime>()
+            as HostApplicationLifetime;
 
     token ??= CancellationToken.none;
 

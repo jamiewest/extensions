@@ -17,8 +17,9 @@ extension LoggingBuilderExtensions on LoggingBuilder {
   /// Sets a minimum [LogLevel] requirement for log messages to be logged.
   LoggingBuilder setMinimumLevel(LogLevel level) {
     services.add(
-      ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>>(
-        instance: _DefaultLoggerLevelConfigureOptions(level),
+      ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>,
+          ConfigureOptions<LoggerFilterOptions>>(
+        (_) => _DefaultLoggerLevelConfigureOptions(level),
       ),
     );
     return this;
@@ -26,7 +27,7 @@ extension LoggingBuilderExtensions on LoggingBuilder {
 
   /// Adds the given [LoggerProvider] to the [LoggingBuilder]
   LoggingBuilder addProvider(LoggerProvider provider) {
-    services.addSingleton<LoggerProvider>(implementationInstance: provider);
+    services.addSingleton<LoggerProvider, LoggerProvider>((_) => provider);
     return this;
   }
 

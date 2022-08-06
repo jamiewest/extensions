@@ -9,7 +9,8 @@ void main() {
     test('DefaultConfigIsMutable', () {
       var host = HostBuilder().build();
 
-      var config = host.services.getRequiredService<Configuration>();
+      var config =
+          host.services.getRequiredService<Configuration>() as Configuration;
       config['key1'] = 'value';
       expect(config['key1'], equals('value'));
     });
@@ -41,7 +42,8 @@ void main() {
 
       var host = hostBuilder.build();
 
-      var config = host.services.getRequiredService<Configuration>();
+      var config =
+          host.services.getRequiredService<Configuration>() as Configuration;
       expect(config['key1'], 'value1');
       expect(config['key2'], 'value3');
     });
@@ -65,7 +67,8 @@ void main() {
         );
 
       var host = hostBuilder.build();
-      var config = host.services.getRequiredService<Configuration>();
+      var config =
+          host.services.getRequiredService<Configuration>() as Configuration;
       expect(config, isNotNull);
       expect('value1', config['key1']);
       expect('value3', config['key2']);
@@ -96,7 +99,8 @@ void main() {
       var host = hostBuilder.build();
 
       expect(
-        host.services.getRequiredService<HostEnvironment>().environmentName,
+        (host.services.getRequiredService<HostEnvironment>() as HostEnvironment)
+            .environmentName,
         equals('EnvB'),
       );
     });
@@ -119,7 +123,8 @@ void main() {
           .build();
 
       expect(
-        host.services.getService<HostEnvironment>().environmentName,
+        (host.services.getRequiredService<HostEnvironment>() as HostEnvironment)
+            .environmentName,
         equals(expected),
       );
     });
@@ -139,7 +144,8 @@ void main() {
           .build();
 
       expect(
-        host.services.getService<HostEnvironment>().contentRootPath,
+        (host.services.getRequiredService<HostEnvironment>() as HostEnvironment)
+            .contentRootPath,
         equals('/'),
       );
     });
@@ -157,7 +163,8 @@ void main() {
           )
           .build();
 
-      var env = host.services.getRequiredService<HostEnvironment>();
+      var env = host.services.getRequiredService<HostEnvironment>()
+          as HostEnvironment;
 
       expect(env.applicationName, equals('MyProjectReference'));
       expect(env.environmentName, equals(Environments.development));
@@ -167,8 +174,9 @@ void main() {
     test('RelativeContentRootIsResolved', () {
       var host = HostBuilder().useContentRoot('testroot').build();
 
-      var basePath =
-          host.services.getRequiredService<HostEnvironment>().contentRootPath;
+      var basePath = (host.services.getRequiredService<HostEnvironment>()
+              as HostEnvironment)
+          .contentRootPath;
 
       expect(p.isAbsolute(basePath!), isTrue);
       expect(basePath, endsWith('${p.separator}testroot'));
@@ -179,7 +187,8 @@ void main() {
 
       var appBase = p.current;
       expect(
-        host.services.getService<HostEnvironment>().contentRootPath,
+        (host.services.getRequiredService<HostEnvironment>() as HostEnvironment)
+            .contentRootPath,
         equals(appBase),
       );
     });
@@ -250,11 +259,10 @@ void main() {
       var hostBuilder = HostBuilder()
           .configureServices((context, services) {
             services
-              ..addTransient<_ServiceD>(
-                  implementationFactory: (s) => _ServiceD())
-              ..addScoped<_ServiceC>(
-                implementationFactory: (s) => _ServiceC(
-                  s.getRequiredService<_ServiceD>(),
+              ..addTransient<_ServiceD, _ServiceD>((s) => _ServiceD())
+              ..addScoped<_ServiceC, _ServiceC>(
+                (s) => _ServiceC(
+                  s.getRequiredService<_ServiceD>() as _ServiceD,
                 ),
               );
           })

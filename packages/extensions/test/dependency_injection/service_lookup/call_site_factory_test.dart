@@ -8,15 +8,14 @@ void main() {
     test('GetService_FactoryCallSite_Transient_DoesNotFail', () {
       var collection = ServiceCollection()
         ..add(
-          ServiceDescriptor.describe<FakeServiceImplementation>(
-            implementationFactory: (sp) => FakeServiceImplementation(),
-            lifetime: ServiceLifetime.transient,
+          ServiceDescriptor.transient<FakeServiceImplementation,
+              FakeServiceImplementation>(
+            (sp) => FakeServiceImplementation(),
           ),
         )
         ..add(
-          ServiceDescriptor.describe<FakeService>(
-            implementationFactory: (sp) => FakeServiceImplementation(),
-            lifetime: ServiceLifetime.transient,
+          ServiceDescriptor.transient<FakeService, FakeService>(
+            (sp) => FakeServiceImplementation(),
           ),
         );
 

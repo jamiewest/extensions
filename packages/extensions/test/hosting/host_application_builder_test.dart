@@ -13,7 +13,8 @@ void main() {
 
       final host = builder.build();
 
-      final config = host.services.getRequiredService<Configuration>();
+      final config =
+          host.services.getRequiredService<Configuration>() as Configuration;
       config['key2'] = 'value2';
 
       expect(config['key1'], equals('value1'));
@@ -33,7 +34,8 @@ void main() {
 
       final host = builder.build();
 
-      final config = host.services.getRequiredService<Configuration>();
+      final config =
+          host.services.getRequiredService<Configuration>() as Configuration;
 
       expect(config, isNotNull);
       expect(config['key1'], equals('value1'));
@@ -70,8 +72,8 @@ void main() {
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices =
-          host.services.getRequiredService<HostEnvironment>();
+      final hostEnvironmentFromServices = host.services
+          .getRequiredService<HostEnvironment>() as HostEnvironment;
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
@@ -102,8 +104,8 @@ void main() {
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices =
-          host.services.getRequiredService<HostEnvironment>();
+      final hostEnvironmentFromServices = host.services
+          .getRequiredService<HostEnvironment>() as HostEnvironment;
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppB'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvB'));
@@ -140,8 +142,8 @@ void main() {
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices =
-          host.services.getRequiredService<HostEnvironment>();
+      final hostEnvironmentFromServices = host.services
+          .getRequiredService<HostEnvironment>() as HostEnvironment;
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
@@ -169,7 +171,8 @@ void main() {
 
       final host = builder.build();
 
-      final env = host.services.getRequiredService<HostEnvironment>();
+      final env = host.services.getRequiredService<HostEnvironment>()
+          as HostEnvironment;
 
       expect(env.applicationName, equals('MyProjectReference'));
       expect(env.environmentName, equals(Environments.development));

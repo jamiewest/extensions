@@ -8,5 +8,5 @@ abstract class SupportRequiredService {
   /// implementing this interface.
   ///
   /// Throws an exception if the [ServiceProvider] cannot create the object.
-  Object getRequiredService({required Type serviceType});
+  Object getRequiredService(Type serviceType);
 }

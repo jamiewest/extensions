@@ -29,47 +29,64 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     String name = Options.defaultName,
   }) {
     tryAdd(
-      ServiceDescriptor.singleton<Options<TOptions>>(
-        implementationFactory: (sp) => UnnamedOptionsManager<TOptions>(
-          sp.getRequiredService<OptionsFactory<TOptions>>(),
+      ServiceDescriptor.singleton<Options<TOptions>,
+          UnnamedOptionsManager<TOptions>>(
+        (sp) => UnnamedOptionsManager<TOptions>(
+          sp.getRequiredService<OptionsFactory<TOptions>>()
+              as OptionsFactory<TOptions>,
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.scoped<OptionsSnapshot<TOptions>>(
+      ServiceDescriptor.scoped<OptionsSnapshot<TOptions>,
+          OptionsManager<TOptions>>(
         (sp) => OptionsManager<TOptions>(
           instance,
-          sp.getRequiredService<OptionsFactory<TOptions>>(),
+          sp.getRequiredService<OptionsFactory<TOptions>>()
+              as OptionsFactory<TOptions>,
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.singleton<OptionsMonitor<TOptions>>(
-        implementationFactory: (sp) => OptionsMonitor<TOptions>(
-          sp.getRequiredService<OptionsFactory<TOptions>>(),
-          sp.getServices<OptionsChangeTokenSource<TOptions>>(),
-          sp.getRequiredService<OptionsMonitorCache<TOptions>>(),
+      ServiceDescriptor.singleton<OptionsMonitor<TOptions>,
+          OptionsMonitor<TOptions>>(
+        (sp) => OptionsMonitor<TOptions>(
+          sp.getRequiredService<OptionsFactory<TOptions>>()
+              as OptionsFactory<TOptions>,
+          (sp.getServices<OptionsChangeTokenSource<TOptions>>() as List)
+              .map((item) => item as OptionsChangeTokenSource<TOptions>)
+              .toList(),
+          sp.getRequiredService<OptionsMonitorCache<TOptions>>()
+              as OptionsMonitorCache<TOptions>,
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.transient<OptionsFactory<TOptions>>(
+      ServiceDescriptor.transient<OptionsFactory<TOptions>,
+          OptionsFactory<TOptions>>(
         (sp) => OptionsFactory<TOptions>(
           instance,
-          setups: sp.getServices<ConfigureOptions<TOptions>>(),
+          setups: (sp.getServices<ConfigureOptions<TOptions>>() as List)
+              .map((item) => item as ConfigureOptions<TOptions>)
+              .toList(),
           postConfigureOptions:
-              sp.getServices<PostConfigureOptions<TOptions>>(),
-          validations: sp.getServices<ValidateOptions<TOptions>>(),
+              (sp.getServices<PostConfigureOptions<TOptions>>() as List)
+                  .map((item) => item as PostConfigureOptions<TOptions>)
+                  .toList(),
+          validations: (sp.getServices<ValidateOptions<TOptions>>() as List)
+              .map((item) => item as ValidateOptions<TOptions>)
+              .toList(),
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.singleton<OptionsMonitorCache<TOptions>>(
-        implementationFactory: (sp) => OptionsCache<TOptions>(instance),
+      ServiceDescriptor.singleton<OptionsMonitorCache<TOptions>,
+          OptionsCache<TOptions>>(
+        (sp) => OptionsCache<TOptions>(instance),
       ),
     );
 
@@ -85,8 +102,8 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ConfigureOptionsAction<TOptions> configureOptions,
       {String? name}) {
     addOptions<TOptions>(instance);
-    addSingleton<ConfigureOptions<TOptions>>(
-      implementationInstance: ConfigureNamedOptions0<TOptions>(
+    addSingleton<ConfigureOptions<TOptions>, ConfigureNamedOptions0<TOptions>>(
+      (_) => ConfigureNamedOptions0<TOptions>(
         name,
         configureOptions,
       ),
@@ -101,8 +118,9 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     PostConfigureActionT0<TOptions> configureOptions,
   ) {
     addOptions<TOptions>(instance);
-    addSingleton<PostConfigureOptions<TOptions>>(
-      implementationInstance: PostConfigureOptions0<TOptions>(
+    addSingleton<PostConfigureOptions<TOptions>,
+        PostConfigureOptions0<TOptions>>(
+      (_) => PostConfigureOptions0<TOptions>(
         name,
         configureOptions,
       ),

@@ -1,6 +1,7 @@
 import 'package:tuple/tuple.dart';
 
 import '../../dependency_injection.dart';
+import '../dependency_injection/service_provider_impl.dart';
 import '../options/options_monitor.dart';
 import 'logger.dart';
 import 'logger_filter_options.dart';
@@ -46,12 +47,15 @@ class LoggerFactory implements Disposable {
   static LoggerFactory create(ConfigureLoggingBuilder configure) {
     var serviceCollection = ServiceCollection()..addLogging(configure);
     var serviceProvider = serviceCollection.buildServiceProvider();
-    var loggerFactory = serviceProvider.getService<LoggerFactory>();
+    var loggerFactory =
+        serviceProvider.getRequiredService<LoggerFactory>() as LoggerFactory;
 
     return _DisposingLoggerFactory(
       loggerFactory,
-      serviceProvider,
-      serviceProvider.getServices<LoggerProvider>(),
+      serviceProvider as ServiceProviderImpl,
+      (serviceProvider.getServices<LoggerProvider>() as List)
+          .map((item) => item as LoggerProvider)
+          .toList(),
     );
   }
 
@@ -206,11 +210,11 @@ class _ProviderRegistration {
 
 class _DisposingLoggerFactory extends LoggerFactory {
   final LoggerFactory _loggerFactory;
-  final ServiceProvider _serviceProvider;
+  final ServiceProviderImpl _serviceProvider;
 
   _DisposingLoggerFactory(
     LoggerFactory loggerFactory,
-    ServiceProvider serviceProvider,
+    ServiceProviderImpl serviceProvider,
     Iterable<LoggerProvider> providerRegistrations,
   )   : _loggerFactory = loggerFactory,
         _serviceProvider = serviceProvider,

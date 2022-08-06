@@ -8,7 +8,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified [descriptor] to the list if the
   /// service type hasn't already been registered.
   void tryAdd(ServiceDescriptor descriptor) {
-    var count = length;
+    final count = length;
     for (var i = 0; i < count; i++) {
       if (this[i].serviceType.hashCode == descriptor.serviceType.hashCode) {
         return;
@@ -20,10 +20,10 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.transient] service
   /// using the factory specified in [implementationFactory] to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddTransient<TService>(
-    ImplementationFactory<TService> implementationFactory,
+  void tryAddTransient<TService, TImplementation>(
+    ImplementationFactory<TImplementation> implementationFactory,
   ) {
-    var descriptor = ServiceDescriptor.transient<TService>(
+    final descriptor = ServiceDescriptor.transient<TService, TImplementation>(
       implementationFactory,
     );
     tryAdd(descriptor);
@@ -32,10 +32,10 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.scoped] service
   /// using the factory specified in [implementationFactory] to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddScoped<TService>(
-    ImplementationFactory<TService> implementationFactory,
+  void tryAddScoped<TService, TImplementation>(
+    ImplementationFactory<TImplementation> implementationFactory,
   ) {
-    var descriptor = ServiceDescriptor.scoped<TService>(
+    final descriptor = ServiceDescriptor.scoped<TService, TImplementation>(
       implementationFactory,
     );
     tryAdd(descriptor);
@@ -44,13 +44,11 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.singleton] service
   /// using the factory specified in `implementationFactory` to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddSingleton<TService>(
-    TService? implementationInstance,
-    ImplementationFactory<TService>? implementationFactory,
+  void tryAddSingleton<TService, TImplementation>(
+    ImplementationFactory<TImplementation> implementationFactory,
   ) {
-    var descriptor = ServiceDescriptor.singleton<TService>(
-      instance: implementationInstance,
-      implementationFactory: implementationFactory,
+    final descriptor = ServiceDescriptor.singleton<TService, TImplementation>(
+      implementationFactory,
     );
     tryAdd(descriptor);
   }
@@ -59,17 +57,11 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// [ServiceDescriptor.serviceType] and an implementation that does not
   /// already exist in `services`.
   void tryAddIterable(ServiceDescriptor descriptor) {
-    var implementationType = descriptor.getImplementationType();
-    if (implementationType == Object ||
-        implementationType == descriptor.serviceType) {
-      throw Exception('SR.TryAddIndistinguishableTypeToIterable');
-    }
-
     var count = length;
     for (var i = 0; i < count; i++) {
       var service = this[i];
       if (service.serviceType.hashCode == descriptor.serviceType.hashCode &&
-          service.getImplementationType() == implementationType) {
+          service.implementationType == descriptor.implementationType) {
         // Already added
         return;
       }

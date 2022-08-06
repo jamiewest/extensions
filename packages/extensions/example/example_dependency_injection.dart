@@ -1,11 +1,12 @@
 import 'package:extensions/dependency_injection.dart';
 
 void main() {
-  ServiceCollection()
-    ..addSingleton<MyService>(
-      implementationInstance: MyService(),
-    )
-    ..buildServiceProvider().getRequiredService<MyService>().doSomething();
+  ((ServiceCollection()
+        ..addSingleton<MyService, MyService>(
+          (_) => MyService(),
+        )
+        ..buildServiceProvider().getRequiredService<MyService>()) as MyService)
+      .doSomething();
 }
 
 class MyService {

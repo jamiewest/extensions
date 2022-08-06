@@ -3,15 +3,18 @@ import 'package:uuid/uuid.dart';
 
 Future<void> main(List<String> arguments) async {
   var services = ServiceCollection()
-    ..tryAddTransient<TransientOperation>((services) => DefaultOperation())
-    ..tryAddScoped<ScopedOperation>((services) => DefaultOperation())
-    ..tryAddSingleton<SingletonOperation>(
-        null, (services) => DefaultOperation())
-    ..tryAddTransient<OperationLogger>(
+    ..tryAddTransient<TransientOperation, DefaultOperation>(
+        (services) => DefaultOperation())
+    ..tryAddScoped<ScopedOperation, DefaultOperation>(
+        (services) => DefaultOperation())
+    ..tryAddSingleton<SingletonOperation, DefaultOperation>(
+        (services) => DefaultOperation())
+    ..tryAddTransient<OperationLogger, OperationLogger>(
       (services) => OperationLogger(
-          services.getService<TransientOperation>(),
-          services.getService<ScopedOperation>(),
-          services.getService<SingletonOperation>()),
+        services.getService<TransientOperation>()! as TransientOperation,
+        services.getService<ScopedOperation>()! as ScopedOperation,
+        services.getService<SingletonOperation>()! as SingletonOperation,
+      ),
     );
 
   var sp = services.buildServiceProvider();
@@ -22,12 +25,11 @@ Future<void> main(List<String> arguments) async {
 
 void exemplifyScoping(ServiceProvider services, String scope) {
   var serviceScope = services.createScope();
-  var provider = serviceScope.serviceProvider
-    ..getRequiredService<OperationLogger>()
-        .logOperations('$scope-Call 1 .GetRequiredService<OperationLogger>()');
+  var provider = serviceScope.serviceProvider;
+  (provider.getRequiredService<OperationLogger>() as OperationLogger)
+      .logOperations('$scope-Call 1 .GetRequiredService<OperationLogger>()');
   print('...');
-  provider
-      .getRequiredService<OperationLogger>()
+  (provider.getRequiredService<OperationLogger>() as OperationLogger)
       .logOperations('$scope-Call 2 .GetRequiredService<OperationLogger>()');
   print('---');
 }

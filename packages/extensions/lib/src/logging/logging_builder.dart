@@ -27,10 +27,13 @@ extension LoggingServiceCollectionExtensions on ServiceCollection {
       options.minLevel = LogLevel.information;
     });
 
-    tryAdd(ServiceDescriptor.singleton<LoggerFactory>(
-      implementationFactory: (services) => LoggerFactory(
-        services.getServices<LoggerProvider>(),
-        services.getService<OptionsMonitor<LoggerFilterOptions>>(),
+    tryAdd(ServiceDescriptor.singleton<LoggerFactory, LoggerFactory>(
+      (services) => LoggerFactory(
+        (services.getServices<LoggerProvider>() as List)
+            .map((item) => item as LoggerProvider)
+            .toList(),
+        services.getService<OptionsMonitor<LoggerFilterOptions>>()
+            as OptionsMonitor<LoggerFilterOptions>,
       ),
     ));
 

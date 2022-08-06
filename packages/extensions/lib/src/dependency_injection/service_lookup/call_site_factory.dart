@@ -48,17 +48,16 @@ class CallSiteFactory implements ServiceProviderIsService {
   ServiceCallSite? getCallSiteFromType(
     Type serviceType,
     CallSiteChain callSiteChain,
-    bool isIterable,
   ) {
     if (_callSiteCache.containsKey(ServiceCacheKey(serviceType, defaultslot))) {
       var site = _callSiteCache[ServiceCacheKey(serviceType, defaultslot)];
       if (site != null) {
         return site;
       } else {
-        return createCallSite(serviceType, callSiteChain, isIterable);
+        return createCallSite(serviceType, callSiteChain);
       }
     } else {
-      return createCallSite(serviceType, callSiteChain, isIterable);
+      return createCallSite(serviceType, callSiteChain);
     }
   }
 
@@ -75,29 +74,18 @@ class CallSiteFactory implements ServiceProviderIsService {
         descriptor!.getSlot(serviceDescriptor),
       );
     }
-    // ignore: lines_longer_than_80_chars
-    // Debug.Fail("_descriptorLookup didn't contain requested serviceDescriptor");
+
     return null;
   }
 
   ServiceCallSite? createCallSite(
     Type serviceType,
     CallSiteChain callSiteChain,
-    bool isIterable,
   ) {
     callSiteChain.checkCircularDependency(serviceType);
-    ServiceCallSite? callSite;
 
-    if (isIterable) {
-      callSite = tryCreateIterable(serviceType, callSiteChain);
-    } else {
-      callSite = _tryCreateExact(serviceType, callSiteChain) ??
-          tryCreateIterable(serviceType, callSiteChain);
-    }
-
-    // var callSite = isIterable
-    //     ? tryCreateIterable(serviceType, callSiteChain)
-    //     : _tryCreateExact(serviceType, callSiteChain);
+    final callSite = _tryCreateExact(serviceType, callSiteChain) ??
+        tryCreateIterable(serviceType, callSiteChain);
 
     return callSite;
   }
@@ -133,45 +121,94 @@ class CallSiteFactory implements ServiceProviderIsService {
     try {
       callSiteChain.add(serviceType);
 
-      var cacheLocation = CallSiteResultCacheLocation.root;
-      var callSites = <ServiceCallSite>[];
+      if (serviceType.toString().contains('Iterable')) {
+        Type? itemType;
+        var cacheLocation = CallSiteResultCacheLocation.root;
+        var callSites = <ServiceCallSite>[];
+        final regex = RegExp(r'\<([^>]+)\>');
+        final match = regex.firstMatch(serviceType.toString());
 
-      if (_descriptorLookup.containsKey(itemType)) {
-        var descriptors = _descriptorLookup[itemType];
-        for (var i = 0; i < descriptors!.length; i++) {
-          var descriptor = descriptors[i];
-
-          // Last service should get slot 0
-          var slot = descriptors.length - i - 1;
-          var callSite = tryCreateExact(
-            descriptor,
-            itemType,
-            callSiteChain,
-            slot,
-          );
-          assert(callSite != null);
-          cacheLocation = _getCommonCacheLocation(
-            cacheLocation,
-            callSite!.cache.location,
-          );
-          callSites.add(callSite);
+        if (match != null) {
+          final result = match[0];
+          if (result != null) {
+            final name = result.substring(1, result.length - 1);
+            for (var descriptor in _descriptors) {
+              if (descriptor.serviceType.toString() == name) {
+                itemType = descriptor.serviceType;
+              }
+            }
+          }
+        } else {
+          // We didn't find a regex result.
+          return null;
         }
-      }
 
-      var resultCache = ResultCache.none;
-      if ((cacheLocation == CallSiteResultCacheLocation.scope) ||
-          (cacheLocation == CallSiteResultCacheLocation.root)) {
-        resultCache = ResultCache(
-          cacheLocation,
-          ServiceCacheKey(itemType, defaultslot),
+        if (_descriptorLookup.containsKey(itemType)) {
+          var descriptors = _descriptorLookup[itemType];
+          for (var i = 0; i < descriptors!.length; i++) {
+            var descriptor = descriptors[i];
+
+            // Last service should get slot 0
+            var slot = descriptors.length - i - 1;
+            var callSite = tryCreateExact(
+              descriptor,
+              itemType!,
+              callSiteChain,
+              slot,
+            );
+            assert(callSite != null);
+            cacheLocation = _getCommonCacheLocation(
+              cacheLocation,
+              callSite!.cache.location,
+            );
+            callSites.add(callSite);
+          }
+        }
+
+        var resultCache = ResultCache.none;
+        if ((cacheLocation == CallSiteResultCacheLocation.scope) ||
+            (cacheLocation == CallSiteResultCacheLocation.root)) {
+          resultCache = ResultCache(
+            cacheLocation,
+            ServiceCacheKey(itemType, defaultslot),
+          );
+        }
+
+        return _callSiteCache[callSiteKey] = IterableCallSite(
+          resultCache,
+          serviceType,
+          itemType,
+          callSites,
         );
+      } else {
+        return null;
       }
 
-      return _callSiteCache[callSiteKey] = IterableCallSite(
-        resultCache,
-        itemType,
-        callSites,
-      );
+      // var cacheLocation = CallSiteResultCacheLocation.root;
+      // var callSites = <ServiceCallSite>[];
+
+      // if (_descriptorLookup.containsKey(itemType)) {
+      //   var descriptors = _descriptorLookup[itemType];
+      //   for (var i = 0; i < descriptors!.length; i++) {
+      //     var descriptor = descriptors[i];
+
+      //     // Last service should get slot 0
+      //     var slot = descriptors.length - i - 1;
+      //     var callSite = tryCreateExact(
+      //       descriptor,
+      //       itemType,
+      //       callSiteChain,
+      //       slot,
+      //     );
+      //     assert(callSite != null);
+      //     cacheLocation = _getCommonCacheLocation(
+      //       cacheLocation,
+      //       callSite!.cache.location,
+      //     );
+      //     callSites.add(callSite);
+      //   }
+      // }
+
     } finally {
       callSiteChain.remove(serviceType);
     }

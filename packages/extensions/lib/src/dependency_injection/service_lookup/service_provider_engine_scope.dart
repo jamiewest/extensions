@@ -1,110 +1,112 @@
-// import '../../shared/async_disposable.dart';
+import '../../primitives/async_disposable.dart';
+import '../../primitives/disposable.dart';
+import '../service_provider.dart';
+import '../service_provider_impl.dart';
+import '../service_scope.dart';
+import '../service_scope_factory.dart';
+import 'service_cache_kind.dart';
 
-// import '../../shared/disposable.dart';
-// import '../service_provider.dart';
-// import '../service_scope.dart';
-// import '../service_scope_factory.dart';
-// import 'service_cache_kind.dart';
+class ServiceProviderEngineScope
+    implements
+        ServiceScope,
+        ServiceProvider,
+        AsyncDisposable,
+        ServiceScopeFactory {
+  // For testing only
+  List<Object> get disposables => _disposables ?? <Object>[];
+  bool _disposed = false;
+  List<Object>? _disposables;
+  final bool _isRootScope;
 
-// class ServiceProviderEngineScope
-//     implements ServiceScope, ServiceProvider, ServiceScopeFactory {
-//   // For testing only
-//   List<Object> get disposables => _disposables ?? <Object>[];
-//   bool _disposed;
-//   List<Object>? _disposables;
+  final Map<ServiceCacheKey, Object?> _resolvedServices;
+  final ServiceProviderImpl _rootProvider;
 
-//   final Map<ServiceCacheKey, Object> _resolvedServices;
-//   final ServiceProvider _rootProvider;
+  ServiceProviderEngineScope(
+    ServiceProviderImpl provider, {
+    required bool isRootScope,
+  })  : _resolvedServices = <ServiceCacheKey, Object?>{},
+        _rootProvider = provider,
+        _isRootScope = isRootScope;
 
-//   ServiceProviderEngineScope(ServiceProvider serviceProvider)
-//       : _resolvedServices = <ServiceCacheKey, Object>{},
-//         _rootProvider = serviceProvider,
-//         _disposed = false;
+  Map<ServiceCacheKey, Object?> get resolvedServices => _resolvedServices;
 
-//   Map<ServiceCacheKey, Object> get resolvedServices => _resolvedServices;
-//   bool get isRootScope => this == _rootProvider.root;
-//   ServiceProvider get rootProvider => _rootProvider;
+  bool get isRootScope => _isRootScope;
 
-//   @override
-//   ServiceProvider get serviceProvider => this;
+  ServiceProviderImpl get rootProvider => _rootProvider;
 
-//   @override
-//   ServiceScope createScope() => rootProvider.createScope();
+  @override
+  Object? getService<T>() {
+    if (_disposed) {
+      throw Exception('Cannot access a disposed object.');
+    }
 
-//   @override
-//   T getService<T>() {
-//     if (_disposed) {
-//       throw Exception('Object disposed exception');
-//     }
+    return rootProvider.getService<T>(this);
+  }
 
-//     return rootProvider.getServiceInternal<T>(this);
-//   }
+  @override
+  ServiceProvider get serviceProvider => this;
 
-//   @override
-//   Iterable<T> getServices<T>() {
-//     if (_disposed) {
-//       throw Exception('Object disposed exception');
-//     }
-//     return rootProvider.getServices<T>();
-//   }
+  @override
+  ServiceScope createScope() => rootProvider.createScope();
 
-//   Object captureDisposable(Object service) {
-//     if (this == service || service is! Disposable) {
-//       return service;
-//     }
+  Object captureDisposable(Object service) {
+    if (this == service || service is! Disposable) {
+      return service;
+    }
 
-//     if (_disposed) {
-//       if (service is Disposable) {
-//         service.dispose();
-//       }
-//     }
+    if (_disposed) {
+      service.dispose();
+    }
 
-//     _disposables ??= <Object>[];
-//     _disposables?.add(service);
+    _disposables ??= <Object>[];
+    _disposables?.add(service);
 
-//     return service;
-//   }
+    return service;
+  }
 
-//   @override
-//   void dispose() {
-//     var toDispose = _beginDispose();
-//     if (toDispose != null) {
-//       for (var i = toDispose.length - 1; i >= 0; i--) {
-//         if (toDispose[i] is Disposable) {
-//           (toDispose[i] as Disposable).dispose();
-//         } else {
-//           throw Exception('R.AsyncDisposableServiceDispose');
-//         }
-//       }
-//     }
-//   }
+  @override
+  void dispose() {
+    var toDispose = _beginDispose();
+    if (toDispose != null) {
+      for (var i = toDispose.length - 1; i >= 0; i--) {
+        if (toDispose[i] is Disposable) {
+          (toDispose[i] as Disposable).dispose();
+        } else {
+          throw Exception(
+              '\'${toDispose[i]}\' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.');
+        }
+      }
+    }
+  }
 
-//   List<Object>? _beginDispose() {
-//     List<Object> toDispose;
-//     if (_disposed) {
-//       return null;
-//     }
+  @override
+  Future<void> disposeAsync() async {
+    var toDispose = _beginDispose();
+    if (toDispose != null) {
+      try {
+        for (var i = toDispose.length - 1; i >= 0; i--) {
+          if (toDispose[i] is AsyncDisposable) {
+            await (toDispose[i] as AsyncDisposable).disposeAsync();
+          } else {
+            (toDispose[i] as Disposable).dispose();
+          }
+        }
+      } on Exception catch (e) {
+        return Future.error(e);
+      }
+    }
+  }
 
-//     _disposed = true;
-//     toDispose = _disposables!;
-//     _disposables = null;
+  List<Object>? _beginDispose() {
+    List<Object> toDispose;
+    if (_disposed) {
+      return null;
+    }
 
-//     return toDispose;
-//   }
+    _disposed = true;
+    toDispose = _disposables!;
+    _disposables = null;
 
-//   @override
-//   Future<void> disposeAsync() async {
-//     var toDispose = _beginDispose();
-//     if (toDispose != null) {
-//       try {
-//         for (var i = toDispose.length - 1; i >= 0; i--) {
-//           if (toDispose[i] is AsyncDisposable) {
-//             await (toDispose[i] as AsyncDisposable).disposeAsync();
-//           } else {
-//             (toDispose[i] as Disposable).dispose();
-//           }
-//         }
-//       } on Exception catch (e) {}
-//     }
-//   }
-// }
+    return toDispose;
+  }
+}

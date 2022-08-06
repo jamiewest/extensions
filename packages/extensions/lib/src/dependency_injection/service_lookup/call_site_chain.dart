@@ -33,13 +33,13 @@ class CallSiteChain {
   }
 
   void _appendResolutionPath(StringBuffer builder, [Type? currentlyResolving]) {
-    final ordered = SplayTreeMap.from(
+    final ordered = SplayTreeMap<Type, ChainItemInfo>.from(
       _callSiteChain,
       (key1, key2) =>
           _callSiteChain[key1]!.order.compareTo(_callSiteChain[key2]!.order),
     );
 
-    for (var pair in _callSiteChain.entries) {
+    for (var pair in ordered.entries) {
       var serviceType = pair.key;
       var implementationType = pair.value.implementationType;
       if (implementationType == null || serviceType == implementationType) {
@@ -51,6 +51,8 @@ class CallSiteChain {
 
       builder.write(' -> ');
     }
+
+    builder.write(currentlyResolving.runtimeType.toString());
   }
 }
 

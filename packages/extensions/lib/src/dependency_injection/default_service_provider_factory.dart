@@ -1,4 +1,5 @@
 import 'service_collection.dart';
+import 'service_collection_container_builder_extensions.dart';
 import 'service_provider.dart';
 import 'service_provider_factory.dart';
 import 'service_provider_options.dart';

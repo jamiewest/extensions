@@ -35,7 +35,9 @@ class ServiceCollection with ListMixin<ServiceDescriptor> {
 
   void checkReadOnly() {
     if (_isReadOnly) {
-      throw Exception('ServiceCollection is read-only.');
+      throw Exception(
+        'The service collection cannot be modified because it is read-only.',
+      );
     }
   }
 }

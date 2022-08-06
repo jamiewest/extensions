@@ -1,3 +1,4 @@
+import '../../dependency_injection.dart';
 import '../configuration/configuration_manager.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
 import '../dependency_injection/service_collection.dart';

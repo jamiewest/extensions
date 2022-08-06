@@ -1,4 +1,5 @@
 import 'package:extensions/dependency_injection.dart';
+import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
 import 'fakes/factory_service.dart';
@@ -9,8 +10,8 @@ void main() {
     test('Add_AddsDescriptorToServiceDescriptors', () {
       // Arrange
       var serviceCollection = ServiceCollection();
-      var descriptor = ServiceDescriptor.singleton<FakeService>(
-        instance: FakeServiceImplementation(),
+      var descriptor = ServiceDescriptor.singleton<FakeService, FakeService>(
+        (_) => FakeServiceImplementation(),
       );
 
       // Act
@@ -25,10 +26,11 @@ void main() {
     test('Add_AddsMultipleDescriptorToServiceDescriptors', () {
       // Arrange
       var serviceCollection = ServiceCollection();
-      var descriptor1 = ServiceDescriptor.singleton<FakeService>(
-        instance: FakeServiceImplementation(),
+      var descriptor1 = ServiceDescriptor.singleton<FakeService, FakeService>(
+        (_) => FakeServiceImplementation(),
       );
-      var descriptor2 = ServiceDescriptor.transient<FactoryService>(
+      var descriptor2 =
+          ServiceDescriptor.transient<FactoryService, FactoryService>(
         (s) => TransientFactoryService(),
       );
 
@@ -48,10 +50,11 @@ void main() {
     test('ServiceDescriptors_AllowsRemovingPreviousRegisteredServices', () {
       // Arrange
       var serviceCollection = ServiceCollection();
-      var descriptor1 = ServiceDescriptor.singleton<FakeService>(
-        instance: FakeServiceImplementation(),
+      var descriptor1 = ServiceDescriptor.singleton<FakeService, FakeService>(
+        (_) => FakeServiceImplementation(),
       );
-      var descriptor2 = ServiceDescriptor.transient<FactoryService>(
+      var descriptor2 =
+          ServiceDescriptor.transient<FactoryService, FactoryService>(
         (s) => TransientFactoryService(),
       );
 
