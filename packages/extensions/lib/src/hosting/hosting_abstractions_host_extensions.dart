@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
-import 'dart:cli';
+//import 'dart:cli';
 
 import '../dependency_injection/service_provider_service_extensions.dart';
 import '../primitives/cancellation_token.dart';
@@ -11,7 +11,7 @@ import 'host_application_lifetime.dart';
 extension HostingAbstractionsHostExtensions on Host {
   /// Starts the host synchronously.
   void startSync() {
-    waitFor(start());
+    //waitFor(start());
   }
 
   // Future<void> stop(Duration? timeout) async {
@@ -44,8 +44,7 @@ extension HostingAbstractionsHostExtensions on Host {
     CancellationToken? token,
   ]) async {
     var applicationLifetime =
-        services.getRequiredService<HostApplicationLifetime>()
-            as HostApplicationLifetime;
+        services.getRequiredService<HostApplicationLifetime>();
 
     token ??= CancellationToken.none;
 

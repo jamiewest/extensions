@@ -3,17 +3,14 @@ import 'package:uuid/uuid.dart';
 
 Future<void> main(List<String> arguments) async {
   var services = ServiceCollection()
-    ..tryAddTransient<TransientOperation, DefaultOperation>(
-        (services) => DefaultOperation())
-    ..tryAddScoped<ScopedOperation, DefaultOperation>(
-        (services) => DefaultOperation())
-    ..tryAddSingleton<SingletonOperation, DefaultOperation>(
-        (services) => DefaultOperation())
-    ..tryAddTransient<OperationLogger, OperationLogger>(
+    ..tryAddTransient<TransientOperation>((services) => DefaultOperation())
+    ..tryAddScoped<ScopedOperation>((services) => DefaultOperation())
+    ..tryAddSingleton<SingletonOperation>((services) => DefaultOperation())
+    ..tryAddTransient<OperationLogger>(
       (services) => OperationLogger(
-        services.getService<TransientOperation>()! as TransientOperation,
-        services.getService<ScopedOperation>()! as ScopedOperation,
-        services.getService<SingletonOperation>()! as SingletonOperation,
+        services.getService<TransientOperation>()!,
+        services.getService<ScopedOperation>()!,
+        services.getService<SingletonOperation>()!,
       ),
     );
 
@@ -26,10 +23,10 @@ Future<void> main(List<String> arguments) async {
 void exemplifyScoping(ServiceProvider services, String scope) {
   var serviceScope = services.createScope();
   var provider = serviceScope.serviceProvider;
-  (provider.getRequiredService<OperationLogger>() as OperationLogger)
+  (provider.getRequiredService<OperationLogger>())
       .logOperations('$scope-Call 1 .GetRequiredService<OperationLogger>()');
   print('...');
-  (provider.getRequiredService<OperationLogger>() as OperationLogger)
+  (provider.getRequiredService<OperationLogger>())
       .logOperations('$scope-Call 2 .GetRequiredService<OperationLogger>()');
   print('---');
 }

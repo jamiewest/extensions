@@ -46,22 +46,26 @@ class ServiceFactoryAdapter<TContainerBuilder>
   @override
   Object createBuilder(ServiceCollection services) {
     if (_serviceProviderFactory == null) {
-      if (_factoryResolver != null && _contextResolver != null) {
-        _serviceProviderFactory =
-            _factoryResolver!(_contextResolver!() as HostBuilderContext);
-        if (_serviceProviderFactory == null) {
-          throw Exception('Returned Null');
-        }
+      assert(_factoryResolver != null && _contextResolver != null);
+      _serviceProviderFactory =
+          _factoryResolver!(_contextResolver!() as HostBuilderContext);
+
+      if (_serviceProviderFactory == null) {
+        throw Exception(
+          'The resolver returned a null ServiceProviderFactory',
+        );
       }
     }
+
     return _serviceProviderFactory?.createBuilder(services: services) as Object;
   }
 
   @override
   ServiceProvider createServiceProvider(Object containerBuilder) {
     if (_serviceProviderFactory == null) {
-      // throw new InvalidOperationException
-      // (SR.CreateBuilderCallBeforeCreateServiceProvider);
+      throw Exception(
+        'CreateBuilder must be called before CreateServiceProvider',
+      );
     }
 
     return _serviceProviderFactory!.createServiceProvider(

@@ -5,7 +5,6 @@ import 'factory_call_site.dart';
 import 'iterable_call_site.dart';
 import 'service_call_site.dart';
 import 'service_provider_call_site.dart';
-import 'service_scope_factory_call_site.dart';
 
 abstract class CallSiteVisitor<TArgument, TResult> {
   TResult visitCallSite(ServiceCallSite callSite, TArgument argument) {
@@ -34,9 +33,9 @@ abstract class CallSiteVisitor<TArgument, TResult> {
       case CallSiteKind.serviceProvider:
         return visitServiceProvider(
             callSite as ServiceProviderCallSite, argument);
-      case CallSiteKind.serviceScopeFactory:
-        return visitServiceScopeFactory(
-            callSite as ServiceScopeFactoryCallSite, argument);
+      // case CallSiteKind.serviceScopeFactory:
+      //   return visitServiceScopeFactory(
+      //       callSite as ServiceScopeFactoryCallSite, argument);
       default:
         throw Exception('SR.CallSiteTypeNotSupported');
     }
@@ -85,11 +84,6 @@ abstract class CallSiteVisitor<TArgument, TResult> {
 
   TResult visitServiceProvider(
     ServiceProviderCallSite serviceProviderCallSite,
-    TArgument argument,
-  );
-
-  TResult visitServiceScopeFactory(
-    ServiceScopeFactoryCallSite serviceScopeFactoryCallSite,
     TArgument argument,
   );
 

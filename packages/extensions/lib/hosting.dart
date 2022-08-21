@@ -8,6 +8,7 @@ export 'primitives.dart';
 export 'src/hosting/background_service.dart';
 export 'src/hosting/environments.dart';
 export 'src/hosting/host.dart';
+export 'src/hosting/host_application_builder.dart';
 export 'src/hosting/host_application_lifetime.dart';
 export 'src/hosting/host_builder.dart';
 export 'src/hosting/host_builder_context.dart';

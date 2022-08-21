@@ -4,7 +4,7 @@ typedef OnChangeListener<TOptions> = void Function(TOptions options,
     [String? name]);
 
 /// Used for notifications when [TOptions] instances change.
-class OptionsMonitor<TOptions> implements Disposable {
+class OptionsMonitor<TOptions> extends Disposable {
   final OptionsMonitorCache<TOptions> _cache;
   final OptionsFactory<TOptions> _factory;
   final List<Disposable> _registrations = <Disposable>[];
@@ -49,7 +49,7 @@ class OptionsMonitor<TOptions> implements Disposable {
   }
 
   /// Registers a listener to be called whenever a named [TOptions] changes.
-  Disposable onChange(OnChangeListener<TOptions> listener) {
+  Disposable? onChange(OnChangeListener<TOptions> listener) {
     var disposable = _ChangeTrackerDisposable<TOptions>(this, listener);
     _onChange = disposable.onChange;
     return disposable;

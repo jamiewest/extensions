@@ -59,7 +59,9 @@ class LoggerRuleSelector {
       var wildcardIndex = categoryName.indexOf(wildcardChar);
       if (wildcardIndex != -1 &&
           categoryName.contains(wildcardChar, wildcardIndex + 1)) {
-        throw Exception('SR.MoreThanOneWildcard');
+        throw Exception(
+          'Only one wildcard character is allowed in category name.',
+        );
       }
 
       String prefix;

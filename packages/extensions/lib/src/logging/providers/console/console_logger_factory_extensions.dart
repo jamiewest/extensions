@@ -8,7 +8,7 @@ import 'console_logger_provider.dart';
 extension ConsoleLoggerFactoryExtensions on LoggingBuilder {
   LoggingBuilder addConsole() {
     services.tryAddIterable(
-      ServiceDescriptor.singleton<LoggerProvider, ConsoleLoggerProvider>(
+      ServiceDescriptor.singleton<LoggerProvider>(
         (sp) => ConsoleLoggerProvider(),
       ),
     );

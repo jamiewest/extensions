@@ -2,21 +2,23 @@ import 'package:flutter/widgets.dart';
 
 import '../extensions_flutter.dart';
 
+typedef AppBuilder = Widget Function(ServiceProvider services);
+
 /// Contains extension methods to [ServiceCollection] for configuring Flutter.
 extension FlutterServiceCollectionExtensions on ServiceCollection {
   ServiceCollection addFlutter(
-    Widget app, {
+    AppBuilder appBuilder, {
     FlutterLifetimeOptions? options,
   }) {
     this
-      ..addSingleton<Widget>(implementationInstance: app)
+      ..addSingleton<Widget>((s) => appBuilder(s))
       ..addSingleton<HostApplicationLifetime>(
-        implementationFactory: (s) => FlutterApplicationLifetime(
-          s.getService<LoggerFactory>().createLogger('ApplicationLifetime'),
+        (s) => FlutterApplicationLifetime(
+          s.getService<LoggerFactory>()!.createLogger('ApplicationLifetime'),
         ),
       )
       ..addSingleton<HostLifetime>(
-        implementationFactory: (s) => FlutterLifetime(
+        (s) => FlutterLifetime(
             app: s.getRequiredService<Widget>(),
             options: options,
             logger: s

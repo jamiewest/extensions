@@ -5,7 +5,6 @@ import 'iterable_call_site.dart';
 import 'service_call_site.dart';
 import 'service_provider_call_site.dart';
 import 'service_provider_engine_scope.dart';
-import 'service_scope_factory_call_site.dart';
 
 class CallSiteRuntimeResolver
     extends CallSiteVisitor<RuntimeResolverContext, Object> {
@@ -14,11 +13,18 @@ class CallSiteRuntimeResolver
   Object? resolve(
     ServiceCallSite callSite,
     ServiceProviderEngineScope scope,
-  ) =>
-      visitCallSite(
-        callSite,
-        RuntimeResolverContext(scope: scope),
-      );
+  ) {
+    if (scope.isRootScope && callSite.value is Object) {
+      if (callSite.value != null) {
+        return callSite.value;
+      }
+    }
+
+    return visitCallSite(
+      callSite,
+      RuntimeResolverContext(scope: scope),
+    );
+  }
 
   @override
   Object visitDisposeCache(
@@ -33,19 +39,33 @@ class CallSiteRuntimeResolver
   Object visitRootCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
-  ) =>
-      resolveService(
+  ) {
+    if (callSite.value is Object) {
+      if (callSite.value != null) {
+        return callSite.value!;
+      }
+    }
+
+    final serviceProviderEngine = argument.scope!.rootProvider.root;
+
+    Object? resolved = visitCallSiteMain(
         callSite,
-        argument,
-        argument.scope!.rootProvider.root,
-      );
+        RuntimeResolverContext(
+          scope: serviceProviderEngine,
+          acquiredLocks: argument.acquiredLocks,
+        ));
+
+    serviceProviderEngine.captureDisposable(resolved);
+    callSite.value = resolved;
+    return resolved;
+  }
 
   @override
   Object visitScopeCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
   ) =>
-      argument.scope! == argument.scope!.rootProvider.root
+      argument.scope!.isRootScope
           ? visitRootCache(callSite, argument)
           : _visitCache(
               callSite,
@@ -57,19 +77,8 @@ class CallSiteRuntimeResolver
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
     ServiceProviderEngineScope serviceProviderEngine,
-  ) =>
-      resolveService(
-        callSite,
-        argument,
-        serviceProviderEngine,
-      );
-
-  Object resolveService(
-    ServiceCallSite callSite,
-    RuntimeResolverContext context,
-    ServiceProviderEngineScope serviceProviderEngine,
   ) {
-    var resolvedServices = serviceProviderEngine.resolvedServices;
+    final resolvedServices = serviceProviderEngine.resolvedServices;
 
     Object? resolved;
     if (resolvedServices.containsKey(callSite.cache.key)) {
@@ -80,10 +89,10 @@ class CallSiteRuntimeResolver
         callSite,
         RuntimeResolverContext(
           scope: serviceProviderEngine,
-          acquiredLocks: context.acquiredLocks,
+          acquiredLocks: argument.acquiredLocks,
         ));
     serviceProviderEngine.captureDisposable(resolved);
-    serviceProviderEngine.resolvedServices[callSite.cache.key] = resolved;
+    resolvedServices[callSite.cache.key] = resolved;
     return resolved;
   }
 
@@ -100,13 +109,6 @@ class CallSiteRuntimeResolver
     RuntimeResolverContext argument,
   ) =>
       argument.scope!;
-
-  @override
-  Object visitServiceScopeFactory(
-    ServiceScopeFactoryCallSite serviceScopeFactoryCallSite,
-    RuntimeResolverContext argument,
-  ) =>
-      serviceScopeFactoryCallSite.value;
 
   @override
   Object visitIterable(
@@ -131,6 +133,13 @@ class CallSiteRuntimeResolver
     RuntimeResolverContext argument,
   ) =>
       factoryCallSite.factory(argument.scope!) as Object;
+
+  // @override
+  // Object visitServiceScopeFactory(
+  //   ServiceScopeFactoryCallSite serviceScopeFactoryCallSite,
+  //   RuntimeResolverContext argument,
+  // ) =>
+  //     serviceScopeFactoryCallSite.value;
 }
 
 class RuntimeResolverContext {

@@ -1,6 +1,7 @@
 import '../../dependency_injection.dart';
+import '../options/configure_options.dart';
 import '../options/options_monitor.dart';
-import '../options/options_service_collection_extensions.dart';
+import 'default_logger_level_configure_options.dart';
 import 'log_level.dart';
 import 'logger_factory.dart';
 import 'logger_filter_options.dart';
@@ -23,11 +24,7 @@ class LoggingBuilder {
 extension LoggingServiceCollectionExtensions on ServiceCollection {
   /// Adds logging services to the specified [ServiceCollection].
   ServiceCollection addLogging([ConfigureLoggingBuilder? configure]) {
-    this.configure<LoggerFilterOptions>(LoggerFilterOptions.new, (options) {
-      options.minLevel = LogLevel.information;
-    });
-
-    tryAdd(ServiceDescriptor.singleton<LoggerFactory, LoggerFactory>(
+    tryAdd(ServiceDescriptor.singleton<LoggerFactory>(
       (services) => LoggerFactory(
         (services.getServices<LoggerProvider>() as List)
             .map((item) => item as LoggerProvider)
@@ -36,6 +33,13 @@ extension LoggingServiceCollectionExtensions on ServiceCollection {
             as OptionsMonitor<LoggerFilterOptions>,
       ),
     ));
+
+    tryAddIterable(
+      ServiceDescriptor.singletonInstance<
+          ConfigureOptions<LoggerFilterOptions>>(
+        DefaultLoggerLevelConfigureOptions(LogLevel.information),
+      ),
+    );
 
     if (configure != null) {
       configure(LoggingBuilder._(this));

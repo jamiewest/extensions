@@ -1,6 +1,6 @@
 /// Identifies a logging event.
 ///
-/// The primary identifier is the "Id" property, with the "Name"
+/// The primary identifier is the 'Id' property, with the 'Name'
 /// property providing a short description of this type of event.
 class EventId {
   /// Initializes an instance of the [EventId].

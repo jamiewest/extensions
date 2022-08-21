@@ -4,14 +4,14 @@ import '../host_environment.dart';
 
 class HostingEnvironment implements HostEnvironment {
   @override
-  String? applicationName;
+  String applicationName = '';
 
   @override
-  String? contentRootPath;
+  String contentRootPath = '';
 
   @override
-  String? environmentName;
+  String environmentName = '';
 
   @override
-  FileProvider? contentRootFileProvider;
+  FileProvider? contentRootFileProvider = null;
 }

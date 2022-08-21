@@ -30,7 +30,7 @@ class ConsoleLifetime extends HostLifetime {
         _environment = environment,
         _applicationLifetime = applicationLifetime,
         _hostOptions = hostOptions.value!,
-        _logger = loggerFactory.createLogger('Microsoft.Hosting.Lifetime');
+        _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
   ConsoleLifetimeOptions get options => _options;
 

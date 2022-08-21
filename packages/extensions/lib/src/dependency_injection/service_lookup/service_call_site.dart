@@ -12,6 +12,7 @@ abstract class ServiceCallSite {
   Type? get implementationType;
   CallSiteKind get kind;
   ResultCache get cache => _cache;
+  Object? value;
 
   bool captureDisposable() =>
       implementationType == null || implementationType is Disposable;

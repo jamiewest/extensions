@@ -2,6 +2,7 @@ import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_descriptor_extensions.dart';
 import '../dependency_injection/service_collection_service_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
+import '../dependency_injection/service_provider.dart';
 import '../dependency_injection/service_provider_service_extensions.dart';
 import 'configure_named_options.dart';
 import 'configure_options.dart';
@@ -29,44 +30,36 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     String name = Options.defaultName,
   }) {
     tryAdd(
-      ServiceDescriptor.singleton<Options<TOptions>,
-          UnnamedOptionsManager<TOptions>>(
-        (sp) => UnnamedOptionsManager<TOptions>(
-          sp.getRequiredService<OptionsFactory<TOptions>>()
-              as OptionsFactory<TOptions>,
+      ServiceDescriptor.singleton<Options<TOptions>>(
+        (ServiceProvider sp) => UnnamedOptionsManager<TOptions>(
+          sp.getRequiredService<OptionsFactory<TOptions>>(),
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.scoped<OptionsSnapshot<TOptions>,
-          OptionsManager<TOptions>>(
+      ServiceDescriptor.scoped<OptionsSnapshot<TOptions>>(
         (sp) => OptionsManager<TOptions>(
           instance,
-          sp.getRequiredService<OptionsFactory<TOptions>>()
-              as OptionsFactory<TOptions>,
+          sp.getRequiredService<OptionsFactory<TOptions>>(),
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.singleton<OptionsMonitor<TOptions>,
-          OptionsMonitor<TOptions>>(
-        (sp) => OptionsMonitor<TOptions>(
-          sp.getRequiredService<OptionsFactory<TOptions>>()
-              as OptionsFactory<TOptions>,
+      ServiceDescriptor.singleton<OptionsMonitor<TOptions>>(
+        (ServiceProvider sp) => OptionsMonitor<TOptions>(
+          sp.getRequiredService<OptionsFactory<TOptions>>(),
           (sp.getServices<OptionsChangeTokenSource<TOptions>>() as List)
               .map((item) => item as OptionsChangeTokenSource<TOptions>)
               .toList(),
-          sp.getRequiredService<OptionsMonitorCache<TOptions>>()
-              as OptionsMonitorCache<TOptions>,
+          sp.getRequiredService<OptionsMonitorCache<TOptions>>(),
         ),
       ),
     );
 
     tryAdd(
-      ServiceDescriptor.transient<OptionsFactory<TOptions>,
-          OptionsFactory<TOptions>>(
+      ServiceDescriptor.transient<OptionsFactory<TOptions>>(
         (sp) => OptionsFactory<TOptions>(
           instance,
           setups: (sp.getServices<ConfigureOptions<TOptions>>() as List)
@@ -84,8 +77,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     );
 
     tryAdd(
-      ServiceDescriptor.singleton<OptionsMonitorCache<TOptions>,
-          OptionsCache<TOptions>>(
+      ServiceDescriptor.singleton<OptionsMonitorCache<TOptions>>(
         (sp) => OptionsCache<TOptions>(instance),
       ),
     );
@@ -102,7 +94,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ConfigureOptionsAction<TOptions> configureOptions,
       {String? name}) {
     addOptions<TOptions>(instance);
-    addSingleton<ConfigureOptions<TOptions>, ConfigureNamedOptions0<TOptions>>(
+    addSingleton<ConfigureOptions<TOptions>>(
       (_) => ConfigureNamedOptions0<TOptions>(
         name,
         configureOptions,
@@ -118,8 +110,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     PostConfigureActionT0<TOptions> configureOptions,
   ) {
     addOptions<TOptions>(instance);
-    addSingleton<PostConfigureOptions<TOptions>,
-        PostConfigureOptions0<TOptions>>(
+    addSingleton<PostConfigureOptions<TOptions>>(
       (_) => PostConfigureOptions0<TOptions>(
         name,
         configureOptions,

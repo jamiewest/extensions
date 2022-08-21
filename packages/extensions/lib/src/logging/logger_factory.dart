@@ -3,6 +3,7 @@ import 'package:tuple/tuple.dart';
 import '../../dependency_injection.dart';
 import '../dependency_injection/service_provider_impl.dart';
 import '../options/options_monitor.dart';
+import 'log_level.dart';
 import 'logger.dart';
 import 'logger_filter_options.dart';
 import 'logger_information.dart';
@@ -10,6 +11,26 @@ import 'logger_provider.dart';
 import 'logger_rule_selector.dart';
 import 'logging_builder.dart'
     show LoggingServiceCollectionExtensions, ConfigureLoggingBuilder;
+
+class StaticFilterOptionsMonitor
+    implements OptionsMonitor<LoggerFilterOptions> {
+  final LoggerFilterOptions _currentValue;
+
+  StaticFilterOptionsMonitor(LoggerFilterOptions currentValue)
+      : _currentValue = currentValue;
+
+  @override
+  Disposable? onChange(OnChangeListener<LoggerFilterOptions> listener) => null;
+
+  @override
+  LoggerFilterOptions get(String? name) => currentValue;
+
+  @override
+  LoggerFilterOptions get currentValue => _currentValue;
+
+  @override
+  void dispose() {}
+}
 
 class _Logger extends Logger with LoggerMixin {}
 
@@ -47,8 +68,7 @@ class LoggerFactory implements Disposable {
   static LoggerFactory create(ConfigureLoggingBuilder configure) {
     var serviceCollection = ServiceCollection()..addLogging(configure);
     var serviceProvider = serviceCollection.buildServiceProvider();
-    var loggerFactory =
-        serviceProvider.getRequiredService<LoggerFactory>() as LoggerFactory;
+    var loggerFactory = serviceProvider.getRequiredService<LoggerFactory>();
 
     return _DisposingLoggerFactory(
       loggerFactory,
@@ -114,12 +134,12 @@ class LoggerFactory implements Disposable {
         loggerInformation.category,
       );
 
-      // var minLevel = result.item1;
-      // if (minLevel != null) {
-      //   if (minLevel != LogLevel.critical) {
-      //     continue;
-      //   }
-      // }
+      var minLevel = result.item1;
+      if (minLevel != null) {
+        if (minLevel != LogLevel.critical) {
+          continue;
+        }
+      }
 
       var filter = result.item2;
 
@@ -134,9 +154,19 @@ class LoggerFactory implements Disposable {
       );
 
       if (!loggerInformation.externalScope) {
-        scopeLoggers?.add(ScopeLogger(null, null));
+        scopeLoggers?.add(
+          ScopeLogger(
+            loggerInformation.logger,
+            null,
+          ),
+        );
       }
     }
+
+    // if (_scopeProvider != null) {
+
+    // }
+
     return Tuple2<List<MessageLogger>, List<ScopeLogger>>(
       messageLoggers,
       scopeLoggers!,

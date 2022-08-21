@@ -1,6 +1,5 @@
 import 'package:extensions/hosting.dart';
 import 'package:extensions/src/configuration/configuration_manager.dart';
-import 'package:extensions/src/hosting/host_application_builder.dart';
 import 'package:extensions/src/hosting/host_application_builder_settings.dart';
 import 'package:test/test.dart';
 
@@ -13,8 +12,7 @@ void main() {
 
       final host = builder.build();
 
-      final config =
-          host.services.getRequiredService<Configuration>() as Configuration;
+      final config = host.services.getRequiredService<Configuration>();
       config['key2'] = 'value2';
 
       expect(config['key1'], equals('value1'));
@@ -34,8 +32,7 @@ void main() {
 
       final host = builder.build();
 
-      final config =
-          host.services.getRequiredService<Configuration>() as Configuration;
+      final config = host.services.getRequiredService<Configuration>();
 
       expect(config, isNotNull);
       expect(config['key1'], equals('value1'));
@@ -72,8 +69,8 @@ void main() {
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices = host.services
-          .getRequiredService<HostEnvironment>() as HostEnvironment;
+      final hostEnvironmentFromServices =
+          host.services.getRequiredService<HostEnvironment>();
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
@@ -104,8 +101,8 @@ void main() {
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices = host.services
-          .getRequiredService<HostEnvironment>() as HostEnvironment;
+      final hostEnvironmentFromServices =
+          host.services.getRequiredService<HostEnvironment>();
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppB'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvB'));
@@ -142,14 +139,13 @@ void main() {
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices = host.services
-          .getRequiredService<HostEnvironment>() as HostEnvironment;
+      final hostEnvironmentFromServices =
+          host.services.getRequiredService<HostEnvironment>();
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
     });
 
-    // TODO: Add config root.
     test('HostConfigParametersReadCorrectly', () {
       final parameters = <String, String>{
         'applicationName': 'MyProjectReference',
@@ -171,8 +167,7 @@ void main() {
 
       final host = builder.build();
 
-      final env = host.services.getRequiredService<HostEnvironment>()
-          as HostEnvironment;
+      final env = host.services.getRequiredService<HostEnvironment>();
 
       expect(env.applicationName, equals('MyProjectReference'));
       expect(env.environmentName, equals(Environments.development));

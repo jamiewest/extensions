@@ -6,7 +6,7 @@ import 'host.dart';
 /// Options for [Host].
 class HostOptions {
   /// The default timeout for [Host.Stop(cancellationToken)].
-  Duration shutdownTimeout = const Duration(seconds: 5);
+  Duration shutdownTimeout = const Duration(seconds: 30);
 
   /// The behavior the [Host] will follow when any of
   /// its [BackgroundService] instances throw an unhandled exception.

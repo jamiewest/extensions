@@ -1,20 +1,16 @@
 import '../../configuration.dart';
 import 'async_service_scope.dart';
-import 'service_lookup/service_provider_engine_scope.dart';
 import 'service_provider.dart';
-import 'service_provider_impl.dart';
 import 'service_scope.dart';
 import 'service_scope_factory.dart';
 import 'support_required_service.dart';
 
 /// Extension methods for getting services from a [ServiceProvider].
 extension ServiceProviderServiceExtensions on ServiceProvider {
-  Object getServices<T>() => getRequiredService<Iterable<T>>();
-
   /// Get service of type [T] from the [ServiceProvider].
-  Object getRequiredService<T>() {
+  T getRequiredService<T>() {
     if (this is SupportRequiredService) {
-      return (this as SupportRequiredService).getRequiredService(T);
+      return (this as SupportRequiredService).getRequiredService(T) as T;
     }
     var service = getService<T>();
     if (service == null) {
@@ -26,8 +22,7 @@ extension ServiceProviderServiceExtensions on ServiceProvider {
 
   /// Creates a new [ServiceScope] that can be used to resolve scoped services.
   ServiceScope createScope() =>
-      (getRequiredService<ServiceScopeFactory>() as ServiceScopeFactory)
-          .createScope();
+      getRequiredService<ServiceScopeFactory>().createScope();
 
   /// Creates a new [AsyncServiceScope] that can be used to resolve scoped
   /// services.

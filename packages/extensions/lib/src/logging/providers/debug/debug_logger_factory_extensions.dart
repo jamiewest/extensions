@@ -8,7 +8,7 @@ import 'debug_logger_provider.dart';
 extension DebugLoggerFactoryExtensions on LoggingBuilder {
   LoggingBuilder addDebug() {
     services.tryAddIterable(
-      ServiceDescriptor.singleton<LoggerProvider, DebugLoggerProvider>(
+      ServiceDescriptor.singleton<LoggerProvider>(
         (sp) => DebugLoggerProvider(),
       ),
     );

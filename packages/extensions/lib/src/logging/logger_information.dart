@@ -7,8 +7,8 @@ import 'logger_provider.dart';
 import 'support_external_scope.dart';
 
 typedef MessageLoggerFilter = bool Function(
-  String x,
-  String y,
+  String provider,
+  String category,
   LogLevel? level,
 );
 

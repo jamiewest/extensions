@@ -20,10 +20,10 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.transient] service
   /// using the factory specified in [implementationFactory] to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddTransient<TService, TImplementation>(
-    ImplementationFactory<TImplementation> implementationFactory,
+  void tryAddTransient<TService>(
+    ImplementationFactory implementationFactory,
   ) {
-    final descriptor = ServiceDescriptor.transient<TService, TImplementation>(
+    final descriptor = ServiceDescriptor.transient<TService>(
       implementationFactory,
     );
     tryAdd(descriptor);
@@ -32,10 +32,10 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.scoped] service
   /// using the factory specified in [implementationFactory] to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddScoped<TService, TImplementation>(
-    ImplementationFactory<TImplementation> implementationFactory,
+  void tryAddScoped<TService>(
+    ImplementationFactory implementationFactory,
   ) {
-    final descriptor = ServiceDescriptor.scoped<TService, TImplementation>(
+    final descriptor = ServiceDescriptor.scoped<TService>(
       implementationFactory,
     );
     tryAdd(descriptor);
@@ -44,12 +44,23 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.singleton] service
   /// using the factory specified in `implementationFactory` to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddSingleton<TService, TImplementation>(
-    ImplementationFactory<TImplementation> implementationFactory,
+  void tryAddSingleton<TService>(
+    ImplementationFactory implementationFactory,
   ) {
-    final descriptor = ServiceDescriptor.singleton<TService, TImplementation>(
+    final descriptor = ServiceDescriptor.singleton<TService>(
       implementationFactory,
     );
+
+    tryAdd(descriptor);
+  }
+
+  void tryAddSingletonInstance<TService>(
+    Object implementationInstance,
+  ) {
+    final descriptor = ServiceDescriptor.singletonInstance(
+      implementationInstance,
+    );
+
     tryAdd(descriptor);
   }
 
@@ -59,12 +70,11 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   void tryAddIterable(ServiceDescriptor descriptor) {
     var count = length;
     for (var i = 0; i < count; i++) {
-      var service = this[i];
-      if (service.serviceType.hashCode == descriptor.serviceType.hashCode &&
-          service.implementationType == descriptor.implementationType) {
-        // Already added
-        return;
-      }
+      // var service = this[i];
+      //if (service.serviceType.hashCode == descriptor.serviceType.hashCode &&
+      //  service.implementationType == descriptor.implementationType) {
+      // Already added
+      //return;
     }
 
     add(descriptor);

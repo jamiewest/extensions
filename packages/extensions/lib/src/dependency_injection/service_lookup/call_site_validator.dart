@@ -1,3 +1,4 @@
+import '../../../dependency_injection.dart';
 import '../service_scope.dart';
 import 'call_site_visitor.dart';
 import 'constant_call_site.dart';
@@ -5,7 +6,6 @@ import 'factory_call_site.dart';
 import 'iterable_call_site.dart';
 import 'service_call_site.dart';
 import 'service_provider_call_site.dart';
-import 'service_scope_factory_call_site.dart';
 
 class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
   final Map<Type, Type> _scopedServices = <Type, Type>{};
@@ -59,8 +59,18 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
     ServiceCallSite callSite,
     CallSiteValidatorState argument,
   ) {
-    if (callSite is ServiceScopeFactoryCallSite) {
-      //return null;
+    // We are fine with having ServiceScopeService requested by singletons
+    if (callSite is ServiceScopeFactory) {
+      return null;
+    }
+
+    if (argument.singleton != null) {
+      // throw new InvalidOperationException(SR.Format(
+      //     SR.ScopedInSingletonException,
+      //     scopedCallSite.ServiceType,
+      //     state.Singleton.ServiceType,
+      //     nameof(ServiceLifetime.Scoped).ToLowerInvariant(),
+      //     nameof(ServiceLifetime.Singleton).ToLowerInvariant()));
     }
 
     visitCallSiteMain(callSite, argument);
@@ -87,14 +97,6 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
     CallSiteValidatorState argument,
   ) =>
       null;
-
-  @override
-  Type? visitServiceScopeFactory(
-    ServiceScopeFactoryCallSite serviceScopeFactoryCallSite,
-    CallSiteValidatorState argument,
-  ) {
-    throw UnimplementedError();
-  }
 }
 
 class CallSiteValidatorState {

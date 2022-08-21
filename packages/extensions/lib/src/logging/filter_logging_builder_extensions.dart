@@ -6,7 +6,7 @@ import 'logger_filter_rule.dart';
 import 'logger_information.dart';
 
 typedef CategoryLevelFilterAction = bool Function(
-  String category,
+  String? category,
   LogLevel level,
 );
 
@@ -23,22 +23,60 @@ typedef ConfigureOptionsAction1 = void Function(LoggerFilterOptions options);
 extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
   /// Adds a log filter to the factory.
   LoggerFilterOptions addFilter({
-    required MessageLoggerFilter levelFilter,
+    String? category,
+    LogLevel? level,
+    CategoryLevelFilterAction? categoryLevelFilter,
+    LevelFilterAction? levelFilter,
+    MessageLoggerFilter? filter,
   }) {
-    _addRule(
-      filter: levelFilter,
-    );
+    if (category != null && level != null) {
+      _addRule(
+        category: category,
+        level: level,
+      );
+    }
+
+    if (category != null && levelFilter != null) {
+      _addRule(
+        category: category,
+        filter: (provider, category, level) => levelFilter(level!),
+      );
+    }
+
+    if (levelFilter != null) {
+      _addRule(
+        filter: (provider, category, level) => levelFilter(level!),
+      );
+    }
+
+    if (categoryLevelFilter != null) {
+      _addRule(
+        filter: (provider, category, level) => categoryLevelFilter(
+          category,
+          level!,
+        ),
+      );
+    }
+
+    if (filter != null) {
+      _addRule(
+        filter: filter,
+      );
+    }
     return this;
   }
 
   void _addRule({
-    required MessageLoggerFilter filter,
+    String? type,
+    String? category,
+    LogLevel? level,
+    MessageLoggerFilter? filter,
   }) {
     rules.add(
       LoggerFilterRule(
-        null,
-        null,
-        null,
+        type,
+        category,
+        level,
         filter,
       ),
     );
@@ -47,9 +85,20 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
 
 /// Extension methods for setting up logging services in an [ServiceCollection].
 extension FilterLoggingBuilderExtensions on LoggingBuilder {
-  LoggingBuilder addFilter(MessageLoggerFilter filter) => _configureFilter(
+  LoggingBuilder addFilter({
+    String? category,
+    LogLevel? level,
+    MessageLoggerFilter? filter,
+    CategoryLevelFilterAction? categoryLevelFilter,
+    LevelFilterAction? levelFilter,
+  }) =>
+      _configureFilter(
         (options) => options.addFilter(
-          levelFilter: filter,
+          category: category,
+          level: level,
+          levelFilter: levelFilter,
+          categoryLevelFilter: categoryLevelFilter,
+          filter: filter,
         ),
       );
 

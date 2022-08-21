@@ -6,11 +6,12 @@ import 'hosted_service.dart';
 extension ServiceCollectionHostedServiceExtensions on ServiceCollection {
   /// Add an [HostedService] registration for the given type.
   ServiceCollection addHostedService<THostedService extends HostedService>(
-    ImplementationFactory<THostedService> implementationFactory,
+    ImplementationFactory implementationFactory,
   ) {
     tryAddIterable(
-      ServiceDescriptor.singleton<HostedService, THostedService>(
-          implementationFactory),
+      ServiceDescriptor.singletonInstance<THostedService>(
+        implementationFactory,
+      ),
     );
 
     return this;

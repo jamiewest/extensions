@@ -8,7 +8,7 @@ class CounterManager {
 
 final builder = Host.createApplicationBuilder()
   //..environment.applicationName = 'AppExample'
-  ..services.addFlutter(const MyApp())
+  ..services.addFlutter((s) => const MyApp())
   ..services.addSingleton<CounterManager>(
     implementationInstance: CounterManager(),
   );

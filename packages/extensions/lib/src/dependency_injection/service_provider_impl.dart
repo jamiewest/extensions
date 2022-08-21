@@ -12,7 +12,6 @@ import 'service_lookup/service_call_site.dart';
 import 'service_lookup/service_provider_call_site.dart';
 import 'service_lookup/service_provider_engine.dart';
 import 'service_lookup/service_provider_engine_scope.dart';
-import 'service_lookup/service_scope_factory_call_site.dart';
 import 'service_provider.dart';
 import 'service_provider_is_service.dart';
 import 'service_provider_options.dart';
@@ -68,7 +67,7 @@ class ServiceProviderImpl
 
     _callSiteFactory
       ..add(ServiceProvider, ServiceProviderCallSite())
-      ..add(ServiceScopeFactory, ServiceScopeFactoryCallSite(_root))
+      ..add(ServiceScopeFactory, ConstantCallSite(ServiceScopeFactory, root))
       ..add(ServiceProviderIsService,
           ConstantCallSite(ServiceProviderIsService, _callSiteFactory));
 
@@ -117,11 +116,11 @@ class ServiceProviderImpl
 
   /// Gets the service object of the specified type.
   @override
-  Object? getService<T>([ServiceScope? scope]) => _getService<T>(
+  T? getService<T>([ServiceScope? scope]) => _getService<T>(
         scope == null ? _root : scope as ServiceProviderEngineScope,
       );
 
-  Object? _getService<T>(
+  T? _getService<T>(
       covariant ServiceProviderEngineScope serviceProviderEngineScope) {
     if (_disposed) {
       throw Exception('Object disposed exception');
@@ -136,11 +135,36 @@ class ServiceProviderImpl
     var result = realizedService!.call(serviceProviderEngineScope);
     assert(result != null || _callSiteFactory.isService(serviceType: T));
 
-    if (result is List<dynamic>) {
-      return result;
+    return result as T;
+  }
+
+  @override
+  Iterable<T> getServices<T>([ServiceScope? scope]) => _getServices<T>(
+        scope == null ? _root : scope as ServiceProviderEngineScope,
+      );
+
+  Iterable<T> _getServices<T>(
+      covariant ServiceProviderEngineScope serviceProviderEngineScope) {
+    if (_disposed) {
+      throw Exception('Object disposed exception');
     }
 
-    return result as T;
+    var realizedService = _realizedServices.putIfAbsent(
+      Iterable<T>,
+      () => _createServiceAccessor!(Iterable<T>),
+    );
+
+    _onResolve(Iterable<T>, serviceProviderEngineScope);
+    var result = realizedService!.call(serviceProviderEngineScope);
+    assert(
+        result != null || _callSiteFactory.isService(serviceType: Iterable<T>));
+
+    if (result is List<dynamic>) {
+      final x = result.cast<T>();
+      return x;
+    }
+
+    throw Exception('Error bitches');
   }
 
   void _onCreate(ServiceCallSite callSite) {
@@ -158,4 +182,8 @@ class ServiceProviderImpl
 
   @override
   Future<void> disposeAsync() => _root.disposeAsync();
+}
+
+extension IterableExtension<T> on Iterable<T> {
+  Iterable<T> converty(List<dynamic> x) => x.map((y) => y as T).toList();
 }

@@ -4,7 +4,7 @@ import '../service_provider.dart';
 import '../service_provider_impl.dart';
 import '../service_scope.dart';
 import '../service_scope_factory.dart';
-import 'service_cache_kind.dart';
+import 'service_cache_key.dart';
 
 class ServiceProviderEngineScope
     implements
@@ -35,12 +35,21 @@ class ServiceProviderEngineScope
   ServiceProviderImpl get rootProvider => _rootProvider;
 
   @override
-  Object? getService<T>() {
+  T? getService<T>() {
     if (_disposed) {
       throw Exception('Cannot access a disposed object.');
     }
 
     return rootProvider.getService<T>(this);
+  }
+
+  @override
+  Iterable<T> getServices<T>() {
+    if (_disposed) {
+      throw Exception('Cannot access a disposed object.');
+    }
+
+    return rootProvider.getServices<T>(this);
   }
 
   @override

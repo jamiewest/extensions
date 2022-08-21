@@ -10,7 +10,7 @@ import 'constant_call_site.dart';
 import 'factory_call_site.dart';
 import 'iterable_call_site.dart';
 import 'result_cache.dart';
-import 'service_cache_kind.dart';
+import 'service_cache_key.dart';
 import 'service_call_site.dart';
 
 class CallSiteFactory implements ServiceProviderIsService {
@@ -18,8 +18,8 @@ class CallSiteFactory implements ServiceProviderIsService {
   final Iterable<ServiceDescriptor> _descriptors;
   final Map<ServiceCacheKey, ServiceCallSite> _callSiteCache =
       <ServiceCacheKey, ServiceCallSite>{};
-  final Map<Type, ServiceDescriptorCacheItem?> _descriptorLookup =
-      <Type, ServiceDescriptorCacheItem?>{};
+  final Map<Type, ServiceDescriptorCacheItem> _descriptorLookup =
+      <Type, ServiceDescriptorCacheItem>{};
 
   CallSiteFactory(Iterable<ServiceDescriptor> descriptors)
       : _descriptors = descriptors {
@@ -116,8 +116,6 @@ class CallSiteFactory implements ServiceProviderIsService {
       return _callSiteCache[callSiteKey];
     }
 
-    var itemType = serviceType;
-
     try {
       callSiteChain.add(serviceType);
 
@@ -135,6 +133,7 @@ class CallSiteFactory implements ServiceProviderIsService {
             for (var descriptor in _descriptors) {
               if (descriptor.serviceType.toString() == name) {
                 itemType = descriptor.serviceType;
+                break;
               }
             }
           }
@@ -236,7 +235,7 @@ class CallSiteFactory implements ServiceProviderIsService {
       }
 
       ServiceCallSite callSite;
-      var lifetime = ResultCache.fromServiceLifetime(
+      var lifetime = ResultCache.builder(
         descriptor.lifetime,
         serviceType,
         slot,

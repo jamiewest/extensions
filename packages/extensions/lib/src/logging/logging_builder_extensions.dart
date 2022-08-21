@@ -2,6 +2,7 @@ import '../dependency_injection/service_collection_service_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
 import '../options/configure_options.dart';
 import '../options/options_service_collection_extensions.dart';
+import 'default_logger_level_configure_options.dart';
 import 'log_level.dart';
 import 'logger_factory_options.dart';
 import 'logger_filter_options.dart';
@@ -17,9 +18,8 @@ extension LoggingBuilderExtensions on LoggingBuilder {
   /// Sets a minimum [LogLevel] requirement for log messages to be logged.
   LoggingBuilder setMinimumLevel(LogLevel level) {
     services.add(
-      ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>,
-          ConfigureOptions<LoggerFilterOptions>>(
-        (_) => _DefaultLoggerLevelConfigureOptions(level),
+      ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>>(
+        (_) => DefaultLoggerLevelConfigureOptions(level),
       ),
     );
     return this;
@@ -27,7 +27,7 @@ extension LoggingBuilderExtensions on LoggingBuilder {
 
   /// Adds the given [LoggerProvider] to the [LoggingBuilder]
   LoggingBuilder addProvider(LoggerProvider provider) {
-    services.addSingleton<LoggerProvider, LoggerProvider>((_) => provider);
+    services.addSingleton<LoggerProvider>((_) => provider);
     return this;
   }
 
@@ -42,12 +42,4 @@ extension LoggingBuilderExtensions on LoggingBuilder {
     services.configure(LoggerFactoryOptions.new, action);
     return this;
   }
-}
-
-class _DefaultLoggerLevelConfigureOptions
-    extends ConfigureOptionsBase<LoggerFilterOptions> {
-  _DefaultLoggerLevelConfigureOptions(LogLevel level)
-      : super(
-          (options) => options.minLevel = level,
-        );
 }

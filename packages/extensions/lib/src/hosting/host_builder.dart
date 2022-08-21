@@ -1,7 +1,6 @@
 import 'package:path/path.dart' as p;
 
 import '../../configuration.dart';
-import '../../hosting.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_descriptor_extensions.dart';
@@ -233,42 +232,40 @@ void populateServiceCollection(
   ServiceProvider Function() serviceProviderGetter,
 ) {
   services
-    ..addSingleton<HostingEnvironment, HostEnvironment>(
-      (_) => hostingEnvironment,
+    ..addSingleton<HostingEnvironment>(
+      <HostEnvironment>(_) => hostingEnvironment,
     )
-    ..addSingleton<HostEnvironment, HostEnvironment>(
-      (_) => hostingEnvironment,
+    ..addSingleton<HostEnvironment>(
+      <HostEnvironment>(_) => hostingEnvironment,
     )
-    ..addSingleton<HostBuilderContext, HostBuilderContext>(
+    ..addSingleton<HostBuilderContext>(
       (_) => hostBuilderContext,
     )
-    ..addSingleton<Configuration, Configuration>(
-      (_) => appConfiguration,
+    ..addSingleton<Configuration>(
+      <Configuration>(_) => appConfiguration,
     )
-    ..addSingleton<ApplicationLifetime, HostApplicationLifetime>(
+    ..addSingleton<ApplicationLifetime>(
       (s) => s.getService<HostApplicationLifetime>() as ApplicationLifetime,
     )
-    ..addSingleton<HostApplicationLifetime, ApplicationLifetime>(
-      (s) => ApplicationLifetime(
-        (s.getRequiredService<LoggerFactory>() as LoggerFactory)
+    ..addSingleton<HostApplicationLifetime>(
+      (ServiceProvider s) => ApplicationLifetime(
+        (s.getRequiredService<LoggerFactory>())
             .createLogger('ApplicationLifetime'),
       ),
     )
-    ..addSingleton<HostLifetime, NullLifetime>((s) => NullLifetime())
+    ..addSingleton<HostLifetime>((s) => NullLifetime())
     ..tryAdd(
-      ServiceDescriptor.singleton<Host, Host>(
+      ServiceDescriptor.singleton<Host>(
         (_) {
           var appServices = serviceProviderGetter();
 
           return Host(
             appServices,
-            appServices.getRequiredService<HostApplicationLifetime>()
-                as HostApplicationLifetime,
-            (appServices.getRequiredService<LoggerFactory>() as LoggerFactory)
+            appServices.getRequiredService<HostApplicationLifetime>(),
+            (appServices.getRequiredService<LoggerFactory>())
                 .createLogger('Host'),
-            appServices.getRequiredService<HostLifetime>() as HostLifetime,
-            appServices.getRequiredService<Options<HostOptions>>()
-                as Options<HostOptions>,
+            appServices.getRequiredService<HostLifetime>(),
+            appServices.getRequiredService<Options<HostOptions>>(),
           );
         },
       ),
@@ -308,7 +305,7 @@ Host resolveHost(ServiceProvider serviceProvider) {
   // service provider, ensuring it will be properly disposed with the provider
   serviceProvider.getService<Configuration>();
 
-  var host = serviceProvider.getRequiredService<Host>() as Host;
+  var host = serviceProvider.getRequiredService<Host>();
 
   return host;
 }

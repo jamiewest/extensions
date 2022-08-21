@@ -2,5 +2,7 @@
 /// that provides custom support to other objects.
 abstract class ServiceProvider {
   // Gets the service object of the specified type.
-  Object? getService<T>();
+  T? getService<T>();
+
+  Iterable<T> getServices<T>();
 }

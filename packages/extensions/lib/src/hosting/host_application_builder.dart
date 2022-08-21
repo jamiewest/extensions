@@ -1,7 +1,9 @@
-import '../../dependency_injection.dart';
+import 'package:path/path.dart' as p;
+
 import '../configuration/configuration_manager.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
 import '../dependency_injection/service_collection.dart';
+import '../dependency_injection/service_collection_container_builder_extensions.dart';
 import '../dependency_injection/service_provider.dart';
 import '../dependency_injection/service_provider_factory.dart';
 import '../dependency_injection/service_provider_options.dart';
@@ -117,7 +119,7 @@ class HostApplicationBuilder {
   /// Build the host. This can only be called once.
   Host build() {
     if (_hostBuilt) {
-      // Throw exception
+      throw Exception('Build can only be called once.');
     }
     _hostBuilt = true;
 
@@ -153,27 +155,29 @@ class HostBuilderAdapter implements HostBuilder {
     if (_configureHostConfigActions.isNotEmpty) {
       var previousApplicationName = config[host_defaults.applicationKey];
       var previousEnvironment = config[host_defaults.environmentKey];
-      //var previousContentRootConfig = config[HostDefaults.contentRootKey];
-      //var previousContentRootPath = _hostApplicationBuilder
-      //    ._hostBuilderContext.hostingEnvironment?.contentRootPath;
+      var previousContentRootConfig = config[host_defaults.contentRootKey];
+      var previousContentRootPath = _hostApplicationBuilder
+          ._hostBuilderContext.hostingEnvironment?.contentRootPath;
 
       for (var configureHostAction in _configureHostConfigActions) {
         configureHostAction(config);
       }
 
       if (previousApplicationName != config[host_defaults.applicationKey]) {
-        // throw error about application name change not supported
+        throw Exception(
+            'The application name changed from \'$previousApplicationName\' to \'$config[host_defaults.applicationKey]\'. Changing host configuration is not supported.');
       }
       if (previousEnvironment != config[host_defaults.environmentKey]) {
-        // throw error about environment change not supported
+        throw Exception(
+            'The environment name changed from \'$previousEnvironment\' to \'$config[host_defaults.environmentKey]\'. Changing host configuration is not supported.');
       }
-      // var currentContentRootConfig = config[HostDefaults.contentRootKey];
-      // if ((previousContentRootConfig != currentContentRootConfig) &&
-      //     (previousContentRootPath !=
-      //         HostBuilder.resolveContentRootPath(
-      //             currentContentRootConfig, AppContext.baseDirectory))) {
-      //   // throw error about content root change not supported
-      // }
+      var currentContentRootConfig = config[host_defaults.contentRootKey];
+      if ((previousContentRootConfig != currentContentRootConfig) &&
+          (previousContentRootPath !=
+              resolveContentRootPath(currentContentRootConfig, p.current))) {
+        throw Exception(
+            'The content root changed from \'$previousContentRootConfig\' to \'$currentContentRootConfig\'. Changing host configuration is not supported.');
+      }
 
       for (var configureAppAction in _configureAppConfigActions) {
         configureAppAction(_hostApplicationBuilder._hostBuilderContext, config);

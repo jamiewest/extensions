@@ -1,21 +1,12 @@
 enum CallSiteResultCacheLocation {
-  root,
-  scope,
-  dispose,
-  none,
-}
+  root(value: 0),
+  scope(value: 1),
+  dispose(value: 2),
+  none(value: 3);
 
-extension CallSiteResultCacheLocationExtensions on CallSiteResultCacheLocation {
-  int get value {
-    switch (this) {
-      case CallSiteResultCacheLocation.root:
-        return 0;
-      case CallSiteResultCacheLocation.scope:
-        return 1;
-      case CallSiteResultCacheLocation.dispose:
-        return 2;
-      case CallSiteResultCacheLocation.none:
-        return 3;
-    }
-  }
+  const CallSiteResultCacheLocation({
+    required this.value,
+  });
+
+  final int value;
 }
