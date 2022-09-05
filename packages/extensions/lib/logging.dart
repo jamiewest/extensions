@@ -1,6 +1,7 @@
 library logging;
 
 export 'primitives.dart';
+export 'src/logging/default_logger_level_configure_options.dart';
 export 'src/logging/event_id.dart';
 export 'src/logging/filter_logging_builder_extensions.dart';
 export 'src/logging/log_level.dart';
@@ -9,6 +10,7 @@ export 'src/logging/logger_extensions.dart';
 export 'src/logging/logger_factory.dart';
 export 'src/logging/logger_factory_extensions.dart';
 export 'src/logging/logger_factory_options.dart';
+export 'src/logging/logger_filter_options.dart';
 export 'src/logging/logger_provider.dart';
 export 'src/logging/logging_builder.dart';
 export 'src/logging/logging_builder_extensions.dart';

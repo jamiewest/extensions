@@ -12,9 +12,13 @@ dependencies:
   #extensions: ^0.3.6
   extensions: 
     path: ../extensions/
+  collection: ^1.16.0
+  package_info_plus: ^1.4.3+1
+  shared_preferences: ^2.0.15
 
   flutter:
     sdk: flutter
+  
 
 dev_dependencies:
   flutter_lints: ^2.0.0

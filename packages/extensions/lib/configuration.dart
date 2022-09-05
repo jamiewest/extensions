@@ -30,6 +30,7 @@ export 'src/configuration/configuration.dart';
 export 'src/configuration/configuration_builder.dart';
 export 'src/configuration/configuration_extensions.dart';
 export 'src/configuration/configuration_key_comparator.dart';
+export 'src/configuration/configuration_manager.dart';
 export 'src/configuration/configuration_path.dart';
 export 'src/configuration/configuration_provider.dart';
 export 'src/configuration/configuration_reload_token.dart';

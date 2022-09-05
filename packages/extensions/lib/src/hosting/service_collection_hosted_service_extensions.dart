@@ -9,7 +9,7 @@ extension ServiceCollectionHostedServiceExtensions on ServiceCollection {
     ImplementationFactory implementationFactory,
   ) {
     tryAddIterable(
-      ServiceDescriptor.singletonInstance<THostedService>(
+      ServiceDescriptor.singleton<HostedService>(
         implementationFactory,
       ),
     );

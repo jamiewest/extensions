@@ -19,13 +19,14 @@ class FlutterLifetime extends HostLifetime {
     required this.environment,
   })  : _logger = logger,
         _lifetime = lifetime as FlutterApplicationLifetime {
-    _lifetime.applicationStarted.register((state) => _onStarted());
-    _lifetime.applicationStopping.register((state) => _onStopping());
-    _lifetime.applicationStopped.register((state) => _onStopped());
-    _lifetime.applicationPaused.register(_onPaused);
-    _lifetime.applicationResumed.register(_onResumed);
-    _lifetime.applicationInactive.register(_onInactive);
-    _lifetime.applicationDetached.register(_onDetached);
+    _lifetime
+      ..applicationStarted.register((state) => _onStarted())
+      ..applicationStopping.register((state) => _onStopping())
+      ..applicationStopped.register((state) => _onStopped())
+      ..applicationPaused.add(_onPaused)
+      ..applicationResumed.add(_onResumed)
+      ..applicationInactive.add(_onInactive)
+      ..applicationDetached.add(_onDetached);
   }
 
   Widget app;
@@ -98,10 +99,10 @@ class FlutterLifetime extends HostLifetime {
   }
 
   void _onInactive() {
-    _logger.logInformation('Application is inactive...');
+    _logger.logInformation('Application is inactive.');
   }
 
   void _onDetached() {
-    _logger.logInformation('Application is detached...');
+    _logger.logInformation('Application is detached.');
   }
 }

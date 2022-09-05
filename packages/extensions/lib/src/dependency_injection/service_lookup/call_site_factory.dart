@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:characters/characters.dart';
+
 import '../service_descriptor.dart';
 import '../service_provider.dart';
 import '../service_provider_factory.dart';
@@ -123,24 +125,41 @@ class CallSiteFactory implements ServiceProviderIsService {
         Type? itemType;
         var cacheLocation = CallSiteResultCacheLocation.root;
         var callSites = <ServiceCallSite>[];
-        final regex = RegExp(r'\<([^>]+)\>');
-        final match = regex.firstMatch(serviceType.toString());
 
-        if (match != null) {
-          final result = match[0];
-          if (result != null) {
-            final name = result.substring(1, result.length - 1);
-            for (var descriptor in _descriptors) {
-              if (descriptor.serviceType.toString() == name) {
-                itemType = descriptor.serviceType;
-                break;
-              }
-            }
-          }
-        } else {
-          // We didn't find a regex result.
-          return null;
+        var typeName = serviceType.toString().replaceFirst('Iterable', '');
+        if (typeName.characters.first == '<') {
+          typeName = typeName.substring(1, typeName.length);
         }
+
+        if (typeName.characters.last == '>') {
+          typeName = typeName.substring(0, typeName.length - 1);
+        }
+
+        // final regex = RegExp(r'\<([^>]+)\>');
+        // final match = regex.firstMatch(serviceType.toString());
+
+        // if (match != null) {
+        //   final result = match[0];
+        //   if (result != null) {
+        //     int idx;
+
+        //     if (idx > 2) {
+        //       name = result.substring(1, result.length);
+        //     } else {
+        //       name = result.substring(1, result.length - 1);
+        //     }
+
+        for (var descriptor in _descriptors) {
+          if (descriptor.serviceType.toString() == typeName) {
+            itemType = descriptor.serviceType;
+            break;
+          }
+        }
+
+        // } else {
+        //   // We didn't find a regex result.
+        //   return null;
+        // }
 
         if (_descriptorLookup.containsKey(itemType)) {
           var descriptors = _descriptorLookup[itemType];

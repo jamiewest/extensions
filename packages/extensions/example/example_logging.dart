@@ -6,6 +6,6 @@ void main() {
   LoggerFactory.create((builder) => builder
     ..addDebug()
     ..addFilter(
-      levelFilter: (level) => level.value >= LogLevel.debug.value,
+      level: LogLevel.information,
     )).createLogger('MyLogger').logTrace('Hello World');
 }

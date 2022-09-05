@@ -37,7 +37,7 @@ class HostApplicationBuilder {
     _configuration = appSettings.configuration ?? ConfigurationManager();
 
     if (!appSettings.disableDefaults) {
-      applyDefaultHostConfiguration(
+      HostingHostBuilderExtensions.applyDefaultHostConfiguration(
         configuration,
         appSettings.args,
       );
@@ -87,11 +87,20 @@ class HostApplicationBuilder {
 
     ServiceProviderOptions? serviceProviderOptions;
 
-    if (!appSettings.disableDefaults) {}
+    if (!appSettings.disableDefaults) {
+      HostingHostBuilderExtensions.addDefaultServices(
+        _hostBuilderContext,
+        services,
+      );
+      serviceProviderOptions =
+          HostingHostBuilderExtensions.createDefaultServiceProviderOptions(
+        _hostBuilderContext,
+      );
+    }
 
     _createServiceProvider = () {
       // Call _configureContainer in case anyone adds callbacks via
-      // HostBuilderAdapter.ConfigureContainer<IServiceCollection>() during
+      // HostBuilderAdapter.ConfigureContainer<ServiceCollection>() during
       // build. Otherwise, this no-ops.
       _configureContainer(services);
       return serviceProviderOptions == null
@@ -131,6 +140,9 @@ class HostApplicationBuilder {
 
     return resolveHost(_appServices!);
   }
+
+  // HostBuilder asHostBuilder() =>
+  //     _hostBuilderAdapter ??= HostBuilderAdapter(this);
 }
 
 class HostBuilderAdapter implements HostBuilder {

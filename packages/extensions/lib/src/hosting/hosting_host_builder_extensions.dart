@@ -60,12 +60,13 @@ extension HostingHostBuilderExtensions on HostBuilder {
   /// Adds a delegate for configuring the provided [LoggingBuilder].
   /// This may be called multiple times.
   HostBuilder configureLogging(
-    Function(HostBuilderContext context, LoggingBuilder logging)
-        configureLogging,
+    Function(HostBuilderContext context, LoggingBuilder logging) configure,
   ) =>
-      configureServices((context, collection) => collection.addLogging(
-            (builder) => configureLogging(context, builder),
-          ));
+      configureServices(
+        (context, collection) => collection.addLogging(
+          (builder) => configure(context, builder),
+        ),
+      );
 
   /// Adds a delegate for configuring the [HostOptions] of the [Host].
   HostBuilder configureHostOptions(
@@ -78,10 +79,12 @@ extension HostingHostBuilderExtensions on HostBuilder {
         ),
       );
 
-  /// Configures an existing <see cref="IHostBuilder"/> instance with pre-configured defaults.
+  /// Configures an existing [HostBuilder] instance with pre-configured defaults.
   // ignore: prefer_expression_function_bodies
   HostBuilder configureDefaults([List<String>? args]) {
-    configureLogging((context, logging) => logging.addDebug());
+    configureLogging((context, logging) {
+      logging.addDebug();
+    });
     return this;
   }
 }

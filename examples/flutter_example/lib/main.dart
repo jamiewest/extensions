@@ -6,31 +6,32 @@ class CounterManager {
   ValueNotifier<int> counter;
 }
 
-final builder = Host.createApplicationBuilder()
-  //..environment.applicationName = 'AppExample'
-  ..services.addFlutter((s) => const MyApp())
-  ..services.addSingleton<CounterManager>(
-    implementationInstance: CounterManager(),
-  );
-
-final host = builder.build();
-
-// final host = Host.createDefaultBuilder()
-//     .useFlutterLifetime(
-//   const MyApp(),
-//   //FlutterLifetimeOptions(),
-// )
-//     .configureServices((context, services) {
-//   services.addSingleton<CounterManager>(
-//       implementationFactory: (_) => CounterManager());
-// }).build();
+final host = (Host.createApplicationBuilder()
+      ..logging.setMinimumLevel(LogLevel.debug)
+      ..services.addFlutter((flutter) => flutter.useApp(const MyApp()))
+      ..services.addSingletonInstance<CounterManager>(CounterManager()))
+    .build();
 
 Future<void> main() async => await host.run();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  FlutterHostingEnvironment? environment;
+
+  @override
+  void initState() {
+    environment = host.services.getRequiredService<HostingEnvironment>()
+        as FlutterHostingEnvironment;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,9 +58,6 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             ValueListenableBuilder<int>(
               valueListenable: counter,
               builder: (BuildContext context, int value, Widget? child) => Text(

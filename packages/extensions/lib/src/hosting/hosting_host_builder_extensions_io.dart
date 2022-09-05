@@ -1,20 +1,6 @@
-import '../configuration/configuration_builder.dart';
-import '../configuration/memory_configuration_builder_extensions.dart';
-import '../configuration/providers/command_line/command_line_configuration_extensions.dart';
-import '../dependency_injection/service_collection_service_extensions.dart';
-import '../dependency_injection/service_provider_service_extensions.dart';
-import '../logging/logger_factory.dart';
-import '../options/options.dart';
-import '../options/options_service_collection_extensions.dart';
-import '../primitives/cancellation_token.dart';
-import 'host_application_lifetime.dart';
-import 'host_builder.dart';
+import '../../hosting.dart';
 import 'host_defaults.dart' as host_defaults;
-import 'host_environment.dart';
-import 'host_lifetime.dart';
 import 'host_options.dart';
-import 'hosting_abstractions_host_extensions.dart';
-import 'internal/application_lifetime.dart';
 import 'internal/console_lifetime.dart';
 import 'internal/console_lifetime_options.dart';
 
@@ -46,21 +32,40 @@ extension HostingHostBuilderExtensions on HostBuilder {
   /// Ctrl+C or SIGTERM to shut down.
   Future<void> runConsole([CancellationToken? cancellationToken]) =>
       useConsoleLifetime((_) => {}).build().run(cancellationToken);
-}
 
-void applyDefaultHostConfiguration(
-  ConfigurationBuilder hostConfigBuilder,
-  List<String>? args,
-) {
-  hostConfigBuilder.addInMemoryCollection(
-    [MapEntry<String, String>(host_defaults.contentRootKey, '')],
-  );
+  static void applyDefaultHostConfiguration(
+    ConfigurationBuilder hostConfigBuilder,
+    List<String>? args,
+  ) {
+    hostConfigBuilder.addInMemoryCollection(
+      [MapEntry<String, String>(host_defaults.contentRootKey, '')],
+    );
 
-  // hostConfigBuilder.AddEnvironmentVariables(prefix: "DOTNET_");
+    // hostConfigBuilder.AddEnvironmentVariables(prefix: "DOTNET_");
 
-  if (args != null) {
-    if (args.isNotEmpty) {
-      hostConfigBuilder.addCommandLine(args);
+    if (args != null) {
+      if (args.isNotEmpty) {
+        hostConfigBuilder.addCommandLine(args);
+      }
     }
+  }
+
+  static void addDefaultServices(
+    HostBuilderContext hostingContext,
+    ServiceCollection services,
+  ) {
+    services.addLogging(
+      (logging) => logging.addDebug(),
+    );
+  }
+
+  static ServiceProviderOptions createDefaultServiceProviderOptions(
+    HostBuilderContext context,
+  ) {
+    final isDevelopment = context.hostingEnvironment!.isDevelopment();
+    return ServiceProviderOptions(
+      validateScopes: isDevelopment,
+      validateOnBuild: isDevelopment,
+    );
   }
 }

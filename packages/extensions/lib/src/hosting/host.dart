@@ -7,6 +7,7 @@ import '../primitives/disposable.dart';
 import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
 import 'host_application_builder.dart';
+import 'host_application_builder_settings.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
 import 'host_lifetime.dart';
@@ -57,7 +58,7 @@ class Host implements Disposable, AsyncDisposable {
 
     await _hostLifetime.waitForStart(combinedCancellationToken);
 
-    //combinedCancellationToken.throwIfCancellatinoRequested();
+    combinedCancellationToken.throwIfCancellationRequested();
     _hostedServices = (services.getServices<HostedService>() as List)
         .map((item) => item as HostedService)
         .toList();
@@ -155,7 +156,10 @@ class Host implements Disposable, AsyncDisposable {
     return builder.configureDefaults(args);
   }
 
-  static HostApplicationBuilder createApplicationBuilder(
-          [List<String>? args]) =>
-      HostApplicationBuilder();
+  static HostApplicationBuilder createApplicationBuilder({
+    HostApplicationBuilderSettings? settings,
+  }) =>
+      HostApplicationBuilder(
+        settings: settings,
+      );
 }

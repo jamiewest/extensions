@@ -10,6 +10,7 @@ class FlutterLifecycleObserver extends StatefulWidget {
     required this.lifetime,
   }) : super(key: key);
 
+  /// The [child] contained by this object.
   final Widget child;
 
   final FlutterApplicationLifetime lifetime;
@@ -38,20 +39,20 @@ class _FlutterLifecycleObserver extends State<FlutterLifecycleObserver>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      widget.lifetime.notifyPaused();
-    }
 
-    if (state == AppLifecycleState.resumed) {
-      widget.lifetime.notifyResumed();
-    }
-
-    if (state == AppLifecycleState.inactive) {
-      widget.lifetime.notifyInactive();
-    }
-
-    if (state == AppLifecycleState.detached) {
-      widget.lifetime.notifyDetached();
+    switch (state) {
+      case AppLifecycleState.paused:
+        widget.lifetime.notifyPaused();
+        break;
+      case AppLifecycleState.resumed:
+        widget.lifetime.notifyDetached();
+        break;
+      case AppLifecycleState.inactive:
+        widget.lifetime.notifyInactive();
+        break;
+      case AppLifecycleState.detached:
+        widget.lifetime.notifyDetached();
+        break;
     }
   }
 }

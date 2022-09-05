@@ -1,8 +1,5 @@
 import '../dependency_injection/service_collection_service_extensions.dart';
-import '../dependency_injection/service_descriptor.dart';
-import '../options/configure_options.dart';
 import '../options/options_service_collection_extensions.dart';
-import 'default_logger_level_configure_options.dart';
 import 'log_level.dart';
 import 'logger_factory_options.dart';
 import 'logger_filter_options.dart';
@@ -17,11 +14,15 @@ typedef ConfigureLoggerFactoryOptions = void Function(
 extension LoggingBuilderExtensions on LoggingBuilder {
   /// Sets a minimum [LogLevel] requirement for log messages to be logged.
   LoggingBuilder setMinimumLevel(LogLevel level) {
-    services.add(
-      ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>>(
-        (_) => DefaultLoggerLevelConfigureOptions(level),
-      ),
+    services.configure<LoggerFilterOptions>(
+      LoggerFilterOptions.new,
+      (options) => options.minLevel = level,
     );
+    // services.add(
+    //   ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>>(
+    //     (_) => DefaultLoggerLevelConfigureOptions(level),
+    //   ),
+    // );
     return this;
   }
 

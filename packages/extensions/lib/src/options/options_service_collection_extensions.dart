@@ -50,9 +50,10 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ServiceDescriptor.singleton<OptionsMonitor<TOptions>>(
         (ServiceProvider sp) => OptionsMonitor<TOptions>(
           sp.getRequiredService<OptionsFactory<TOptions>>(),
-          (sp.getServices<OptionsChangeTokenSource<TOptions>>() as List)
-              .map((item) => item as OptionsChangeTokenSource<TOptions>)
-              .toList(),
+          sp.getServices<OptionsChangeTokenSource<TOptions>>(),
+          // (sp.getServices<OptionsChangeTokenSource<TOptions>>() as List)
+          //     .map((item) => item as OptionsChangeTokenSource<TOptions>)
+          //     .toList(),
           sp.getRequiredService<OptionsMonitorCache<TOptions>>(),
         ),
       ),
@@ -62,16 +63,20 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ServiceDescriptor.transient<OptionsFactory<TOptions>>(
         (sp) => OptionsFactory<TOptions>(
           instance,
-          setups: (sp.getServices<ConfigureOptions<TOptions>>() as List)
-              .map((item) => item as ConfigureOptions<TOptions>)
-              .toList(),
+          setups: sp.getServices<ConfigureOptions<TOptions>>(),
+          //setups: (sp.getServices<ConfigureOptions<TOptions>>() as List)
+          //    .map((item) => item as ConfigureOptions<TOptions>)
+          //    .toList(),
           postConfigureOptions:
-              (sp.getServices<PostConfigureOptions<TOptions>>() as List)
-                  .map((item) => item as PostConfigureOptions<TOptions>)
-                  .toList(),
-          validations: (sp.getServices<ValidateOptions<TOptions>>() as List)
-              .map((item) => item as ValidateOptions<TOptions>)
-              .toList(),
+              sp.getServices<PostConfigureOptions<TOptions>>(),
+          // postConfigureOptions:
+          //     (sp.getServices<PostConfigureOptions<TOptions>>() as List)
+          //         .map((item) => item as PostConfigureOptions<TOptions>)
+          //         .toList(),
+          validations: sp.getServices<ValidateOptions<TOptions>>(),
+          // validations: (sp.getServices<ValidateOptions<TOptions>>() as List)
+          //     .map((item) => item as ValidateOptions<TOptions>)
+          //     .toList(),
         ),
       ),
     );

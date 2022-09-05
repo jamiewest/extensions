@@ -29,8 +29,7 @@ extension LoggingServiceCollectionExtensions on ServiceCollection {
         (services.getServices<LoggerProvider>() as List)
             .map((item) => item as LoggerProvider)
             .toList(),
-        services.getService<OptionsMonitor<LoggerFilterOptions>>()
-            as OptionsMonitor<LoggerFilterOptions>,
+        services.getService<OptionsMonitor<LoggerFilterOptions>>(),
       ),
     ));
 

@@ -133,8 +133,10 @@ class ServiceProviderImpl
 
     _onResolve(T, serviceProviderEngineScope);
     var result = realizedService!.call(serviceProviderEngineScope);
-    assert(result != null || _callSiteFactory.isService(serviceType: T));
-
+    //assert(result is Never || _callSiteFactory.isService(serviceType: T));
+    if (result == null) {
+      return null;
+    }
     return result as T;
   }
 

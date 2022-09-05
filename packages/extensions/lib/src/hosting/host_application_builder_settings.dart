@@ -5,12 +5,19 @@ import 'host_application_builder.dart';
 /// Settings for constructing an [HostApplicationBuilder].
 class HostApplicationBuilderSettings {
   /// Initializes an instance of the [HostApplicationBuilderSettings] class.
-  HostApplicationBuilderSettings();
+  HostApplicationBuilderSettings({
+    this.applicationName,
+    this.args,
+    this.configuration,
+    this.configurationRootPath,
+    this.disableDefaults = false,
+    this.environmentName,
+  });
 
   /// If 'false', configures the [HostApplicationBuilder] instance with
   /// pre-configured defaults. This has a similar effect to calling
   /// [HostingHostBuilderExtensions.configureDefaults()].
-  bool disableDefaults = false;
+  bool disableDefaults;
 
   /// The command line arguments. This is unused if [disableDefaults] is 'true'.
   List<String>? args;

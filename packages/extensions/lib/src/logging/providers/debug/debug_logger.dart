@@ -43,6 +43,35 @@ class DebugLogger implements Logger {
       message = '$message\n\n$exception';
     }
 
-    developer.log(message, name: _name);
+    developer.log(
+      message,
+      time: DateTime.now(),
+      level: _getLogLevel(logLevel),
+      name: _name,
+    );
+  }
+
+  int _getLogLevel(LogLevel level) {
+    var value = 0;
+    switch (level) {
+      case LogLevel.information:
+        value = 800;
+        break;
+      case LogLevel.warning:
+        value = 900;
+        break;
+      case LogLevel.critical:
+        value = 1000;
+        break;
+      case LogLevel.debug:
+        value = 500;
+        break;
+      case LogLevel.none:
+        value = 2000;
+        break;
+      default:
+    }
+
+    return value;
   }
 }

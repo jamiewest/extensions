@@ -7,6 +7,7 @@ import 'log_level.dart';
 import 'logger.dart';
 import 'logger_filter_options.dart';
 import 'logger_information.dart';
+import 'logger_mixin.dart';
 import 'logger_provider.dart';
 import 'logger_rule_selector.dart';
 import 'logging_builder.dart'
@@ -54,6 +55,11 @@ class LoggerFactory implements Disposable {
       for (var provider in providers) {
         _addProviderRegistration(provider, false);
       }
+    }
+
+    if (filterOption == null) {
+      _filterOptions =
+          StaticFilterOptionsMonitor(LoggerFilterOptions()).currentValue;
     }
 
     if (filterOption != null) {
@@ -136,7 +142,7 @@ class LoggerFactory implements Disposable {
 
       var minLevel = result.item1;
       if (minLevel != null) {
-        if (minLevel != LogLevel.critical) {
+        if (minLevel.value > LogLevel.critical.value) {
           continue;
         }
       }
@@ -147,7 +153,7 @@ class LoggerFactory implements Disposable {
         MessageLogger(
           loggerInformation.logger,
           loggerInformation.category,
-          loggerInformation.providerType.runtimeType.toString(),
+          loggerInformation.providerType.toString(),
           result.item1,
           filter,
         ),

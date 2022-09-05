@@ -1,25 +1,28 @@
-import 'dart:collection';
-
 import 'package:extensions/hosting.dart';
 
+/// Allows consumers to be notified of application lifetime events.
 class FlutterApplicationLifetime extends ApplicationLifetime {
   final Logger _logger;
-  final _pausedSource = LifecycleRegister();
-  final _resumedSource = LifecycleRegister();
-  final _inactiveSource = LifecycleRegister();
-  final _detachedSource = LifecycleRegister();
+  final _pausedSource = <Function()>[];
+  final _resumedSource = <Function()>[];
+  final _inactiveSource = <Function()>[];
+  final _detachedSource = <Function()>[];
 
   FlutterApplicationLifetime(Logger logger)
       : _logger = logger,
         super(logger);
 
-  LifecycleRegister get applicationPaused => _pausedSource;
+  /// Triggered when the application host has paused.
+  List<Function()> get applicationPaused => _pausedSource;
 
-  LifecycleRegister get applicationResumed => _resumedSource;
+  /// Triggered when the application host has resumed.
+  List<Function()> get applicationResumed => _resumedSource;
 
-  LifecycleRegister get applicationInactive => _inactiveSource;
+  /// Triggered when the application host is inactive.
+  List<Function()> get applicationInactive => _inactiveSource;
 
-  LifecycleRegister get applicationDetached => _detachedSource;
+  /// Triggered when the application host is detached.
+  List<Function()> get applicationDetached => _detachedSource;
 
   void notifyPaused() {
     try {
@@ -65,23 +68,9 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
-  void _executeHandlers(LifecycleRegister register) {
-    // Run the cancellation token callbacks
-    register.notify();
-  }
-}
-
-typedef LifeCycleCallback = void Function();
-
-class LifecycleRegister {
-  final HashSet<LifeCycleCallback> _callbacks = HashSet<LifeCycleCallback>();
-  void register(LifeCycleCallback callback) {
-    _callbacks.add(callback);
-  }
-
-  void notify() {
-    for (var callback in _callbacks.toList().reversed) {
-      callback.call();
+  void _executeHandlers(Iterable<Function()> handlers) {
+    for (var handler in handlers.toList().reversed) {
+      handler.call();
     }
   }
 }

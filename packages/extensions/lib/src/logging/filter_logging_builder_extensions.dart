@@ -36,6 +36,10 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
       );
     }
 
+    if (level != null) {
+      _addRule(level: level);
+    }
+
     if (category != null && levelFilter != null) {
       _addRule(
         category: category,

@@ -31,18 +31,12 @@ class MyOptions {
   String? option;
 }
 
-class MyOptions1 {
-  String? option;
-}
-
 class MyService extends HostedService {
   MyService(
     this.options,
-    //this.options1,
   );
 
   final OptionsSnapshot<MyOptions> options;
-  //final OptionsSnapshot<MyOptions1> options1;
 
   @override
   Future<void> start(CancellationToken cancellationToken) {
