@@ -1,7 +1,12 @@
+/// To use, import `package:extensions_flutter/extensions_flutter.dart`
+
 library extensions_flutter;
 
 export 'package:extensions/hosting.dart';
 
+export 'src/flutter_app.dart';
+export 'src/flutter_app_builder.dart';
+export 'src/flutter_app_options.dart';
 export 'src/flutter_application_lifetime.dart';
 export 'src/flutter_builder.dart';
 export 'src/flutter_builder_extensions.dart';

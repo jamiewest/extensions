@@ -1,5 +1,4 @@
 import 'package:extensions/hosting.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
@@ -11,7 +10,7 @@ typedef ConfigureFlutterBuilder = void Function(FlutterBuilder builder);
 
 /// Contains extension methods to [ServiceCollection] for configuring Flutter.
 extension FlutterServiceCollectionExtensions on ServiceCollection {
-  ServiceCollection addFlutter(ConfigureFlutterBuilder configure) {
+  ServiceCollection addFlutter([ConfigureFlutterBuilder? configure]) {
     addSingleton<HostApplicationLifetime>(
       (services) => FlutterApplicationLifetime(
         services
@@ -27,7 +26,8 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
             .getRequiredService<LoggerFactory>()
             .createLogger('Hosting.Lifetime'),
         lifetime: services.getRequiredService<HostApplicationLifetime>(),
-        environment: services.getRequiredService<HostEnvironment>(),
+        environment: services.getRequiredService<HostEnvironment>()
+            as FlutterHostingEnvironment,
       ),
     );
 
@@ -35,20 +35,14 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
     addSingleton<HostEnvironment>(
       (services) => services.getRequiredService<HostingEnvironment>(),
     );
-    addHostedService<FlutterHostingEnvironment>(
+    addSingleton<FlutterHostingEnvironment>(
       (services) => services.getRequiredService<HostingEnvironment>(),
     );
 
-    // add(
-    //   ServiceDescriptor.singleton<ConfigureOptions<LoggerFilterOptions>>(
-    //     (_) => DefaultLoggerLevelConfigureOptions(
-    //       kReleaseMode ? LogLevel.information : LogLevel.trace,
-    //     ),
-    //   ),
-    // );
-
-    final builder = FlutterBuilder(this);
-    configure(builder);
+    if (configure != null) {
+      final builder = FlutterBuilder(this);
+      configure(builder);
+    }
 
     return this;
   }

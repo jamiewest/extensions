@@ -5,18 +5,6 @@ import 'configuration_root.dart';
 import 'internal_configuration_root_extensions.dart';
 
 /// Represents a section of application configuration values.
-// abstract class IConfigurationSection implements IConfiguration {
-//   /// Gets the key this section occupies in its parent.
-//   String? get key;
-
-//   /// Gets the full path to this section within the [IConfiguration].
-//   String get path;
-
-//   /// Gets or sets the section value.
-//   String? value;
-// }
-
-/// Represents a section of application configuration values.
 class ConfigurationSection implements Configuration {
   final ConfigurationRoot _root;
   final String _path;

@@ -6,13 +6,26 @@ class CounterManager {
   ValueNotifier<int> counter;
 }
 
-final host = (Host.createApplicationBuilder()
-      ..logging.setMinimumLevel(LogLevel.debug)
-      ..services.addFlutter((flutter) => flutter.useApp(const MyApp()))
-      ..services.addSingletonInstance<CounterManager>(CounterManager()))
-    .build();
+final app = FlutterApp.create(
+  app: const MyApp(),
+  enableVersionTracking: true,
+  services: (services) => services.addSingleton<CounterManager>(
+    (services) => CounterManager(),
+  ),
+);
 
-Future<void> main() async => await host.run();
+// final app = (FlutterApplication.createBuilder()
+//       ..logging.addDebug()
+//       ..flutter.runApp(const MyApp()))
+//     .build();
+
+// final host = (Host.createApplicationBuilder()
+//       ..logging.setMinimumLevel(LogLevel.debug)
+//       ..services.addFlutter((flutter) => flutter.runApp(const MyApp()))
+//       ..services.addSingletonInstance<CounterManager>(CounterManager()))
+//     .build();
+
+Future<void> main() async => await app.run();
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -28,7 +41,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    environment = host.services.getRequiredService<HostingEnvironment>()
+    environment = app.services.getRequiredService<HostingEnvironment>()
         as FlutterHostingEnvironment;
     super.initState();
   }
@@ -49,10 +62,11 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counter = host.services.getRequiredService<CounterManager>().counter;
+    final counter = app.services.getRequiredService<CounterManager>().counter;
+    final i = app.services.getRequiredService<VersionInfo>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test'),
+        title: const Text('Test1'),
       ),
       body: Center(
         child: Column(
@@ -61,7 +75,7 @@ class MyHomePage extends StatelessWidget {
             ValueListenableBuilder<int>(
               valueListenable: counter,
               builder: (BuildContext context, int value, Widget? child) => Text(
-                '${counter.value}',
+                '${counter.value} ${i.previousVersion}',
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),

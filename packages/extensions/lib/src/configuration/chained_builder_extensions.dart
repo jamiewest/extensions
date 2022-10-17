@@ -5,8 +5,10 @@ import 'configuration_builder.dart';
 /// Extension methods for adding [Configuration] to an [ConfigurationBuilder].
 extension ChainedBuilderExtensions on ConfigurationBuilder {
   /// Adds an existing configuration to [ConfigurationBuilder].
-  ConfigurationBuilder addConfiguration(Configuration config,
-      [bool shouldDisposeConfiguration = false]) {
+  ConfigurationBuilder addConfiguration(
+    Configuration config, [
+    bool shouldDisposeConfiguration = false,
+  ]) {
     add(
       ChainedConfigurationSource()
         ..configuration = config

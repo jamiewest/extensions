@@ -4,22 +4,7 @@
 /// Configuration providers read configuration data from key-value pairs
 /// using a variety of configuration sources:
 ///
-/// ## Example
-/// ```dart
-/// import 'package:extensions/configuration.dart';
-///
-/// void main(List<String>? args) {
-///   var builder = ConfigurationBuilder();
-///   // Adds a memory collection to the configuration system.
-///   configurationBuilder.addInMemoryCollection(
-///   {
-///       'Logging:LogLevel:Default', 'Warning',
-///   });
-///
-///   var config = builder.build();
-///   print(config['Logging:LogLevel:Default']);
-/// }
-/// ```
+/// To use, import `package:extensions/configuration.dart`.
 library configuration;
 
 export 'primitives.dart';
@@ -45,5 +30,9 @@ export 'src/configuration/memory_configuration_source.dart';
 export 'src/configuration/providers/command_line/command_line_configuration_extensions.dart';
 export 'src/configuration/providers/command_line/command_line_configuration_provider.dart';
 export 'src/configuration/providers/command_line/command_line_configuration_source.dart';
+export 'src/configuration/providers/json/json_configuration_extensions.dart';
+export 'src/configuration/providers/json/json_configuration_parser.dart';
+export 'src/configuration/providers/json/json_configuration_provider.dart';
+export 'src/configuration/providers/json/json_configuration_source.dart';
 export 'src/configuration/stream_configuration_provider.dart';
 export 'src/configuration/stream_configuration_source.dart';

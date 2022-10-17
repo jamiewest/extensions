@@ -79,12 +79,8 @@ extension HostingHostBuilderExtensions on HostBuilder {
         ),
       );
 
-  /// Configures an existing [HostBuilder] instance with pre-configured defaults.
-  // ignore: prefer_expression_function_bodies
-  HostBuilder configureDefaults([List<String>? args]) {
-    configureLogging((context, logging) {
-      logging.addDebug();
-    });
-    return this;
-  }
+  /// Configures an existing [HostBuilder] instance with pre-configured
+  /// defaults.
+  HostBuilder configureDefaults([List<String>? args]) =>
+      configureLogging((context, logging) => logging.addDebug());
 }

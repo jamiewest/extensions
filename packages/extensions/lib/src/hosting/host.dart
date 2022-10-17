@@ -1,19 +1,16 @@
-import '../dependency_injection/service_provider.dart';
-import '../logging/logger.dart';
+import 'dart:async';
+
+import '../../dependency_injection.dart';
+import '../../logging.dart';
+
 import '../options/options.dart';
-import '../primitives/async_disposable.dart';
 import '../primitives/cancellation_token.dart';
-import '../primitives/disposable.dart';
 import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
-import 'host_application_builder.dart';
-import 'host_application_builder_settings.dart';
 import 'host_application_lifetime.dart';
-import 'host_builder.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
 import 'hosted_service.dart';
-import 'hosting_host_builder_extensions.dart';
 import 'hosting_logger_extensions.dart';
 import 'internal/application_lifetime.dart';
 
@@ -50,18 +47,19 @@ class Host implements Disposable, AsyncDisposable {
 
     cancellationToken ??= CancellationToken.none;
 
-    var combinedCancellationTokenSource =
+    final combinedCancellationTokenSource =
         CancellationTokenSource.createLinkedTokenSource(
-      [cancellationToken, _applicationLifetime.applicationStopping],
+      [
+        cancellationToken,
+        _applicationLifetime.applicationStopping,
+      ],
     );
-    var combinedCancellationToken = combinedCancellationTokenSource.token;
+    final combinedCancellationToken = combinedCancellationTokenSource.token;
 
     await _hostLifetime.waitForStart(combinedCancellationToken);
 
     combinedCancellationToken.throwIfCancellationRequested();
-    _hostedServices = (services.getServices<HostedService>() as List)
-        .map((item) => item as HostedService)
-        .toList();
+    _hostedServices = services.getServices<HostedService>();
 
     for (var hostedService in _hostedServices!) {
       // Fire HostedService.start
@@ -107,7 +105,11 @@ class Host implements Disposable, AsyncDisposable {
     var cts = CancellationTokenSource(_options.shutdownTimeout);
     //var cts = CancellationTokenSource();
     var linkedCts = CancellationTokenSource.createLinkedTokenSource(
-        [cts.token, cancellationToken]);
+      [
+        cts.token,
+        cancellationToken,
+      ],
+    );
 
     var token = linkedCts.token;
     // Trigger HostApplicationLifetime.applicationStopping
@@ -125,7 +127,7 @@ class Host implements Disposable, AsyncDisposable {
       }
     }
 
-    // Fire IHostApplicationLifetime.Stopped
+    // Fire HostApplicationLifetime.stopped
     _applicationLifetime.notifyStopped();
 
     try {
@@ -148,18 +150,4 @@ class Host implements Disposable, AsyncDisposable {
 
   @override
   Future<void> disposeAsync() => Future.value();
-
-  /// Initializes a new instance of the [HostBuilder] class with
-  /// pre-configured defaults.
-  static HostBuilder createDefaultBuilder([List<String>? args]) {
-    var builder = HostBuilder();
-    return builder.configureDefaults(args);
-  }
-
-  static HostApplicationBuilder createApplicationBuilder({
-    HostApplicationBuilderSettings? settings,
-  }) =>
-      HostApplicationBuilder(
-        settings: settings,
-      );
 }

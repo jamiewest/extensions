@@ -1,6 +1,4 @@
 import 'package:extensions/hosting.dart';
-import 'package:extensions/src/configuration/configuration_manager.dart';
-import 'package:extensions/src/hosting/host_application_builder_settings.dart';
 import 'package:test/test.dart';
 
 void main() {

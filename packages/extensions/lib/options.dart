@@ -1,3 +1,6 @@
+/// Options
+///
+/// To use, import `package:extensions/options.dart`.
 library options;
 
 export 'primitives.dart';

@@ -1,3 +1,6 @@
+/// Primitives
+///
+/// To use, import `package:extensions/primitives.dart`.
 library primitives;
 
 export 'src/primitives/async_disposable.dart' show AsyncDisposable;

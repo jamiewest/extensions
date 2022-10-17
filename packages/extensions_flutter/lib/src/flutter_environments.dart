@@ -1,8 +1,8 @@
-enum FlutterEnvironments {
-  debug('Debug'),
-  profile('Profile'),
-  release('Release');
+// enum FlutterEnvironments {
+//   debug('Debug'),
+//   profile('Profile'),
+//   release('Release');
 
-  const FlutterEnvironments(this.name);
-  final String name;
-}
+//   const FlutterEnvironments(this.name);
+//   final String name;
+// }

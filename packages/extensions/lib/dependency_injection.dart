@@ -3,19 +3,7 @@
 /// Provides support for registering and accessing dependencies according
 /// to their service lifetime.
 ///
-/// ```dart
-/// import 'package:extensions/dependency_injection.dart';
-///
-/// void main(List<String>? args) {
-///   var serviceCollection = ServiceCollection();
-///   serviceCollection.addSingleton<MyService>(
-///     implementationInstance: MyService(),
-///   );
-///
-///   var services = serviceCollection.buildServiceProvider();
-///   var myService = services.getRequiredService<MyService>();
-/// }
-/// ```
+/// To use, import `package:extensions/dependency_injection.dart`.
 library dependency_injection;
 
 export 'primitives.dart';

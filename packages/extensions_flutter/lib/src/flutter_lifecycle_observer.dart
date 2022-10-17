@@ -45,7 +45,7 @@ class _FlutterLifecycleObserver extends State<FlutterLifecycleObserver>
         widget.lifetime.notifyPaused();
         break;
       case AppLifecycleState.resumed:
-        widget.lifetime.notifyDetached();
+        widget.lifetime.notifyResumed();
         break;
       case AppLifecycleState.inactive:
         widget.lifetime.notifyInactive();

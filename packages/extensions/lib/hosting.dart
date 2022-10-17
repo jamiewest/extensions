@@ -1,4 +1,12 @@
+/// Hosting
+///
+/// To use, import `package:extensions/hosting.dart`.
 library hosting;
+
+import 'src/hosting/host_application_builder.dart';
+import 'src/hosting/host_application_builder_settings.dart';
+import 'src/hosting/host_builder.dart';
+import 'src/hosting/hosting_host_builder_extensions.dart';
 
 export 'configuration.dart';
 export 'dependency_injection.dart';
@@ -27,3 +35,17 @@ export 'src/hosting/internal/configure_container_adapter.dart';
 export 'src/hosting/internal/hosting_environment.dart';
 export 'src/hosting/internal/service_factory_adapter.dart';
 export 'src/hosting/service_collection_hosted_service_extensions.dart';
+
+/// Initializes a new instance of the [HostBuilder] class with
+/// pre-configured defaults.
+HostBuilder createDefaultBuilder([List<String>? args]) {
+  var builder = HostBuilder();
+  return builder.configureDefaults(args);
+}
+
+HostApplicationBuilder createApplicationBuilder({
+  HostApplicationBuilderSettings? settings,
+}) =>
+    HostApplicationBuilder(
+      settings: settings,
+    );

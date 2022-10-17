@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:extensions/hosting.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
+import 'flutter_hosting_environment.dart';
 import 'flutter_lifecycle_observer.dart';
 import 'flutter_lifetime_options.dart';
 
@@ -33,36 +35,38 @@ class FlutterLifetime extends HostLifetime {
 
   FlutterLifetimeOptions? options;
 
-  HostEnvironment environment;
+  FlutterHostingEnvironment environment;
 
   @override
-  Future<void> waitForStart(CancellationToken cancellationToken) {
+  Future<void> waitForStart(CancellationToken cancellationToken) async {
+    WidgetsFlutterBinding.ensureInitialized();
+
     FlutterError.onError = _handleFlutterError;
 
-    return runZonedGuarded<Future<void>>(
-          () async {
-            runApp(
-              FlutterLifecycleObserver(
-                lifetime: _lifetime,
-                child: app,
-              ),
-            );
-          },
-          (o, s) => _handleError,
-        ) ??
-        Future.value();
+    PlatformDispatcher.instance.onError = _handleError;
+
+    _lifetime.applicationStarted.register(
+      (_) => runApp(
+        FlutterLifecycleObserver(
+          lifetime: _lifetime,
+          child: app,
+        ),
+      ),
+    );
   }
 
   @override
-  Future<void> stop(CancellationToken cancellationToken) => Future.value();
+  Future<void> stop(CancellationToken cancellationToken) {
+    throw UnimplementedError();
+  }
 
   /// Handles errors caught by the Flutter framework.
   ///
-  /// Forwards the error to the [_handleError] handler when in release mode and
+  /// Forwards the error to the [handleError] handler when in release mode and
   /// prints it to the console otherwise.
-  Future<void> _handleFlutterError(FlutterErrorDetails details) async {
+  void _handleFlutterError(FlutterErrorDetails details) {
     if (options?.flutterErrorHandler != null) {
-      await options?.flutterErrorHandler!(details);
+      options?.flutterErrorHandler!(details);
     }
   }
 
@@ -70,10 +74,11 @@ class FlutterLifetime extends HostLifetime {
   ///
   /// Additional device diagnostic data will be sent along the error if the
   /// user consents for it.
-  Future<void> _handleError(Object error, StackTrace stackTrace) async {
+  bool _handleError(Object error, StackTrace stackTrace) {
     if (options?.errorHandler != null) {
-      await options?.errorHandler!(error, stackTrace);
+      return options!.errorHandler!(error, stackTrace);
     }
+    return false;
   }
 
   void _onStarted() {

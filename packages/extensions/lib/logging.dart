@@ -1,3 +1,6 @@
+/// Logging
+///
+/// To use, import `package:extensions/logging.dart`.
 library logging;
 
 export 'primitives.dart';

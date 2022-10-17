@@ -52,7 +52,9 @@ class ChainedConfigurationProvider
   /// set of keys returned by all the preceding [ConfigurationProvider]s.
   @override
   Iterable<String> getChildKeys(
-      Iterable<String> earlierKeys, String? parentPath) {
+    Iterable<String> earlierKeys,
+    String? parentPath,
+  ) {
     var section =
         parentPath == null ? _config : _config?.getSection(parentPath);
 

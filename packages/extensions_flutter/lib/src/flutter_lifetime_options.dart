@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 
-typedef FlutterErrorHandler = Future<void> Function(
+typedef FlutterErrorHandler = void Function(
   FlutterErrorDetails details,
 );
 
-typedef ErrorHandler = Future<void> Function(
+typedef ErrorHandler = bool Function(
   Object error,
   StackTrace stackTrace,
 );

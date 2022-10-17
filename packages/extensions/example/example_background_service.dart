@@ -2,7 +2,7 @@ import 'package:extensions/hosting.dart';
 import 'package:extensions/src/hosting/hosting_host_builder_extensions_io.dart';
 
 Future<void> main(List<String> args) async {
-  await Host.createDefaultBuilder(args)
+  await createDefaultBuilder(args)
       .configureServices((context, services) {
         services.addHostedService<MyBackgroundService>(
           (services) => MyBackgroundService(),

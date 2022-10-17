@@ -19,7 +19,11 @@ class ConfigurationRoot implements Configuration, Disposable {
     for (var provider in providers) {
       provider.load();
       _changeTokenRegistrations?.add(
-          ChangeToken.onChange(() => provider.getReloadToken(), _raiseChanged));
+        ChangeToken.onChange(
+          () => provider.getReloadToken(),
+          _raiseChanged,
+        ),
+      );
     }
   }
 
