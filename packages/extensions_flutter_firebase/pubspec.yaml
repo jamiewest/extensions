@@ -2,6 +2,7 @@ name: extensions_flutter_firebase
 description: A new Flutter package project.
 version: 0.0.1
 homepage:
+publish_to: none
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -11,8 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  extensions_flutter:
-    path: ../extensions_flutter/
+  extensions_flutter: ^0.3.6
   firebase_crashlytics: ^2.8.9
   firebase_analytics: ^9.3.3
   firebase_core: ^1.21.1

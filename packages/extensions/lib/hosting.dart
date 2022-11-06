@@ -34,6 +34,7 @@ export 'src/hosting/internal/application_lifetime.dart';
 export 'src/hosting/internal/configure_container_adapter.dart';
 export 'src/hosting/internal/hosting_environment.dart';
 export 'src/hosting/internal/service_factory_adapter.dart';
+export 'src/hosting/options_builder_extensions.dart';
 export 'src/hosting/service_collection_hosted_service_extensions.dart';
 
 /// Initializes a new instance of the [HostBuilder] class with

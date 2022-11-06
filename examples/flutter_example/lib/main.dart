@@ -6,26 +6,17 @@ class CounterManager {
   ValueNotifier<int> counter;
 }
 
-final app = FlutterApp.create(
-  app: const MyApp(),
-  enableVersionTracking: true,
+final host = createDefaultBuilder(
+  const MyApp(),
+  environment: (env) => env.applicationName = 'test',
   services: (services) => services.addSingleton<CounterManager>(
     (services) => CounterManager(),
   ),
-);
+).build();
 
-// final app = (FlutterApplication.createBuilder()
-//       ..logging.addDebug()
-//       ..flutter.runApp(const MyApp()))
-//     .build();
-
-// final host = (Host.createApplicationBuilder()
-//       ..logging.setMinimumLevel(LogLevel.debug)
-//       ..services.addFlutter((flutter) => flutter.runApp(const MyApp()))
-//       ..services.addSingletonInstance<CounterManager>(CounterManager()))
-//     .build();
-
-Future<void> main() async => await app.run();
+Future<void> main() async {
+  await host.run();
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -37,12 +28,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FlutterHostingEnvironment? environment;
+  HostingEnvironment? environment;
 
   @override
   void initState() {
-    environment = app.services.getRequiredService<HostingEnvironment>()
-        as FlutterHostingEnvironment;
+    environment = host.services.getRequiredService<HostingEnvironment>();
+
     super.initState();
   }
 
@@ -52,6 +43,7 @@ class _MyAppState extends State<MyApp> {
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          useMaterial3: true,
         ),
         home: const MyHomePage());
   }
@@ -62,8 +54,8 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counter = app.services.getRequiredService<CounterManager>().counter;
-    final i = app.services.getRequiredService<VersionInfo>();
+    final counter = host.services.getRequiredService<CounterManager>().counter;
+    //final i = app.services.getRequiredService<VersionInfo>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Test1'),
@@ -75,7 +67,7 @@ class MyHomePage extends StatelessWidget {
             ValueListenableBuilder<int>(
               valueListenable: counter,
               builder: (BuildContext context, int value, Widget? child) => Text(
-                '${counter.value} ${i.previousVersion}',
+                '${counter.value} ',
                 style: Theme.of(context).textTheme.headline4,
               ),
             ),

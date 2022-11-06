@@ -8,25 +8,27 @@ extension HostingHostBuilderExtensions on HostBuilder {
   /// Listens for Ctrl+C or SIGTERM and calls
   /// [HostApplicationLifetime.stopApplication] to start the shutdown process.
   /// This will unblock extensions like RunAsync and WaitForShutdownAsync.
-  HostBuilder useConsoleLifetime(
+  HostBuilder useConsoleLifetime([
     void Function(ConsoleLifetimeOptions options)? configure,
-  ) =>
-      configureServices((_, collection) => collection
-        ..addSingleton<HostLifetime>(
-          (sp) => ConsoleLifetime(
-            sp.getRequiredService<Options<ConsoleLifetimeOptions>>(),
-            sp.getRequiredService<HostEnvironment>(),
-            sp.getRequiredService<ApplicationLifetime>(),
-            sp.getRequiredService<Options<HostOptions>>(),
-            sp.getRequiredService<LoggerFactory>(),
+  ]) =>
+      configureServices(
+        (_, collection) => collection
+          ..addSingleton<HostLifetime>(
+            (sp) => ConsoleLifetime(
+              sp.getRequiredService<Options<ConsoleLifetimeOptions>>(),
+              sp.getRequiredService<HostEnvironment>(),
+              sp.getRequiredService<ApplicationLifetime>(),
+              sp.getRequiredService<Options<HostOptions>>(),
+              sp.getRequiredService<LoggerFactory>(),
+            ),
+          )
+          ..configure<ConsoleLifetimeOptions>(
+            ConsoleLifetimeOptions.new,
+            (options) {
+              options.suppressStatusMessages = false;
+            },
           ),
-        )
-        ..configure<ConsoleLifetimeOptions>(
-          ConsoleLifetimeOptions.new,
-          (options) {
-            options.suppressStatusMessages = false;
-          },
-        ));
+      );
 
   /// Enables console support, builds and starts the host, and waits for
   /// Ctrl+C or SIGTERM to shut down.

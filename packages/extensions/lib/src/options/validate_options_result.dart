@@ -21,7 +21,7 @@ class ValidateOptionsResult {
   late bool skipped;
 
   /// True if validation failed.
-  late bool failed;
+  bool failed = false;
 
   /// Used to describe why validation failed.
   late String failureMessage;

@@ -42,7 +42,7 @@ class OptionsFactory<TOptions> {
     }
 
     if (_validations != null) {
-      var failures = List<String>.empty();
+      var failures = List<String>.empty(growable: true);
       for (var validate in _validations!) {
         var result = validate.validate(name, options);
         if (result.failed) {

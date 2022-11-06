@@ -1,3 +1,7 @@
+## 0.3.8
+
+* Bug fixes and updates.
+
 ## 0.3.7
 
 * Bug fixes and updates.

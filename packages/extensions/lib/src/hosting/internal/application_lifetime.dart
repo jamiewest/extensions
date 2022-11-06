@@ -70,13 +70,13 @@ class ApplicationLifetime implements HostApplicationLifetime {
     }
   }
 
-  void _executeHandlers(CancellationTokenSource cancel) {
+  void _executeHandlers(CancellationTokenSource cts) {
     // Noop if this is already cancelled
-    if (cancel.isCancellationRequested) {
+    if (cts.isCancellationRequested) {
       return;
     }
 
     // Run the cancellation token callbacks
-    cancel.cancel();
+    cts.cancel();
   }
 }

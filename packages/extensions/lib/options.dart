@@ -16,4 +16,5 @@ export 'src/options/options_service_collection_extensions.dart'
     show OptionsServiceCollectionExtensions;
 export 'src/options/options_snapshot.dart' show OptionsSnapshot;
 export 'src/options/post_configure_options.dart' show PostConfigureOptions;
+export 'src/options/validate_options.dart';
 export 'src/options/validate_options_result.dart' show ValidateOptionsResult;

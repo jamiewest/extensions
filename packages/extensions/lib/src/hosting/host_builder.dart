@@ -262,7 +262,8 @@ void populateServiceCollection(
           return Host(
             appServices,
             appServices.getRequiredService<HostApplicationLifetime>(),
-            (appServices.getRequiredService<LoggerFactory>())
+            appServices
+                .getRequiredService<LoggerFactory>()
                 .createLogger('Host'),
             appServices.getRequiredService<HostLifetime>(),
             appServices.getRequiredService<Options<HostOptions>>(),

@@ -15,4 +15,7 @@ class OptionsValidationException implements Exception {
   Iterable<String> get failures => _failures;
 
   String message() => failures.join('; ');
+
+  @override
+  String toString() => message();
 }

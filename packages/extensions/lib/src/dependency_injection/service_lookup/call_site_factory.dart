@@ -259,6 +259,7 @@ class CallSiteFactory implements ServiceProviderIsService {
         serviceType,
         slot,
       );
+
       if (descriptor.implementationInstance != null) {
         callSite = ConstantCallSite(
           descriptor.serviceType,
@@ -273,8 +274,8 @@ class CallSiteFactory implements ServiceProviderIsService {
       } else {
         throw Exception('Invalid service descriptor');
       }
-
-      return _callSiteCache[callSiteKey] = callSite;
+      _callSiteCache[callSiteKey] = callSite;
+      return callSite;
     }
     return null;
   }
@@ -333,7 +334,7 @@ class ServiceDescriptorCacheItem {
     if (_items != null) {
       var index = _items!.indexOf(descriptor);
       if (index != -1) {
-        return index + 1;
+        return _items!.length - (index + 1);
       }
     }
 
