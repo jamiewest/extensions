@@ -1,6 +1,6 @@
 name: extensions_flutter_firebase
 description: Adds firebase to a flutter host.
-version: 0.0.1
+version: 0.0.2
 repository: https://www.github.com/jamiewest/extensions
 issue_tracker: https://github.com/jamiewest/extensions/issues?q=is%3Aissue+is%3Aopen+label%3Aextensions-flutter-firebase
 
@@ -13,10 +13,10 @@ dependencies:
     sdk: flutter
 
   extensions_flutter: ^0.3.6
-  firebase_crashlytics: ^2.8.9
-  firebase_analytics: ^9.3.3
-  firebase_core: ^1.21.1
-  firebase_performance: ^0.8.2+4
+  firebase_crashlytics: ^3.0.4
+  firebase_analytics: ^10.0.4
+  firebase_core: ^2.1.1
+  firebase_performance: 0.9.0+4
 
 dev_dependencies:
   flutter_test:
