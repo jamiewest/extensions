@@ -1,3 +1,7 @@
+## 0.3.10
+
+* Added const constructor to NullLoggerFactory.
+
 ## 0.3.9
 
 * Exported NullLogger, NullLoggerFactory, and CancellationTokenSource. Changed Logger.logError to not require and exception.
