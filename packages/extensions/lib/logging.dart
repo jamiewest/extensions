@@ -17,6 +17,8 @@ export 'src/logging/logger_filter_options.dart';
 export 'src/logging/logger_provider.dart';
 export 'src/logging/logging_builder.dart';
 export 'src/logging/logging_builder_extensions.dart';
+export 'src/logging/null_logger.dart';
+export 'src/logging/null_logger_factory.dart';
 // Providers
 export 'src/logging/providers/console/console_logger.dart';
 export 'src/logging/providers/console/console_logger_factory_extensions.dart';
