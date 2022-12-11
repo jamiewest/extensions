@@ -7,10 +7,10 @@ import 'null_logger.dart';
 ///[NullLogger] that logs nothing.
 class NullLoggerFactory implements LoggerFactory {
   /// Creates a new [NullLoggerFactory] instance.
-  NullLoggerFactory();
+  const NullLoggerFactory();
 
   /// Returns the shared instance of [NullLoggerFactory].
-  static NullLoggerFactory get instance => NullLoggerFactory();
+  static NullLoggerFactory get instance => const NullLoggerFactory();
 
   /// This returns a [NullLogger] instance which logs nothing.
   @override
