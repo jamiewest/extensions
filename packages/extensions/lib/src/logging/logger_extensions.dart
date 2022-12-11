@@ -64,7 +64,7 @@ extension LoggerExtensions on Logger {
   void logError(
     String? message, {
     EventId? eventId,
-    required Exception exception,
+    Exception? exception,
   }) =>
       log<String>(
         logLevel: LogLevel.error,
