@@ -1,3 +1,7 @@
+## 0.3.9
+
+* Exported NullLogger, NullLoggerFactory, and CancellationTokenSource. Changed Logger.logError to not require and exception.
+
 ## 0.3.8
 
 * Bug fixes and updates.
