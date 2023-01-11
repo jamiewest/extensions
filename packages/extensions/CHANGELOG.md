@@ -1,3 +1,7 @@
+## 0.3.11
+
+* Exported CancellationTokenRegistration.
+
 ## 0.3.10
 
 * Added const constructor to NullLoggerFactory.
