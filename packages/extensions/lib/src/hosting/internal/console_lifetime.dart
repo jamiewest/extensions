@@ -61,18 +61,17 @@ class ConsoleLifetime extends HostLifetime {
     }
 
     ProcessSignal.sigint.watch().listen((signal) {
-      _onProcessExit();
+      applicationLifetime.stopApplication();
+      exit(0);
     });
 
-    //ProcessSignal.sigquit.watch().listen((signal) {
-    //  print('sigquit');
-    //  _onProcessExit();
-    //  exit(0);
-    //});
-
     ProcessSignal.sigterm.watch().listen((signal) {
-      print('sigterm');
-      _onProcessExit();
+      applicationLifetime.stopApplication();
+      exit(0);
+    });
+
+    ProcessSignal.sighup.watch().listen((signal) {
+      applicationLifetime.stopApplication();
       exit(0);
     });
 

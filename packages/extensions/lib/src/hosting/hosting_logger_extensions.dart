@@ -8,12 +8,12 @@ extension HostingLoggerExtensions on Logger {
   void applicationError(
     EventId eventId,
     String message,
-    Exception exception,
+    Object error,
   ) {
     logCritical(
       message,
       eventId: eventId,
-      exception: exception,
+      error: error,
     );
   }
 
@@ -58,7 +58,7 @@ extension HostingLoggerExtensions on Logger {
       logDebug(
         'Hosting shutdown exception',
         eventId: LoggerEventIds.stoppedWithException,
-        exception: ex,
+        error: ex,
       );
     }
   }
@@ -68,7 +68,7 @@ extension HostingLoggerExtensions on Logger {
       logError(
         'BackgroundService failed',
         eventId: LoggerEventIds.backgroundServiceFaulted,
-        exception: ex,
+        error: ex,
       );
     }
   }
@@ -81,7 +81,7 @@ extension HostingLoggerExtensions on Logger {
         and the Host instance is stopping. To avoid this behavior, configure 
         this to Ignore; however the BackgroundService will not be restarted.''',
         eventId: LoggerEventIds.backgroundServiceStoppingHost,
-        exception: ex,
+        error: ex,
       );
     }
   }

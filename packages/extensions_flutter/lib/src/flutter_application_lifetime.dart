@@ -30,7 +30,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     } on Exception catch (ex) {
       _logger.logCritical(
         'An error occurred pausing the application',
-        exception: ex,
+        error: ex,
       );
     }
   }
@@ -41,7 +41,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     } on Exception catch (ex) {
       _logger.logCritical(
         'An error occurred resuming the application',
-        exception: ex,
+        error: ex,
       );
     }
   }
@@ -52,7 +52,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     } on Exception catch (ex) {
       _logger.logCritical(
         'An error occurred while the application was inactive',
-        exception: ex,
+        error: ex,
       );
     }
   }
@@ -63,7 +63,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     } on Exception catch (ex) {
       _logger.logCritical(
         'An error occurred detaching the application',
-        exception: ex,
+        error: ex,
       );
     }
   }

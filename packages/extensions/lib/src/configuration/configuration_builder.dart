@@ -15,10 +15,8 @@ class ConfigurationBuilder {
   List<ConfigurationSource> get sources => _sources;
 
   /// Adds a new configuration source.
-  // ignore: avoid_returning_this
-  ConfigurationBuilder add(ConfigurationSource source) {
+  void add(ConfigurationSource source) {
     sources.add(source);
-    return this;
   }
 
   /// Builds a [Configuration] with keys and values from the set of

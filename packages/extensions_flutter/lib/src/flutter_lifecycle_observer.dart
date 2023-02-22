@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'flutter_application_lifetime.dart';
+import '../extensions_flutter.dart';
 
 /// Widget used to monitor lifecycle event changes
 class FlutterLifecycleObserver extends StatefulWidget {

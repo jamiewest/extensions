@@ -6,7 +6,7 @@ import 'log_level.dart';
 /// Function to create a `String` message of the `state` and `exception`.
 typedef LogFormatter<TState> = String Function(
   TState state,
-  Exception? exception,
+  Object? error,
 );
 
 /// Represents a type used to perform logging.
@@ -18,7 +18,7 @@ abstract class Logger {
     required LogLevel logLevel,
     required EventId eventId,
     required TState state,
-    Exception? exception,
+    Object? error,
     required LogFormatter<TState> formatter,
   });
 

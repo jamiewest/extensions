@@ -1,5 +1,4 @@
 import 'call_site_kind.dart';
-import 'result_cache.dart';
 import 'service_call_site.dart';
 
 class FactoryCallSite extends ServiceCallSite {
@@ -7,12 +6,11 @@ class FactoryCallSite extends ServiceCallSite {
   final Type _serviceType;
 
   FactoryCallSite(
-    ResultCache cache,
+    super.cache,
     Type serviceType,
     Function factory,
   )   : _factory = factory,
-        _serviceType = serviceType,
-        super(cache);
+        _serviceType = serviceType;
 
   Function get factory => _factory;
 

@@ -24,8 +24,11 @@ import 'host_options.dart';
 import 'internal/application_lifetime.dart';
 import 'internal/configure_container_adapter.dart';
 import 'internal/hosting_environment.dart';
-import 'internal/null_lifetime.dart';
 import 'internal/service_factory_adapter.dart';
+
+import 'host_builder_stub.dart'
+    if (dart.library.html) 'host_builder_io_web.dart'
+    if (dart.library.io) 'host_builder_io.dart' as hostBuilder;
 
 typedef ConfigureServicesDelegate = void Function(
   HostBuilderContext context,
@@ -253,7 +256,6 @@ void populateServiceCollection(
             .createLogger('ApplicationLifetime'),
       ),
     )
-    ..addSingleton<HostLifetime>((s) => NullLifetime())
     ..tryAdd(
       ServiceDescriptor.singleton<Host>(
         (_) {
@@ -275,6 +277,8 @@ void populateServiceCollection(
       options.initialize(hostBuilderContext.configuration!);
     })
     ..addLogging();
+
+  hostBuilder.addLifetime(services);
 }
 
 HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {

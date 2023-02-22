@@ -35,7 +35,5 @@ class ValidationHostedService implements HostedService {
   }
 
   @override
-  Future<void> stop(CancellationToken cancellationToken) {
-    throw UnimplementedError();
-  }
+  Future<void> stop(CancellationToken cancellationToken) => Future.value();
 }

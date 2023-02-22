@@ -16,7 +16,7 @@ mixin LoggerMixin on Logger {
     required LogLevel logLevel,
     required EventId eventId,
     required TState state,
-    Exception? exception,
+    Object? error,
     required LogFormatter<TState> formatter,
   }) {
     var loggers = messageLoggers;
@@ -35,7 +35,7 @@ mixin LoggerMixin on Logger {
         logLevel,
         eventId,
         loggerInfo.logger,
-        exception,
+        error,
         formatter,
         exceptions,
         state,
@@ -47,7 +47,7 @@ mixin LoggerMixin on Logger {
     LogLevel logLevel,
     EventId eventId,
     Logger logger,
-    Exception? exception,
+    Object? error,
     LogFormatter<TState> formatter,
     List<Exception>? exceptions,
     TState state,
@@ -57,7 +57,7 @@ mixin LoggerMixin on Logger {
         logLevel: logLevel,
         state: state,
         eventId: eventId,
-        exception: exception,
+        error: error,
         formatter: formatter,
       );
     } catch (e) {

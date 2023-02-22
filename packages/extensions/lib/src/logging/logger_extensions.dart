@@ -7,13 +7,13 @@ extension LoggerExtensions on Logger {
   void logDebug(
     String? message, {
     EventId? eventId,
-    Exception? exception,
+    Object? error,
     List<Object>? args,
   }) =>
       log(
         logLevel: LogLevel.debug,
         eventId: eventId ?? EventId.empty(),
-        exception: exception,
+        error: error,
         state: message ?? '',
         formatter: (s, e) => s as String,
       );
@@ -22,12 +22,12 @@ extension LoggerExtensions on Logger {
   void logTrace(
     String? message, {
     EventId? eventId,
-    Exception? exception,
+    Object? error,
   }) =>
       log<String>(
         logLevel: LogLevel.trace,
         eventId: eventId ?? EventId.empty(),
-        exception: exception,
+        error: error,
         state: message ?? '',
         formatter: (s, e) => s,
       );
@@ -36,12 +36,12 @@ extension LoggerExtensions on Logger {
   void logInformation(
     String? message, {
     EventId? eventId,
-    Exception? exception,
+    Object? error,
   }) =>
       log<String>(
         logLevel: LogLevel.information,
         eventId: eventId ?? EventId.empty(),
-        exception: exception,
+        error: error,
         state: message ?? '',
         formatter: (s, e) => s,
       );
@@ -50,12 +50,12 @@ extension LoggerExtensions on Logger {
   void logWarning(
     String? message, {
     EventId? eventId,
-    Exception? exception,
+    Object? error,
   }) =>
       log<String>(
         logLevel: LogLevel.warning,
         eventId: eventId ?? EventId.empty(),
-        exception: exception,
+        error: error,
         state: message ?? '',
         formatter: (s, e) => s,
       );
@@ -64,12 +64,12 @@ extension LoggerExtensions on Logger {
   void logError(
     String? message, {
     EventId? eventId,
-    Exception? exception,
+    Object? error,
   }) =>
       log<String>(
         logLevel: LogLevel.error,
         eventId: eventId ?? const EventId(0, null),
-        exception: exception,
+        error: error,
         state: message ?? '',
         formatter: (s, e) => s,
       );
@@ -78,13 +78,13 @@ extension LoggerExtensions on Logger {
   void logCritical(
     String? message, {
     EventId? eventId,
-    Exception? exception,
+    Object? error,
     List<Object>? args,
   }) =>
       log<String>(
         logLevel: LogLevel.critical,
         eventId: eventId ?? const EventId(0, null),
-        exception: exception,
+        error: error,
         state: message ?? '',
         formatter: (s, e) => s,
       );

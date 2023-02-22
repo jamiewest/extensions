@@ -20,7 +20,7 @@ class NullLogger implements Logger {
     required LogLevel logLevel,
     EventId? eventId,
     TState? state,
-    Exception? exception,
+    Object? error,
     LogFormatter<TState>? formatter,
   }) {}
 }

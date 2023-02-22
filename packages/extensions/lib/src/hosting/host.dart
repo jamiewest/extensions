@@ -1,16 +1,20 @@
 import 'dart:async';
 
 import '../../dependency_injection.dart';
+
 import '../../logging.dart';
 
 import '../options/options.dart';
-import '../primitives/cancellation_token.dart';
 import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
+import 'host_application_builder.dart';
+import 'host_application_builder_settings.dart';
 import 'host_application_lifetime.dart';
+import 'host_builder.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
 import 'hosted_service.dart';
+import 'hosting_host_builder_extensions.dart';
 import 'hosting_logger_extensions.dart';
 import 'internal/application_lifetime.dart';
 
@@ -149,4 +153,18 @@ class Host implements Disposable, AsyncDisposable {
 
   @override
   Future<void> disposeAsync() => Future.value();
+
+  /// Initializes a new instance of the [HostBuilder] class with
+  /// pre-configured defaults.
+  static HostBuilder createDefaultBuilder() {
+    final builder = HostBuilder();
+    return builder.configureDefaults();
+  }
+
+  /// Initializes a new instance of the [HostApplicationBuilder] class
+  /// with pre-configured defaults.
+  static HostApplicationBuilder createApplicationBuilder({
+    HostApplicationBuilderSettings? settings,
+  }) =>
+      HostApplicationBuilder(settings: settings);
 }

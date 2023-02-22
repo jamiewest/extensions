@@ -49,7 +49,8 @@
 //         'Environment': Environments.staging,
 //       };
 
-//       var builder = ConfigurationBuilder().addInMemoryCollection(vals.entries);
+//       var builder = ConfigurationBuilder()
+//        .addInMemoryCollection(vals.entries);
 //       var config = builder.build();
 
 //       var host = _createBuilder(config).build();

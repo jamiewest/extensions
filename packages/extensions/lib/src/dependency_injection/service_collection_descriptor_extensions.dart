@@ -57,7 +57,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   void tryAddSingletonInstance<TService>(
     Object implementationInstance,
   ) {
-    final descriptor = ServiceDescriptor.singletonInstance(
+    final descriptor = ServiceDescriptor.singletonInstance<TService>(
       implementationInstance,
     );
 

@@ -1,22 +1,26 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:extensions_flutter/extensions_flutter.dart';
+import 'package:flutter_example/plugins/device_preview.dart';
+import 'package:flutter_example/plugins/firebase.dart';
 
-class CounterManager {
-  CounterManager() : counter = ValueNotifier(0);
-  ValueNotifier<int> counter;
-}
+//import 'firebase_options.dart';
 
-final host = createDefaultBuilder(
-  const MyApp(),
-  environment: (env) => env.applicationName = 'test',
-  services: (services) => services.addSingleton<CounterManager>(
-    (services) => CounterManager(),
-  ),
-).build();
+final builder = Host.createApplicationBuilder()
+  ..services.addSingletonInstance<ValueNotifier<int>>(ValueNotifier(0))
+  ..services.addFlutter<MyApp>(const MyApp(), configure: (flutter) => flutter
+      // ..useFirebase(
+      //   options: DefaultFirebaseOptions.currentPlatform,
+      //   configure: (firebase) => firebase
+      //     ..addCrashlytics()
+      //     ..addAnalytics(),
+      //)
+      //..useDevicePreview(),
+      );
 
-Future<void> main() async {
-  await host.run();
-}
+final host = builder.build();
+
+Future<void> main() async => await host.run();
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -28,24 +32,17 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  HostingEnvironment? environment;
-
-  @override
-  void initState() {
-    environment = host.services.getRequiredService<HostingEnvironment>();
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-        ),
-        home: const MyHomePage());
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        useMaterial3: true,
+      ),
+      builder: DevicePreview.appBuilder,
+      home: SafeArea(child: const MyHomePage()),
+    );
   }
 }
 
@@ -54,11 +51,10 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final counter = host.services.getRequiredService<CounterManager>().counter;
-    //final i = app.services.getRequiredService<VersionInfo>();
+    final counter = host.services.getRequiredService<ValueNotifier<int>>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test1'),
+        title: const Text('Caleb'),
       ),
       body: Center(
         child: Column(
@@ -68,8 +64,12 @@ class MyHomePage extends StatelessWidget {
               valueListenable: counter,
               builder: (BuildContext context, int value, Widget? child) => Text(
                 '${counter.value} ',
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
+            ),
+            TextButton(
+              onPressed: () => throw Exception('Test'),
+              child: const Text("Throw Test Exception"),
             ),
           ],
         ),

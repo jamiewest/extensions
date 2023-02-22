@@ -53,7 +53,7 @@ extension HostingAbstractionsHostExtensions on Host {
       applicationLifetime,
     );
 
-    var waitForStop = Completer();
+    var waitForStop = Completer<void>();
     applicationLifetime.applicationStopping.register(
       (state) {
         (state as Completer).complete();

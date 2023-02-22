@@ -103,7 +103,9 @@ class ServiceProviderImpl
       }
     } on Exception catch (e) {
       throw Exception(
-          'Error while validating the service descriptor \'${descriptor.toString()}\': ${e.toString()}');
+        'Error while validating the service descriptor'
+        ' \'${descriptor.toString()}\': ${e.toString()}',
+      );
     }
   }
 

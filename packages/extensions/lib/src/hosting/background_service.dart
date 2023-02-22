@@ -8,11 +8,11 @@ import 'hosted_service.dart';
 
 /// Base class for implementing a long running [HostedService].
 abstract class BackgroundService implements HostedService, Disposable {
-  CancelableOperation? _executeOperation;
+  CancelableOperation<void>? _executeOperation;
   CancellationTokenSource? _stoppingCts;
 
   /// Gets the [CancelableOperation] that executes the background operation.
-  CancelableOperation? get executeOperation => _executeOperation;
+  CancelableOperation<void>? get executeOperation => _executeOperation;
 
   /// This method is called when the [HostedService] starts. The
   /// implementation should return a future that represents the
@@ -57,7 +57,7 @@ abstract class BackgroundService implements HostedService, Disposable {
       _stoppingCts!.cancel();
     } finally {
       // Wait until the future completes or the stop token triggers
-      var c = Completer();
+      var c = Completer<void>();
       cancellationToken.register((o) {
         c.complete();
       });

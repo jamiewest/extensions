@@ -141,8 +141,8 @@ class HostApplicationBuilder {
     return resolveHost(_appServices!);
   }
 
-  // HostBuilder asHostBuilder() =>
-  //     _hostBuilderAdapter ??= HostBuilderAdapter(this);
+  HostBuilder asHostBuilder() =>
+      _hostBuilderAdapter ??= HostBuilderAdapter(this);
 }
 
 class HostBuilderAdapter implements HostBuilder {
@@ -177,54 +177,63 @@ class HostBuilderAdapter implements HostBuilder {
 
       if (previousApplicationName != config[host_defaults.applicationKey]) {
         throw Exception(
-            'The application name changed from \'$previousApplicationName\' to \'$config[host_defaults.applicationKey]\'. Changing host configuration is not supported.');
+          'The application name changed from \'$previousApplicationName\''
+          ' to \'$config[host_defaults.applicationKey]\'. Changing host'
+          ' configuration is not supported.',
+        );
       }
       if (previousEnvironment != config[host_defaults.environmentKey]) {
         throw Exception(
-            'The environment name changed from \'$previousEnvironment\' to \'$config[host_defaults.environmentKey]\'. Changing host configuration is not supported.');
+          'The environment name changed from \'$previousEnvironment\' to'
+          ' \'$config[host_defaults.environmentKey]\'. Changing host'
+          ' configuration is not supported.',
+        );
       }
       var currentContentRootConfig = config[host_defaults.contentRootKey];
       if ((previousContentRootConfig != currentContentRootConfig) &&
           (previousContentRootPath !=
               resolveContentRootPath(currentContentRootConfig, p.current))) {
         throw Exception(
-            'The content root changed from \'$previousContentRootConfig\' to \'$currentContentRootConfig\'. Changing host configuration is not supported.');
-      }
-
-      for (var configureAppAction in _configureAppConfigActions) {
-        configureAppAction(_hostApplicationBuilder._hostBuilderContext, config);
-      }
-      for (var configureServicesAction in _configureServicesActions) {
-        configureServicesAction(
-          _hostApplicationBuilder._hostBuilderContext,
-          _hostApplicationBuilder.services,
+          'The content root changed from \'$previousContentRootConfig\' to'
+          ' \'$currentContentRootConfig\'. Changing host configuration is'
+          ' not supported.',
         );
+      }
+    }
 
-        if (_configureContainerActions.isNotEmpty) {
-          var previousConfigureContainer =
-              _hostApplicationBuilder._configureContainer;
+    for (var configureAppAction in _configureAppConfigActions) {
+      configureAppAction(_hostApplicationBuilder._hostBuilderContext, config);
+    }
+    for (var configureServicesAction in _configureServicesActions) {
+      configureServicesAction(
+        _hostApplicationBuilder._hostBuilderContext,
+        _hostApplicationBuilder.services,
+      );
 
-          _hostApplicationBuilder._configureContainer = (containerBuilder) {
-            previousConfigureContainer(containerBuilder);
+      if (_configureContainerActions.isNotEmpty) {
+        var previousConfigureContainer =
+            _hostApplicationBuilder._configureContainer;
 
-            for (var containerAction in _configureContainerActions) {
-              containerAction.configureContainer(
-                _hostApplicationBuilder._hostBuilderContext,
-                containerBuilder,
-              );
-            }
-          };
-        }
+        _hostApplicationBuilder._configureContainer = (containerBuilder) {
+          previousConfigureContainer(containerBuilder);
 
-        if (_serviceProviderFactory != null) {
-          _hostApplicationBuilder._createServiceProvider = () {
-            var containerBuilder = _serviceProviderFactory!
-                .createBuilder(_hostApplicationBuilder.services);
-            _hostApplicationBuilder._configureContainer(containerBuilder);
-            return _serviceProviderFactory!
-                .createServiceProvider(containerBuilder);
-          };
-        }
+          for (var containerAction in _configureContainerActions) {
+            containerAction.configureContainer(
+              _hostApplicationBuilder._hostBuilderContext,
+              containerBuilder,
+            );
+          }
+        };
+      }
+
+      if (_serviceProviderFactory != null) {
+        _hostApplicationBuilder._createServiceProvider = () {
+          var containerBuilder = _serviceProviderFactory!
+              .createBuilder(_hostApplicationBuilder.services);
+          _hostApplicationBuilder._configureContainer(containerBuilder);
+          return _serviceProviderFactory!
+              .createServiceProvider(containerBuilder);
+        };
       }
     }
   }
@@ -266,7 +275,8 @@ class HostBuilderAdapter implements HostBuilder {
 
   @override
   HostBuilder configureContainer<TContainerBuilder>(
-      ConfigureContainerAdapterDelegate<TContainerBuilder> configureDelegate) {
+    ConfigureContainerAdapterDelegate<TContainerBuilder> configureDelegate,
+  ) {
     _configureContainerActions.add(
       ConfigureContainerAdapter<TContainerBuilder>(configureDelegate),
     );

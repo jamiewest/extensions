@@ -82,7 +82,9 @@ class ServiceProviderEngineScope
           (toDispose[i] as Disposable).dispose();
         } else {
           throw Exception(
-              '\'${toDispose[i]}\' type only implements IAsyncDisposable. Use DisposeAsync to dispose the container.');
+            '\'${toDispose[i]}\' type only implements AsyncDisposable.'
+            ' Use DisposeAsync to dispose the container.',
+          );
         }
       }
     }

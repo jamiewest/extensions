@@ -96,10 +96,10 @@ void main() {
         ..add(memConfigSrc1)
         ..add(memConfigSrc2);
 
-      var config = ConfigurationBuilder()
-          .addConfiguration(configurationBuilder.build())
-          .add(memConfigSrc3)
-          .build();
+      var config =
+          (ConfigurationBuilder().addConfiguration(configurationBuilder.build())
+                ..add(memConfigSrc3))
+              .build();
 
       var dict = {for (var item in config.asEnumerable()) item.key: item.value};
 

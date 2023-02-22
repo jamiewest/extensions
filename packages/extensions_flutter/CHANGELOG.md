@@ -1,3 +1,7 @@
+## 0.3.7 
+
+* Updates
+
 ## 0.3.6 
 
 * More changes...

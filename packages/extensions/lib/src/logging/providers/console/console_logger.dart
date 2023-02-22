@@ -24,22 +24,22 @@ class ConsoleLogger implements Logger {
     required LogLevel logLevel,
     required EventId eventId,
     required TState state,
-    Exception? exception,
+    Object? error,
     required LogFormatter<TState> formatter,
   }) {
     if (!isEnabled(logLevel)) {
       return;
     }
 
-    var formattedMessage = formatter(state, exception);
+    var formattedMessage = formatter(state, error);
     if (formattedMessage.isEmpty) {
       return;
     }
 
     var message = '${logLevel.name}: $formattedMessage';
 
-    if (exception != null) {
-      message = '$message\n\n$exception';
+    if (error != null) {
+      message = '$message\n\n$error';
     }
 
     print(message);

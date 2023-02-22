@@ -251,10 +251,9 @@ class _DisposingLoggerFactory extends LoggerFactory {
   _DisposingLoggerFactory(
     LoggerFactory loggerFactory,
     ServiceProviderImpl serviceProvider,
-    Iterable<LoggerProvider> providerRegistrations,
+    Iterable<LoggerProvider> super.providerRegistrations,
   )   : _loggerFactory = loggerFactory,
-        _serviceProvider = serviceProvider,
-        super(providerRegistrations);
+        _serviceProvider = serviceProvider;
 
   @override
   void dispose() => _serviceProvider.dispose();

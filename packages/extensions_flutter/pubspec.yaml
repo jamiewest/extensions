@@ -1,6 +1,6 @@
 name: extensions_flutter
 description: Adds Flutter integration for the extensions package.
-version: 0.3.6
+version: 0.3.7
 repository: https://www.github.com/jamiewest/extensions
 issue_tracker: https://github.com/jamiewest/extensions/issues?q=is%3Aissue+is%3Aopen+label%3Aextensions-flutter
 
@@ -9,15 +9,12 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  collection: ^1.16.0
-  encrypt: ^5.0.1
-  extensions: ^0.3.8
+  extensions: ^0.3.12
   flutter:
     sdk: flutter
-  flutter_animate: ^2.0.1
-  package_info_plus: ^1.4.3+1
-  pub_semver: ^2.1.1
-  shared_preferences: ^2.0.15
+  package_info_plus: ^3.0.3
+  pub_semver: ^2.1.3
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_lints: ^2.0.0

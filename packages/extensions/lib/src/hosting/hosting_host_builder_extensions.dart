@@ -60,7 +60,11 @@ extension HostingHostBuilderExtensions on HostBuilder {
   /// Adds a delegate for configuring the provided [LoggingBuilder].
   /// This may be called multiple times.
   HostBuilder configureLogging(
-    Function(HostBuilderContext context, LoggingBuilder logging) configure,
+    void Function(
+      HostBuilderContext context,
+      LoggingBuilder logging,
+    )
+        configure,
   ) =>
       configureServices(
         (context, collection) => collection.addLogging(
@@ -70,8 +74,12 @@ extension HostingHostBuilderExtensions on HostBuilder {
 
   /// Adds a delegate for configuring the [HostOptions] of the [Host].
   HostBuilder configureHostOptions(
-          Function(HostBuilderContext context, HostOptions options)
-              configureOptions) =>
+    void Function(
+      HostBuilderContext context,
+      HostOptions options,
+    )
+        configureOptions,
+  ) =>
       configureServices(
         (context, collection) => collection.configure<HostOptions>(
           HostOptions.new,
