@@ -7,5 +7,5 @@ import 'configuration_source.dart';
 /// Stream based [ConfigurationSource].
 abstract class StreamConfigurationSource implements ConfigurationSource {
   /// The stream containing the configuration data.
-  Stream? stream;
+  Stream<dynamic>? stream;
 }

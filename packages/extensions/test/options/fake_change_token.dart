@@ -1,8 +1,9 @@
 import 'package:extensions/src/primitives/change_token.dart';
 import 'package:extensions/src/primitives/disposable.dart';
+import 'package:extensions/src/primitives/void_callback.dart';
 
 class FakeChangeToken implements ChangeToken, Disposable {
-  Function()? _callback;
+  VoidCallback? _callback;
   bool _activeChangeCallbacks = false;
   bool _hasChanged = false;
 

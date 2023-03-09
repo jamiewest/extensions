@@ -115,7 +115,7 @@ class CallSiteRuntimeResolver
     IterableCallSite iterableCallSite,
     RuntimeResolverContext argument,
   ) {
-    var items = [];
+    var items = <Object>[];
     for (var i = 0; i < iterableCallSite.serviceCallSites.length; i++) {
       var value = visitCallSite(
         iterableCallSite.serviceCallSites.elementAt(i),
@@ -132,7 +132,7 @@ class CallSiteRuntimeResolver
     FactoryCallSite factoryCallSite,
     RuntimeResolverContext argument,
   ) =>
-      factoryCallSite.factory(argument.scope!) as Object;
+      factoryCallSite.factory(argument.scope!);
 
   // @override
   // Object visitServiceScopeFactory(

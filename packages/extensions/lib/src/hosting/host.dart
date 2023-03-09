@@ -5,6 +5,7 @@ import '../../dependency_injection.dart';
 import '../../logging.dart';
 
 import '../options/options.dart';
+import '../primitives/cancellation_token_source.dart';
 import 'background_service.dart';
 import 'background_service_exception_behavior.dart';
 import 'host_application_builder.dart';

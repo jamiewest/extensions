@@ -82,9 +82,10 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
 
   /// Registers an action used to configure a particular type of options.
   ServiceCollection configure<TOptions>(
-      OptionsImplementationFactory<TOptions> instance,
-      ConfigureOptionsAction<TOptions> configureOptions,
-      {String? name}) {
+    OptionsImplementationFactory<TOptions> instance,
+    ConfigureOptionsAction<TOptions> configureOptions, {
+    String? name,
+  }) {
     addOptions<TOptions>(instance);
     addSingleton<ConfigureOptions<TOptions>>(
       (_) => ConfigureNamedOptions0<TOptions>(
@@ -94,6 +95,15 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     );
     return this;
   }
+
+  /// Registers an action used to configure all instances of a particular
+  /// type of options.
+  ServiceCollection configureAll<TOptions>(
+    OptionsImplementationFactory<TOptions> instance,
+    ConfigureOptionsAction<TOptions> configureOptions, {
+    String? name,
+  }) =>
+      configure<TOptions>(instance, configureOptions);
 
   /// Registers an action used to configure a particular type of options.
   ServiceCollection postConfigure<TOptions>(

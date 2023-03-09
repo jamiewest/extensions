@@ -33,5 +33,5 @@ class NotFoundFileInfo implements FileInfo {
 
   /// Always throws. A stream cannot be created for a non-existing file.
   @override
-  Stream createReadStream() => throw FileNotFoundException(name);
+  Stream<dynamic> createReadStream() => throw FileNotFoundException(name);
 }

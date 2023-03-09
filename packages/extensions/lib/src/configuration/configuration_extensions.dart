@@ -15,7 +15,7 @@ extension ConfigurationExtensions on Configuration {
   ///
   /// If the `makePathsRelative` is true, the child keys returned will have the
   /// current configuration's Path trimmed from the front.
-  Iterable<MapEntry<String, String>> asEnumerable({
+  Iterable<MapEntry<String, String>> asIterable({
     bool makePathsRelative = false,
   }) sync* {
     var stack = QueueList<Configuration>()..addFirst(this);

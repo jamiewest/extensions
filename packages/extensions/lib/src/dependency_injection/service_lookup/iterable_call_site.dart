@@ -22,7 +22,7 @@ class IterableCallSite extends ServiceCallSite {
   Type get serviceType => _serviceType;
 
   @override
-  Type? get implementationType => const [Iterable.empty()].runtimeType;
+  Type? get implementationType => const [Iterable<dynamic>.empty()].runtimeType;
 
   @override
   CallSiteKind get kind => CallSiteKind.iterable;

@@ -15,7 +15,8 @@ extension ServiceProviderServiceExtensions on ServiceProvider {
     var service = getService<T>();
     if (service == null) {
       throw Exception(
-          'No service for type \'${T.toString()}\' has been registered.');
+        'No service for type \'${T.toString()}\' has been registered.',
+      );
     }
     return service;
   }

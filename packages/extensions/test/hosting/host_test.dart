@@ -1,21 +1,59 @@
-// import 'package:extensions/hosting.dart';
-// import 'package:extensions/src/primitives/cancellation_token.dart';
-// import 'package:test/test.dart';
+import 'package:extensions/hosting.dart';
+import 'package:test/test.dart';
 
-// import 'fakes/fake_hosted_service.dart';
-// import 'fakes/fake_service.dart';
-// import 'fakes/fake_service_implementation.dart';
+import 'package:path/path.dart' as p;
 
-// void main() {
-//   group('HostTests', () {
-//     test('StopAsyncWithCancellation', () async {
-//       final builder = HostBuilder();
-//       final host = builder.build();
-//       await host.start();
-//       final cts = CancellationTokenSource()..cancel();
-//       expect(cts.isCancellationRequested, equals(true));
-//       await host.stop(cts.token);
-//     });
+void main() {
+  group('HostTests', () {
+    test('StopAsyncWithCancellation', () async {
+      final builder = HostBuilder();
+      final host = builder.build();
+      await host.start();
+      final cts = CancellationTokenSource()..cancel();
+      expect(cts.isCancellationRequested, equals(true));
+      await host.stop(cts.token);
+    });
+
+    test('CreateDefaultBuilder_IncludesContentRootByDefault', () {
+      var expected = p.current;
+      var builder = Host.createDefaultBuilder();
+      var host = builder.build();
+      var config = host.services.getRequiredService<Configuration>();
+      expect(config['ContentRoot'], equals(expected));
+      var env = host.services.getRequiredService<HostEnvironment>();
+      expect(env.contentRootPath, equals(expected));
+    });
+
+    test('CreateDefaultBuilder_EnablesScopeValidation', () {
+      var host = (Host.createDefaultBuilder()
+            ..useEnvironment(Environments.development)
+            ..configureServices(
+              (context, services) => services.addScoped<ServiceA>(
+                (sp) => ServiceA(),
+              ),
+            ))
+          .build();
+
+      expect(
+        () => host.services.getRequiredService<ServiceA>(),
+        throwsException,
+      );
+    });
+
+    test('', () {});
+    test('', () {});
+    test('', () {});
+  });
+}
+
+class ServiceA {}
+
+class ServiceB {
+  // ignore: avoid_unused_constructor_parameters
+  ServiceB(ServiceC c);
+}
+
+class ServiceC {}
 
 //     test('HostInjectsHostingEnvironment', () async {
 //       var host =

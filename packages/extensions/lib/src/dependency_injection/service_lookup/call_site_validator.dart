@@ -65,6 +65,7 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
     }
 
     if (argument.singleton != null) {
+      throw Exception('ScopedInSingletonException');
       // throw new InvalidOperationException(SR.Format(
       //     SR.ScopedInSingletonException,
       //     scopedCallSite.ServiceType,

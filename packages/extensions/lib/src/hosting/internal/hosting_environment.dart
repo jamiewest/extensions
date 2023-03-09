@@ -13,5 +13,5 @@ class HostingEnvironment implements HostEnvironment {
   String environmentName = '';
 
   @override
-  FileProvider? contentRootFileProvider = null;
+  FileProvider? contentRootFileProvider;
 }

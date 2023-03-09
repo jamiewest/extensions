@@ -17,6 +17,9 @@ import 'environments.dart';
 import 'host.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder_context.dart';
+import 'host_builder_stub.dart'
+    if (dart.library.html) 'host_builder_web.dart'
+    if (dart.library.io) 'host_builder_io.dart' as host_builder;
 import 'host_defaults.dart' as host_defaults;
 import 'host_environment.dart';
 import 'host_lifetime.dart';
@@ -25,10 +28,6 @@ import 'internal/application_lifetime.dart';
 import 'internal/configure_container_adapter.dart';
 import 'internal/hosting_environment.dart';
 import 'internal/service_factory_adapter.dart';
-
-import 'host_builder_stub.dart'
-    if (dart.library.html) 'host_builder_io_web.dart'
-    if (dart.library.io) 'host_builder_io.dart' as hostBuilder;
 
 typedef ConfigureServicesDelegate = void Function(
   HostBuilderContext context,
@@ -60,8 +59,8 @@ class HostBuilder {
       <ConfigureAppConfigurationDelegate>[];
   final List<ConfigureServicesDelegate> _configureServicesActions =
       <ConfigureServicesDelegate>[];
-  final List<ConfigureContainerAdapter> _configureContainerActions =
-      <ConfigureContainerAdapter>[];
+  final List<ConfigureContainerAdapter<dynamic>> _configureContainerActions =
+      <ConfigureContainerAdapter<dynamic>>[];
 
   IServiceFactoryAdapter? _serviceProviderFactory =
       ServiceFactoryAdapter<ServiceCollection>(
@@ -167,7 +166,7 @@ class HostBuilder {
   void _initializeHostConfiguration() {
     // Make sure there's some default storage since there are
     // no default providers
-    var configBuilder = ConfigurationBuilder().addInMemoryCollection();
+    var configBuilder = ConfigurationBuilder()..addInMemoryCollection();
 
     for (var buildAction in _configureHostConfigActions) {
       buildAction(configBuilder);
@@ -235,18 +234,10 @@ void populateServiceCollection(
   ServiceProvider Function() serviceProviderGetter,
 ) {
   services
-    ..addSingleton<HostingEnvironment>(
-      <HostEnvironment>(_) => hostingEnvironment,
-    )
-    ..addSingleton<HostEnvironment>(
-      <HostEnvironment>(_) => hostingEnvironment,
-    )
-    ..addSingleton<HostBuilderContext>(
-      (_) => hostBuilderContext,
-    )
-    ..addSingleton<Configuration>(
-      <Configuration>(_) => appConfiguration,
-    )
+    ..addSingletonInstance<HostingEnvironment>(hostingEnvironment)
+    ..addSingletonInstance<HostEnvironment>(hostingEnvironment)
+    ..addSingletonInstance<HostBuilderContext>(hostBuilderContext)
+    ..addSingletonInstance<Configuration>(appConfiguration)
     ..addSingleton<ApplicationLifetime>(
       (s) => s.getService<HostApplicationLifetime>() as ApplicationLifetime,
     )
@@ -278,7 +269,7 @@ void populateServiceCollection(
     })
     ..addLogging();
 
-  hostBuilder.addLifetime(services);
+  host_builder.addLifetime(services);
 }
 
 HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {

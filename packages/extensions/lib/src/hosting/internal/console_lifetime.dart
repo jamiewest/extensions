@@ -41,11 +41,7 @@ class ConsoleLifetime extends HostLifetime {
   HostOptions get hostOptions => _hostOptions;
 
   @override
-  Future<void> stop(CancellationToken cancellationToken) {
-    // There's nothing to do here
-    var completer = Completer()..complete();
-    return completer.future;
-  }
+  Future<void> stop(CancellationToken cancellationToken) => Future.value();
 
   @override
   Future<void> waitForStart(CancellationToken cancellationToken) {
@@ -89,7 +85,7 @@ class ConsoleLifetime extends HostLifetime {
     _logger.logInformation('Application is shutting down...');
   }
 
-  void _onProcessExit() {
-    applicationLifetime.stopApplication();
-  }
+  // void _onProcessExit() {
+  //   applicationLifetime.stopApplication();
+  // }
 }

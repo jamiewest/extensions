@@ -1,3 +1,6 @@
+import 'package:path/path.dart' as p;
+
+import '../configuration/configuration_builder.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
 import '../dependency_injection/service_provider.dart';
@@ -9,6 +12,7 @@ import 'host.dart';
 import 'host_builder.dart';
 import 'host_builder_context.dart';
 import 'host_defaults.dart' as host_defaults;
+import 'host_environment_env_extensions.dart';
 import 'host_options.dart';
 
 typedef ConfigureDefaultServiceProvider = void Function(
@@ -89,6 +93,41 @@ extension HostingHostBuilderExtensions on HostBuilder {
 
   /// Configures an existing [HostBuilder] instance with pre-configured
   /// defaults.
-  HostBuilder configureDefaults([List<String>? args]) =>
-      configureLogging((context, logging) => logging.addDebug());
+  HostBuilder configureDefaults([List<String>? args]) => configureLogging(
+        (context, logging) => logging.addDebug(),
+      ).configureAppConfiguration(
+        (context, configuration) =>
+            applyDefaultHostConfiguration(configuration),
+      )..useServiceProviderFactory(
+          factory: (context) => DefaultServiceProviderFactory(
+            options: createDefaultServiceProviderOptions(context),
+          ),
+        );
+
+  static void applyDefaultHostConfiguration(
+    ConfigurationBuilder hostConfigBuilder,
+  ) {
+    setDefaultContentRoot(hostConfigBuilder);
+  }
+
+  static void setDefaultContentRoot(
+    ConfigurationBuilder hostConfigBuilder,
+  ) {
+    var cwd = p.current;
+    hostConfigBuilder.addInMemoryCollection(
+      <String, String>{
+        host_defaults.contentRootKey: cwd,
+      }.entries,
+    );
+  }
+
+  ServiceProviderOptions createDefaultServiceProviderOptions(
+    HostBuilderContext context,
+  ) {
+    var isDevelopment = context.hostingEnvironment?.isDevelopment();
+    return ServiceProviderOptions(
+      validateScopes: isDevelopment!,
+      validateOnBuild: isDevelopment!,
+    );
+  }
 }

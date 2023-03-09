@@ -1,5 +1,4 @@
 import '../../dependency_injection.dart';
-import '../dependency_injection/service_collection.dart';
 import '../logging/logger_factory.dart';
 import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';

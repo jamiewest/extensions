@@ -8,7 +8,7 @@ Future<void> main(List<String> args) async {
           (services) => MyBackgroundService(),
         );
       })
-      .useConsoleLifetime(null)
+      .useConsoleLifetime()
       .build()
       .run();
 }

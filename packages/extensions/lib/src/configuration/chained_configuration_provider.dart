@@ -25,7 +25,7 @@ class ChainedConfigurationProvider
 
   /// Tries to get a configuration value for the specified key.
   @override
-  List tryGet(String key) {
+  List<dynamic> tryGet(String key) {
     var value = _config?[key];
     if (value != null) {
       return [true, value];

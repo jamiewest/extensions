@@ -1,5 +1,6 @@
 import '../../logging/logger.dart';
 import '../../primitives/cancellation_token.dart';
+import '../../primitives/cancellation_token_source.dart';
 import '../host_application_lifetime.dart';
 import '../hosting_logger_extensions.dart';
 import '../logger_event_ids.dart';

@@ -7,7 +7,7 @@ import '../../common/configuration_provider_extensions.dart';
 void main() {
   group('EnvironmentVariablesTest', () {
     test('LoadKeyValuePairsFromEnvironmentDictionary', () {
-      var dict = LinkedHashMap.from({
+      var dict = LinkedHashMap<String, String>.from({
         'DefaultConnection:ConnectionString': 'TestConnectionString',
         'DefaultConnection:Provider': 'SqlClient',
         'Inventory:ConnectionString': 'AnotherTestConnectionString',

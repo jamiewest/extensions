@@ -1,7 +1,12 @@
+import 'package:extensions/hosting.dart';
 import 'package:flutter/widgets.dart';
 
-import '../extensions_flutter.dart';
-import 'flutter_lifetime_options.dart';
+import 'flutter_application_lifetime.dart';
+import 'flutter_builder_extensions.dart';
+import 'flutter_error_handler.dart';
+import 'flutter_lifecycle_observer.dart';
+import 'flutter_lifetime.dart';
+import 'service_provider_extensions.dart';
 
 typedef ConfigureAction = void Function(FlutterBuilder builder);
 
@@ -10,25 +15,25 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
   /// Adds required services for Flutter.
   ServiceCollection addFlutter<TApp extends Widget>(
     TApp app, {
-    FlutterLifetimeOptions? options,
     ConfigureAction? configure,
   }) {
-    addOptions<FlutterLifetimeOptions>(
-      () => options ?? FlutterLifetimeOptions(),
-    );
-
+    addSingletonInstance<TApp>(app);
     addSingleton<HostApplicationLifetime>(
       (services) => FlutterApplicationLifetime(
-        services
-            .getService<LoggerFactory>()!
-            .createLogger('ApplicationLifetime'),
+        services.createLogger('ApplicationLifetime'),
+      ),
+    );
+
+    addSingleton<ErrorHandler>(
+      (services) => FlutterErrorHandler(
+        services.createLogger('ErrorHandler'),
       ),
     );
 
     addSingleton<HostLifetime>(
       (sp) => FlutterLifetime<TApp>(
-        app,
-        sp.getRequiredService<Options<FlutterLifetimeOptions>>(),
+        sp.getRequiredService<TApp>(),
+        sp.getRequiredService<ErrorHandler>(),
         sp.getServices<FlutterAppBuilder>(),
         sp,
         sp.getRequiredService<HostEnvironment>(),

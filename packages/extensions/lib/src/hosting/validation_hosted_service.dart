@@ -1,10 +1,11 @@
 import '../options/options.dart';
 import '../primitives/cancellation_token.dart';
+import '../primitives/void_callback.dart';
 import 'hosted_service.dart';
 import 'validator_options.dart';
 
 class ValidationHostedService implements HostedService {
-  final Map<Type, Function()> _validators;
+  final Map<Type, VoidCallback> _validators;
 
   ValidationHostedService(Options<ValidatorOptions> validatorOptions)
       : _validators = validatorOptions.value!.validators;

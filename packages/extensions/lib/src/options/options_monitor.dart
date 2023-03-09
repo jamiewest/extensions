@@ -17,7 +17,7 @@ class OptionsMonitor<TOptions> extends Disposable {
   )   : _factory = factory,
         _cache = cache {
     for (var source in sources.toList()) {
-      var registration = ChangeToken.onStateChange(
+      var registration = ChangeToken.onChangeWithState(
         () => source.getChangeToken(),
         _invokeChanged,
         source.name,
@@ -40,7 +40,12 @@ class OptionsMonitor<TOptions> extends Disposable {
   TOptions get currentValue => get(Options.defaultName);
 
   @override
-  void dispose() {}
+  void dispose() {
+    for (var registration in _registrations) {
+      registration.dispose();
+    }
+    _registrations.clear();
+  }
 
   /// Returns a configured [TOptions] instance with the given [name].
   TOptions get(String? name) {
@@ -70,5 +75,5 @@ class _ChangeTrackerDisposable<TOptions> implements Disposable {
       _listener.call(options, name);
 
   @override
-  void dispose() => _monitor.onChange((options, [name]) {});
+  void dispose() => _monitor._onChange = null;
 }

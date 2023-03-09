@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import '../file_info.dart';
+import '../../file_info.dart';
 
 /// Represents a directory on a physical filesystem
 class PhysicalDirectoryInfo implements FileInfo {
@@ -34,7 +34,7 @@ class PhysicalDirectoryInfo implements FileInfo {
   /// Always throws an exception because read streams are
   /// not supported on directories.
   @override
-  Stream createReadStream() {
+  Stream<dynamic> createReadStream() {
     throw Exception('SR.CannotCreateStream');
   }
 }

@@ -1,4 +1,5 @@
 import 'cancellation_token.dart';
+import 'cancellation_token_source.dart';
 import 'change_token.dart';
 import 'disposable.dart';
 
@@ -46,7 +47,7 @@ class CompositeChangeToken extends ChangeToken {
   }
 
   @override
-  Disposable? registerChangeCallback(Function(Object? state) callback,
+  Disposable? registerChangeCallback(void Function(Object? state) callback,
       [Object? state]) {
     _ensureCallbacksInitialized();
     return _cancellationTokenSource!.token.register((state) {

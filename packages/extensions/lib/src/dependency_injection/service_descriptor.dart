@@ -1,4 +1,5 @@
 import 'service_lifetime.dart';
+import 'service_lookup/factory_call_site.dart';
 import 'service_provider.dart';
 
 typedef ImplementationFactory = Object Function(
@@ -8,7 +9,7 @@ typedef ImplementationFactory = Object Function(
 /// Describes a service with its service type, implementation, and lifetime.
 class ServiceDescriptor {
   Object? _implementationInstance;
-  Function? _implementationFactory;
+  FactoryCallback? _implementationFactory;
 
   ServiceDescriptor(
     this.serviceType,
@@ -28,7 +29,7 @@ class ServiceDescriptor {
 
   factory ServiceDescriptor._factory(
     Type serviceType,
-    Function factory,
+    FactoryCallback factory,
     ServiceLifetime lifetime,
   ) =>
       ServiceDescriptor(
@@ -42,7 +43,7 @@ class ServiceDescriptor {
 
   Object? get implementationInstance => _implementationInstance;
 
-  Function? get implementationFactory => _implementationFactory;
+  FactoryCallback? get implementationFactory => _implementationFactory;
 
   @override
   String toString() {

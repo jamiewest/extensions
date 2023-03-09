@@ -14,7 +14,7 @@ class EnvironmentVariablesConfigurationProvider extends ConfigurationProvider
   @override
   void load() => loadInternal(Platform.environment);
 
-  void loadInternal(Map envVariables) {
+  void loadInternal(Map<dynamic, dynamic> envVariables) {
     var data = LinkedHashMap<String, String>(
       equals: (a, b) => a.toLowerCase() == b.toLowerCase(),
       hashCode: (k) => k.toLowerCase().hashCode,

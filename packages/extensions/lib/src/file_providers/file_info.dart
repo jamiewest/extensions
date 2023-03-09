@@ -22,5 +22,5 @@ abstract class FileInfo {
 
   /// Return file contents as readonly stream. Caller should dispose stream
   /// when complete.
-  Stream createReadStream();
+  Stream<dynamic> createReadStream();
 }

@@ -153,8 +153,8 @@ class HostBuilderAdapter implements HostBuilder {
       <ConfigureAppConfigurationDelegate>[];
   final List<ConfigureServicesDelegate> _configureServicesActions =
       <ConfigureServicesDelegate>[];
-  final List<ConfigureContainerAdapter> _configureContainerActions =
-      <ConfigureContainerAdapter>[];
+  final List<ConfigureContainerAdapter<dynamic>> _configureContainerActions =
+      <ConfigureContainerAdapter<dynamic>>[];
 
   IServiceFactoryAdapter? _serviceProviderFactory;
 

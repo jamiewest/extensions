@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:extensions/hosting.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
 import 'flutter_builder_extensions.dart';
-import 'flutter_lifetime_options.dart';
+import 'flutter_error_handler.dart';
 
 class FlutterLifetime<TApp extends Widget> extends HostLifetime {
   final TApp _application;
-  final FlutterLifetimeOptions _options;
+  final ErrorHandler _errorHandler;
   final Iterable<FlutterAppBuilder> _builders;
   final ServiceProvider _services;
   final HostEnvironment _environment;
@@ -18,14 +19,14 @@ class FlutterLifetime<TApp extends Widget> extends HostLifetime {
 
   FlutterLifetime(
     TApp application,
-    Options<FlutterLifetimeOptions> options,
+    ErrorHandler errorHandler,
     Iterable<FlutterAppBuilder> builders,
     ServiceProvider services,
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
     LoggerFactory loggerFactory,
   )   : _application = application,
-        _options = options.value!,
+        _errorHandler = errorHandler,
         _builders = builders,
         _services = services,
         _environment = environment,
@@ -56,6 +57,9 @@ class FlutterLifetime<TApp extends Widget> extends HostLifetime {
     applicationLifetime.applicationStarted.register(
       (_) {
         WidgetsFlutterBinding.ensureInitialized();
+
+        FlutterError.onError = _errorHandler.onFlutterError;
+        PlatformDispatcher.instance.onError = _errorHandler.onError;
 
         Widget? widget;
         for (var builder in _builders) {

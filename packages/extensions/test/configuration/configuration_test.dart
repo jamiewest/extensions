@@ -101,7 +101,7 @@ void main() {
                 ..add(memConfigSrc3))
               .build();
 
-      var dict = {for (var item in config.asEnumerable()) item.key: item.value};
+      var dict = {for (var item in config.asIterable()) item.key: item.value};
 
       expect(dict['Mem1'], equals('Value1'));
       expect(dict['Mem1:'], equals('NoKeyValue1'));
@@ -154,7 +154,7 @@ void main() {
 
       var dict = {
         for (var item
-            in config.getSection('Mem1').asEnumerable(makePathsRelative: true))
+            in config.getSection('Mem1').asIterable(makePathsRelative: true))
           item.key: item.value
       };
       expect(dict.length, equals(3));
@@ -164,7 +164,7 @@ void main() {
 
       var dict2 = {
         for (var item
-            in config.getSection('Mem2').asEnumerable(makePathsRelative: true))
+            in config.getSection('Mem2').asIterable(makePathsRelative: true))
           item.key: item.value
       };
       expect(dict2.length, equals(3));
@@ -174,7 +174,7 @@ void main() {
 
       var dict3 = {
         for (var item
-            in config.getSection('Mem3').asEnumerable(makePathsRelative: true))
+            in config.getSection('Mem3').asIterable(makePathsRelative: true))
           item.key: item.value
       };
       expect(dict2.length, equals(3));
@@ -218,7 +218,7 @@ void main() {
           .build();
 
       var newConfigurationRoot = ConfigurationBuilder()
-          .addInMemoryCollection(configurationRoot.asEnumerable())
+          .addInMemoryCollection(configurationRoot.asIterable())
           .build();
 
       expect(newConfigurationRoot['keya:keyb'], equals('valueB'));

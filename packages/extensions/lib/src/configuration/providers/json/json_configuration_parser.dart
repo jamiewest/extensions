@@ -11,7 +11,9 @@ class JsonConfigurationParser {
   static Map<String, String?> parse(String input) =>
       JsonConfigurationParser()._parse(input);
 
-  static Future<Map<String, String?>> parseStream(Stream input) async =>
+  static Future<Map<String, String?>> parseStream(
+    Stream<dynamic> input,
+  ) async =>
       JsonConfigurationParser()._parseStream(input);
 
   Map<String, String?> _parse(String input) {
@@ -22,7 +24,7 @@ class JsonConfigurationParser {
     return _data;
   }
 
-  Future<Map<String, String?>> _parseStream(Stream input) async {
+  Future<Map<String, String?>> _parseStream(Stream<dynamic> input) async {
     final json = await input.last as String;
 
     return _parse(json);
@@ -41,7 +43,7 @@ class JsonConfigurationParser {
     _setNullIfElementIsEmpty(isEmpty);
   }
 
-  void _visitListElement(List element) {
+  void _visitListElement(List<dynamic> element) {
     var index = 0;
     for (var listElement in element) {
       _enterContext(index.toString());

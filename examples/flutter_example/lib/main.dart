@@ -1,8 +1,6 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:extensions_flutter/extensions_flutter.dart';
-import 'package:flutter_example/plugins/device_preview.dart';
-import 'package:flutter_example/plugins/firebase.dart';
 
 //import 'firebase_options.dart';
 
@@ -41,7 +39,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       builder: DevicePreview.appBuilder,
-      home: SafeArea(child: const MyHomePage()),
+      home: const SafeArea(child: MyHomePage()),
     );
   }
 }

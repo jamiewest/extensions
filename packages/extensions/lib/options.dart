@@ -4,6 +4,7 @@
 library options;
 
 export 'primitives.dart';
+export 'src/options/configuration_change_token_source.dart';
 export 'src/options/configure_named_options.dart' show ConfigureNamedOptions;
 export 'src/options/configure_options.dart' show ConfigureOptions;
 export 'src/options/options.dart' show Options;

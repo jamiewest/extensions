@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 
 import '../primitives/cancellation_token.dart';
+import '../primitives/cancellation_token_source.dart';
 import '../primitives/disposable.dart';
 import 'hosted_service.dart';
 

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-import '../file_info.dart';
+import '../../file_info.dart';
 
 class PhysicalFileInfo implements FileInfo {
   final File _info;
@@ -29,5 +29,5 @@ class PhysicalFileInfo implements FileInfo {
   bool get isDirectory => false;
 
   @override
-  Stream createReadStream() => _info.openRead(1);
+  Stream<List<int>> createReadStream() => _info.openRead(1);
 }

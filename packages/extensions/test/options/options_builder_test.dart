@@ -69,10 +69,10 @@ void main() {
   });
 
   test('CanMixConfigureCallsOutsideBuilderInOrder', () {
-    var services = ServiceCollection();
-    var builder = services.addOptions<FakeOptions>(
-      FakeOptions.new,
-      name: '1',
-    );
+    // var services = ServiceCollection();
+    // var builder = services.addOptions<FakeOptions>(
+    //   FakeOptions.new,
+    //   name: '1',
+    // );
   });
 }

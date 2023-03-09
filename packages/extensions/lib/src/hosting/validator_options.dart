@@ -1,8 +1,10 @@
-class ValidatorOptions {
-  final Map<Type, Function()> _validators;
+import '../primitives/void_callback.dart';
 
-  ValidatorOptions() : _validators = <Type, Function()>{};
+class ValidatorOptions {
+  final Map<Type, VoidCallback> _validators;
+
+  ValidatorOptions() : _validators = <Type, VoidCallback>{};
   // Maps each options type to a method that forces its
   // evaluation, e.g. OptionsMonitor<TOptions>.get(name)
-  Map<Type, Function()> get validators => _validators;
+  Map<Type, VoidCallback> get validators => _validators;
 }

@@ -36,7 +36,7 @@ abstract class ConfigurationProvider {
 
 /// Provides configuration key/values for an application.
 mixin ConfigurationProviderMixin on ConfigurationProvider {
-  ConfigurationReloadToken _reloadToken = ConfigurationReloadToken();
+  ConfigurationReloadToken _changeToken = ConfigurationReloadToken();
 
   /// The configuration key value pairs for this provider.
   LinkedHashMap<String, String?> data = LinkedHashMap<String, String?>(
@@ -59,7 +59,7 @@ mixin ConfigurationProviderMixin on ConfigurationProvider {
   /// Returns a [ChangeToken] that can be used to listen when this provider
   /// is reloaded.
   @override
-  ChangeToken getReloadToken() => _reloadToken;
+  ChangeToken getReloadToken() => _changeToken;
 
   // /// Loads (or reloads) the data for this provider.
   @override
@@ -100,8 +100,9 @@ mixin ConfigurationProviderMixin on ConfigurationProvider {
 
   /// Triggers the reload change token and creates a new one.
   void onReload() {
-    _reloadToken.onReload();
-    _reloadToken = ConfigurationReloadToken();
+    final previousToken = _changeToken;
+    _changeToken = ConfigurationReloadToken();
+    previousToken.onReload();
   }
 
   /// Generates a string representing this provider name and relevant details.

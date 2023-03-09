@@ -1,28 +1,29 @@
 import 'package:extensions/hosting.dart';
+import 'package:flutter/widgets.dart';
 
 /// Allows consumers to be notified of application lifetime events.
 class FlutterApplicationLifetime extends ApplicationLifetime {
   final Logger _logger;
-  final _pausedSource = <Function()>[];
-  final _resumedSource = <Function()>[];
-  final _inactiveSource = <Function()>[];
-  final _detachedSource = <Function()>[];
+  final _pausedSource = <VoidCallback>[];
+  final _resumedSource = <VoidCallback>[];
+  final _inactiveSource = <VoidCallback>[];
+  final _detachedSource = <VoidCallback>[];
 
   FlutterApplicationLifetime(Logger logger)
       : _logger = logger,
         super(logger);
 
   /// Triggered when the application host has paused.
-  List<Function()> get applicationPaused => _pausedSource;
+  List<VoidCallback> get applicationPaused => _pausedSource;
 
   /// Triggered when the application host has resumed.
-  List<Function()> get applicationResumed => _resumedSource;
+  List<VoidCallback> get applicationResumed => _resumedSource;
 
   /// Triggered when the application host is inactive.
-  List<Function()> get applicationInactive => _inactiveSource;
+  List<VoidCallback> get applicationInactive => _inactiveSource;
 
   /// Triggered when the application host is detached.
-  List<Function()> get applicationDetached => _detachedSource;
+  List<VoidCallback> get applicationDetached => _detachedSource;
 
   void notifyPaused() {
     try {
@@ -68,7 +69,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
-  void _executeHandlers(Iterable<Function()> handlers) {
+  void _executeHandlers(Iterable<VoidCallback> handlers) {
     for (var handler in handlers.toList().reversed) {
       handler.call();
     }
