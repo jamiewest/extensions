@@ -1,4 +1,3 @@
-import '../primitives/cancellation_token.dart';
 import '../primitives/cancellation_token_source.dart';
 import '../primitives/change_token.dart';
 import '../primitives/disposable.dart';
@@ -6,12 +5,12 @@ import '../primitives/disposable.dart';
 /// Implements [ChangeToken].
 class ConfigurationReloadToken implements ChangeToken {
   final CancellationTokenSource _cts = CancellationTokenSource();
-  bool? _activeChangeCallbacks = true;
+  final bool _activeChangeCallbacks = true;
 
   /// Indicates if this token will proactively raise callbacks.
   /// Callbacks are still guaranteed to be invoked, eventually.
   @override
-  bool get activeChangeCallbacks => _activeChangeCallbacks!;
+  bool get activeChangeCallbacks => _activeChangeCallbacks;
 
   /// Gets a value that indicates if a change has occurred.
   @override

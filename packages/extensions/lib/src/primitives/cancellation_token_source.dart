@@ -26,7 +26,7 @@ class CancellationTokenSource extends Disposable {
   // Used by [cancelAfter] and Timer-related ctors.
   Timer? _timer;
 
-  static final TimerCallback _timerCallback = (Object? state) =>
+  static void onTimer(Object? state) =>
       (state! as CancellationTokenSource)._notifyCancellation(false);
 
   /// The current state of the CancellationTokenSource.
@@ -63,7 +63,7 @@ class CancellationTokenSource extends Disposable {
 
   CancellationTokenSource([Duration? delay]) {
     if (delay != null) {
-      _timer = Timer(delay, () => _timerCallback.call(this));
+      _timer = Timer(delay, () => onTimer(this));
     }
 
     _registrations = Registrations(this);
@@ -92,7 +92,7 @@ class CancellationTokenSource extends Disposable {
       _state = _notifyingCompleteState;
     }
 
-    _timer ??= Timer(delay, () => _timerCallback(this));
+    _timer ??= Timer(delay, () => onTimer(this));
   }
 
   void _notifyCancellation(bool throwOnFirstException) {
@@ -140,7 +140,7 @@ class CancellationTokenSource extends Disposable {
       }
       _registrations!.callbacks = node.next;
 
-      _registrations!._executingCallbackId = node.id;
+      //_registrations!._executingCallbackId = node.id;
 
       node.id = 0;
 
@@ -152,7 +152,7 @@ class CancellationTokenSource extends Disposable {
     }
 
     _state = _notifyingCompleteState;
-    _registrations!._executingCallbackId = 0;
+    //_registrations!._executingCallbackId = 0;
 
     if (exceptionsList != null) {
       assert(
@@ -312,7 +312,7 @@ class Registrations {
 
   /// Tracks the running callback to assist ctr.Dispose() to wait for
   /// the target callback to complete.
-  int _executingCallbackId = 0;
+  // int _executingCallbackId = 0;
 
   /// Initializes the instance.
   Registrations(this.source);
@@ -385,7 +385,8 @@ class CallbackNode {
   CallbackNode? next;
 
   int id = 0;
-  Function? callback; // Action<object> or Action<object,CancellationToken>
+  void Function(Object? o)?
+      callback; // Action<object> or Action<object,CancellationToken>
   Object? callbackState;
 
   CallbackNode(this.registrations);

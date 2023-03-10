@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:characters/characters.dart';
-
 import '../service_descriptor.dart';
 import '../service_provider.dart';
 import '../service_provider_factory.dart';
@@ -127,11 +125,11 @@ class CallSiteFactory implements ServiceProviderIsService {
         var callSites = <ServiceCallSite>[];
 
         var typeName = serviceType.toString().replaceFirst('Iterable', '');
-        if (typeName.characters.first == '<') {
+        if (typeName[0] == '<') {
           typeName = typeName.substring(1, typeName.length);
         }
 
-        if (typeName.characters.last == '>') {
+        if (typeName[typeName.length - 1] == '>') {
           typeName = typeName.substring(0, typeName.length - 1);
         }
 
@@ -201,32 +199,6 @@ class CallSiteFactory implements ServiceProviderIsService {
       } else {
         return null;
       }
-
-      // var cacheLocation = CallSiteResultCacheLocation.root;
-      // var callSites = <ServiceCallSite>[];
-
-      // if (_descriptorLookup.containsKey(itemType)) {
-      //   var descriptors = _descriptorLookup[itemType];
-      //   for (var i = 0; i < descriptors!.length; i++) {
-      //     var descriptor = descriptors[i];
-
-      //     // Last service should get slot 0
-      //     var slot = descriptors.length - i - 1;
-      //     var callSite = tryCreateExact(
-      //       descriptor,
-      //       itemType,
-      //       callSiteChain,
-      //       slot,
-      //     );
-      //     assert(callSite != null);
-      //     cacheLocation = _getCommonCacheLocation(
-      //       cacheLocation,
-      //       callSite!.cache.location,
-      //     );
-      //     callSites.add(callSite);
-      //   }
-      // }
-
     } finally {
       callSiteChain.remove(serviceType);
     }

@@ -1,4 +1,3 @@
-import 'cancellation_token.dart';
 import 'cancellation_token_source.dart';
 import 'change_token.dart';
 import 'disposable.dart';

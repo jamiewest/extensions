@@ -127,7 +127,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
     var isDevelopment = context.hostingEnvironment?.isDevelopment();
     return ServiceProviderOptions(
       validateScopes: isDevelopment!,
-      validateOnBuild: isDevelopment!,
+      validateOnBuild: isDevelopment,
     );
   }
 }

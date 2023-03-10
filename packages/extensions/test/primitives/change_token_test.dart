@@ -62,13 +62,6 @@ void main() {
       expect(callbackState, isNotNull);
     });
 
-    test('DisposingChangeTokenRegistrationDuringCallbackWorks', () {
-      var provider = TrackableChangeTokenProvider();
-      var count = 0;
-
-      Disposable? reg;
-    });
-
     test('DoubleDisposeDisposesOnce', () {
       var provider = TrackableChangeTokenProvider();
       var count = 0;

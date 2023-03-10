@@ -15,9 +15,9 @@ void main() {
 
       // Inflated empty token comparisons
       var inflatedEmptyCT1 = CancellationToken();
-      var temp1 = inflatedEmptyCT1.canBeCanceled;
+      // var temp1 = inflatedEmptyCT1.canBeCanceled;
       var inflatedEmptyCT2 = CancellationToken();
-      var temp2 = inflatedEmptyCT2.canBeCanceled;
+      // var temp2 = inflatedEmptyCT2.canBeCanceled;
 
       expect(inflatedEmptyCT1, equals(CancellationToken()));
       expect(CancellationToken(), equals(inflatedEmptyCT1));
@@ -26,9 +26,9 @@ void main() {
 
       // Inflated pre-set token comparisons
       var inflatedDefaultSetCT1 = CancellationToken(true);
-      var temp3 = inflatedDefaultSetCT1.canBeCanceled;
+      // var temp3 = inflatedDefaultSetCT1.canBeCanceled;
       var inflatedDefaultSetCT2 = CancellationToken(true);
-      var temp4 = inflatedDefaultSetCT2.canBeCanceled;
+      // var temp4 = inflatedDefaultSetCT2.canBeCanceled;
 
       expect(inflatedDefaultSetCT1, equals(CancellationToken(true)));
       expect(inflatedDefaultSetCT2, equals(inflatedDefaultSetCT2));

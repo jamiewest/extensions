@@ -1,7 +1,6 @@
 import 'package:extensions/hosting.dart';
-import 'package:test/test.dart';
-
 import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
 
 void main() {
   group('HostTests', () {
@@ -39,10 +38,6 @@ void main() {
         throwsException,
       );
     });
-
-    test('', () {});
-    test('', () {});
-    test('', () {});
   });
 }
 

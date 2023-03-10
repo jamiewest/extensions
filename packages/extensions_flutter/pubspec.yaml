@@ -9,8 +9,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  extensions: #^0.3.12
-    path: ../extensions/
+  extensions: ^0.3.12
   flutter:
     sdk: flutter
 
