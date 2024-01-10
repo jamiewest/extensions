@@ -1,6 +1,6 @@
 import 'dart:developer' as developer;
 
-import '../../../primitives/disposable.dart';
+import '../../../common/disposable.dart';
 import '../../event_id.dart';
 import '../../log_level.dart';
 import '../../logger.dart';

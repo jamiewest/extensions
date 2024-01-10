@@ -1,3 +1,4 @@
+import 'package:extensions/common.dart';
 import 'package:extensions/hosting.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';

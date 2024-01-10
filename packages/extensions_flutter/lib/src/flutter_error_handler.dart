@@ -11,7 +11,7 @@ abstract class ErrorHandler {
 class FlutterErrorHandler implements ErrorHandler {
   FlutterErrorHandler(Logger logger) {
     onError = (exception, stackTrace) {
-      logger.logError('');
+      logger.logError('', error: exception);
       return true;
     };
 

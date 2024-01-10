@@ -11,7 +11,7 @@ class ConstantCallSite extends ServiceCallSite {
     Object? defaultValue,
   )   : _serviceType = serviceType,
         _defaultValue = defaultValue,
-        super(ResultCache.none);
+        super(ResultCache.none(serviceType));
 
   Object? get defaultValue => _defaultValue;
 

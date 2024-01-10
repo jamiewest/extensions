@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-
 import 'configuration.dart';
 import 'configuration_section.dart';
 

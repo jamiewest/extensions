@@ -1,5 +1,5 @@
 import '../primitives/change_token.dart';
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 import 'configuration.dart';
 import 'configuration_provider.dart';
 import 'configuration_reload_token.dart';

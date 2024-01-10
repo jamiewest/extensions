@@ -10,7 +10,7 @@ class NullLoggerFactory implements LoggerFactory {
   const NullLoggerFactory();
 
   /// Returns the shared instance of [NullLoggerFactory].
-  static NullLoggerFactory get instance => const NullLoggerFactory();
+  static const NullLoggerFactory instance = NullLoggerFactory();
 
   /// This returns a [NullLogger] instance which logs nothing.
   @override

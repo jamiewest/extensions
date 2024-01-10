@@ -4,7 +4,8 @@
 /// to their service lifetime.
 ///
 /// To use, import `package:extensions/dependency_injection.dart`.
-library dependency_injection;
+/// {@category DependencyInjection}
+library extensions.dependency_injection;
 
 export 'primitives.dart';
 export 'src/dependency_injection/service_collection.dart';

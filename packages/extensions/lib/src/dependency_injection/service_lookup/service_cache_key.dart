@@ -1,15 +1,10 @@
+import 'package:extensions/src/dependency_injection/service_lookup/service_identifier.dart';
+
 class ServiceCacheKey {
-  final Type? _type;
-  final int _slot;
-
-  ServiceCacheKey(Type? type, int slot)
-      : _type = type,
-        _slot = slot;
-
-  static ServiceCacheKey get empty => ServiceCacheKey(null, 0);
+  ServiceCacheKey(this.serviceIdentifier, this.slot);
 
   /// Type of service being cached
-  Type? get type => _type;
+  final ServiceIdentifier serviceIdentifier;
 
   /// Reverse index of the service when resolved in an `Iterable`
   /// where default instance gets slot 0.
@@ -21,12 +16,16 @@ class ServiceCacheKey {
   ///  Impl1 2
   ///  Impl2 1
   ///  Impl3 0
-  int get slot => _slot;
+  final int slot;
 
   @override
-  bool operator ==(Object other) =>
-      other is ServiceCacheKey && _type == other.type && _slot == other.slot;
+  bool operator ==(Object other) {
+    if (other is ServiceCacheKey) {
+      return serviceIdentifier == other.serviceIdentifier && slot == other.slot;
+    }
+    return false;
+  }
 
   @override
-  int get hashCode => (type.hashCode * 397) ^ _slot;
+  int get hashCode => (serviceIdentifier.hashCode * 397) ^ slot;
 }

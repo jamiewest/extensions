@@ -1,6 +1,4 @@
-import 'package:tuple/tuple.dart';
-
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 import 'event_id.dart';
 import 'log_level.dart';
 import 'logger.dart';
@@ -81,15 +79,14 @@ mixin LoggerMixin on Logger {
         continue;
       }
 
-      var result = loggerIsEnabled(logLevel, loggerInfo.logger, exceptions);
-      if (result.item1) {
+      var (isEnabled, ex) =
+          loggerIsEnabled(logLevel, loggerInfo.logger, exceptions);
+      if (isEnabled) {
         break;
       }
 
-      if (result.item2 != null) {
-        exceptions == null
-            ? exceptions = result.item2
-            : exceptions.addAll(exceptions);
+      if (ex != null) {
+        exceptions == null ? exceptions = ex : exceptions.addAll(exceptions);
       }
     }
 
@@ -109,7 +106,7 @@ mixin LoggerMixin on Logger {
   @override
   Disposable beginScope<TState>(TState state) => Scope();
 
-  static Tuple2<bool, List<Exception>?> loggerIsEnabled(
+  static (bool, List<Exception>?) loggerIsEnabled(
     LogLevel logLevel,
     Logger logger,
     List<Exception>? exceptions,
@@ -118,7 +115,7 @@ mixin LoggerMixin on Logger {
 
     try {
       if (logger.isEnabled(logLevel)) {
-        return const Tuple2<bool, List<Exception>?>(true, null);
+        return (true, null);
       }
     } on Exception catch (ex) {
       if (exceptions == null) {
@@ -128,6 +125,6 @@ mixin LoggerMixin on Logger {
       }
     }
 
-    return Tuple2<bool, List<Exception>?>(true, newExceptions);
+    return (true, newExceptions);
   }
 }

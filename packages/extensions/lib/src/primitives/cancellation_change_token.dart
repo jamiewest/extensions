@@ -1,6 +1,6 @@
-import 'cancellation_token.dart';
+import '../common/cancellation_token.dart';
 import 'change_token.dart';
-import 'disposable.dart';
+import '../common/disposable.dart';
 
 /// A [ChangeToken] implementation using [CancellationToken].
 class CancellationChangeToken implements ChangeToken {

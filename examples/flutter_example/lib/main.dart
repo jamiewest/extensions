@@ -6,15 +6,20 @@ import 'package:extensions_flutter/extensions_flutter.dart';
 
 final builder = Host.createApplicationBuilder()
   ..services.addSingletonInstance<ValueNotifier<int>>(ValueNotifier(0))
-  ..services.addFlutter<MyApp>(const MyApp(), configure: (flutter) => flutter
-      // ..useFirebase(
-      //   options: DefaultFirebaseOptions.currentPlatform,
-      //   configure: (firebase) => firebase
-      //     ..addCrashlytics()
-      //     ..addAnalytics(),
-      //)
-      //..useDevicePreview(),
-      );
+  ..services.addFlutter(
+    (flutter) => flutter
+      ..useApp(
+        (services) => const MyApp(),
+      ),
+
+    // ..useFirebase(
+    //   options: DefaultFirebaseOptions.currentPlatform,
+    //   configure: (firebase) => firebase
+    //     ..addCrashlytics()
+    //     ..addAnalytics(),
+    //)
+    //..useDevicePreview(),
+  );
 
 final host = builder.build();
 

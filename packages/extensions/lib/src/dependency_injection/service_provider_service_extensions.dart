@@ -1,4 +1,4 @@
-import '../../configuration.dart';
+import '../common/async_disposable.dart';
 import 'async_service_scope.dart';
 import 'service_provider.dart';
 import 'service_scope.dart';
@@ -8,17 +8,41 @@ import 'support_required_service.dart';
 /// Extension methods for getting services from a [ServiceProvider].
 extension ServiceProviderServiceExtensions on ServiceProvider {
   /// Get service of type [T] from the [ServiceProvider].
-  T getRequiredService<T>() {
+  T? getService<T>() {
+    return getServiceFromType(T) as T;
+  }
+
+  /// Get service of type [serviceType] from the [ServiceProvider].
+  Object getRequiredServiceFromType(Type serviceType) {
     if (this is SupportRequiredService) {
-      return (this as SupportRequiredService).getRequiredService(T) as T;
+      return (this as SupportRequiredService).getRequiredService(serviceType);
     }
-    var service = getService<T>();
+
+    Object? service = getServiceFromType(serviceType);
     if (service == null) {
       throw Exception(
-        'No service for type \'${T.toString()}\' has been registered.',
+        'No service for type \'${serviceType.runtimeType.toString()}\''
+        ' has been registered.',
       );
     }
+
     return service;
+  }
+
+  /// Get service of type [T] from the [ServiceProvider].
+  T getRequiredService<T>() {
+    return getRequiredServiceFromType(T) as T;
+  }
+
+  /// Get an enumeration of services of type [T] from the [ServiceProvider].
+  Iterable<T> getServices<T>() {
+    return getRequiredService<T>() as Iterable<T>;
+  }
+
+  /// Get an enumeration of services of type [serviceType] from
+  /// the [ServiceProvider].
+  Iterable<Object> getServicesFromType(Type serviceType) {
+    return getRequiredServiceFromType(serviceType) as Iterable<Object>;
   }
 
   /// Creates a new [ServiceScope] that can be used to resolve scoped services.

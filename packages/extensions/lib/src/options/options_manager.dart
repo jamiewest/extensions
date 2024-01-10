@@ -20,14 +20,14 @@ class OptionsManager<TOptions>
     var newName = name ?? Options.defaultName;
     var x = _cache.tryGetValue(newName);
 
-    if (!x.item1) {
+    if (!x.$1) {
       var localFactory = _factory;
       var localName = newName;
       var options = _cache.getOrAdd(name, () => localFactory.create(localName));
       return options;
     }
 
-    return x.item2;
+    return x.$2;
   }
 
   @override

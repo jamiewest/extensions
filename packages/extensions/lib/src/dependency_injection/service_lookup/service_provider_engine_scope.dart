@@ -1,5 +1,7 @@
-import '../../primitives/async_disposable.dart';
-import '../../primitives/disposable.dart';
+import 'package:extensions/src/dependency_injection/keyed_service_provider.dart';
+
+import '../../common/async_disposable.dart';
+import '../../common/disposable.dart';
 import '../service_provider.dart';
 import '../service_provider_impl.dart';
 import '../service_scope.dart';
@@ -10,6 +12,7 @@ class ServiceProviderEngineScope
     implements
         ServiceScope,
         ServiceProvider,
+        KeyedServiceProvider,
         AsyncDisposable,
         ServiceScopeFactory {
   // For testing only
@@ -119,5 +122,28 @@ class ServiceProviderEngineScope
     _disposables = null;
 
     return toDispose;
+  }
+
+  @override
+  T? getKeyedService<T>(Object? serviceKey) {
+    if (_disposed) {
+      // ThrowHelper.ThrowObjectDisposedException();
+    }
+
+    return rootProvider.getKeyedService<T>(serviceKey, this);
+  }
+
+  @override
+  T getRequiredKeyedService<T>(Object? serviceKey) {
+    if (_disposed) {
+      // ThrowHelper.ThrowObjectDisposedException();
+    }
+
+    return rootProvider.getRequiredKeyedService<T>(serviceKey, this);
+  }
+
+  @override
+  Iterable<T> getKeyedServices<T>(Object? serviceKey) {
+    return rootProvider.getKeyedServices<T>(serviceKey);
   }
 }

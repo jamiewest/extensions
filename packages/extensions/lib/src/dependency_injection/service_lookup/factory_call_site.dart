@@ -1,8 +1,12 @@
+import 'package:extensions/src/dependency_injection/service_lookup/result_cache.dart';
+
 import '../service_provider.dart';
 import 'call_site_kind.dart';
 import 'service_call_site.dart';
 
-typedef FactoryCallback = Object Function(ServiceProvider services);
+typedef FactoryCallback = Object Function(
+  ServiceProvider services,
+);
 
 class FactoryCallSite extends ServiceCallSite {
   final FactoryCallback _factory;
@@ -14,6 +18,19 @@ class FactoryCallSite extends ServiceCallSite {
     FactoryCallback factory,
   )   : _factory = factory,
         _serviceType = serviceType;
+
+  factory FactoryCallSite.keyed(
+    ResultCache cache,
+    Type serviceType,
+    Object serviceKey,
+    Object Function(ServiceProvider serviceProvider, Object serviceKey) factory,
+  ) {
+    return FactoryCallSite(
+      cache,
+      serviceType,
+      (sp) => factory(sp, serviceKey),
+    );
+  }
 
   FactoryCallback get factory => _factory;
 

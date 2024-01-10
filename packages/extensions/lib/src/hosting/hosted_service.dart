@@ -1,4 +1,4 @@
-import '../primitives/cancellation_token.dart';
+import '../common/cancellation_token.dart';
 
 /// Defines methods for objects that are managed by the host.
 abstract class HostedService {

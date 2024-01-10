@@ -1,6 +1,11 @@
 import 'dart:collection';
 
+import '../common/exceptions/invalid_operation_exception.dart';
+
 import 'service_descriptor.dart';
+
+const String _serviceCollectionReadOnly =
+    'The service collection cannot be modified because it is read-only.';
 
 /// Specifies the contract for a collection of service descriptors.
 class ServiceCollection with ListMixin<ServiceDescriptor> {
@@ -35,9 +40,12 @@ class ServiceCollection with ListMixin<ServiceDescriptor> {
 
   void checkReadOnly() {
     if (_isReadOnly) {
-      throw Exception(
-        'The service collection cannot be modified because it is read-only.',
-      );
+      _throwReadOnlyException();
     }
+  }
+
+  static void _throwReadOnlyException() {
+    /// TODO: FIX THIS
+    //throw InvalidOperationException(message: _serviceCollectionReadOnly);
   }
 }

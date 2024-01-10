@@ -3,7 +3,7 @@ import 'service_provider.dart';
 /// Optional contract used by
 /// [ServiceProviderServiceExtensions.getRequiredService()] resolve services if
 /// supported by [ServiceProvider].
-abstract class SupportRequiredService {
+abstract interface class SupportRequiredService {
   /// Gets service of type [serviceType] from the [ServiceProvider]
   /// implementing this interface.
   ///

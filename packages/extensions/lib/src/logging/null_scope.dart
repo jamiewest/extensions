@@ -1,4 +1,4 @@
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 
 /// An empty scope without any logic.
 class NullScope implements Disposable {

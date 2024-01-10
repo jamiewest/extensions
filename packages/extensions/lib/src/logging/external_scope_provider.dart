@@ -1,4 +1,4 @@
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 
 typedef ScopeCallback<TState> = void Function(
   Object? object,

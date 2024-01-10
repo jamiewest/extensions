@@ -1,24 +1,26 @@
+import 'package:extensions/src/dependency_injection/service_lookup/service_identifier.dart';
+
 import '../service_lifetime.dart';
 import 'call_site_result_cache_location.dart';
 import 'service_cache_key.dart';
 
 class ResultCache {
-  static ResultCache get none => ResultCache(
-        CallSiteResultCacheLocation.none,
-        ServiceCacheKey.empty,
-      );
+  static ResultCache none(Type serviceType) {
+    var cacheKey =
+        ServiceCacheKey(ServiceIdentifier.fromServiceType(serviceType), 0);
+    return ResultCache(CallSiteResultCacheLocation.none, cacheKey);
+  }
 
   ResultCache(
     this.location,
     this.key,
   );
 
-  factory ResultCache.builder(
+  factory ResultCache.fromServiceLifetime(
     ServiceLifetime lifetime,
-    Type? type,
+    ServiceIdentifier serviceIdentifier,
     int slot,
   ) {
-    assert(lifetime == ServiceLifetime.transient || type != null);
     CallSiteResultCacheLocation location;
 
     switch (lifetime) {
@@ -38,10 +40,10 @@ class ResultCache {
 
     return ResultCache(
       location,
-      ServiceCacheKey(type, slot),
+      ServiceCacheKey(serviceIdentifier, slot),
     );
   }
 
-  final CallSiteResultCacheLocation location;
-  final ServiceCacheKey key;
+  CallSiteResultCacheLocation location;
+  ServiceCacheKey key;
 }

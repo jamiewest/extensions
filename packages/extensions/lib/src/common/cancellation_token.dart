@@ -1,6 +1,6 @@
 import 'cancellation_token_registration.dart';
 import 'cancellation_token_source.dart';
-import 'operation_cancelled_exception.dart';
+import 'exceptions/operation_cancelled_exception.dart';
 
 /// Propagates notification that operations should be canceled.
 ///
@@ -85,7 +85,8 @@ class CancellationToken {
   /// Throws a [OperationCanceledException] if
   /// this token has had cancellation requested.
   void _throwOperationCanceledException() {
-    throw OperationCanceledException('', this);
+    /// TODO: FIX THIS
+    //throw OperationCanceledException(cancellationToken: this);
   }
 
   @override
@@ -102,7 +103,5 @@ class CancellationToken {
 }
 
 typedef CallbackRegistration = void Function(Object? state);
-
-typedef TimerCallback = void Function(CancellationTokenSource source);
 
 typedef CancellationCallback = void Function(Object? state);

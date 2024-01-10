@@ -1,5 +1,3 @@
-import 'package:tuple/tuple.dart';
-
 import 'options.dart';
 import 'options_monitor_cache.dart';
 import 'options_service_collection_extensions.dart';
@@ -24,11 +22,11 @@ class OptionsCache<TOptions> implements OptionsMonitorCache<TOptions> {
   }
 
   /// Gets a named options instance, if available.
-  Tuple2<bool, TOptions> tryGetValue(String? name) {
+  (bool, TOptions) tryGetValue(String? name) {
     if (_cache.containsKey(name)) {
-      return Tuple2<bool, TOptions>(true, _cache[name] as TOptions);
+      return (true, _cache[name] as TOptions);
     }
-    return Tuple2<bool, TOptions>(false, _factory.call());
+    return (false, _factory.call());
   }
 
   @override

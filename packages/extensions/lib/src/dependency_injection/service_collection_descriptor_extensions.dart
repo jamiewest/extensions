@@ -64,6 +64,18 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     tryAdd(descriptor);
   }
 
+  void tryAddKeyedSingletonInstance<TService>(
+    Object? serviceKey,
+    Object implementationInstance,
+  ) {
+    final descriptor = ServiceDescriptor.keyedSingletonInstance<TService>(
+      serviceKey,
+      implementationInstance,
+    );
+
+    tryAdd(descriptor);
+  }
+
   /// Adds a [ServiceDescriptor] if an existing descriptor with the same
   /// [ServiceDescriptor.serviceType] and an implementation that does not
   /// already exist in `services`.
@@ -101,6 +113,18 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
       var descriptor = this[i];
       if (descriptor.serviceType == serviceType) {
         removeAt(i);
+      }
+    }
+    return this;
+  }
+
+  /// Removes all services of type [serviceType] in [ServiceCollection].
+  ServiceCollection removeAllKeyed(Type serviceType, Object? serviceKey) {
+    for (var i = length - 1; i >= 0; i--) {
+      var descriptor = this[i];
+      if (descriptor.serviceType == serviceType &&
+          descriptor.serviceKey == serviceKey) {
+        remove(i);
       }
     }
     return this;

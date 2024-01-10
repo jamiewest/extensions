@@ -5,7 +5,8 @@
 /// using a variety of configuration sources:
 ///
 /// To use, import `package:extensions/configuration.dart`.
-library configuration;
+/// {@category Configuration}
+library extensions.configuration;
 
 export 'primitives.dart';
 export 'src/configuration/chained_builder_extensions.dart';

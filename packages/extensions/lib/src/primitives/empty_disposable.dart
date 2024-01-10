@@ -1,4 +1,4 @@
-import 'disposable.dart';
+import '../common/disposable.dart';
 
 class EmptyDisposable implements Disposable {
   EmptyDisposable();

@@ -1,4 +1,4 @@
-import '../primitives/async_disposable.dart';
+import '../common/async_disposable.dart';
 import 'service_provider.dart';
 import 'service_scope.dart';
 

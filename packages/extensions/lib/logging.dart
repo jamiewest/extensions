@@ -1,7 +1,8 @@
 /// Logging
 ///
 /// To use, import `package:extensions/logging.dart`.
-library logging;
+/// {@category Logging}
+library extensions.logging;
 
 export 'primitives.dart';
 export 'src/logging/default_logger_level_configure_options.dart';
@@ -19,6 +20,7 @@ export 'src/logging/logging_builder.dart';
 export 'src/logging/logging_builder_extensions.dart';
 export 'src/logging/null_logger.dart';
 export 'src/logging/null_logger_factory.dart';
+export 'src/logging/null_scope.dart';
 // Providers
 export 'src/logging/providers/console/console_logger.dart';
 export 'src/logging/providers/console/console_logger_factory_extensions.dart';

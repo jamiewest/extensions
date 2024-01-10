@@ -1,6 +1,6 @@
-import '../primitives/cancellation_token_source.dart';
+import '../common/cancellation_token_source.dart';
 import '../primitives/change_token.dart';
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 
 /// Implements [ChangeToken].
 class ConfigurationReloadToken implements ChangeToken {

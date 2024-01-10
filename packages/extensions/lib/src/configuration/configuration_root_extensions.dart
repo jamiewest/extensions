@@ -1,5 +1,3 @@
-import 'package:tuple/tuple.dart';
-
 import 'configuration_provider.dart';
 import 'configuration_root.dart';
 import 'configuration_section.dart';
@@ -14,15 +12,16 @@ extension ConfigurationRootExtensions on ConfigurationRoot {
     ) {
       for (var child in children) {
         var valueAndProvider = _getValueAndProvider(this, child.path);
+        var (key, provider) = _getValueAndProvider(this, child.path);
 
-        if (valueAndProvider.item2 != null) {
+        if (provider != null) {
           stringBuffer
             ..write(indent)
             ..write(child.key)
             ..write('=')
-            ..write(valueAndProvider.item1)
+            ..write(key)
             ..write(' (')
-            ..write(valueAndProvider.item2)
+            ..write(provider)
             ..writeln(')');
         } else {
           stringBuffer
@@ -41,18 +40,32 @@ extension ConfigurationRootExtensions on ConfigurationRoot {
     return builder.toString();
   }
 
-  Tuple2<String?, ConfigurationProvider?> _getValueAndProvider(
+  (String? key, ConfigurationProvider? provider) _getValueAndProvider(
     ConfigurationRoot root,
     String key,
   ) {
     for (var provider in root.providers.toList().reversed) {
       var value = provider.tryGet(key);
       if (value[0] == true) {
-        return Tuple2<String, ConfigurationProvider>(
-            value[1] as String, provider);
+        return (value[1] as String, provider);
       }
     }
 
-    return const Tuple2<String?, ConfigurationProvider?>(null, null);
+    return (null, null);
   }
+
+  //   Tuple2<String?, ConfigurationProvider?> _getValueAndProvider(
+  //   ConfigurationRoot root,
+  //   String key,
+  // ) {
+  //   for (var provider in root.providers.toList().reversed) {
+  //     var value = provider.tryGet(key);
+  //     if (value[0] == true) {
+  //       return Tuple2<String, ConfigurationProvider>(
+  //           value[1] as String, provider);
+  //     }
+  //   }
+
+  //   return const Tuple2<String?, ConfigurationProvider?>(null, null);
+  // }
 }

@@ -1,5 +1,7 @@
-import '../primitives/async_disposable.dart';
-import '../primitives/disposable.dart';
+import 'package:extensions/src/dependency_injection/keyed_service_provider.dart';
+
+import '../common/async_disposable.dart';
+import '../common/disposable.dart';
 import 'service_descriptor.dart';
 import 'service_lookup/call_site_chain.dart';
 import 'service_lookup/call_site_factory.dart';
@@ -27,7 +29,11 @@ typedef CreateServiceAccessorInner = Object? Function(
 );
 
 class ServiceProviderImpl
-    implements ServiceProvider, Disposable, AsyncDisposable {
+    implements
+        ServiceProvider,
+        KeyedServiceProvider,
+        Disposable,
+        AsyncDisposable {
   CallSiteValidator? _callSiteValidator;
   CreateServiceAccessor? _createServiceAccessor;
   // Internal for testing
@@ -186,6 +192,23 @@ class ServiceProviderImpl
 
   @override
   Future<void> disposeAsync() => _root.disposeAsync();
+
+  @override
+  T? getKeyedService<T>(Object? serviceKey,
+      [ServiceProviderEngineScope? serviceProviderEngineScope]) {
+    throw UnimplementedError();
+  }
+
+  @override
+  T getRequiredKeyedService<T>(Object? serviceKey,
+      [ServiceProviderEngineScope? serviceProviderEngineScope]) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Iterable<T> getKeyedServices<T>(Object? serviceKey) {
+    throw UnimplementedError();
+  }
 }
 
 extension IterableExtension<T> on Iterable<T> {

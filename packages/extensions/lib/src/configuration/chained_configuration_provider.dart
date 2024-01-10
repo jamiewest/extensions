@@ -1,5 +1,5 @@
 import '../primitives/change_token.dart';
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 import 'chained_configuration_source.dart';
 import 'configuration.dart';
 import 'configuration_key_comparator.dart';

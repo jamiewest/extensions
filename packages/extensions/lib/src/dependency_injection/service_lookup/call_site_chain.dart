@@ -1,38 +1,45 @@
 import 'dart:collection';
 
+import 'package:extensions/src/dependency_injection/service_lookup/service_identifier.dart';
+
 class CallSiteChain {
-  final Map<Type, ChainItemInfo> _callSiteChain;
+  final Map<ServiceIdentifier, ChainItemInfo> _callSiteChain;
 
-  CallSiteChain() : _callSiteChain = <Type, ChainItemInfo>{};
+  CallSiteChain() : _callSiteChain = <ServiceIdentifier, ChainItemInfo>{};
 
-  void checkCircularDependency(Type serviceType) {
-    if (_callSiteChain.containsKey(serviceType)) {
-      throw Exception(_createCircularDependencyExceptionMessage(serviceType));
+  void checkCircularDependency(ServiceIdentifier serviceIdentifier) {
+    if (_callSiteChain.containsKey(ServiceIdentifier)) {
+      throw Exception(
+          _createCircularDependencyExceptionMessage(serviceIdentifier));
     }
   }
 
-  void remove(Type serviceType) => _callSiteChain.remove(serviceType);
+  void remove(ServiceIdentifier serviceIdentifier) =>
+      _callSiteChain.remove(serviceIdentifier);
 
-  void add(Type serviceType, [Type? implementationType]) {
-    _callSiteChain[serviceType] = ChainItemInfo(
+  void add(ServiceIdentifier serviceIdentifier, [Type? implementationType]) {
+    _callSiteChain[serviceIdentifier] = ChainItemInfo(
       _callSiteChain.length,
       implementationType,
     );
   }
 
-  String _createCircularDependencyExceptionMessage(Type type) {
+  String _createCircularDependencyExceptionMessage(
+    ServiceIdentifier serviceIdentifier,
+  ) {
     var messageBuilder = StringBuffer()
       ..write('''
         A circular dependency was detected for the service of 
-        type '${type.runtimeType.toString()}'.''')
+        type '${serviceIdentifier.serviceType.runtimeType.toString()}'.''')
       ..writeln();
 
-    _appendResolutionPath(messageBuilder, type);
+    _appendResolutionPath(messageBuilder, serviceIdentifier);
 
     return messageBuilder.toString();
   }
 
-  void _appendResolutionPath(StringBuffer builder, [Type? currentlyResolving]) {
+  void _appendResolutionPath(
+      StringBuffer builder, ServiceIdentifier currentlyResolving) {
     final ordered = SplayTreeMap<Type, ChainItemInfo>.from(
       _callSiteChain,
       (key1, key2) =>
@@ -52,7 +59,7 @@ class CallSiteChain {
       builder.write(' -> ');
     }
 
-    builder.write(currentlyResolving.runtimeType.toString());
+    builder.write(currentlyResolving.serviceType.runtimeType.toString());
   }
 }
 

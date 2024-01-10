@@ -1,4 +1,4 @@
-import 'disposable.dart';
+import '../common/disposable.dart';
 
 /// Produces the change token.
 typedef ChangeTokenProducer = ChangeToken? Function();

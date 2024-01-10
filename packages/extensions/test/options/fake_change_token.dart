@@ -1,5 +1,5 @@
 import 'package:extensions/src/primitives/change_token.dart';
-import 'package:extensions/src/primitives/disposable.dart';
+import 'package:extensions/src/common/disposable.dart';
 import 'package:extensions/src/primitives/void_callback.dart';
 
 class FakeChangeToken implements ChangeToken, Disposable {

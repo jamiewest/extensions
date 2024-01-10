@@ -1,7 +1,8 @@
 /// Options
 ///
 /// To use, import `package:extensions/options.dart`.
-library options;
+/// {@category Options}
+library extensions.options;
 
 export 'primitives.dart';
 export 'src/options/configuration_change_token_source.dart';

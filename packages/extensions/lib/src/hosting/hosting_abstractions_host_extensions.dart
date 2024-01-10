@@ -1,10 +1,8 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:async';
-//import 'dart:cli';
 
+import '../common/cancellation_token.dart';
 import '../dependency_injection/service_provider_service_extensions.dart';
-import '../primitives/cancellation_token.dart';
+
 import 'host.dart';
 import 'host_application_lifetime.dart';
 

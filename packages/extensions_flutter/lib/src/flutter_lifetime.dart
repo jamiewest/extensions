@@ -1,34 +1,30 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:extensions/common.dart';
 import 'package:extensions/hosting.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
-import 'flutter_builder_extensions.dart';
+import 'flutter_application_wrapper.dart';
 import 'flutter_error_handler.dart';
+import 'flutter_lifecycle_observer.dart';
 
-class FlutterLifetime<TApp extends Widget> extends HostLifetime {
-  final TApp _application;
+class FlutterLifetime extends HostLifetime {
+  final FlutterApplicationWrapper _application;
   final ErrorHandler _errorHandler;
-  final Iterable<FlutterAppBuilder> _builders;
-  final ServiceProvider _services;
   final HostEnvironment _environment;
   final FlutterApplicationLifetime _applicationLifetime;
   final Logger _logger;
 
   FlutterLifetime(
-    TApp application,
+    FlutterApplicationWrapper application,
     ErrorHandler errorHandler,
-    Iterable<FlutterAppBuilder> builders,
-    ServiceProvider services,
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
     LoggerFactory loggerFactory,
   )   : _application = application,
         _errorHandler = errorHandler,
-        _builders = builders,
-        _services = services,
         _environment = environment,
         _applicationLifetime =
             applicationLifetime as FlutterApplicationLifetime,
@@ -61,13 +57,12 @@ class FlutterLifetime<TApp extends Widget> extends HostLifetime {
         FlutterError.onError = _errorHandler.onFlutterError;
         PlatformDispatcher.instance.onError = _errorHandler.onError;
 
-        Widget? widget;
-        for (var builder in _builders) {
-          widget ??= _application;
-          widget = builder(_services, widget);
-        }
+        final app = FlutterLifecycleObserver(
+          lifetime: applicationLifetime,
+          child: _application.child,
+        );
 
-        runApp(widget!);
+        runApp(app);
       },
     );
   }

@@ -1,6 +1,5 @@
 import 'package:extensions/configuration.dart';
 import 'package:test/test.dart';
-import 'package:tuple/tuple.dart';
 
 abstract class ConfigurationProviderTestBase {
   void loadFromSingleProvider() {
@@ -182,25 +181,27 @@ abstract class ConfigurationProviderTestBase {
     expect(sections[0].value, equals(value344));
   }
 
-  Tuple2<ConfigurationProvider, VoidCallback> loadThroughProvider(
+  (ConfigurationProvider, VoidCallback) loadThroughProvider(
     TestSection testConfig,
   );
 
-  static Tuple2<ConfigurationProvider, VoidCallback> loadUsingMemoryProvider(
+  static (ConfigurationProvider, VoidCallback) loadUsingMemoryProvider(
       TestSection testConfig) {
     var values = <MapEntry<String, String?>>[];
     sectionToValues(testConfig, '', values);
 
-    return Tuple2<ConfigurationProvider, VoidCallback>(
-        MemoryConfigurationProvider(MemoryConfigurationSource(values)), () {});
+    return (
+      MemoryConfigurationProvider(MemoryConfigurationSource(values)),
+      () {}
+    );
   }
 
   ConfigurationRoot buildConfigRoot(
-    List<Tuple2<ConfigurationProvider, VoidCallback>> providers,
+    List<(ConfigurationProvider, VoidCallback)> providers,
   ) {
-    var root = ConfigurationRoot(providers.map((e) => e.item1).toList());
+    var root = ConfigurationRoot(providers.map((e) => e.$1).toList());
 
-    for (var initializer in providers.map((e) => e.item2)) {
+    for (var initializer in providers.map((e) => e.$2)) {
       initializer();
     }
 
@@ -213,104 +214,103 @@ abstract class ConfigurationProviderTestBase {
     List<MapEntry<String, String?>> values,
   ) {
     for (var tuple in section.values!
-        .expand((e) => e.item2.expand(e.item1))
-        .map((e) => Tuple2<String, String?>(e.item1, e.item2))) {
+        .expand((e) => e.$2.expand(e.$1))
+        .map((e) => (e.$1, e.$2))) {
       values.add(MapEntry<String, String?>(
-        '$sectionName${tuple.item1}',
-        tuple.item2 == null ? null : tuple.item2 as String,
+        '$sectionName${tuple.$1}',
+        tuple.$2 == null ? null : tuple.$2 as String,
       ));
     }
 
     for (var tuple in section.sections!) {
-      sectionToValues(tuple.item2, '$sectionName${tuple.item1}:', values);
+      sectionToValues(tuple.$2, '$sectionName${tuple.$1}:', values);
     }
   }
 }
 
 class TestSection {
   TestSection({
-    this.values = const <Tuple2<String, TestKeyValue>>[],
-    this.sections = const <Tuple2<String, TestSection>>[],
+    this.values = const <(String, TestKeyValue)>[],
+    this.sections = const <(String, TestSection)>[],
   });
 
-  Iterable<Tuple2<String, TestKeyValue>>? values;
-  Iterable<Tuple2<String, TestSection>>? sections;
+  Iterable<(String, TestKeyValue)>? values;
+  Iterable<(String, TestSection)>? sections;
 
   static TestSection get nullsTestConfig => TestSection()
     ..values = [
-      Tuple2<String, TestKeyValue>('Key1', TestKeyValue.value((null))),
+      ('Key1', TestKeyValue.value(null)),
     ]
     ..sections = [
-      Tuple2<String, TestSection>(
-          'Section1',
-          TestSection()
-            ..values = [
-              Tuple2<String, TestKeyValue>('Key2', TestKeyValue.value(null)),
-            ]
-            ..sections = [
-              Tuple2<String, TestSection>(
-                  'Section2',
-                  TestSection()
-                    ..values = [
-                      Tuple2<String, TestKeyValue>(
-                          'Key3', TestKeyValue.value(null)),
-                      Tuple2<String, TestKeyValue>('Key3a',
-                          TestKeyValue.values(<String?>[null, null, null])),
-                    ])
-            ]),
-      Tuple2<String, TestSection>(
-          'Section3',
-          TestSection()
-            ..sections = [
-              Tuple2<String, TestSection>(
-                  'Section4',
-                  TestSection()
-                    ..values = [
-                      Tuple2<String, TestKeyValue>(
-                          'Key4', TestKeyValue.value(null)),
-                    ])
-            ])
+      (
+        'Section1',
+        TestSection()
+          ..values = [
+            ('Key2', TestKeyValue.value(null)),
+          ]
+          ..sections = [
+            (
+              'Section2',
+              TestSection()
+                ..values = [
+                  ('Key3', TestKeyValue.value(null)),
+                  ('Key3a', TestKeyValue.values(<String?>[null, null, null])),
+                ]
+            )
+          ]
+      ),
+      (
+        'Section3',
+        TestSection()
+          ..sections = [
+            (
+              'Section4',
+              TestSection()
+                ..values = [
+                  ('Key4', TestKeyValue.value(null)),
+                ]
+            )
+          ]
+      )
     ];
 
   static TestSection get testConfig => TestSection()
     ..values = [
-      Tuple2<String, TestKeyValue>('Key1', TestKeyValue.value('Value1')),
+      ('Key1', TestKeyValue.value('Value1')),
     ]
     ..sections = [
-      Tuple2<String, TestSection>(
-          'Section1',
-          TestSection()
-            ..values = [
-              Tuple2<String, TestKeyValue>(
-                  'Key2', TestKeyValue.value('Value12')),
-            ]
-            ..sections = [
-              Tuple2<String, TestSection>(
-                'Section2',
-                TestSection()
-                  ..values = [
-                    Tuple2<String, TestKeyValue>(
-                        'Key3', TestKeyValue.value('Value123')),
-                    Tuple2<String, TestKeyValue>(
-                        'Key3a',
-                        TestKeyValue.values(
-                            ['ArrayValue0', 'ArrayValue1', 'ArrayValue2'])),
-                  ]
-                  ..sections = [],
-              )
-            ]),
-      Tuple2<String, TestSection>(
-          'Section3',
-          TestSection()
-            ..sections = [
-              Tuple2<String, TestSection>(
-                  'Section4',
-                  TestSection()
-                    ..values = [
-                      Tuple2<String, TestKeyValue>(
-                          'Key4', TestKeyValue.value('Value344'))
-                    ])
-            ])
+      (
+        'Section1',
+        TestSection()
+          ..values = [
+            ('Key2', TestKeyValue.value('Value12')),
+          ]
+          ..sections = [
+            (
+              'Section2',
+              TestSection()
+                ..values = [
+                  ('Key3', TestKeyValue.value('Value123')),
+                  (
+                    'Key3a',
+                    TestKeyValue.values(
+                        ['ArrayValue0', 'ArrayValue1', 'ArrayValue2'])
+                  ),
+                ]
+                ..sections = [],
+            )
+          ]
+      ),
+      (
+        'Section3',
+        TestSection()
+          ..sections = [
+            (
+              'Section4',
+              TestSection()..values = [('Key4', TestKeyValue.value('Value344'))]
+            )
+          ]
+      )
     ];
 }
 
@@ -329,12 +329,12 @@ class TestKeyValue {
 
   String? asString() => _value != null ? _value as String? : null;
 
-  Iterable<Tuple2<String, String?>> expand(String key) sync* {
+  Iterable<(String, String?)> expand(String key) sync* {
     if (asList() == null) {
-      yield Tuple2<String, String?>(key, asString());
+      yield (key, asString());
     } else {
       for (var i = 0; i < asList()!.length; i++) {
-        yield Tuple2<String, String?>('$key:$i', asList()![i]);
+        yield ('$key:$i', asList()![i]);
       }
     }
   }

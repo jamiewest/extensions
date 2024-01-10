@@ -1,0 +1,23 @@
+import 'package:extensions/src/dependency_injection/service_collection_service_extensions.dart';
+import 'package:extensions/src/options/options_service_collection_extensions.dart';
+
+import 'options.dart';
+import 'options_builder.dart';
+import 'options_monitor.dart';
+import 'startup_validator_options.dart';
+import 'validate_on_start.dart';
+
+extension OptionsBuilderExtensions<TOptions> on OptionsBuilder<TOptions> {
+  OptionsBuilder<TOptions> validateOnStart() {
+    services.addTransient<StartupValidator>(
+      (services) => StartupValidator(
+        validators: services.getService<Options<StartupValidatorOptions>>()!,
+      ),
+    );
+    services
+        .addOptions<StartupValidatorOptions>(() => StartupValidatorOptions())
+        .configure1<OptionsMonitor<TOptions>>((vo, options) => vo.validators);
+
+    return this;
+  }
+}

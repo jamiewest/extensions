@@ -1,4 +1,4 @@
-import 'package:extensions/primitives.dart';
+import 'package:extensions/common.dart';
 import 'package:extensions/src/hosting/hosted_service.dart';
 
 class FakeHostedService implements HostedService, Disposable {

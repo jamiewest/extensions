@@ -1,5 +1,3 @@
-import 'package:tuple/tuple.dart';
-
 import 'log_level.dart';
 import 'logger_filter_options.dart';
 import 'logger_filter_rule.dart';
@@ -7,7 +5,7 @@ import 'logger_information.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class LoggerRuleSelector {
-  static Tuple2<LogLevel?, MessageLoggerFilter?> select(
+  static (LogLevel?, MessageLoggerFilter?) select(
     LoggerFilterOptions options,
     Type providerType,
     String category,
@@ -39,7 +37,7 @@ class LoggerRuleSelector {
       minLevel = current.logLevel;
     }
 
-    return Tuple2<LogLevel?, MessageLoggerFilter?>(minLevel, filter);
+    return (minLevel, filter);
   }
 
   static bool isBetter(
@@ -67,7 +65,7 @@ class LoggerRuleSelector {
       String prefix;
       String suffix;
 
-      if (wildcardIndex == 1) {
+      if (wildcardIndex == -1) {
         prefix = categoryName;
         suffix = '';
       } else {

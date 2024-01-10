@@ -1,3 +1,4 @@
+import 'package:extensions/common.dart';
 import 'package:extensions/configuration.dart';
 import 'package:extensions/src/primitives/change_token.dart';
 import 'package:test/test.dart';

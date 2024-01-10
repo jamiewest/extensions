@@ -1,7 +1,6 @@
 import 'package:extensions/src/configuration/configuration_provider.dart';
 import 'package:extensions/src/primitives/void_callback.dart';
 import 'package:test/test.dart';
-import 'package:tuple/tuple.dart';
 import 'configuration_provider_test_base.dart';
 
 void main() {
@@ -21,7 +20,7 @@ class ConfigurationProviderMemoryTest extends ConfigurationProviderTestBase {
   }
 
   @override
-  Tuple2<ConfigurationProvider, VoidCallback> loadThroughProvider(
+  (ConfigurationProvider, VoidCallback) loadThroughProvider(
     TestSection testConfig,
   ) =>
       ConfigurationProviderTestBase.loadUsingMemoryProvider(testConfig);

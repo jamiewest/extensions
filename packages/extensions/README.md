@@ -68,3 +68,11 @@ Future<void> main(List<String> args) async =>
 Extensions is a derived work of the [dotnet/runtime](https://github.com/dotnet/runtime) 
 
 
+Interfaces will follow the .NET convention of using 'I' as a prefix to interfaces. These will be placed in a file using the name without the 'I' (ex. IMyInterface would be saved as `my_interface.dart`). Implementations using the same name would also reside in that file.
+
+Since we cannot do constructor or method overloading, we will be using named parameters where appropriate. 
+
+Static only helper classes will be permitted.
+
+Strings.resx will be included and source_gen'd.
+

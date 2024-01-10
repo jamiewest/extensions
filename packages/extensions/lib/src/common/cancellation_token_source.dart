@@ -4,8 +4,6 @@ import 'cancellation_token.dart';
 import 'cancellation_token_registration.dart';
 import 'disposable.dart';
 
-typedef TimerCallback = void Function(Object? state);
-
 /// Signals to a [CancellationToken] that it should be canceled.
 ///
 /// [CancellationTokenSource] is used to instantiate a [CancellationToken] (via

@@ -1,4 +1,4 @@
-import '../../primitives/disposable.dart';
+import '../../common/disposable.dart';
 import 'call_site_kind.dart';
 import 'result_cache.dart';
 

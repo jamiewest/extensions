@@ -1,4 +1,4 @@
-library configuration_io;
+library extensions.configuration_io;
 
 export 'configuration.dart';
 export 'src/configuration/providers/environment_variables/environment_variables_configuration_provider.dart';

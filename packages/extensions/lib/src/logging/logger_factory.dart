@@ -1,6 +1,5 @@
-import 'package:tuple/tuple.dart';
-
 import '../../dependency_injection.dart';
+import '../common/exceptions/object_disposed_exception.dart';
 import '../dependency_injection/service_provider_impl.dart';
 import '../options/options_monitor.dart';
 import 'log_level.dart';
@@ -89,31 +88,38 @@ class LoggerFactory implements Disposable {
     _filterOptions = filterOptions;
     for (var registeredLogger in _loggers.entries) {
       var logger = registeredLogger.value as _Logger;
-      var result = _applyFilters(logger.loggers!);
+      var (messageLoggers, scopeLoggers) = _applyFilters(logger.loggers!);
       logger
-        ..messageLoggers = result.item1
-        ..scopeLoggers = result.item2;
+        ..messageLoggers = messageLoggers
+        ..scopeLoggers = scopeLoggers;
     }
   }
 
   /// Creates a new [Logger] instance with the given [categoryName].
   Logger createLogger(String categoryName) {
+    if (_checkDisposed()) {
+      /// TODO: FIX THIS
+      //throw ObjectDisposedException(objectName: 'LoggerFactory');
+    }
+
     var logger = _Logger();
     if (_loggers.containsKey(categoryName)) {
       return _loggers[categoryName] as Logger;
     } else {
       logger.loggers = _createLoggers(categoryName).toList();
 
-      var result = _applyFilters(logger.loggers!);
+      var (messageLoggers, scopeLoggers) = _applyFilters(logger.loggers!);
       logger
-        ..messageLoggers = result.item1
-        ..scopeLoggers = result.item2;
+        ..messageLoggers = messageLoggers
+        ..scopeLoggers = scopeLoggers;
 
       _loggers[categoryName] = logger;
     }
 
     return logger;
   }
+
+  bool _checkDisposed() => _disposed;
 
   Iterable<LoggerInformation> _createLoggers(String categoryName) {
     var loggers = List.generate(
@@ -127,7 +133,7 @@ class LoggerFactory implements Disposable {
     return loggers;
   }
 
-  Tuple2<List<MessageLogger>, List<ScopeLogger>> _applyFilters(
+  (List<MessageLogger>, List<ScopeLogger>) _applyFilters(
     List<LoggerInformation> loggers,
   ) {
     var messageLoggers = <MessageLogger>[];
@@ -140,21 +146,21 @@ class LoggerFactory implements Disposable {
         loggerInformation.category,
       );
 
-      var minLevel = result.item1;
+      var minLevel = result.$1;
       if (minLevel != null) {
         if (minLevel.value > LogLevel.critical.value) {
           continue;
         }
       }
 
-      var filter = result.item2;
+      var filter = result.$2;
 
       messageLoggers.add(
         MessageLogger(
           loggerInformation.logger,
           loggerInformation.category,
           loggerInformation.providerType.toString(),
-          result.item1,
+          result.$1,
           filter,
         ),
       );
@@ -173,7 +179,7 @@ class LoggerFactory implements Disposable {
 
     // }
 
-    return Tuple2<List<MessageLogger>, List<ScopeLogger>>(
+    return (
       messageLoggers,
       scopeLoggers!,
     );
@@ -194,10 +200,10 @@ class LoggerFactory implements Disposable {
       );
       logger.loggers = loggerInformation;
 
-      var result = _applyFilters(logger.loggers!);
+      var (messageLoggers, scopeLoggers) = _applyFilters(logger.loggers!);
       logger
-        ..messageLoggers = result.item1
-        ..scopeLoggers = result.item2;
+        ..messageLoggers = messageLoggers
+        ..scopeLoggers = scopeLoggers;
     }
   }
 

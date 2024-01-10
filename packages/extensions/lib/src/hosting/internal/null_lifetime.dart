@@ -1,4 +1,5 @@
-import '../../primitives/cancellation_token.dart';
+import '../../common/cancellation_token.dart';
+
 import '../host_lifetime.dart';
 
 /// Minimalistic lifetime that does nothing.

@@ -53,6 +53,9 @@ class _FlutterLifecycleObserver extends State<FlutterLifecycleObserver>
       case AppLifecycleState.detached:
         widget.lifetime.notifyDetached();
         break;
+      case AppLifecycleState.hidden:
+        // TODO: Update lifetime.
+        break;
     }
   }
 }

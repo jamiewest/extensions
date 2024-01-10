@@ -1,4 +1,4 @@
-import '../primitives/disposable.dart';
+import '../common/disposable.dart';
 
 import 'logger.dart';
 

@@ -1,13 +1,15 @@
 /// Hosting
 ///
 /// To use, import `package:extensions/hosting.dart`.
-library hosting;
+/// {@category Hosting}
+library extensions.hosting;
 
 import 'src/hosting/host_application_builder.dart';
 import 'src/hosting/host_application_builder_settings.dart';
 import 'src/hosting/host_builder.dart';
 import 'src/hosting/hosting_host_builder_extensions.dart';
 
+export 'common.dart';
 export 'configuration.dart';
 export 'dependency_injection.dart';
 export 'logging.dart';

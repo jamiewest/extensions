@@ -1,4 +1,5 @@
 import '../../hosting.dart';
+import '../common/cancellation_token.dart';
 import 'host_defaults.dart' as host_defaults;
 import 'host_options.dart';
 import 'internal/console_lifetime.dart';

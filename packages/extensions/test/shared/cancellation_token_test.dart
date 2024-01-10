@@ -1,5 +1,4 @@
-import 'package:extensions/src/primitives/cancellation_token.dart';
-import 'package:extensions/src/primitives/cancellation_token_source.dart';
+import 'package:extensions/common.dart';
 import 'package:test/test.dart';
 
 void main() {
