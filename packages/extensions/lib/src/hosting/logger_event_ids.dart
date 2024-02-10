@@ -18,4 +18,6 @@ class LoggerEventIds {
       const EventId(9, 'BackgroundServiceFaulted');
   static EventId backgroundServiceStoppingHost =
       const EventId(10, 'BackgroundServiceStoppingHost');
+  static EventId hostedServiceStartupFaulted =
+      const EventId(11, 'HostedServiceStartupFaulted');
 }

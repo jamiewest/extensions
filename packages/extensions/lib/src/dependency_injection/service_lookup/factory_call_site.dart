@@ -1,8 +1,7 @@
-import 'package:extensions/src/dependency_injection/service_lookup/result_cache.dart';
-
 import '../service_provider.dart';
 import 'call_site_kind.dart';
 import 'service_call_site.dart';
+import 'service_lookup.dart';
 
 typedef FactoryCallback = Object Function(
   ServiceProvider services,

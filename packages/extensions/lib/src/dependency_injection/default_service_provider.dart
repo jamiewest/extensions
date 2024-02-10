@@ -1,18 +1,12 @@
-import 'package:extensions/src/dependency_injection/service_lookup/call_site_factory.dart';
-import 'package:extensions/src/dependency_injection/service_lookup/call_site_validator.dart';
-import 'package:extensions/src/dependency_injection/service_lookup/service_call_site.dart';
-import 'package:extensions/src/dependency_injection/service_lookup/service_identifier.dart';
+part of 'service_lookup/service_lookup.dart';
 
-import '../common/async_disposable.dart';
-import '../common/disposable.dart';
-import 'keyed_service_provider.dart';
-import 'service_descriptor.dart';
-import 'service_lookup/call_site_chain.dart';
-import 'service_lookup/runtime_service_provider_engine.dart';
-import 'service_lookup/service_provider_engine.dart';
-import 'service_lookup/service_provider_engine_scope.dart';
-import 'service_provider.dart';
-import 'service_provider_options.dart';
+typedef CreateServiceAccessor = CreateServiceAccessorInner? Function(
+  Type type,
+);
+
+typedef CreateServiceAccessorInner = Object? Function(
+  ServiceProviderEngineScope scope,
+);
 
 /// The default [ServiceProvider]
 class DefaultServiceProvider
@@ -22,101 +16,204 @@ class DefaultServiceProvider
         Disposable,
         AsyncDisposable {
   CallSiteValidator? _callSiteValidator;
-  late final ServiceAccessor Function(ServiceIdentifier serviceIdentifier)
-      _createServiceAccessor;
-  late final ServiceProviderEngine _engine;
+  // late final ServiceAccessor Function(ServiceIdentifier serviceIdentifier)
+  //     _createServiceAccessors;
+  final ServiceProviderEngine _engine;
   bool _disposed = false;
   Map<ServiceIdentifier, ServiceAccessor> _serviceAccessors;
 
-  final CallSiteFactory _callSiteFactory;
+  late final CallSiteFactory _callSiteFactory;
 
   late final ServiceProviderEngineScope _root;
 
   DefaultServiceProvider(
-    List<ServiceDescriptor> serviceDescriptors,
+    Iterable<ServiceDescriptor> serviceDescriptors,
     ServiceProviderOptions options,
-  ) {
+  )   : _engine = RuntimeServiceProviderEngine(),
+        _serviceAccessors = <ServiceIdentifier, ServiceAccessor>{} {
     // note that Root needs to be set before calling GetEngine(), because
     // the engine may need to access Root
     _root = ServiceProviderEngineScope(this, isRootScope: true);
-    _engine = getEngine();
+    var callSiteFactory = CallSiteFactory(serviceDescriptors);
+
+    callSiteFactory
+      ..add(ServiceIdentifier.fromServiceType(ServiceProvider),
+          ServiceProviderCallSite())
+      ..add(ServiceIdentifier.fromServiceType(ServiceScopeFactory),
+          ConstantCallSite(ServiceScopeFactory, _root))
+      ..add(ServiceIdentifier.fromServiceType(ServiceProviderIsService),
+          ConstantCallSite(ServiceProviderIsService, callSiteFactory))
+      ..add(ServiceIdentifier.fromServiceType(ServiceProviderIsKeyedService),
+          ConstantCallSite(ServiceProviderIsKeyedService, callSiteFactory));
+
+    _callSiteFactory = callSiteFactory;
+
+    if (options.validateScopes) {
+      _callSiteValidator = CallSiteValidator();
+    }
+
+    if (options.validateOnBuild) {
+      List<Exception>? exceptions;
+      for (var serviceDescriptor in serviceDescriptors) {
+        try {
+          _validateService(serviceDescriptor);
+        } on Exception catch (e) {
+          exceptions ??= <Exception>[];
+          exceptions.add(e);
+        }
+      }
+
+      if (exceptions != null) {
+        // throw new AggregateException("Some services are not able to be constructed", exceptions.ToArray());
+        throw Exception();
+      }
+    }
   }
 
   @override
+  Object? getServiceFromType(Type type) {
+    return _getService(ServiceIdentifier.fromServiceType(type), _root);
+  }
+
+  @override
+  Object? getKeyedServiceFromType(Type serviceType, Object? serviceKey,
+      [ServiceProviderEngineScope? scope]) {
+    return _getService(
+        ServiceIdentifier(
+          serviceKey: serviceKey,
+          serviceType: serviceType,
+        ),
+        scope ?? _root);
+  }
+
+  @override
+  Object getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey,
+      [ServiceProviderEngineScope? scope]) {
+    var service =
+        getKeyedServiceFromType(serviceType, serviceKey, scope ?? _root);
+    if (service == null) {
+      throw InvalidOperationException(
+        message: 'No service for type \'$serviceType\' has been registered.',
+      );
+    }
+    return service;
+  }
+
+  bool _isDisposed() => _disposed;
+
+  @override
   void dispose() {
-    // TODO: implement dispose
+    _disposeCore();
+    _root.dispose();
   }
 
   @override
   Future<void> disposeAsync() {
-    // TODO: implement disposeAsync
-    throw UnimplementedError();
+    _disposeCore();
+    return _root.disposeAsync();
   }
 
-  @override
-  T? getKeyedService<T>(Type serviceType) {
-    // TODO: implement getKeyedService
-    throw UnimplementedError();
+  void _disposeCore() {
+    _disposed = true;
   }
 
-  @override
-  Iterable<T> getKeyedServices<T>(Object? serviceKey) {
-    // TODO: implement getKeyedServices
-    throw UnimplementedError();
+  void _onCreate(ServiceCallSite callSite) {
+    _callSiteValidator?.validateCallSite(callSite);
   }
 
-  @override
-  T getRequiredKeyedService<T>(Type serviceType) {
-    // TODO: implement getRequiredKeyedService
-    throw UnimplementedError();
+  void _onResolve(ServiceCallSite? callSite, ServiceScope scope) {
+    if (callSite != null) {
+      _callSiteValidator?.validateResolution(callSite, scope, _root);
+    }
   }
 
-  @override
-  T? getService<T>() {
-    // TODO: implement getService
-    throw UnimplementedError();
+  Object? _getService(
+    ServiceIdentifier serviceIdentifier,
+    ServiceProviderEngineScope serviceProviderEngineScope,
+  ) {
+    if (_disposed) {
+      ThrowHelper.throwObjectDisposedException();
+    }
+
+    if (!_serviceAccessors.containsKey(serviceIdentifier)) {
+      _serviceAccessors[serviceIdentifier] =
+          _createServiceAccessor(serviceIdentifier);
+    }
+
+    var serviceAccessor = _serviceAccessors[serviceIdentifier];
+
+    // var serviceAccessor = _serviceAccessors.putIfAbsent(
+    //   serviceIdentifier,
+    //   () => _createServiceAccessor(serviceIdentifier),
+    // );
+    _onResolve(serviceAccessor!.callSite, serviceProviderEngineScope);
+    var result =
+        serviceAccessor.realizedService?.call(serviceProviderEngineScope);
+    assert(result != null || !_callSiteFactory._isService(serviceIdentifier));
+    return result;
   }
 
-  @override
-  Iterable<T> getServices<T>() {
-    // TODO: implement getServices
-    throw UnimplementedError();
+  void _validateService(ServiceDescriptor descriptor) {
+    try {
+      var callSite = _callSiteFactory.getCallSite(descriptor, CallSiteChain());
+      if (callSite != null) {
+        _onCreate(callSite);
+      }
+    } on Exception catch (e) {
+      throw InvalidOperationException(
+        message: 'Error while validating the service descriptor'
+            ' \'${descriptor}\': ${e}',
+      );
+    }
   }
 
-  //   private ServiceAccessor CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
-  // {
-  //     ServiceCallSite? callSite = CallSiteFactory.GetCallSite(serviceIdentifier, new CallSiteChain());
-  //     if (callSite != null)
-  //     {
-  //         DependencyInjectionEventSource.Log.CallSiteBuilt(this, serviceIdentifier.ServiceType, callSite);
-  //         OnCreate(callSite);
-
-  //         // Optimize singleton case
-  //         if (callSite.Cache.Location == CallSiteResultCacheLocation.Root)
-  //         {
-  //             object? value = CallSiteRuntimeResolver.Instance.Resolve(callSite, Root);
-  //             return new ServiceAccessor { CallSite = callSite, RealizedService = scope => value };
-  //         }
-
-  //         Func<ServiceProviderEngineScope, object?> realizedService = _engine.RealizeService(callSite);
-  //         return new ServiceAccessor { CallSite = callSite, RealizedService = realizedService };
-  //     }
-  //     return new ServiceAccessor { CallSite = callSite, RealizedService = _ => null };
-  // }
-
-  ServiceAccessor createServiceAccessor(ServiceIdentifier serviceIdentifier) {
-    var callSite = _callSiteFactory.getCallSite(
+  ServiceAccessor _createServiceAccessor(ServiceIdentifier serviceIdentifier) {
+    var callSite = _callSiteFactory.getCallSiteFromServiceIdentifer(
       serviceIdentifier,
       CallSiteChain(),
     );
+    if (callSite != null) {
+      _onCreate(callSite);
+
+      // Optimize singleton case
+      if (callSite.cache.location == CallSiteResultCacheLocation.root) {
+        var value = CallSiteRuntimeResolver.instance.resolve(callSite, _root);
+        return ServiceAccessor()
+          ..callSite = callSite
+          ..realizedService = (scope) => value;
+      }
+
+      var realizedService = _engine.realizeService(callSite);
+      return ServiceAccessor()
+        ..callSite = callSite
+        ..realizedService = realizedService;
+    }
+    return ServiceAccessor()
+      ..callSite = callSite
+      ..realizedService = (_) => null;
   }
 
-  ServiceProviderEngine getEngine() {
-    return RuntimeServiceProviderEngine();
+  void _replaceServiceAccessor(
+    ServiceCallSite callSite,
+    Object? Function(ServiceProviderEngineScope scope) accessor,
+  ) {
+    _serviceAccessors[ServiceIdentifier(
+      serviceKey: callSite.key,
+      serviceType: callSite.serviceType,
+    )] = ServiceAccessor()
+      ..callSite = callSite
+      ..realizedService = accessor;
+  }
+
+  ServiceScope createScope() {
+    if (_disposed) {
+      ThrowHelper.throwObjectDisposedException();
+    }
+    return ServiceProviderEngineScope(this, isRootScope: false);
   }
 }
 
-sealed class ServiceAccessor {
+class ServiceAccessor {
   ServiceCallSite? callSite;
   Object? Function(ServiceProviderEngineScope scope)? realizedService;
 }

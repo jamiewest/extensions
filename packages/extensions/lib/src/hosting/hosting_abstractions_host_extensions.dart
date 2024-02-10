@@ -7,16 +7,6 @@ import 'host.dart';
 import 'host_application_lifetime.dart';
 
 extension HostingAbstractionsHostExtensions on Host {
-  /// Starts the host synchronously.
-  void startSync() {
-    //waitFor(start());
-  }
-
-  // Future<void> stop(Duration? timeout) async {
-  //   var cts = CancellationTokenSource(timeout);
-  //   await this.stop(cts.token);
-  // }
-
   /// Runs an application and block the calling thread until host shutdown.
   void runSync() {
     run();

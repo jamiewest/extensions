@@ -8,10 +8,10 @@ abstract class KeyedServiceProvider implements ServiceProvider {
 
   /// Gets service of type [serviceType] from the [ServiceProvider]
   /// implementing this interface.
-  Object? getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey);
+  Object getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey);
 
-  /// Gets services of type [T] from the [ServiceProvider].
-  Iterable<T> getKeyedServices<T>(Object? serviceKey);
+  // /// Gets services of type [T] from the [ServiceProvider].
+  // Iterable<T> getKeyedServices<T>(Object? serviceKey);
 }
 
 /// Statics for use with [KeyedServiceProvider].

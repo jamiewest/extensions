@@ -10,7 +10,8 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   void tryAdd(ServiceDescriptor descriptor) {
     final count = length;
     for (var i = 0; i < count; i++) {
-      if (this[i].serviceType.hashCode == descriptor.serviceType.hashCode) {
+      if (this[i].serviceType.hashCode == descriptor.serviceType.hashCode &&
+          this[i].serviceKey == descriptor.serviceKey) {
         return;
       }
     }
@@ -90,6 +91,28 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     }
 
     add(descriptor);
+  }
+
+  void tryAddKeyedTransient<TService>(
+    Object? serviceKey,
+    KeyedImplementationFactory implementationFactory,
+  ) {
+    var descriptor = ServiceDescriptor.keyedTransient<TService>(
+      serviceKey,
+      (services) => implementationFactory,
+    );
+    tryAdd(descriptor);
+  }
+
+  void tryAddKeyedScoped<TService>(
+    Object? serviceKey,
+    KeyedImplementationFactory implementationFactory,
+  ) {
+    var descriptor = ServiceDescriptor.keyedScoped<TService>(
+      serviceKey,
+      (services) => implementationFactory,
+    );
+    tryAdd(descriptor);
   }
 
   /// Removes the first service in [ServiceCollection] with the same service

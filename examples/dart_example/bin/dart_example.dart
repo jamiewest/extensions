@@ -81,6 +81,7 @@ class OperationLogger {
     String message,
   ) {
     print(
-        '$scope: ${T.runtimeType.toString()} [ ${operation.operationId}...$message ');
+      '$scope: ${T.runtimeType.toString()} [ ${operation.operationId}...$message ',
+    );
   }
 }

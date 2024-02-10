@@ -20,7 +20,7 @@ import 'host_builder_context.dart';
 import 'host_builder_stub.dart'
     if (dart.library.html) 'host_builder_web.dart'
     if (dart.library.io) 'host_builder_io.dart' as host_builder;
-import 'host_defaults.dart' as host_defaults;
+import 'host_defaults.dart';
 import 'host_environment.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
@@ -52,7 +52,34 @@ typedef ConfigureContainerDelegate<TContainerBuilder> = TContainerBuilder
     Function(HostBuilderContext context, TContainerBuilder builder);
 
 /// A program initialization abstraction.
-class HostBuilder {
+abstract class HostBuilder {
+  Map<Object, Object> get properties;
+
+  HostBuilder configureHostConfiguration(
+    ConfigureHostConfigurationDelegate configureDelegate,
+  );
+
+  HostBuilder configureAppConfiguration(
+    ConfigureAppConfigurationDelegate configureDelegate,
+  );
+
+  HostBuilder configureServices(
+    ConfigureServicesDelegate configureDelegate,
+  );
+
+  HostBuilder useServiceProviderFactory<TContainerBuilder>({
+    ServiceProviderFactory<TContainerBuilder>? implementation,
+    FactoryResolver<TContainerBuilder>? factory,
+  });
+
+  HostBuilder configureContainer<TContainerBuilder>(
+    ConfigureContainerAdapterDelegate<TContainerBuilder> configureDelegate,
+  );
+
+  Host build();
+}
+
+class DefaultHostBuilder implements HostBuilder {
   final List<ConfigureHostConfigurationDelegate> _configureHostConfigActions =
       <ConfigureHostConfigurationDelegate>[];
   final List<ConfigureAppConfigurationDelegate> _configureAppConfigActions =
@@ -275,11 +302,11 @@ void populateServiceCollection(
 HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
   var hostingEnvironment = HostingEnvironment()
     ..applicationName =
-        hostConfiguration[host_defaults.applicationKey] ?? 'application'
-    ..environmentName = hostConfiguration[host_defaults.environmentKey] ??
+        hostConfiguration[HostDefaults.applicationKey] ?? 'application'
+    ..environmentName = hostConfiguration[HostDefaults.environmentKey] ??
         Environments.production
     ..contentRootPath = resolveContentRootPath(
-      hostConfiguration[host_defaults.contentRootKey],
+      hostConfiguration[HostDefaults.contentRootKey],
       p.current,
     );
 

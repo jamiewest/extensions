@@ -1,5 +1,3 @@
-import 'dart:core';
-
 import '../service_descriptor.dart';
 
 class ServiceIdentifier {
@@ -19,7 +17,7 @@ class ServiceIdentifier {
   static ServiceIdentifier fromServiceType(Type serviceType) =>
       ServiceIdentifier(serviceType: serviceType);
 
-  static ServiceIdentifier fromServiceDescriptor(
+  static ServiceIdentifier fromDescriptor(
     ServiceDescriptor serviceDescriptor,
   ) =>
       ServiceIdentifier(

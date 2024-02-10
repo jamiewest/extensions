@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 
-import 'package:extensions/src/hosting/hosted_lifecycle_service.dart';
+import '../options/validate_on_start.dart';
+
+import '../dependency_injection/service_provider_service_extensions.dart';
+import 'hosted_lifecycle_service.dart';
 
 import '../common/async_disposable.dart';
 import '../common/cancellation_token.dart';
@@ -15,7 +19,6 @@ import 'host_application_builder.dart';
 import 'host_application_builder_settings.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
-import 'host_environment.dart';
 import 'host_lifetime.dart';
 import 'host_options.dart';
 import 'hosted_service.dart';
@@ -67,34 +70,105 @@ class Host implements Disposable, AsyncDisposable {
 
     cancellationToken ??= CancellationToken.none;
 
-    final combinedCancellationTokenSource =
-        CancellationTokenSource.createLinkedTokenSource(
+    final cts = CancellationTokenSource.createLinkedTokenSource(
       [
         cancellationToken,
         _applicationLifetime.applicationStopping,
       ],
     );
-    final combinedCancellationToken = combinedCancellationTokenSource.token;
+    final _cancellationToken = cts.token;
 
-    await _hostLifetime.waitForStart(combinedCancellationToken);
+    await _hostLifetime.waitForStart(_cancellationToken);
+    _cancellationToken.throwIfCancellationRequested();
 
-    combinedCancellationToken.throwIfCancellationRequested();
-    _hostedServices = services.getServices<HostedService>();
+    var exceptions = <Exception>[];
+
+    _hostedServices ??= services.getServices<HostedService>();
     _hostedLifecycleServices = getHostLifecycles(_hostedServices!);
     _hostStarting = true;
+
     bool concurrent = true; // _options.servicesStartConcurrently;
     bool abortOnFirstException = !concurrent;
 
-    for (var hostedService in _hostedServices!) {
-      // Fire HostedService.start
-      await hostedService.start(combinedCancellationToken);
-
-      if (hostedService is BackgroundService) {
-        await _tryExecuteBackgroundService(hostedService);
+    void logAndRethrow() {
+      if (exceptions.length > 0) {
+        if (exceptions.length == 1) {
+          // Rethrow if it's a single error
+          var singleException = exceptions[0];
+          _logger.hostedServiceStartupFaulted(singleException);
+          throw singleException;
+        } else {
+          // TODO: Change exception to AggregateException.
+          var ex = Exception(
+            'one or more hosted services failed to start',
+            // exceptions,
+          );
+          _logger.hostedServiceStartupFaulted(ex);
+          throw ex;
+        }
       }
     }
 
+    var validator = services.getService<StartupValidator>();
+    if (validator != null) {
+      try {
+        validator.validate();
+      } on Exception catch (ex) {
+        exceptions.add(ex);
+
+        // Validation errors cause startup to be aborted.
+        logAndRethrow();
+      }
+    }
+
+    // Call starting().
+    if (_hostedLifecycleServices != null) {
+      await foreachService<HostedLifecycleService>(
+        _hostedLifecycleServices!,
+        cancellationToken,
+        concurrent,
+        abortOnFirstException,
+        exceptions,
+        (service, token) => service.starting(token),
+      );
+
+      // Exceptions in starting cause startup to be aborted.
+      logAndRethrow();
+    }
+
+    // Call start().
+    await foreachService<HostedService>(
+      _hostedServices!,
+      cancellationToken,
+      concurrent,
+      abortOnFirstException,
+      exceptions,
+      (service, token) async {
+        await service.start(token);
+
+        if (service is BackgroundService) {
+          _tryExecuteBackgroundService(service);
+        }
+      },
+    );
+
+    // Exceptions in start cause startup to be aborted
+    logAndRethrow();
+
+    // Call started
+    if (_hostedLifecycleServices != null) {
+      await foreachService<HostedLifecycleService>(
+        _hostedLifecycleServices!,
+        cancellationToken,
+        concurrent,
+        abortOnFirstException,
+        exceptions,
+        (service, token) => service.started(token),
+      );
+    }
+
     // Fire HostApplicationLifetime.started
+    // This catches all exceptions and does not re-throw.
     _applicationLifetime.notifyStarted();
     _logger.started();
   }
@@ -104,67 +178,135 @@ class Host implements Disposable, AsyncDisposable {
   ) async {
     try {
       await backgroundService.executeOperation!.value;
-    } on Exception catch (e) {
+    } on Exception catch (ex) {
       // When the host is being stopped, it cancels the background services.
       // This isn't an error condition, so don't log it as an error.
       if (_stopCalled && backgroundService.executeOperation!.isCanceled) {
         return;
       }
-      _logger.backgroundServiceFaulted(e);
+      _logger.backgroundServiceFaulted(ex);
       if (_options.backgroundServiceExceptionBehavior ==
           BackgroundServiceExceptionBehavior.stopHost) {
-        _logger.backgroundServiceStoppingHost(e);
+        _logger.backgroundServiceStoppingHost(ex);
+        // This catches all exceptions and does not re-throw.
         _applicationLifetime.stopApplication();
       }
     }
   }
 
   /// Attempts to gracefully stop the program.
+  // Order:
+  //  HostedLifecycleService.stopping
+  //  HostApplicationLifetime.applicationStopping
+  //  HostedService.stop
+  //  HostedLifecycleService.stopped
+  //  HostApplicationLifetime.applicationStopped
+  //  HostLifetime.stop
   Future<void> stop([CancellationToken? cancellationToken]) async {
     _stopCalled = true;
     _logger.stopping();
 
     cancellationToken ??= CancellationToken.none;
 
-    var cts = CancellationTokenSource(_options.shutdownTimeout);
-    var linkedCts = CancellationTokenSource.createLinkedTokenSource(
-      [
-        cts.token,
-        cancellationToken,
-      ],
-    );
+    CancellationTokenSource? cts;
+    if (_options.shutdownTimeout != null) {
+      cts =
+          CancellationTokenSource.createLinkedTokenSource([cancellationToken]);
+      cts.cancelAfter(_options.shutdownTimeout!);
+      cancellationToken = cts.token;
+    }
 
-    var token = linkedCts.token;
-    // Trigger HostApplicationLifetime.applicationStopping
-    _applicationLifetime.stopApplication();
+    if (cts != null) {
+      List<Exception> exceptions = <Exception>[];
+      if (!_hostStarting) {
+        // Started?
 
-    var exceptions = <Exception>[];
-    if (_hostedServices != null) {
-      for (var hostedService
-          in List<HostedService>.from(_hostedServices!).reversed) {
-        try {
-          await hostedService.stop(token);
-        } on Exception catch (ex) {
-          exceptions.add(ex);
+        // Call IHostApplicationLifetime.ApplicationStopping.
+        // This catches all exceptions and does not re-throw.
+        _applicationLifetime.stopApplication();
+      } else {
+        assert(
+          _hostedServices != null,
+          'Hosted services are resolved when host is started.',
+        );
+        // Ensure hosted services are stopped in LIFO order
+        // TODO: This needs to be cleaned up.
+        Iterable<HostedService> reversedServices =
+            List<HostedService>.from(_hostedServices ?? <HostedService>[])
+                .reversed;
+        Iterable<HostedLifecycleService>? reversedLifetimeServices =
+            List<HostedLifecycleService>.from(
+                    _hostedLifecycleServices ?? <HostedLifecycleService>[])
+                .reversed;
+        bool concurrent = _options.servicesStopConcurrently;
+
+        // Call stopping.
+        if (reversedLifetimeServices.isNotEmpty) {
+          await foreachService<HostedLifecycleService>(
+            reversedLifetimeServices,
+            cancellationToken,
+            concurrent,
+            false,
+            exceptions,
+            (service, token) => service.stopping(token),
+          );
+        }
+
+        // Call HostApplicationLifetime.applicationStopping.
+        // This catches all exceptions and does not re-throw.
+        _applicationLifetime.stopApplication();
+
+        if (reversedServices.isNotEmpty) {
+          await foreachService<HostedService>(
+            reversedServices,
+            cancellationToken,
+            concurrent,
+            false,
+            exceptions,
+            (service, token) => service.stop(token),
+          );
+        }
+
+        if (reversedLifetimeServices.isNotEmpty) {
+          await foreachService<HostedLifecycleService>(
+            reversedLifetimeServices,
+            cancellationToken,
+            concurrent,
+            false,
+            exceptions,
+            (service, token) => service.stopped(token),
+          );
+        }
+      }
+      // Call HostApplicationLifetime.stopped
+      // This catches all exceptions and does not re-throw.
+      _applicationLifetime.notifyStopped();
+
+      // This may not catch exceptions, so we do it here.
+      try {
+        await _hostLifetime.stop(cancellationToken);
+      } on Exception catch (ex) {
+        exceptions.add(ex);
+      }
+
+      _hostStopped = true;
+
+      if (exceptions.length > 0) {
+        if (exceptions.length == 1) {
+          // Rethrow if it's a single error
+
+          Exception singleException = exceptions[0];
+          _logger.stoppedWithException(singleException);
+          throw singleException;
+        } else {
+          // TODO: Update when AggregateException is added.
+          // var ex = new AggregateException(
+          //     "One or more hosted services failed to stop.", exceptions);
+          // _logger.StoppedWithException(ex);
+          // throw ex;
         }
       }
     }
-
-    // Fire HostApplicationLifetime.stopped
-    _applicationLifetime.notifyStopped();
-
-    try {
-      await _hostLifetime.stop(token);
-    } on Exception catch (ex) {
-      exceptions.add(ex);
-    }
-
-    if (exceptions.isNotEmpty) {
-      var ex = Exception('One or more hosted services failed to stop.');
-      _logger.stoppedWithException(ex);
-      throw ex;
-    }
-
     _logger.stopped();
   }
 
@@ -218,6 +360,59 @@ class Host implements Disposable, AsyncDisposable {
     }
   }
 
+  static Future<void> _foreachService<T>(
+    Iterable<T> services,
+    CancellationToken token,
+    bool concurrent,
+    bool abortOnFirstException,
+    List<Exception> exceptions,
+    Future<void> Function(T type, CancellationToken cancellationToken)
+        operation,
+  ) async {
+    if (concurrent) {
+      List<Future>? futures;
+
+      for (var service in services) {
+        var completer = Completer();
+        Future<void> future;
+        try {
+          future = operation(service, token);
+          completer.complete(future);
+        } on Exception catch (ex) {
+          exceptions.add(ex);
+          continue;
+        }
+
+        if (completer.isCompleted) {
+          //if (completer.future.)
+        } else {
+          // The task encountered an await; add it to a list to
+          // run concurrently.
+          futures ??= <Future>[];
+          futures.add(future);
+        }
+      }
+      if (futures != null) {
+        Future<void> groupedFutures = Future.wait(futures);
+
+        try {
+          await groupedFutures;
+        } on Exception catch (ex) {}
+      }
+    } else {
+      for (var service in services) {
+        try {
+          await operation(service, token);
+        } on Exception catch (ex) {
+          exceptions.add(ex);
+          if (abortOnFirstException) {
+            return;
+          }
+        }
+      }
+    }
+  }
+
   static List<HostedLifecycleService>? getHostLifecycles(
     Iterable<HostedService> hostedServices,
   ) {
@@ -239,7 +434,7 @@ class Host implements Disposable, AsyncDisposable {
   /// Initializes a new instance of the [HostBuilder] class with
   /// pre-configured defaults.
   static HostBuilder createDefaultBuilder() {
-    final builder = HostBuilder();
+    final builder = DefaultHostBuilder();
     return builder.configureDefaults();
   }
 

@@ -9,7 +9,11 @@ import 'support_required_service.dart';
 extension ServiceProviderServiceExtensions on ServiceProvider {
   /// Get service of type [T] from the [ServiceProvider].
   T? getService<T>() {
-    return getServiceFromType(T) as T;
+    final service = getServiceFromType(T);
+    if (service != null) {
+      return service as T;
+    }
+    return null;
   }
 
   /// Get service of type [serviceType] from the [ServiceProvider].
@@ -36,7 +40,15 @@ extension ServiceProviderServiceExtensions on ServiceProvider {
 
   /// Get an enumeration of services of type [T] from the [ServiceProvider].
   Iterable<T> getServices<T>() {
-    return getRequiredService<T>() as Iterable<T>;
+    var result = getServiceFromType(Iterable<T>);
+
+    if (result is List<dynamic>) {
+      return result.cast<T>();
+    }
+
+    return List<T>.empty();
+
+    //throw Exception('No service found for registered type.');
   }
 
   /// Get an enumeration of services of type [serviceType] from

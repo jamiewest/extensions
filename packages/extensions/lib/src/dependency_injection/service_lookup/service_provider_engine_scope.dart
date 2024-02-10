@@ -1,12 +1,4 @@
-import 'package:extensions/src/dependency_injection/keyed_service_provider.dart';
-
-import '../../common/async_disposable.dart';
-import '../../common/disposable.dart';
-import '../service_provider.dart';
-import '../service_provider_impl.dart';
-import '../service_scope.dart';
-import '../service_scope_factory.dart';
-import 'service_cache_key.dart';
+part of 'service_lookup.dart';
 
 class ServiceProviderEngineScope
     implements
@@ -22,11 +14,11 @@ class ServiceProviderEngineScope
   final bool _isRootScope;
 
   final Map<ServiceCacheKey, Object?> _resolvedServices;
-  final ServiceProviderImpl _rootProvider;
+  final DefaultServiceProvider _rootProvider;
 
   ServiceProviderEngineScope(
-    ServiceProviderImpl provider, {
-    required bool isRootScope,
+    DefaultServiceProvider provider, {
+    bool isRootScope = false,
   })  : _resolvedServices = <ServiceCacheKey, Object?>{},
         _rootProvider = provider,
         _isRootScope = isRootScope;
@@ -35,24 +27,38 @@ class ServiceProviderEngineScope
 
   bool get isRootScope => _isRootScope;
 
-  ServiceProviderImpl get rootProvider => _rootProvider;
+  DefaultServiceProvider get rootProvider => _rootProvider;
 
   @override
-  T? getService<T>() {
+  Object? getServiceFromType(Type type) {
     if (_disposed) {
-      throw Exception('Cannot access a disposed object.');
+      ThrowHelper.throwObjectDisposedException();
     }
 
-    return rootProvider.getService<T>(this);
+    return _rootProvider._getService(
+        ServiceIdentifier.fromServiceType(type), this);
   }
 
   @override
-  Iterable<T> getServices<T>() {
+  Object? getKeyedServiceFromType(Type serviceType, Object? serviceKey) {
     if (_disposed) {
-      throw Exception('Cannot access a disposed object.');
+      ThrowHelper.throwObjectDisposedException();
     }
 
-    return rootProvider.getServices<T>(this);
+    return rootProvider.getKeyedServiceFromType(serviceType, serviceKey, this);
+  }
+
+  @override
+  Object getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey) {
+    if (_disposed) {
+      ThrowHelper.throwObjectDisposedException();
+    }
+
+    return rootProvider.getRequiredKeyedServiceFromType(
+      serviceType,
+      serviceKey,
+      this,
+    );
   }
 
   @override
@@ -61,8 +67,10 @@ class ServiceProviderEngineScope
   @override
   ServiceScope createScope() => rootProvider.createScope();
 
-  Object captureDisposable(Object service) {
-    if (this == service || service is! Disposable) {
+  Object? captureDisposable(Object? service) {
+    if (this == service ||
+        service is! Disposable ||
+        service is AsyncDisposable) {
       return service;
     }
 
@@ -112,38 +120,15 @@ class ServiceProviderEngineScope
   }
 
   List<Object>? _beginDispose() {
-    List<Object> toDispose;
     if (_disposed) {
       return null;
     }
 
     _disposed = true;
-    toDispose = _disposables!;
-    _disposables = null;
 
-    return toDispose;
-  }
-
-  @override
-  T? getKeyedService<T>(Object? serviceKey) {
-    if (_disposed) {
-      // ThrowHelper.ThrowObjectDisposedException();
+    if (isRootScope && !rootProvider._isDisposed()) {
+      rootProvider.dispose();
     }
-
-    return rootProvider.getKeyedService<T>(serviceKey, this);
-  }
-
-  @override
-  T getRequiredKeyedService<T>(Object? serviceKey) {
-    if (_disposed) {
-      // ThrowHelper.ThrowObjectDisposedException();
-    }
-
-    return rootProvider.getRequiredKeyedService<T>(serviceKey, this);
-  }
-
-  @override
-  Iterable<T> getKeyedServices<T>(Object? serviceKey) {
-    return rootProvider.getKeyedServices<T>(serviceKey);
+    return _disposables;
   }
 }

@@ -1,3 +1,6 @@
+import '../../common/exceptions/invalid_operation_exception.dart';
+import 'service_cache_key.dart';
+
 import '../../../dependency_injection.dart';
 import '../service_scope.dart';
 import 'call_site_visitor.dart';
@@ -8,26 +11,32 @@ import 'service_call_site.dart';
 import 'service_provider_call_site.dart';
 
 class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
-  final Map<Type, Type> _scopedServices = <Type, Type>{};
+  final Map<ServiceCacheKey, Type> _scopedServices = <ServiceCacheKey, Type>{};
 
   void validateCallSite(ServiceCallSite callSite) {
     var scoped = visitCallSite(callSite, CallSiteValidatorState());
     if (scoped != null) {
-      _scopedServices[callSite.serviceType] = scoped;
+      _scopedServices[callSite.cache.key] = scoped;
     }
   }
 
   void validateResolution(
-    Type serviceType,
+    ServiceCallSite callSite,
     ServiceScope scope,
     ServiceScope rootScope,
   ) {
-    if (scope == rootScope && _scopedServices.containsKey(serviceType)) {
-      var scopedService = _scopedServices[serviceType];
+    if (scope == rootScope && _scopedServices.containsKey(callSite.cache.key)) {
+      var scopedService = _scopedServices[callSite.cache.key];
+      var serviceType = callSite.serviceType;
       if (serviceType == scopedService) {
-        throw Exception('DirectScopedResolvedFromRootException');
+        throw InvalidOperationException(
+          message: 'Cannot resolve {1} service \'{0}\' from root provider.',
+        );
       }
-      throw Exception('ScopedResolvedFromRootException');
+      throw InvalidOperationException(
+        message: 'Cannot resolve \'{0}\' from root provider because' +
+            ' it requires {2} service \'{1}\'.',
+      );
     }
   }
 
@@ -60,18 +69,14 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
     CallSiteValidatorState argument,
   ) {
     // We are fine with having ServiceScopeService requested by singletons
-    if (callSite is ServiceScopeFactory) {
+    if (callSite.serviceType is ServiceScopeFactory) {
       return null;
     }
-
     if (argument.singleton != null) {
-      throw Exception('ScopedInSingletonException');
-      // throw new InvalidOperationException(SR.Format(
-      //     SR.ScopedInSingletonException,
-      //     scopedCallSite.ServiceType,
-      //     state.Singleton.ServiceType,
-      //     nameof(ServiceLifetime.Scoped).ToLowerInvariant(),
-      //     nameof(ServiceLifetime.Singleton).ToLowerInvariant()));
+      throw InvalidOperationException(
+        message: 'Cannot consume scoped service \'${callSite.serviceType}\'' +
+            ' from singleton \'${argument.singleton!.serviceType}\'',
+      );
     }
 
     visitCallSiteMain(callSite, argument);

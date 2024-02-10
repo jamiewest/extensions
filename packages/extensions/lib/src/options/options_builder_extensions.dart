@@ -1,5 +1,6 @@
-import 'package:extensions/src/dependency_injection/service_collection_service_extensions.dart';
-import 'package:extensions/src/options/options_service_collection_extensions.dart';
+import '../dependency_injection/service_collection_service_extensions.dart';
+import '../dependency_injection/service_provider_service_extensions.dart';
+import 'options_service_collection_extensions.dart';
 
 import 'options.dart';
 import 'options_builder.dart';

@@ -7,6 +7,7 @@ import 'host_environment.dart';
 class HostBuilderContext {
   final Map<Object, Object> _properties;
 
+  /// Initializes a new instance of [HostBuilderContext].
   HostBuilderContext(Map<Object, Object> properties) : _properties = properties;
 
   /// The [HostEnvironment] initialized by the [Host].

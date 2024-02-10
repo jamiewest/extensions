@@ -41,7 +41,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
     List<String>? args,
   ) {
     hostConfigBuilder.addInMemoryCollection(
-      [MapEntry<String, String>(host_defaults.contentRootKey, '')],
+      [MapEntry<String, String>(HostDefaults.contentRootKey, '')],
     );
 
     // hostConfigBuilder.AddEnvironmentVariables(prefix: "DOTNET_");

@@ -28,4 +28,10 @@ class FakeServiceCollection implements ServiceProvider {
   void myFancyContainerMethod() {
     fancyMethodCalled = true;
   }
+
+  @override
+  Object? getServiceFromType(Type type) {
+    // TODO: implement getServiceFromType
+    throw UnimplementedError();
+  }
 }

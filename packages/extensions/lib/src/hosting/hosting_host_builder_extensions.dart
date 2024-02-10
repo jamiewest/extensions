@@ -12,6 +12,7 @@ import 'host.dart';
 import 'host_builder.dart';
 import 'host_builder_context.dart';
 import 'host_defaults.dart' as host_defaults;
+import 'host_defaults.dart';
 import 'host_environment_env_extensions.dart';
 import 'host_options.dart';
 
@@ -29,7 +30,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
         (configBuilder) => configBuilder.addInMemoryCollection(
           [
             MapEntry<String, String>(
-              host_defaults.environmentKey,
+              HostDefaults.environmentKey,
               environment,
             )
           ],
@@ -43,7 +44,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
   HostBuilder useContentRoot(String contentRoot) => configureHostConfiguration(
         (configBuilder) => configBuilder.addInMemoryCollection([
           MapEntry<String, String>(
-            host_defaults.contentRootKey,
+            HostDefaults.contentRootKey,
             contentRoot,
           )
         ]),
@@ -67,8 +68,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
     void Function(
       HostBuilderContext context,
       LoggingBuilder logging,
-    )
-        configure,
+    ) configure,
   ) =>
       configureServices(
         (context, collection) => collection.addLogging(
@@ -81,8 +81,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
     void Function(
       HostBuilderContext context,
       HostOptions options,
-    )
-        configureOptions,
+    ) configureOptions,
   ) =>
       configureServices(
         (context, collection) => collection.configure<HostOptions>(
@@ -116,7 +115,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
     var cwd = p.current;
     hostConfigBuilder.addInMemoryCollection(
       <String, String>{
-        host_defaults.contentRootKey: cwd,
+        HostDefaults.contentRootKey: cwd,
       }.entries,
     );
   }

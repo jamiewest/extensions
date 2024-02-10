@@ -21,6 +21,8 @@ class ServiceCollection with ListMixin<ServiceDescriptor> {
     _descriptors[index] = value;
   }
 
+  bool get isReadOnly => _isReadOnly;
+
   @override
   int get length => _descriptors.length;
 
@@ -31,6 +33,30 @@ class ServiceCollection with ListMixin<ServiceDescriptor> {
   void add(ServiceDescriptor element) {
     checkReadOnly();
     _descriptors.insert(length, element);
+  }
+
+  @override
+  void clear() {
+    checkReadOnly();
+    super.clear();
+  }
+
+  @override
+  bool remove(Object? element) {
+    checkReadOnly();
+    return super.remove(element);
+  }
+
+  @override
+  ServiceDescriptor removeAt(int index) {
+    checkReadOnly();
+    return super.removeAt(index);
+  }
+
+  @override
+  void insert(int index, ServiceDescriptor element) {
+    checkReadOnly();
+    super.insert(index, element);
   }
 
   /// Makes this collection read-only.
@@ -45,7 +71,6 @@ class ServiceCollection with ListMixin<ServiceDescriptor> {
   }
 
   static void _throwReadOnlyException() {
-    /// TODO: FIX THIS
-    //throw InvalidOperationException(message: _serviceCollectionReadOnly);
+    throw InvalidOperationException(message: _serviceCollectionReadOnly);
   }
 }

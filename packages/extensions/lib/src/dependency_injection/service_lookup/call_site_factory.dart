@@ -1,24 +1,7 @@
-import 'dart:math';
+part of 'service_lookup.dart';
 
-import 'package:collection/collection.dart';
-import 'service_descriptor_extensions.dart';
-import 'service_identifier.dart';
-
-import '../keyed_service_provider.dart';
-import '../service_descriptor.dart';
-import '../service_provider.dart';
-import '../service_provider_factory.dart';
-import '../service_provider_is_service.dart';
-import 'call_site_chain.dart';
-import 'call_site_result_cache_location.dart';
-import 'constant_call_site.dart';
-import 'factory_call_site.dart';
-import 'iterable_call_site.dart';
-import 'result_cache.dart';
-import 'service_cache_key.dart';
-import 'service_call_site.dart';
-
-class CallSiteFactory implements ServiceProviderIsService {
+class CallSiteFactory
+    implements ServiceProviderIsService, ServiceProviderIsKeyedService {
   final int defaultslot = 0;
   final List<ServiceDescriptor> _descriptors;
   final Map<ServiceCacheKey, ServiceCallSite> _callSiteCache =
@@ -33,7 +16,7 @@ class CallSiteFactory implements ServiceProviderIsService {
 
   void populate() {
     for (var descriptor in _descriptors) {
-      var cacheKey = ServiceIdentifier.fromServiceDescriptor(descriptor);
+      var cacheKey = ServiceIdentifier.fromDescriptor(descriptor);
 
       ServiceDescriptorCacheItem cacheItem;
       if (_descriptorLookup.containsKey(cacheKey)) {
@@ -48,7 +31,7 @@ class CallSiteFactory implements ServiceProviderIsService {
 
   int? getSlot(ServiceDescriptor serviceDescriptor) {
     final serviceIdentifier =
-        ServiceIdentifier.fromServiceDescriptor(serviceDescriptor);
+        ServiceIdentifier.fromDescriptor(serviceDescriptor);
     if (_descriptorLookup.containsKey(serviceIdentifier)) {
       final item = _descriptorLookup[serviceIdentifier];
       return item!.getSlot(serviceDescriptor);
@@ -61,7 +44,7 @@ class CallSiteFactory implements ServiceProviderIsService {
     CallSiteChain callSiteChain,
   ) {
     final serviceIdentifier =
-        ServiceIdentifier.fromServiceDescriptor(serviceDescriptor);
+        ServiceIdentifier.fromDescriptor(serviceDescriptor);
 
     if (_descriptorLookup.containsKey(serviceIdentifier)) {
       var descriptor = _descriptorLookup[serviceIdentifier];
@@ -181,7 +164,6 @@ class CallSiteFactory implements ServiceProviderIsService {
       var serviceType = serviceIdentifier.serviceType;
       Type? itemType;
       if (serviceType.toString().contains('Iterable')) {
-        
         var cacheLocation = CallSiteResultCacheLocation.root;
 
         var typeName = serviceType.toString().replaceFirst('Iterable', '');
@@ -204,28 +186,46 @@ class CallSiteFactory implements ServiceProviderIsService {
           return null;
         }
 
-        var cacheKey = new ServiceIdentifier(serviceKey: serviceIdentifier.serviceKey, serviceType: itemType,);
+        var cacheKey = new ServiceIdentifier(
+          serviceKey: serviceIdentifier.serviceKey,
+          serviceType: itemType,
+        );
 
+        List<ServiceCallSite> callSites = <ServiceCallSite>[];
         List<MapEntry<int, ServiceCallSite>> callSitesByIndex =
             <MapEntry<int, ServiceCallSite>>[];
 
         int slot = 0;
         for (var i = _descriptors.length - 1; i >= 0; i--) {
           if (_keysMatch(_descriptors[i].serviceKey, cacheKey.serviceKey)) {
-            var callSite = tryCreateExact(_descriptors[i], serviceIdentifier, callSiteChain, slot,);
+            var callSite = tryCreateExact(
+              _descriptors[i],
+              cacheKey,
+              callSiteChain,
+              slot,
+            );
             if (callSite != null) {
               slot++;
-              cacheLocation = _getCommonCacheLocation(cacheLocation, callSite.cache.location);
+              cacheLocation = _getCommonCacheLocation(
+                cacheLocation,
+                callSite.cache.location,
+              );
               callSitesByIndex.add(MapEntry<int, ServiceCallSite>(i, callSite));
             }
           }
         }
 
         callSitesByIndex.sortBy<num>((e) => e.key);
+        callSites.addAll(callSitesByIndex
+            .map(
+              (e) => e.value,
+            )
+            .toList());
 
-        var resultCache = (cacheLocation == CallSiteResultCacheLocation.scope || cacheLocation == CallSiteResultCacheLocation.root)
-         ? ResultCache(cacheLocation, callSiteKey )
-         : ResultCache(CallSiteResultCacheLocation.none, callSiteKey);
+        var resultCache = (cacheLocation == CallSiteResultCacheLocation.scope ||
+                cacheLocation == CallSiteResultCacheLocation.root)
+            ? ResultCache._(cacheLocation, callSiteKey)
+            : ResultCache._(CallSiteResultCacheLocation.none, callSiteKey);
 
         return _callSiteCache[callSiteKey] = IterableCallSite(
           resultCache,
@@ -290,17 +290,28 @@ class CallSiteFactory implements ServiceProviderIsService {
           (sp, a) => descriptor.keyedImplementationFactory!(sp, a),
         );
       } else {
-        throw Exception('Invalid service descriptor');
+        throw InvalidOperationException(message: 'Invalid service descriptor');
       }
-      _callSiteCache[callSiteKey] = callSite;
-      return callSite;
+      callSite.key = descriptor.serviceKey;
+      return _callSiteCache[callSiteKey] = callSite;
     }
     return null;
   }
 
-  @override
-  bool isService({required Type serviceType}) {
-    if (_descriptorLookup.containsKey(serviceType)) {
+  bool _isService(ServiceIdentifier serviceIdentifier) {
+    var serviceType = serviceIdentifier.serviceType;
+
+    if (_descriptorLookup.containsKey(serviceIdentifier)) {
+      return true;
+    }
+
+    if (serviceIdentifier.serviceKey != null &&
+        _descriptorLookup.containsKey(
+          ServiceIdentifier(
+            serviceKey: KeyedService.anyKey,
+            serviceType: serviceType,
+          ),
+        )) {
       return true;
     }
 
@@ -309,8 +320,20 @@ class CallSiteFactory implements ServiceProviderIsService {
     // code in ServiceProvider.ctor
     return serviceType is ServiceProvider ||
         serviceType is ServiceProviderFactory ||
-        serviceType is ServiceProviderIsService;
+        serviceType is ServiceProviderIsService ||
+        serviceType is ServiceProviderIsKeyedService;
   }
+
+  @override
+  bool isService({required Type serviceType}) => _isService(ServiceIdentifier(
+        serviceKey: null,
+        serviceType: serviceType,
+      ));
+
+  @override
+  bool isKeyedService({required Type serviceType, Object? serviceKey}) =>
+      _isService(
+          ServiceIdentifier(serviceKey: serviceKey, serviceType: serviceType));
 }
 
 class ServiceDescriptorCacheItem {
@@ -356,10 +379,10 @@ class ServiceDescriptorCacheItem {
       }
     }
 
-    throw Exception('SR.ServiceDescriptorNotExist');
+    throw InvalidOperationException(
+      message: 'Requested service descriptor doesn\'t exist.',
+    );
   }
-
-  
 
   ServiceDescriptorCacheItem add(ServiceDescriptor descriptor) {
     var newCacheItem = ServiceDescriptorCacheItem();
@@ -377,20 +400,20 @@ class ServiceDescriptorCacheItem {
 }
 
 /// Returns true if both keys are null or equals, or if key1 is
-  /// KeyedService.AnyKey and key2 is not null
-  static bool _keysMatch(
-    Object? key1,
-    Object? key2,
-  ) {
-    if (key1 == null && key2 == null) {
-      return true;
-    }
-
-    if (key1 != null && key2 != null) {
-      return key1 == key2 ||
-          key1 == KeyedService.anyKey ||
-          key2 == KeyedService.anyKey;
-    }
-
-    return false;
+/// KeyedService.AnyKey and key2 is not null
+bool _keysMatch(
+  Object? key1,
+  Object? key2,
+) {
+  if (key1 == null && key2 == null) {
+    return true;
   }
+
+  if (key1 != null && key2 != null) {
+    return key1 == key2 ||
+        key1 == KeyedService.anyKey ||
+        key2 == KeyedService.anyKey;
+  }
+
+  return false;
+}

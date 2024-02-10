@@ -33,11 +33,10 @@ abstract class CallSiteVisitor<TArgument, TResult> {
       case CallSiteKind.serviceProvider:
         return visitServiceProvider(
             callSite as ServiceProviderCallSite, argument);
-      // case CallSiteKind.serviceScopeFactory:
-      //   return visitServiceScopeFactory(
-      //       callSite as ServiceScopeFactoryCallSite, argument);
       default:
-        throw Exception('SR.CallSiteTypeNotSupported');
+        throw Exception(
+          'Call site type ${callSite.runtimeType} is not supported',
+        );
     }
   }
 

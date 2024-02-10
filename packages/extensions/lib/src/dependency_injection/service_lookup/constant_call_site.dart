@@ -1,6 +1,6 @@
 import 'call_site_kind.dart';
-import 'result_cache.dart';
 import 'service_call_site.dart';
+import 'service_lookup.dart';
 
 class ConstantCallSite extends ServiceCallSite {
   final Type _serviceType;

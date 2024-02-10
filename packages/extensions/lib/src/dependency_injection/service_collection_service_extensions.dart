@@ -3,6 +3,9 @@ import 'service_descriptor.dart';
 
 /// Extension methods for adding services to a [ServiceCollection].
 extension ServiceCollectionServiceExtensions on ServiceCollection {
+  /// Adds a transient service of the type specified in [TService] with
+  /// a factory specified in [implementationFactory] to the specified
+  /// [ServiceCollection].
   ServiceCollection addTransient<TService>(
     ImplementationFactory implementationFactory,
   ) {
@@ -44,4 +47,12 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
     add(descriptor);
     return this;
   }
+
+  // ServiceCollection _add(
+  //   Type serviceType,
+  //   ImplementationFactory implementationFactory,
+  //   ServiceLifetime lifetime,
+  // ) {
+  //   //final descriptor = ServiceDescriptor()
+  // }
 }

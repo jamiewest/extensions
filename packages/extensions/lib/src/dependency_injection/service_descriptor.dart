@@ -1,7 +1,6 @@
 import '../common/exceptions/invalid_operation_exception.dart';
 
 import 'service_lifetime.dart';
-import 'service_lookup/factory_call_site.dart';
 import 'service_provider.dart';
 
 typedef ImplementationFactory = Object Function(
@@ -15,14 +14,17 @@ typedef KeyedImplementationFactory = Object Function(
 
 /// Describes a service with its service type, implementation, and lifetime.
 class ServiceDescriptor {
-  Object? _implementationInstance;
-  Object? _implementationFactory;
+  final Object? _implementationInstance;
+  final Object? _implementationFactory;
 
-  ServiceDescriptor._({
+  ServiceDescriptor({
     required this.serviceType,
-    required this.lifetime,
+    this.lifetime = ServiceLifetime.singleton,
     this.serviceKey,
-  });
+    Object? implementationInstance,
+    Object? implementationFactory,
+  })  : _implementationInstance = implementationInstance,
+        _implementationFactory = implementationFactory;
 
   /// Initializes a new instance of [ServiceDescriptor] with the specified
   /// [instance] and default [ServiceLifetime].
@@ -31,23 +33,26 @@ class ServiceDescriptor {
     required Object instance,
     Object? serviceKey,
   }) =>
-      ServiceDescriptor._(
+      ServiceDescriptor(
         serviceType: serviceType,
         serviceKey: serviceKey,
-        lifetime: ServiceLifetime.singleton,
-      ).._implementationInstance = instance;
+        implementationInstance: instance,
+      );
 
+  /// Initializes a new instance of [ServiceDescriptor] with the specified
+  /// [instance].
   factory ServiceDescriptor._factory({
     required Type serviceType,
     Object? serviceKey,
     required Object factory,
     required ServiceLifetime lifetime,
   }) =>
-      ServiceDescriptor._(
+      ServiceDescriptor(
         serviceType: serviceType,
         lifetime: lifetime,
         serviceKey: serviceKey,
-      ).._implementationFactory = factory;
+        implementationFactory: factory,
+      );
 
   /// Gets the [ServiceLifetime] of the service.
   final ServiceLifetime lifetime;
@@ -66,6 +71,7 @@ class ServiceDescriptor {
     return _implementationInstance;
   }
 
+  /// Gets the instance that implements the service.
   Object? get keyedImplementationInstance {
     if (!isKeyedService) {
       throwNonKeyedDescriptor();
@@ -92,16 +98,26 @@ class ServiceDescriptor {
 
   @override
   String toString() {
-    String? newlifetime = '''ServiceType: ${serviceType.toString()} 
+    String? _lifetime = '''ServiceType: ${serviceType.toString()} 
         Lifetime: ${lifetime.toString()} ''';
 
-    if (implementationFactory != null) {
-      return '''${newlifetime}ImplementationFactory: 
-      ${implementationFactory?.toString()}''';
-    }
+    if (isKeyedService) {
+      _lifetime += 'ServiceKey: ${serviceKey} ';
 
-    return '''${newlifetime}ImplementationInstance: 
-    ${implementationInstance.toString()}''';
+      if (keyedImplementationFactory != null) {
+        return _lifetime +
+            'KeyedImplementationFactory: $keyedImplementationFactory';
+      }
+
+      return _lifetime +
+          'KeyedImplementationInstance: $keyedImplementationInstance';
+    } else {
+      if (implementationFactory != null) {
+        return _lifetime + 'ImplementationFactory: $implementationFactory';
+      }
+
+      return _lifetime + 'ImplementationInstance: $implementationInstance';
+    }
   }
 
   /// Creates an instance of [ServiceDescriptor] with the specified
@@ -115,6 +131,8 @@ class ServiceDescriptor {
         lifetime: ServiceLifetime.transient,
       );
 
+  /// Creates an instance of [ServiceDescriptor] with the specified
+  /// [TService], and the [ServiceLifetime.transient] lifetime.
   static ServiceDescriptor keyedTransient<TService>(
     Object? serviceKey,
     ImplementationFactory implementationFactory,
@@ -137,6 +155,8 @@ class ServiceDescriptor {
         lifetime: ServiceLifetime.scoped,
       );
 
+  /// Creates an instance of [ServiceDescriptor] with the specified
+  /// [TService], [implementationFactory] and the [ServiceLifetime.scoped].
   static ServiceDescriptor keyedScoped<TService>(
     Object? serviceKey,
     ImplementationFactory implementationFactory,
@@ -159,6 +179,9 @@ class ServiceDescriptor {
         lifetime: ServiceLifetime.singleton,
       );
 
+  /// Creates an instance of [ServiceDescriptor] with the specified
+  /// [TService], [serviceKey], [implementationFactory]
+  /// and the [ServiceLifetime.singleton] lifetime.
   static ServiceDescriptor keyedSingleton<TService>(
     Object? serviceKey,
     ImplementationFactory implementationFactory,

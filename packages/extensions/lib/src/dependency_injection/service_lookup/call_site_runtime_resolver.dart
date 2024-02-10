@@ -1,13 +1,7 @@
-import 'call_site_visitor.dart';
-import 'constant_call_site.dart';
-import 'factory_call_site.dart';
-import 'iterable_call_site.dart';
-import 'service_call_site.dart';
-import 'service_provider_call_site.dart';
-import 'service_provider_engine_scope.dart';
+part of 'service_lookup.dart';
 
 class CallSiteRuntimeResolver
-    extends CallSiteVisitor<RuntimeResolverContext, Object> {
+    extends CallSiteVisitor<RuntimeResolverContext, Object?> {
   static CallSiteRuntimeResolver get instance => CallSiteRuntimeResolver();
 
   Object? resolve(
@@ -27,7 +21,7 @@ class CallSiteRuntimeResolver
   }
 
   @override
-  Object visitDisposeCache(
+  Object? visitDisposeCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
   ) =>
@@ -36,7 +30,7 @@ class CallSiteRuntimeResolver
       );
 
   @override
-  Object visitRootCache(
+  Object? visitRootCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
   ) {
@@ -46,7 +40,7 @@ class CallSiteRuntimeResolver
       }
     }
 
-    final serviceProviderEngine = argument.scope!.rootProvider.root;
+    final serviceProviderEngine = argument.scope!.rootProvider._root;
 
     Object? resolved = visitCallSiteMain(
         callSite,
@@ -61,7 +55,7 @@ class CallSiteRuntimeResolver
   }
 
   @override
-  Object visitScopeCache(
+  Object? visitScopeCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
   ) =>
@@ -73,7 +67,7 @@ class CallSiteRuntimeResolver
               argument.scope!,
             );
 
-  Object _visitCache(
+  Object? _visitCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
     ServiceProviderEngineScope serviceProviderEngine,
@@ -115,7 +109,7 @@ class CallSiteRuntimeResolver
     IterableCallSite iterableCallSite,
     RuntimeResolverContext argument,
   ) {
-    var items = <Object>[];
+    var items = <Object?>[];
     for (var i = 0; i < iterableCallSite.serviceCallSites.length; i++) {
       var value = visitCallSite(
         iterableCallSite.serviceCallSites.elementAt(i),

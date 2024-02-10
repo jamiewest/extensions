@@ -13,15 +13,7 @@ export 'src/common/cancellation_token_registration.dart';
 export 'src/common/cancellation_token_source.dart';
 export 'src/common/cancellation_token.dart';
 export 'src/common/disposable.dart';
+export 'src/common/string.dart';
+export 'src/common/enum.dart';
 
 typedef TimerCallback = void Function(Object? state);
-
-bool isNullOrWhitespace(String? value) {
-  if (value == null) return true;
-  return value.trim().isEmpty;
-}
-
-bool isNullOrEmpty(String? value) {
-  if (value == null) return true;
-  return value.isEmpty;
-}

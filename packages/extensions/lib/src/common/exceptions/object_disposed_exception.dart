@@ -1,4 +1,4 @@
-import '../../../common.dart';
+import '../string.dart' as string;
 import 'invalid_operation_exception.dart';
 
 /// /// The exception that is thrown when accessing an object that was disposed.
@@ -16,7 +16,7 @@ class ObjectDisposedException extends InvalidOperationException {
   @override
   String? get message {
     final name = objectName;
-    if (isNullOrEmpty(name)) {
+    if (string.isNullOrEmpty(name)) {
       return super.message;
     }
 

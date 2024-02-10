@@ -1,6 +1,7 @@
 import 'dart:collection';
 
-import 'package:extensions/src/dependency_injection/service_lookup/service_identifier.dart';
+import '../../common/exceptions/invalid_operation_exception.dart';
+import 'service_identifier.dart';
 
 class CallSiteChain {
   final Map<ServiceIdentifier, ChainItemInfo> _callSiteChain;
@@ -8,9 +9,10 @@ class CallSiteChain {
   CallSiteChain() : _callSiteChain = <ServiceIdentifier, ChainItemInfo>{};
 
   void checkCircularDependency(ServiceIdentifier serviceIdentifier) {
-    if (_callSiteChain.containsKey(ServiceIdentifier)) {
-      throw Exception(
-          _createCircularDependencyExceptionMessage(serviceIdentifier));
+    if (_callSiteChain.containsKey(serviceIdentifier)) {
+      throw InvalidOperationException(
+        message: _createCircularDependencyExceptionMessage(serviceIdentifier),
+      );
     }
   }
 
@@ -28,9 +30,11 @@ class CallSiteChain {
     ServiceIdentifier serviceIdentifier,
   ) {
     var messageBuilder = StringBuffer()
-      ..write('''
+      ..write(
+        '''
         A circular dependency was detected for the service of 
-        type '${serviceIdentifier.serviceType.runtimeType.toString()}'.''')
+        type '${serviceIdentifier.toString()}'.''',
+      )
       ..writeln();
 
     _appendResolutionPath(messageBuilder, serviceIdentifier);
@@ -39,8 +43,10 @@ class CallSiteChain {
   }
 
   void _appendResolutionPath(
-      StringBuffer builder, ServiceIdentifier currentlyResolving) {
-    final ordered = SplayTreeMap<Type, ChainItemInfo>.from(
+    StringBuffer builder,
+    ServiceIdentifier currentlyResolving,
+  ) {
+    final ordered = SplayTreeMap<ServiceIdentifier, ChainItemInfo>.from(
       _callSiteChain,
       (key1, key2) =>
           _callSiteChain[key1]!.order.compareTo(_callSiteChain[key2]!.order),
@@ -50,16 +56,18 @@ class CallSiteChain {
       var serviceType = pair.key;
       var implementationType = pair.value.implementationType;
       if (implementationType == null || serviceType == implementationType) {
-        builder.write(serviceType.runtimeType.toString());
+        builder.write(serviceType.toString());
       } else {
-        builder.write('''${serviceType.runtimeType.toString()}
-            (${implementationType.runtimeType.toString()})''');
+        builder.write(
+          '''${serviceType.toString()}
+            (${implementationType.toString()})''',
+        );
       }
 
       builder.write(' -> ');
     }
 
-    builder.write(currentlyResolving.serviceType.runtimeType.toString());
+    builder.write(currentlyResolving.serviceType.toString());
   }
 }
 

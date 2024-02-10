@@ -1,6 +1,6 @@
 import '../../common/disposable.dart';
 import 'call_site_kind.dart';
-import 'result_cache.dart';
+import 'service_lookup.dart';
 
 /// Summary description for ServiceCallSite
 abstract class ServiceCallSite {
@@ -13,6 +13,7 @@ abstract class ServiceCallSite {
   CallSiteKind get kind;
   ResultCache get cache => _cache;
   Object? value;
+  Object? key;
 
   bool captureDisposable() =>
       implementationType == null || implementationType is Disposable;

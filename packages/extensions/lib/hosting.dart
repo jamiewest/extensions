@@ -9,7 +9,6 @@ import 'src/hosting/host_application_builder_settings.dart';
 import 'src/hosting/host_builder.dart';
 import 'src/hosting/hosting_host_builder_extensions.dart';
 
-export 'common.dart';
 export 'configuration.dart';
 export 'dependency_injection.dart';
 export 'logging.dart';
@@ -42,7 +41,7 @@ export 'src/hosting/service_collection_hosted_service_extensions.dart';
 /// Initializes a new instance of the [HostBuilder] class with
 /// pre-configured defaults.
 HostBuilder createDefaultBuilder([List<String>? args]) {
-  var builder = HostBuilder();
+  var builder = DefaultHostBuilder();
   return builder.configureDefaults(args);
 }
 

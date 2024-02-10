@@ -2,6 +2,8 @@ import '../common/cancellation_token.dart';
 import 'host.dart';
 import 'host_builder.dart';
 
+/// Provides extension methods for the [HostBuilder] from the hosting
+/// abstractions package.
 extension HostingAbstractionsHostBuilderExtensions on HostBuilder {
   /// Builds and starts the host.
   Future<Host> start({
@@ -11,9 +13,4 @@ extension HostingAbstractionsHostBuilderExtensions on HostBuilder {
     await host.start(cancellationToken);
     return host;
   }
-
-  // Host startSync({
-  //   CancellationToken? cancellationToken,
-  // }) =>
-  //     waitFor(start(cancellationToken: cancellationToken));
 }

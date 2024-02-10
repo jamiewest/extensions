@@ -85,4 +85,14 @@ extension HostingLoggerExtensions on Logger {
       );
     }
   }
+
+  void hostedServiceStartupFaulted(Exception? ex) {
+    if (isEnabled(LogLevel.error)) {
+      logError(
+        'Hosting failed to start',
+        eventId: LoggerEventIds.hostedServiceStartupFaulted,
+        error: ex,
+      );
+    }
+  }
 }

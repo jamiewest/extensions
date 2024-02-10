@@ -1,4 +1,4 @@
-import 'package:extensions/common.dart';
+import 'package:extensions/common.dart' hide equals;
 import 'package:test/test.dart';
 
 void main() {

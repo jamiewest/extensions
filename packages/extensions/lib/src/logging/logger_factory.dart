@@ -1,6 +1,5 @@
+import '../dependency_injection/service_lookup/service_lookup.dart';
 import '../../dependency_injection.dart';
-import '../common/exceptions/object_disposed_exception.dart';
-import '../dependency_injection/service_provider_impl.dart';
 import '../options/options_monitor.dart';
 import 'log_level.dart';
 import 'logger.dart';
@@ -77,7 +76,7 @@ class LoggerFactory implements Disposable {
 
     return _DisposingLoggerFactory(
       loggerFactory,
-      serviceProvider as ServiceProviderImpl,
+      serviceProvider as DefaultServiceProvider,
       (serviceProvider.getServices<LoggerProvider>() as List)
           .map((item) => item as LoggerProvider)
           .toList(),
@@ -252,11 +251,11 @@ class _ProviderRegistration {
 
 class _DisposingLoggerFactory extends LoggerFactory {
   final LoggerFactory _loggerFactory;
-  final ServiceProviderImpl _serviceProvider;
+  final DefaultServiceProvider _serviceProvider;
 
   _DisposingLoggerFactory(
     LoggerFactory loggerFactory,
-    ServiceProviderImpl serviceProvider,
+    DefaultServiceProvider serviceProvider,
     Iterable<LoggerProvider> super.providerRegistrations,
   )   : _loggerFactory = loggerFactory,
         _serviceProvider = serviceProvider;

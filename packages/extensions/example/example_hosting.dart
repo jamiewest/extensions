@@ -1,9 +1,9 @@
 import 'package:extensions/hosting.dart';
 
 void main() {
-  var builder = Host.createApplicationBuilder()
-    ..logging.addDebug()
-    ..logging.setMinimumLevel(LogLevel.trace);
+  var builder = Host.createApplicationBuilder();
+  // ..logging.addDebug()
+  // ..logging.setMinimumLevel(LogLevel.trace);
 
   var host = builder.build()..start();
 
