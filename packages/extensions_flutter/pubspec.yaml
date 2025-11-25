@@ -3,7 +3,6 @@ description: Adds Flutter integration for the extensions package.
 version: 0.3.8
 repository: https://www.github.com/jamiewest/extensions
 issue_tracker: https://github.com/jamiewest/extensions/issues?q=is%3Aissue+is%3Aopen+label%3Aextensions-flutter
-publish_to: none
 
 environment:
   sdk: '^3.10.1'
