@@ -24,12 +24,11 @@ class FlutterLifetime implements HostLifetime {
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
     LoggerFactory loggerFactory,
-  )   : _application = application,
-        _errorHandler = errorHandler,
-        _environment = environment,
-        _applicationLifetime =
-            applicationLifetime as FlutterApplicationLifetime,
-        _logger = loggerFactory.createLogger('Hosting.Lifetime');
+  ) : _application = application,
+      _errorHandler = errorHandler,
+      _environment = environment,
+      _applicationLifetime = applicationLifetime as FlutterApplicationLifetime,
+      _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
   HostEnvironment get environment => _environment;
 
@@ -62,31 +61,25 @@ class FlutterLifetime implements HostLifetime {
     registrations.add(cancellationToken.register(cancel));
 
     registrations.add(
-      applicationLifetime.applicationStarted.register(
-        (state) {
-          if (cancelled || cancellationToken.isCancellationRequested) {
-            cancel(null);
-            return;
-          }
+      applicationLifetime.applicationStarted.register((state) {
+        if (cancelled || cancellationToken.isCancellationRequested) {
+          cancel(null);
+          return;
+        }
 
-          (state as FlutterLifetime)._onApplicationStarted();
-        },
-        this,
-      ),
+        (state as FlutterLifetime)._onApplicationStarted();
+      }, this),
     );
 
     registrations.add(
-      applicationLifetime.applicationStopping.register(
-        (state) {
-          if (cancelled || cancellationToken.isCancellationRequested) {
-            cancel(null);
-            return;
-          }
+      applicationLifetime.applicationStopping.register((state) {
+        if (cancelled || cancellationToken.isCancellationRequested) {
+          cancel(null);
+          return;
+        }
 
-          (state as FlutterLifetime)._onApplicationStopping();
-        },
-        this,
-      ),
+        (state as FlutterLifetime)._onApplicationStopping();
+      }, this),
     );
 
     applicationLifetime
@@ -97,26 +90,24 @@ class FlutterLifetime implements HostLifetime {
       ..applicationDetached.add(_onDetached);
 
     registrations.add(
-      applicationLifetime.applicationStarted.register(
-        (_) {
-          if (cancelled || cancellationToken.isCancellationRequested) {
-            cancel(null);
-            return;
-          }
+      applicationLifetime.applicationStarted.register((_) {
+        if (cancelled || cancellationToken.isCancellationRequested) {
+          cancel(null);
+          return;
+        }
 
-          WidgetsFlutterBinding.ensureInitialized();
+        WidgetsFlutterBinding.ensureInitialized();
 
-          FlutterError.onError = _errorHandler.onFlutterError;
-          PlatformDispatcher.instance.onError = _errorHandler.onError;
+        FlutterError.onError = _errorHandler.onFlutterError;
+        PlatformDispatcher.instance.onError = _errorHandler.onError;
 
-          final app = FlutterLifecycleObserver(
-            lifetime: applicationLifetime,
-            child: _application.child,
-          );
+        final app = FlutterLifecycleObserver(
+          lifetime: applicationLifetime,
+          child: _application.child,
+        );
 
-          runApp(app);
-        },
-      ),
+        runApp(app);
+      }),
     );
 
     if (cancellationToken.isCancellationRequested) {
@@ -136,13 +127,13 @@ class FlutterLifetime implements HostLifetime {
   void _onApplicationStopping() =>
       _logger.logInformation('Application is shutting down...');
 
-  void _onPaused() => _logger.logInformation('Application paused.');
+  void _onPaused() => _logger.logDebug('Application paused.');
 
-  void _onResumed() => _logger.logInformation('Application resumed.');
+  void _onResumed() => _logger.logDebug('Application resumed.');
 
-  void _onInactive() => _logger.logInformation('Application is inactive.');
+  void _onInactive() => _logger.logDebug('Application is inactive.');
 
-  void _onHidden() => _logger.logInformation('Application is hidden.');
+  void _onHidden() => _logger.logDebug('Application is hidden.');
 
-  void _onDetached() => _logger.logInformation('Application is detached.');
+  void _onDetached() => _logger.logDebug('Application is detached.');
 }
