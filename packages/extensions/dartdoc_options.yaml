@@ -1,0 +1,5 @@
+dartdoc:
+  exclude: ['common', 'configuration_io', 'hosting_io', 'io']
+  linkToSource:
+    root: '.'
+    uriTemplate: 'https://github.com/jamiewest/extensions/blob/main/packages/extensions/%f%#L%l%'

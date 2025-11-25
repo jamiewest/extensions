@@ -1,0 +1,24 @@
+name: extensions_flutter
+description: Adds Flutter integration for the extensions package.
+version: 0.3.8
+repository: https://www.github.com/jamiewest/extensions
+issue_tracker: https://github.com/jamiewest/extensions/issues?q=is%3Aissue+is%3Aopen+label%3Aextensions-flutter
+publish_to: none
+
+environment:
+  sdk: '^3.10.1'
+resolution: workspace
+
+dependencies:
+  collection: ^1.17.0
+  
+  #extensions: ^0.3.12
+  extensions:
+    path: ../extensions
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter

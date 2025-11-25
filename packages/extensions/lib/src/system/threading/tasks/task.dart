@@ -1,0 +1,1 @@
+typedef Task = Future<void>;
