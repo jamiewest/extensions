@@ -8,7 +8,9 @@ void main() {
   group('CircularDependencyTests', () {
     test('SelfCircularDependency', () {
       var expectedMessage =
-          'A circular dependency was detected for the service of type \'SelfCircularDependency\'.\nSelfCircularDependency -> SelfCircularDependency';
+          'A circular dependency was detected for the service of '
+          "type 'SelfCircularDependency'.\n"
+          'SelfCircularDependency -> SelfCircularDependency';
 
       var collection = ServiceCollection()
         ..addTransient<SelfCircularDependency>(

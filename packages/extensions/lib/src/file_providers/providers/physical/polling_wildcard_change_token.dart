@@ -140,9 +140,8 @@ class PollingWildcardChangeToken implements IChangeToken {
   IDisposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
-  ) {
-    // This implementation doesn't support active callbacks
-    // Consumers must poll hasChanged
-    return EmptyDisposable.instance();
-  }
+  ) =>
+      // This implementation doesn't support active callbacks
+      // Consumers must poll hasChanged
+      EmptyDisposable.instance();
 }

@@ -29,13 +29,13 @@ extension HttpClientFactoryServiceCollectionExtensions on ServiceCollection {
 
   /// Registers a typed client bound to the named client.
   HttpClientBuilder addHttpClientTyped<TClient extends Object>(
-    TClient Function(http.BaseClient client, ServiceProvider services) factory, {
+    TClient Function(
+      http.BaseClient client,
+      ServiceProvider services,
+    ) factory, {
     String name = Options.defaultName,
-  }) {
-    var builder = addHttpClient(name);
-    builder.addTypedClient<TClient>(factory);
-    return builder;
-  }
+  }) =>
+      addHttpClient(name)..addTypedClient<TClient>(factory);
 
   void _addHttpClientCore() {
     tryAdd(

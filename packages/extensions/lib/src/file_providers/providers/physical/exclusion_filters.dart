@@ -6,7 +6,8 @@ enum ExclusionFilters {
   /// Exclude files and directories whose name begins with period.
   dotPrefixed(0x0001),
 
-  /// Exclude files and directories marked as hidden (e.g., FileSystemEntity.isHidden).
+  /// Exclude files and directories marked as hidden
+  /// (e.g., FileSystemEntity.isHidden).
   hidden(0x0002),
 
   /// Exclude files and directories marked as system files.
@@ -14,7 +15,8 @@ enum ExclusionFilters {
 
   /// Exclude files and directories when the name begins with a period,
   /// or has hidden or system attributes.
-  sensitive(0x0007); // dotPrefixed | hidden | system
+  sensitive(0x0007);
+  // dotPrefixed | hidden | system
 
   const ExclusionFilters(this.value);
 
@@ -33,7 +35,8 @@ enum ExclusionFilters {
     );
   }
 
-  /// Checks if a file or directory name should be excluded based on this filter.
+  /// Checks if a file or directory name should be excluded based on this
+  /// filter.
   bool shouldExclude(String name, {bool isHidden = false}) {
     if (this == ExclusionFilters.none) {
       return false;

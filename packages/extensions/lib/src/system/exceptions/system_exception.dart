@@ -7,5 +7,5 @@ class SystemException extends ExceptionBase {
     super.message = 'System error.',
     super.innerException,
     super.stackTrace,
-  });
+  }) : super(typeName: 'SystemException');
 }

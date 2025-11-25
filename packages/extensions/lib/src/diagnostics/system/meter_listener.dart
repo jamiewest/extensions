@@ -35,7 +35,7 @@ class MeterListener implements Disposable {
     }
 
     if (!_disposed && !instrument.meter._disposed) {
-      // TODO: Implement measurement event enabling
+      // TODO(jamiewest): Implement measurement event enabling.
     }
   }
 

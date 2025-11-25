@@ -46,13 +46,6 @@ void main() {
 
 class ServiceA {}
 
-class ServiceB {
-  // ignore: avoid_unused_constructor_parameters
-  ServiceB(ServiceC c);
-}
-
-class ServiceC {}
-
 //     test('HostInjectsHostingEnvironment', () async {
 //       var host =
 //           _createBuilder().useEnvironment('WithHostingEnvironment').build();

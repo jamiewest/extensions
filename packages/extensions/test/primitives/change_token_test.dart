@@ -120,18 +120,12 @@ void main() {
 
 class TestChangeToken implements IChangeToken {
   _VoidCallback? _callback;
-  bool _activeChangeCallbacks = false;
-  bool _hasChanged = false;
 
   @override
-  bool get activeChangeCallbacks => _activeChangeCallbacks;
-
-  set activeChangeCallbacks(bool value) => _activeChangeCallbacks = value;
+  bool activeChangeCallbacks = false;
 
   @override
-  bool get hasChanged => _hasChanged;
-
-  set hasChanged(bool value) => _hasChanged = value;
+  bool hasChanged = false;
 
   @override
   IDisposable registerChangeCallback(

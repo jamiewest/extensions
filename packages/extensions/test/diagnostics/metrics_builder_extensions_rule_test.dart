@@ -18,8 +18,7 @@ void main() {
       void builderEnableMetricsAddsRule(String? meterName) {
         var services = ServiceCollection()
           ..addOptions<MetricsOptions>(MetricsOptions.new);
-        var builder = _FakeBuilder(services)
-          ..enableMetrics(meterName: meterName);
+        _FakeBuilder(services).enableMetrics(meterName: meterName);
 
         var container = services.buildServiceProvider();
         var options = container.getRequiredService<Options<MetricsOptions>>();
@@ -45,8 +44,7 @@ void main() {
     test('BuilderEnableMetricsWithAllParamsAddsRule', () {
       var services = ServiceCollection()
         ..addOptions<MetricsOptions>(MetricsOptions.new);
-      var builder = _FakeBuilder(services)
-        ..enableMetrics(
+      _FakeBuilder(services).enableMetrics(
           meterName: 'meter',
           instrumentName: 'instance',
           listenerName: 'listener',
@@ -76,8 +74,7 @@ void main() {
               meterName: meterName,
             ),
           );
-        var builder = _FakeBuilder(services)
-          ..enableMetrics(meterName: meterName);
+        _FakeBuilder(services).enableMetrics(meterName: meterName);
 
         var container = services.buildServiceProvider();
         var options = container.getRequiredService<Options<MetricsOptions>>();
@@ -130,8 +127,7 @@ void main() {
       void builderDisableMetricsAddsRule(String? meterName) {
         var services = ServiceCollection()
           ..addOptions<MetricsOptions>(MetricsOptions.new);
-        var builder = _FakeBuilder(services)
-          ..disableMetrics(meterName: meterName);
+        _FakeBuilder(services).disableMetrics(meterName: meterName);
 
         var container = services.buildServiceProvider();
         var options = container.getRequiredService<Options<MetricsOptions>>();
@@ -157,8 +153,7 @@ void main() {
     test('BuilderDisableMetricsWithAllParamsAddsRule', () {
       var services = ServiceCollection()
         ..addOptions<MetricsOptions>(MetricsOptions.new);
-      var builder = _FakeBuilder(services)
-        ..disableMetrics(
+      _FakeBuilder(services).disableMetrics(
           meterName: 'meter',
           instrumentName: 'instance',
           listenerName: 'listener',
@@ -188,8 +183,7 @@ void main() {
               meterName: meterName,
             ),
           );
-        var builder = _FakeBuilder(services)
-          ..enableMetrics(meterName: meterName);
+        _FakeBuilder(services).enableMetrics(meterName: meterName);
 
         var container = services.buildServiceProvider();
         var options = container.getRequiredService<Options<MetricsOptions>>();

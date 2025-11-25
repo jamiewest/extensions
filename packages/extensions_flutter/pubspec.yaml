@@ -12,9 +12,8 @@ resolution: workspace
 dependencies:
   collection: ^1.17.0
   
-  #extensions: ^0.3.12
-  extensions:
-    path: ../extensions
+  extensions: ^0.3.13
+
   flutter:
     sdk: flutter
 

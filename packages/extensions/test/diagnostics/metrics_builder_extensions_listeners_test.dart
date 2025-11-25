@@ -32,10 +32,9 @@ void main() {
 
     test('CanClearListeners', () {
       var services = ServiceCollection();
-      var builder = _FakeBuilder(services);
-
-      builder.addListener(_FakeListenerA());
-      builder.addListener(_FakeListenerB());
+      var builder = _FakeBuilder(services)
+        ..addListener(_FakeListenerA())
+        ..addListener(_FakeListenerB());
       var container = services.buildServiceProvider();
       expect(container.getServices<MetricsListener>().length, equals(2));
 

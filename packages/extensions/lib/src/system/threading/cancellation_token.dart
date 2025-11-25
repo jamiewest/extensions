@@ -85,8 +85,7 @@ class CancellationToken {
   /// Throws a [OperationCanceledException] if
   /// this token has had cancellation requested.
   void _throwOperationCanceledException() {
-    /// TODO: FIX THIS
-    //throw OperationCanceledException(cancellationToken: this);
+    throw OperationCanceledException(cancellationToken: this);
   }
 
   @override

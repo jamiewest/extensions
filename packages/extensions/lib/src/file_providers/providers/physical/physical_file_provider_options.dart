@@ -26,7 +26,8 @@ class PhysicalFileProviderOptions {
   /// Defaults to false.
   final bool usePollingFileWatcher;
 
-  /// Determines whether change token callbacks will be raised via active polling.
+  /// Determines whether change token callbacks will be raised via active
+  /// polling.
   ///
   /// When true, change callbacks will poll the file system for changes rather
   /// than passively waiting for file system events.
@@ -39,10 +40,11 @@ class PhysicalFileProviderOptions {
     ExclusionFilters? exclusionFilters,
     bool? usePollingFileWatcher,
     bool? useActivePolling,
-  }) => PhysicalFileProviderOptions(
-      exclusionFilters: exclusionFilters ?? this.exclusionFilters,
-      usePollingFileWatcher:
-          usePollingFileWatcher ?? this.usePollingFileWatcher,
-      useActivePolling: useActivePolling ?? this.useActivePolling,
-    );
+  }) =>
+      PhysicalFileProviderOptions(
+        exclusionFilters: exclusionFilters ?? this.exclusionFilters,
+        usePollingFileWatcher:
+            usePollingFileWatcher ?? this.usePollingFileWatcher,
+        useActivePolling: useActivePolling ?? this.useActivePolling,
+      );
 }

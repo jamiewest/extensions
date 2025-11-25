@@ -2,6 +2,7 @@ class ExceptionBase implements Exception {
   final String? _message;
   final Exception? _innerException;
   final StackTrace? _stackTrace;
+  final String _typeName;
 
   static const String innerExceptionString = ' ---> ';
 
@@ -9,9 +10,11 @@ class ExceptionBase implements Exception {
     String? message,
     Exception? innerException,
     StackTrace? stackTrace,
+    String typeName = 'ExceptionBase',
   })  : _message = message ?? '',
         _innerException = innerException,
-        _stackTrace = stackTrace;
+        _stackTrace = stackTrace,
+        _typeName = typeName;
 
   /// The message that describes the current exception.
   String? get message =>
@@ -23,5 +26,5 @@ class ExceptionBase implements Exception {
   /// The string representation of the immediate frames on the call stack.
   StackTrace? get stackTrace => _stackTrace;
 
-  String _getClassName() => runtimeType.toString();
+  String _getClassName() => _typeName;
 }

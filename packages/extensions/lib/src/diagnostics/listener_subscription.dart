@@ -61,9 +61,11 @@ base class ListenerSubscription extends LinkedListEntry<ListenerSubscription>
     _rules = rules;
 
     // Get a fresh list of instruments to compare against the new rules.
-    var tempListener = MeterListener()
-      ..instrumentPublished = (instrument, _) => _refreshInstrument(instrument);
-    // tempListener.start();
+    MeterListener()
+      ..instrumentPublished = (instrument, _) {
+        _refreshInstrument(instrument);
+      }
+      ..start();
   }
 
   void _refreshInstrument(Instrument instrument) {
@@ -150,7 +152,7 @@ base class ListenerSubscription extends LinkedListEntry<ListenerSubscription>
         suffix = meterName.substring(wildcardIndex + 1);
       }
 
-      /// TODO: Should this ignore ordinal case?
+      // TODO(jamiewest): Should this ignore ordinal case?
       if (!instrument.meter.name.startsWith(prefix) ||
           !instrument.meter.name.endsWith(suffix)) {
         return false;

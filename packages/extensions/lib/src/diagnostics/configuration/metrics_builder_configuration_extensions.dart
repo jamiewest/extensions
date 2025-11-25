@@ -9,20 +9,21 @@ import 'metrics_configuration.dart';
 import 'metrics_configure_options.dart';
 
 /// Extensions for [MetricsBuilder] for enabling metrics based
-/// on [Configuration].
-extension MetricsBuilderConfigurationExtensions on MetricsBuilder {
-  MetricsBuilder addConfiguration(Configuration configuration) {
-    services.addSingletonInstance<ConfigureOptions<MetricsOptions>>(
-      (services) => MetricsConfigureOptions(configuration),
-    );
-    services.addSingletonInstance<OptionsChangeTokenSource<MetricsOptions>>(
-      (services) => ConfigurationChangeTokenSource<MetricsOptions>(
-        config: configuration,
-      ),
-    );
-    services.addSingletonInstance<MetricsConfiguration>(
-      (services) => MetricsConfiguration(configuration),
-    );
-    return this;
+  /// on [Configuration].
+  extension MetricsBuilderConfigurationExtensions on MetricsBuilder {
+    MetricsBuilder addConfiguration(Configuration configuration) {
+      services
+        ..addSingletonInstance<ConfigureOptions<MetricsOptions>>(
+          (services) => MetricsConfigureOptions(configuration),
+        )
+        ..addSingletonInstance<OptionsChangeTokenSource<MetricsOptions>>(
+          (services) => ConfigurationChangeTokenSource<MetricsOptions>(
+            config: configuration,
+          ),
+        )
+        ..addSingletonInstance<MetricsConfiguration>(
+          (services) => MetricsConfiguration(configuration),
+        );
+      return this;
+    }
   }
-}

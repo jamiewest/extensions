@@ -36,9 +36,10 @@ abstract class FileConfigurationSource implements ConfigurationSource {
   ConfigurationProvider build(ConfigurationBuilder builder);
 
   /// Called to use any default settings on the builder like
-  /// the [FileProvider] or [FileLoadExceptionHandler].
+  /// the [FileProvider] or the load exception handler.
   void ensureDefaults(ConfigurationBuilder builder) {
-    // if (fileProvider == null && builder.getUserDefinedFileProvider() == null) {
+    // if (fileProvider == null &&
+    //     builder.getUserDefinedFileProvider() == null) {
     //   _ownsFileProvider = true;
     // }
 

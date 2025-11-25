@@ -47,9 +47,7 @@ class DefaultHttpMessageHandlerBuilder implements HttpMessageHandlerBuilder {
 
     // Build in reverse: last added handler becomes the outermost.
     for (var i = additionalHandlers.length - 1; i >= 0; i--) {
-      var delegatingHandler = additionalHandlers[i];
-      delegatingHandler.innerHandler = handler;
-      handler = delegatingHandler;
+      handler = additionalHandlers[i]..innerHandler = handler;
     }
 
     return handler;

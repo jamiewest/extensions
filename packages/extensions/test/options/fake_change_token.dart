@@ -4,20 +4,8 @@ import 'package:extensions/src/system/disposable.dart';
 
 class FakeChangeToken implements ChangeToken, Disposable {
   VoidCallback? _callback;
-  bool _activeChangeCallbacks = false;
-  bool _hasChanged = false;
-
-  bool get activeChangeCallbacks => _activeChangeCallbacks;
-
-  set activeChangeCallbacks(bool value) {
-    _activeChangeCallbacks = value;
-  }
-
-  bool get hasChanged => _hasChanged;
-
-  set hasChanged(bool value) {
-    _hasChanged = value;
-  }
+  bool activeChangeCallbacks = false;
+  bool hasChanged = false;
 
   Disposable? registerChangeCallback(ChangeCallback callback, [Object? state]) {
     _callback = () => callback(state);

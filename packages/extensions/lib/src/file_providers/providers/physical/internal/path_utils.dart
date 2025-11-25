@@ -1,10 +1,6 @@
 import 'package:path/path.dart' as p;
 import '../../../../system/string.dart' as string;
 
-void main() {
-  print(PathUtils.ensureTrailingSlash('c:\\test'));
-}
-
 class PathUtils {
   static String ensureTrailingSlash(String path) {
     if (!string.isNullOrEmpty(path) &&

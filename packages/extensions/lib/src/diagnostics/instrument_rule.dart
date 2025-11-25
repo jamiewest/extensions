@@ -28,7 +28,7 @@ class InstrumentRule {
   /// Gets the [MeterScope].
   int get scopes {
     if (_scopes.hasFlag(MeterScope.none)) {
-      // TODO: Visit when ArgumentOutOfRangeException is added.
+      // TODO(jamiewest): Visit when ArgumentOutOfRangeException is added.
       // throw ArgumentOutOfRangeException();
     }
     return _scopes;

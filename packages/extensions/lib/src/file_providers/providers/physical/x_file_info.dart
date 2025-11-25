@@ -1,10 +1,7 @@
 import 'dart:io' as io;
-import 'dart:io' show File;
 
 import 'package:cross_file/cross_file.dart';
-import 'package:file/file.dart' show File;
 
-import '../../../../file_providers.dart' show File;
 import '../../file_info.dart';
 
 /// Represents a file using cross_file's XFile for cross-platform support.
