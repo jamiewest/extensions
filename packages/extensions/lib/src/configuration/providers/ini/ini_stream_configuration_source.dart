@@ -1,5 +1,9 @@
+import '../../../../configuration.dart' show ConfigurationSource;
+import '../../../../configuration_io.dart' show ConfigurationSource;
+import '../../../../io.dart' show ConfigurationSource;
 import '../../configuration_builder.dart';
 import '../../configuration_provider.dart';
+import '../../configuration_source.dart' show ConfigurationSource;
 import '../../stream_configuration_source.dart';
 import 'ini_stream_configuration_provider.dart';
 

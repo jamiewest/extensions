@@ -1,7 +1,10 @@
 import 'dart:io' as io;
+import 'dart:io' show File;
 
 import 'package:cross_file/cross_file.dart';
+import 'package:file/file.dart' show File;
 
+import '../../../../file_providers.dart' show File;
 import '../../file_info.dart';
 
 /// Represents a file using cross_file's XFile for cross-platform support.
@@ -14,7 +17,7 @@ class XFileInfo implements FileInfo {
   /// Creates an [XFileInfo] from an [XFile].
   XFileInfo(this._file) : _ioFile = null;
 
-  /// Creates an [XFileInfo] from a Dart IO [File].
+  /// Creates an [XFileInfo] from a Dart IO [io.File].
   ///
   /// This constructor is only available on VM platforms.
   XFileInfo.fromFile(io.File file)

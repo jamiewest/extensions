@@ -29,8 +29,7 @@ class FakeFileInfo implements FileInfo {
 }
 
 class FakeDirectoryContents extends DirectoryContents {
-  FakeDirectoryContents(List<FileInfo> entries, {this.exists = true})
-      : super(entries);
+  FakeDirectoryContents(List<FileInfo> super.entries, {this.exists = true});
 
   @override
   final bool exists;

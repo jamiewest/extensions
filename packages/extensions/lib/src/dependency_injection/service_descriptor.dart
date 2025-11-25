@@ -110,7 +110,7 @@ class ServiceDescriptor {
 
   @override
   String toString() {
-    String lifetimeText = '''ServiceType: ${serviceType.toString()} 
+    var lifetimeText = '''ServiceType: ${serviceType.toString()} 
         Lifetime: ${lifetime.toString()} ''';
 
     if (isKeyedService) {

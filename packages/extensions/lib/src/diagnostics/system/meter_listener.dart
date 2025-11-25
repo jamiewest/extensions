@@ -12,7 +12,7 @@ typedef MeasurementCallback<T> = void Function(
 /// MeterListener is class used to listen to the metrics instrument
 /// measurements recording.
 class MeterListener implements Disposable {
-  bool _disposed = false;
+  final bool _disposed = false;
 
   /// Creates a MeterListener object.
   MeterListener();

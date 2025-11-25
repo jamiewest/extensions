@@ -3,7 +3,6 @@ import 'dart:convert';
 import '../../configuration_provider.dart';
 import '../../stream_configuration_provider.dart';
 import 'xml_configuration_parser.dart';
-import 'xml_stream_configuration_source.dart';
 
 /// XML configuration provider that reads from a stream.
 ///

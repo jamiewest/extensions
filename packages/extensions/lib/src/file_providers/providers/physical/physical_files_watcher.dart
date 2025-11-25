@@ -86,12 +86,10 @@ class PhysicalFilesWatcher implements Disposable {
     return _createFileToken(fullPath);
   }
 
-  bool _isWildcardPattern(String pattern) {
-    return pattern.contains('*') ||
+  bool _isWildcardPattern(String pattern) => pattern.contains('*') ||
         pattern.contains('?') ||
         pattern.contains('[') ||
         pattern.contains('{');
-  }
 
   IChangeToken _createFileToken(String filePath) {
     if (_usePolling || _watcher == null) {

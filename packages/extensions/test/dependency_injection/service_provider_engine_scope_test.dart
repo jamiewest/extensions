@@ -33,7 +33,7 @@ void main() {
       (s as Disposable).dispose();
 
       expect(() => sp.getRequiredService<ServiceProvider>(),
-          throwsA(TypeMatcher<ObjectDisposedException>()));
+          throwsA(const TypeMatcher<ObjectDisposedException>()));
     });
   });
 }

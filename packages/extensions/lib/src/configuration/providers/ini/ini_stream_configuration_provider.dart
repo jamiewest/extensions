@@ -3,7 +3,6 @@ import 'dart:convert';
 import '../../configuration_provider.dart';
 import '../../stream_configuration_provider.dart';
 import 'ini_configuration_parser.dart';
-import 'ini_stream_configuration_source.dart';
 
 /// INI configuration provider that reads from a stream.
 ///

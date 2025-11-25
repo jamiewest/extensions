@@ -22,17 +22,17 @@ void main() {
       );
 
       expect(() => serviceCollection[0] = descriptor2,
-          throwsA(TypeMatcher<InvalidOperationException>()));
+          throwsA(const TypeMatcher<InvalidOperationException>()));
       expect(() => serviceCollection.clear(),
-          throwsA(TypeMatcher<InvalidOperationException>()));
+          throwsA(const TypeMatcher<InvalidOperationException>()));
       expect(() => serviceCollection.remove(descriptor),
-          throwsA(TypeMatcher<InvalidOperationException>()));
+          throwsA(const TypeMatcher<InvalidOperationException>()));
       expect(() => serviceCollection.add(descriptor),
-          throwsA(TypeMatcher<InvalidOperationException>()));
+          throwsA(const TypeMatcher<InvalidOperationException>()));
       expect(() => serviceCollection.insert(0, descriptor2),
-          throwsA(TypeMatcher<InvalidOperationException>()));
+          throwsA(const TypeMatcher<InvalidOperationException>()));
       expect(() => serviceCollection.removeAt(0),
-          throwsA(TypeMatcher<InvalidOperationException>()));
+          throwsA(const TypeMatcher<InvalidOperationException>()));
 
       expect(serviceCollection.isReadOnly, isTrue);
       expect(serviceCollection.length, equals(1));

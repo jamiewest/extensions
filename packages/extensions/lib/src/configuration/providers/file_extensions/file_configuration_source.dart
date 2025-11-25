@@ -5,6 +5,7 @@ import '../../../system/string.dart' as string;
 import '../../configuration_builder.dart';
 import '../../configuration_provider.dart';
 import '../../configuration_source.dart';
+import 'file_configuration_provider.dart' show FileConfigurationProvider;
 
 /// Represents a base class for file based [ConfigurationSource].
 abstract class FileConfigurationSource implements ConfigurationSource {

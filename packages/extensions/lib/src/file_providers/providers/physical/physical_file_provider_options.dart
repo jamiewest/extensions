@@ -1,4 +1,6 @@
+import '../../../../file_providers.dart' show PhysicalFileProvider;
 import 'exclusion_filters.dart';
+import 'physical_file_provider.dart' show PhysicalFileProvider;
 
 /// Options for a [PhysicalFileProvider].
 class PhysicalFileProviderOptions {
@@ -37,12 +39,10 @@ class PhysicalFileProviderOptions {
     ExclusionFilters? exclusionFilters,
     bool? usePollingFileWatcher,
     bool? useActivePolling,
-  }) {
-    return PhysicalFileProviderOptions(
+  }) => PhysicalFileProviderOptions(
       exclusionFilters: exclusionFilters ?? this.exclusionFilters,
       usePollingFileWatcher:
           usePollingFileWatcher ?? this.usePollingFileWatcher,
       useActivePolling: useActivePolling ?? this.useActivePolling,
     );
-  }
 }

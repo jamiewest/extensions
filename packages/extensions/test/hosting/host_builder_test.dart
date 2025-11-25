@@ -102,7 +102,7 @@ void main() {
       var host = hostBuilder.build();
 
       expect(
-        (host.services.getRequiredService<HostEnvironment>()).environmentName,
+        host.services.getRequiredService<HostEnvironment>().environmentName,
         equals('EnvB'),
       );
     });
@@ -174,7 +174,7 @@ void main() {
       var host = DefaultHostBuilder().useContentRoot('testroot').build();
 
       var basePath =
-          (host.services.getRequiredService<HostEnvironment>()).contentRootPath;
+          host.services.getRequiredService<HostEnvironment>().contentRootPath;
 
       expect(p.isAbsolute(basePath), isTrue);
       expect(basePath, endsWith('${p.separator}testroot'));

@@ -62,7 +62,7 @@ class PhysicalFileProvider implements FileProvider, Disposable {
       return NotFoundFileInfo(path);
     }
 
-    var fileInfo = LocalFileSystem().file(path);
+    var fileInfo = const LocalFileSystem().file(path);
 
     return PhysicalFileInfo(fileInfo);
   }

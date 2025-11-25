@@ -23,13 +23,11 @@ class FactoryCallSite extends ServiceCallSite {
     Type serviceType,
     Object serviceKey,
     Object Function(ServiceProvider serviceProvider, Object serviceKey) factory,
-  ) {
-    return FactoryCallSite(
+  ) => FactoryCallSite(
       cache,
       serviceType,
       (sp) => factory(sp, serviceKey),
     );
-  }
 
   FactoryCallback get factory => _factory;
 

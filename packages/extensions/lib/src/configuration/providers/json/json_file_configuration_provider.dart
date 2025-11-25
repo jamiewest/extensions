@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import '../file_extensions/file_configuration_provider.dart';
 import 'json_configuration_parser.dart';
-import 'json_file_configuration_source.dart';
 
 /// A JSON file based [FileConfigurationProvider].
 class JsonFileConfigurationProvider extends FileConfigurationProvider {
