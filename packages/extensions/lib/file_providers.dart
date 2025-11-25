@@ -1,6 +1,6 @@
 /// Providers abstractions over the file system that are used throughout
 /// the framework.
-library file_providers;
+library;
 
 export 'package:cross_file/cross_file.dart';
 export 'package:file/file.dart';

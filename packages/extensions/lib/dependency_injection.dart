@@ -1,6 +1,6 @@
 /// Provides classes that support the implementation of the dependency
 /// injection software design pattern.
-library dependency_injection;
+library;
 
 export 'src/dependency_injection/async_service_scope.dart';
 export 'src/dependency_injection/default_service_provider_factory.dart';

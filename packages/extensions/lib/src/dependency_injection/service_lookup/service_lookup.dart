@@ -1,4 +1,4 @@
-library extensions.dependency_injection.service_lookup;
+library;
 
 import 'dart:math';
 

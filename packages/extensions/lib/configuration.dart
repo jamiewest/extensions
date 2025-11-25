@@ -1,7 +1,7 @@
 /// Configuration is performed using one or more configuration providers.
 /// Configuration providers read configuration data from key-value pairs
 /// using a variety of configuration sources:
-library configuration;
+library;
 
 export 'src/configuration/chained_builder_extensions.dart';
 export 'src/configuration/chained_configuration_provider.dart';

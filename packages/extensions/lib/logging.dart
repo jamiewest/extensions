@@ -1,5 +1,5 @@
 /// Contains classes and abstractions for configuring ILogger.
-library logging;
+library;
 
 export 'src/logging/default_logger_level_configure_options.dart';
 export 'src/logging/event_id.dart';

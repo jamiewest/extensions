@@ -1,6 +1,6 @@
 /// Contains isolated types that are used in many places within the extensions
 /// package.
-library primitives;
+library;
 
 export 'src/primitives/aggregate_exception.dart' show AggregateException;
 export 'src/primitives/cancellation_change_token.dart'

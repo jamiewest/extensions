@@ -1,5 +1,5 @@
 /// HTTP client abstractions modeled after Microsoft.Extensions.Http.
-library http_extensions;
+library;
 
 export 'src/http/delegating_handler.dart';
 export 'src/http/http_client_builder.dart';

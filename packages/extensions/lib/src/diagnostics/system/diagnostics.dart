@@ -1,4 +1,4 @@
-library diagnostics;
+library;
 
 import '../../system/disposable.dart';
 import 'meter_options.dart';

@@ -33,7 +33,8 @@ class ArgumentException extends SystemException {
     }
   }
 
-  /// Throws an exception if <paramref name="argument"/> is null, empty, or consists only of white-space characters.
+  /// Throws an exception if [argument] is null, empty, or consists only of
+  /// white-space characters.
   static void throwIfNullOrWhitespace(String? argument, String? paramName) {
     if (isNullOrWhitespace(argument)) {
       _throwNullOrWhitespaceException(argument, paramName);

@@ -1,5 +1,5 @@
 /// Provides types used for implementing the options pattern.
-library options;
+library;
 
 export 'src/options/configuration_change_token_source.dart';
 export 'src/options/configure_named_options.dart' show ConfigureNamedOptions;

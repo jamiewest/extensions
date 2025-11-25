@@ -3,8 +3,8 @@ import 'instrument_rule.dart';
 import 'system/diagnostics.dart';
 
 /// This is used by [InstrumentRule] to distinguish between meters created
-/// via [Meter] constructors ([global])
-/// and those created via Dependency Injection with <see cref="IMeterFactory.Create(MeterOptions)"/> (<see cref="Local"/>)."/>.
+/// via [Meter] constructors ([global]) and those created via Dependency
+/// Injection with `IMeterFactory.Create(MeterOptions)` ([local]).
 enum MeterScope with EnumFlags {
   /// No scope is specified. This should not be used.
   none,

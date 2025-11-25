@@ -2,7 +2,7 @@
 ///
 /// This library enables pattern-based file matching similar to
 /// Microsoft.Extensions.FileSystemGlobbing.
-library file_system_globbing;
+library;
 
 export 'package:glob/glob.dart';
 

@@ -1,6 +1,6 @@
 /// Provides classes that allow you to encapsulate an app's resources and
 /// lifetime functionality.
-library hosting;
+library;
 
 import 'src/hosting/host_application_builder.dart';
 import 'src/hosting/host_application_builder_settings.dart';

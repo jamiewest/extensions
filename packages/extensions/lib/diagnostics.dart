@@ -1,6 +1,6 @@
 /// contains the default implementation of meter factory and extension
 /// methods for registering this default meter factory to the DI.
-library diagnostics;
+library;
 
 import 'dart:collection';
 
