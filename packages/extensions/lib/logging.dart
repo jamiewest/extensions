@@ -11,6 +11,7 @@ export 'src/logging/logger_factory.dart';
 export 'src/logging/logger_factory_extensions.dart';
 export 'src/logging/logger_factory_options.dart';
 export 'src/logging/logger_filter_options.dart';
+export 'src/logging/logger_filter_rule.dart';
 export 'src/logging/logger_provider.dart';
 export 'src/logging/logging_builder.dart';
 export 'src/logging/logging_builder_extensions.dart';

@@ -1,3 +1,7 @@
+## 0.3.15
+
+* Changed logging scope for lifetime messages and added additional tests.
+
 ## 0.3.14
 
 * Updates.

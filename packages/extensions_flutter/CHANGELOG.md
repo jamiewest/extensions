@@ -1,3 +1,8 @@
+## 0.3.9
+
+* Added exports for additional extensions package modules: configuration, diagnostics, file_providers, file_system_globbing, http, options, primitives, and system.
+* Updated dependency on extensions to ^0.3.15.
+
 ## 0.3.8
 
 * Hardened error handling: log full Flutter/platform errors (with stack/context) and delegate to previous handlers without swallowing crashes.

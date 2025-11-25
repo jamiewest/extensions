@@ -3,6 +3,7 @@ export 'src/system/disposable.dart';
 export 'src/system/enum.dart';
 export 'src/system/exceptions/argument_exception.dart';
 export 'src/system/exceptions/argument_null_exception.dart';
+export 'src/system/exceptions/object_disposed_exception.dart';
 export 'src/system/exceptions/operation_cancelled_exception.dart';
 export 'src/system/exceptions/system_exception.dart';
 export 'src/system/string.dart';
