@@ -171,9 +171,8 @@ void main() {
         var callbackInvoked = false;
         final disposable = composite.registerChangeCallback((_) {
           callbackInvoked = true;
-        }, null);
-
-        disposable.dispose();
+        }, null)
+          ..dispose();
         cts.cancel();
 
         expect(callbackInvoked, isFalse);
@@ -198,9 +197,11 @@ void main() {
 
     group('Multiple Tokens', () {
       test('CompositeToken_WithManyTokens_InvokesCallbackOnce', () {
-        final tokenSources = List.generate(10, (_) => CancellationTokenSource());
-        final tokens =
-            tokenSources.map((cts) => CancellationChangeToken(cts.token)).toList();
+        final tokenSources =
+            List.generate(10, (_) => CancellationTokenSource());
+        final tokens = tokenSources
+            .map((cts) => CancellationChangeToken(cts.token))
+            .toList();
         final composite = CompositeChangeToken(tokens);
 
         var callbackCount = 0;
@@ -221,8 +222,7 @@ void main() {
         final cts = CancellationTokenSource();
         final changingToken = CancellationChangeToken(cts.token);
 
-        final composite =
-            CompositeChangeToken([unchangedToken, changingToken]);
+        final composite = CompositeChangeToken([unchangedToken, changingToken]);
 
         expect(composite.hasChanged, isFalse);
 
@@ -269,7 +269,7 @@ void main() {
         disposable.dispose();
 
         // Should work without errors (resources cleaned up properly)
-        expect(() => disposable.dispose(), returnsNormally);
+        expect(disposable.dispose, returnsNormally);
       });
     });
 

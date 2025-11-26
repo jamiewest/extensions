@@ -16,8 +16,7 @@ void main() {
       });
 
       test('Dispose_CanBeCalledMultipleTimes', () {
-        final factory = LoggerFactory()
-          ..dispose();
+        final factory = LoggerFactory()..dispose();
         expect(factory.dispose, returnsNormally);
       });
 
@@ -25,8 +24,9 @@ void main() {
         final factory = LoggerFactory();
         final provider = TestLoggerProvider();
 
-        factory.addProvider(provider);
-        factory.dispose();
+        factory
+          ..addProvider(provider)
+          ..dispose();
 
         expect(provider.isDisposed, isTrue);
       });
@@ -77,7 +77,8 @@ void main() {
     group('Provider Management', () {
       // TODO: Fix implementation bug in LoggerFactory.addProvider
       // The implementation tries to set loggerInformation[newLoggerIndex] where
-      // newLoggerIndex = length, which causes RangeError. Should use .add() instead.
+      // newLoggerIndex = length, which causes RangeError. Should use .add()
+      // instead.
       test('AddProvider_CreatesLoggersForExistingCategories', () {
         final provider1 = TestLoggerProvider();
         final factory = LoggerFactory([provider1])
@@ -92,7 +93,6 @@ void main() {
           throwsRangeError,
         );
       }, skip: 'Implementation bug: addProvider uses invalid list index');
-
 
       test('AddProvider_NewLoggersUseAllProviders', () {
         final provider1 = TestLoggerProvider();
@@ -162,8 +162,7 @@ void main() {
 
       test('CreateLogger_FilterAboveCriticalExcludesLogger', () {
         final provider = TestLoggerProvider();
-        final filterOptions = LoggerFilterOptions()
-          ..minLevel = LogLevel.none;
+        final filterOptions = LoggerFilterOptions()..minLevel = LogLevel.none;
 
         final factory = LoggerFactory(
           [provider],
@@ -177,8 +176,7 @@ void main() {
 
       test('CreateLogger_CaptureScopes_EnablesScopeLoggers', () {
         final provider = TestLoggerProvider();
-        final filterOptions = LoggerFilterOptions()
-          ..captureScopes = true;
+        final filterOptions = LoggerFilterOptions()..captureScopes = true;
 
         final factory = LoggerFactory(
           [provider],
@@ -191,8 +189,7 @@ void main() {
 
       test('CreateLogger_NoCaptureScopes_DisablesScopeLoggers', () {
         final provider = TestLoggerProvider();
-        final filterOptions = LoggerFilterOptions()
-          ..captureScopes = false;
+        final filterOptions = LoggerFilterOptions()..captureScopes = false;
 
         final factory = LoggerFactory(
           [provider],

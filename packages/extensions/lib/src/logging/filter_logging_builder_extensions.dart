@@ -1,7 +1,6 @@
 import '../../logging.dart';
 import '../dependency_injection/service_collection.dart';
 import '../options/options_service_collection_extensions.dart';
-import 'logger_filter_rule.dart';
 import 'logger_information.dart';
 
 typedef CategoryLevelFilterAction = bool Function(

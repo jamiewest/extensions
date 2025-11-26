@@ -34,6 +34,8 @@ class PhysicalFileProvider implements FileProvider, Disposable {
         _watcher = PhysicalFilesWatcher(
           p.absolute(root),
           !(options?.usePollingFileWatcher ?? false),
+          pollingInterval:
+              options?.pollingInterval ?? const Duration(seconds: 4),
         ) {
     if (!p.isAbsolute(root)) {
       throw ArgumentError.value(
@@ -62,7 +64,7 @@ class PhysicalFileProvider implements FileProvider, Disposable {
       return NotFoundFileInfo(path);
     }
 
-    var fileInfo = const LocalFileSystem().file(path);
+    var fileInfo = const LocalFileSystem().file(fullPath);
 
     return PhysicalFileInfo(fileInfo);
   }

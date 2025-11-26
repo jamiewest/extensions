@@ -2,7 +2,6 @@ import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/src/dependency_injection/service_lookup/service_cache_key.dart';
 import 'package:extensions/src/dependency_injection/service_lookup/service_identifier.dart';
 import 'package:extensions/src/dependency_injection/service_lookup/service_lookup.dart';
-import 'package:extensions/src/system/exceptions/object_disposed_exception.dart';
 import 'package:extensions/system.dart';
 import 'package:test/test.dart';
 

@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:extensions/file_providers.dart';
-import 'package:extensions/system.dart';
 import 'package:extensions_flutter/extensions_flutter.dart';
 import 'package:extensions_flutter/src/flutter_application_wrapper.dart';
 import 'package:extensions_flutter/src/flutter_error_handler.dart';
@@ -34,28 +32,25 @@ class _TestErrorHandler implements ErrorHandler {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test(
-    'waitForStart throws when cancellation is already requested',
-    () async {
-      final lifetime = FlutterApplicationLifetime(NullLogger());
-      final flutterLifetime = FlutterLifetime(
-        FlutterApplicationWrapper(const SizedBox.shrink()),
-        _TestErrorHandler(),
-        _TestHostEnvironment(),
-        lifetime,
-        const NullLoggerFactory(),
-      );
+  test('waitForStart throws when cancellation is already requested', () async {
+    final lifetime = FlutterApplicationLifetime(NullLogger());
+    final flutterLifetime = FlutterLifetime(
+      FlutterApplicationWrapper(const SizedBox.shrink()),
+      _TestErrorHandler(),
+      _TestHostEnvironment(),
+      lifetime,
+      const NullLoggerFactory(),
+    );
 
-      await expectLater(
-        flutterLifetime.waitForStart(CancellationToken(true)),
-        throwsA(isA<OperationCanceledException>()),
-      );
+    await expectLater(
+      flutterLifetime.waitForStart(CancellationToken(true)),
+      throwsA(isA<OperationCanceledException>()),
+    );
 
-      expect(lifetime.applicationPaused, isEmpty);
-      expect(lifetime.applicationResumed, isEmpty);
-      expect(lifetime.applicationInactive, isEmpty);
-      expect(lifetime.applicationHidden, isEmpty);
-      expect(lifetime.applicationDetached, isEmpty);
-    },
-  );
+    expect(lifetime.applicationPaused, isEmpty);
+    expect(lifetime.applicationResumed, isEmpty);
+    expect(lifetime.applicationInactive, isEmpty);
+    expect(lifetime.applicationHidden, isEmpty);
+    expect(lifetime.applicationDetached, isEmpty);
+  });
 }

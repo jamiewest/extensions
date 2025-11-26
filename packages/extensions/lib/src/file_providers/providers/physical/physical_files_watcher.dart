@@ -18,6 +18,7 @@ import 'polling_wildcard_change_token.dart';
 class PhysicalFilesWatcher implements Disposable {
   final String _root;
   final bool _usePolling;
+  final Duration _pollingInterval;
   final CancellationTokenSource _cancellationTokenSource =
       CancellationTokenSource();
   Watcher? _watcher;
@@ -27,11 +28,14 @@ class PhysicalFilesWatcher implements Disposable {
   /// [root] - The root directory to watch
   /// [useEventBasedWatcher] - If true, uses event-based file watching.
   /// If false, uses polling.
+  /// [pollingInterval] - The interval at which to poll for changes.
   PhysicalFilesWatcher(
     String root,
-    bool useEventBasedWatcher,
-  )   : _root = root,
-        _usePolling = !useEventBasedWatcher {
+    bool useEventBasedWatcher, {
+    Duration pollingInterval = const Duration(seconds: 4),
+  })  : _root = root,
+        _usePolling = !useEventBasedWatcher,
+        _pollingInterval = pollingInterval {
     if (useEventBasedWatcher) {
       _initializeEventWatcher();
     }
@@ -95,6 +99,7 @@ class PhysicalFilesWatcher implements Disposable {
     if (_usePolling || _watcher == null) {
       return PollingFileChangeToken(
         File(filePath),
+        pollingInterval: _pollingInterval,
         cancellationTokenSource: _cancellationTokenSource,
       );
     }
@@ -103,6 +108,7 @@ class PhysicalFilesWatcher implements Disposable {
     // but could be enhanced to use the watcher's events
     return PollingFileChangeToken(
       File(filePath),
+      pollingInterval: _pollingInterval,
       cancellationTokenSource: _cancellationTokenSource,
     );
   }
@@ -112,6 +118,7 @@ class PhysicalFilesWatcher implements Disposable {
       return PollingWildcardChangeToken(
         _root,
         pattern,
+        pollingInterval: _pollingInterval,
         cancellationTokenSource: _cancellationTokenSource,
       );
     }
@@ -121,6 +128,7 @@ class PhysicalFilesWatcher implements Disposable {
     return PollingWildcardChangeToken(
       _root,
       pattern,
+      pollingInterval: _pollingInterval,
       cancellationTokenSource: _cancellationTokenSource,
     );
   }

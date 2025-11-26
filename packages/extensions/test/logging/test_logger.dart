@@ -173,13 +173,11 @@ class ThrowingLoggerProvider implements LoggerProvider {
   final bool throwOnBeginScope;
 
   @override
-  Logger createLogger(String categoryName) {
-    return ThrowingLogger(
-      throwOnLog: throwOnLog,
-      throwOnIsEnabled: throwOnIsEnabled,
-      throwOnBeginScope: throwOnBeginScope,
-    );
-  }
+  Logger createLogger(String categoryName) => ThrowingLogger(
+        throwOnLog: throwOnLog,
+        throwOnIsEnabled: throwOnIsEnabled,
+        throwOnBeginScope: throwOnBeginScope,
+      );
 
   @override
   void dispose() {}

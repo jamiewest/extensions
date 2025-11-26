@@ -10,9 +10,8 @@ void main() {
       test('Log_CallsProviderLogger', () {
         final provider = TestLoggerProvider();
         final factory = LoggerFactory([provider]);
-        final logger = factory.createLogger('TestCategory');
-
-        logger.logInformation('Test message');
+        final logger = factory.createLogger('TestCategory')
+          ..logInformation('Test message');
 
         final testLogger = provider.loggers['TestCategory'] as TestLogger;
         expect(testLogger.loggedMessages, hasLength(1));
@@ -49,10 +48,9 @@ void main() {
       test('Log_BelowMinLevel_DoesNotLog', () {
         final provider = FilterableLoggerProvider(LogLevel.warning);
         final factory = LoggerFactory([provider]);
-        final logger = factory.createLogger('TestCategory');
-
-        logger.logDebug('Debug message');
-        logger.logInformation('Info message');
+        final logger = factory.createLogger('TestCategory')
+          ..logDebug('Debug message')
+          ..logInformation('Info message');
 
         final testLogger = provider.loggers['TestCategory']!;
         expect(testLogger.loggedMessages, isEmpty);
@@ -61,11 +59,10 @@ void main() {
       test('Log_AtOrAboveMinLevel_Logs', () {
         final provider = FilterableLoggerProvider(LogLevel.warning);
         final factory = LoggerFactory([provider]);
-        final logger = factory.createLogger('TestCategory');
-
-        logger.logWarning('Warning message');
-        logger.logError('Error message');
-        logger.logCritical('Critical message');
+        final logger = factory.createLogger('TestCategory')
+          ..logWarning('Warning message')
+          ..logError('Error message')
+          ..logCritical('Critical message');
 
         final testLogger = provider.loggers['TestCategory']!;
         expect(testLogger.loggedMessages, hasLength(3));
@@ -197,9 +194,8 @@ void main() {
         final throwingProvider = ThrowingLoggerProvider(throwOnLog: true);
         final workingProvider = FilterableLoggerProvider();
         final factory = LoggerFactory([throwingProvider, workingProvider]);
-        final logger = factory.createLogger('TestCategory');
-
-        logger.logInformation('Test message');
+        final logger = factory.createLogger('TestCategory')
+          ..logInformation('Test message');
 
         // Working provider should still receive the log
         final testLogger = workingProvider.loggers['TestCategory']!;
@@ -213,9 +209,8 @@ void main() {
         final provider2 = FilterableLoggerProvider();
         final provider3 = FilterableLoggerProvider();
         final factory = LoggerFactory([provider1, provider2, provider3]);
-        final logger = factory.createLogger('TestCategory');
-
-        logger.logInformation('Test message');
+        final logger = factory.createLogger('TestCategory')
+          ..logInformation('Test message');
 
         expect(
           provider1.loggers['TestCategory']!.loggedMessages,
@@ -235,9 +230,8 @@ void main() {
         final provider1 = FilterableLoggerProvider(LogLevel.error);
         final provider2 = FilterableLoggerProvider(LogLevel.debug);
         final factory = LoggerFactory([provider1, provider2]);
-        final logger = factory.createLogger('TestCategory');
-
-        logger.logInformation('Test message');
+        final logger = factory.createLogger('TestCategory')
+          ..logInformation('Test message');
 
         // Only provider2 should log (provider1 requires Error or higher)
         expect(provider1.loggers['TestCategory']!.loggedMessages, isEmpty);
