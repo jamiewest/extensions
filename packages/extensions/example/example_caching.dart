@@ -128,11 +128,84 @@ void main() async {
     print('Current entry count: ${stats.currentEntryCount}');
   }
 
+  // Example 8: Alphabet caching with eviction callbacks
+  // Port of Microsoft.Extensions.Caching.Memory example
+  print('\n=== Example 8: Alphabet Caching with Eviction ===');
+  final alphabetCache = MemoryCache(MemoryCacheOptions());
+
+  const millisecondsDelayAfterAdd = 50;
+  const millisecondsAbsoluteExpiration = 750;
+
+  void onPostEviction(
+    Object key,
+    Object? value,
+    EvictionReason reason,
+    Object? state,
+  ) {
+    if (value is AlphabetLetter) {
+      print('${value.letter} was evicted for $reason.');
+    }
+  }
+
+  Future<void> iterateAlphabetAsync(
+    Future<void> Function(String) asyncFunc,
+  ) async {
+    for (var charCode = 'A'.codeUnitAt(0);
+        charCode <= 'Z'.codeUnitAt(0);
+        charCode++) {
+      final letter = String.fromCharCode(charCode);
+      await asyncFunc(letter);
+    }
+    print('');
+  }
+
+  // Add letters to cache with expiration
+  await iterateAlphabetAsync((letter) async {
+    final options = MemoryCacheEntryOptions()
+      ..absoluteExpirationRelativeToNow =
+          const Duration(milliseconds: millisecondsAbsoluteExpiration)
+      ..postEvictionCallbacks.add(
+        PostEvictionCallbackRegistration(
+          evictionCallback: onPostEviction,
+        ),
+      );
+
+    alphabetCache.set(letter, AlphabetLetter(letter), options);
+
+    print('$letter was cached.');
+
+    await Future<void>.delayed(
+      const Duration(milliseconds: millisecondsDelayAfterAdd),
+    );
+  });
+
+  // Read letters from cache (some may have expired)
+  await iterateAlphabetAsync((letter) async {
+    final value = alphabetCache.get<AlphabetLetter>(letter);
+    if (value != null) {
+      print('$letter is still in cache. ${value.message}');
+    }
+  });
+
   // Cleanup
   cache.dispose();
   limitedCache.dispose();
   distributedCache.dispose();
   statsCache.dispose();
+  alphabetCache.dispose();
 
   print('\n=== Examples Complete ===');
+}
+
+/// Record representing a letter in the alphabet with a descriptive message.
+class AlphabetLetter {
+  const AlphabetLetter(this.letter);
+
+  final String letter;
+
+  String get message {
+    final position = letter.codeUnitAt(0) - 'A'.codeUnitAt(0) + 1;
+    return "The '$letter' character is the $position letter in the "
+        'English alphabet.';
+  }
 }

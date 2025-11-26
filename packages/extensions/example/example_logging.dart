@@ -9,6 +9,7 @@ import 'package:extensions/logging.dart';
 void main() {
   LoggerFactory.create(
     (builder) => builder
+      //..addSimpleConsole()
       ..addConsole() // Use console logger to see output in terminal
       ..addFilter(
         level: LogLevel.trace, // Set to trace to see all log levels
