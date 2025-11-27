@@ -1,4 +1,6 @@
+import '../../caching.dart' show MemoryCacheOptions;
 import 'cache_entry.dart';
+import 'memory_cache_options.dart' show MemoryCacheOptions;
 import 'memory_cache_statistics.dart';
 
 /// Represents a local in-memory cache whose values are not serialized.

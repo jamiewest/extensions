@@ -1,7 +1,9 @@
-/// Contains classes and abstractions for caching data in memory and distributed systems.
+/// Contains classes and abstractions for caching data in memory and
+/// distributed systems.
 ///
-/// This library provides a comprehensive caching solution inspired by Microsoft.Extensions.Caching,
-/// offering both in-memory and distributed caching capabilities with features like:
+/// This library provides a comprehensive caching solution inspired by
+/// Microsoft.Extensions.Caching, offering both in-memory and distributed
+/// caching capabilities with features like:
 ///
 /// - Multiple expiration strategies (absolute, sliding, change token-based)
 /// - Priority-based eviction policies

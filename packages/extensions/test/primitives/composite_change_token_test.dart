@@ -358,14 +358,6 @@ class TestChangeToken implements IChangeToken {
       _callbacks.remove(callback);
     });
   }
-
-  void triggerChange() {
-    changed = true;
-    for (final callback in List.of(_callbacks)) {
-      callback(null);
-    }
-    _callbacks.clear();
-  }
 }
 
 /// Tracks callback registrations for testing lazy initialization.

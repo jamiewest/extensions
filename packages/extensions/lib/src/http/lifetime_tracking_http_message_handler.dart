@@ -9,8 +9,7 @@ import 'http_message_handler.dart';
 /// so (after the configured lifetime expires and there are no active requests).
 class LifetimeTrackingHttpMessageHandler extends DelegatingHandler {
   /// Creates a new [LifetimeTrackingHttpMessageHandler].
-  LifetimeTrackingHttpMessageHandler(HttpMessageHandler innerHandler)
-      : super(innerHandler);
+  LifetimeTrackingHttpMessageHandler(HttpMessageHandler super.innerHandler);
 
   @override
   void dispose() {

@@ -7,9 +7,7 @@ import 'distributed_cache_entry_options.dart';
 /// Extension methods for [IDistributedCache].
 extension DistributedCacheExtensions on IDistributedCache {
   /// Sets the value for [key] without options.
-  Future<void> setBytes(String key, Uint8List value) {
-    return set(key, value);
-  }
+  Future<void> setBytes(String key, Uint8List value) => set(key, value);
 
   /// Gets a string value from the cache with the given [key].
   ///

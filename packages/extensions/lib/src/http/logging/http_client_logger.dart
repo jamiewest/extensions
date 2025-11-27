@@ -1,4 +1,10 @@
+import 'dart:io' show HttpClient;
+
 import 'package:http/http.dart';
+
+import '../../../http.dart' show HttpClientFactory;
+
+import '../http_client_factory.dart' show HttpClientFactory;
 
 /// An abstraction for custom HTTP request logging for a named [HttpClient]
 /// instances returned by [HttpClientFactory].

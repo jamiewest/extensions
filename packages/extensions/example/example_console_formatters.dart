@@ -10,13 +10,11 @@ void main() {
 
   // Example 1: Basic Console Logger
   print('--- Example 1: Basic Console Logger (No Colors) ---');
-  final basicLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addConsole()
       ..addFilter(level: LogLevel.trace),
-  ).createLogger('BasicLogger');
-
-  basicLogger
+  ).createLogger('BasicLogger')
     ..logTrace('Trace message')
     ..logDebug('Debug message')
     ..logInformation('Information message')
@@ -26,13 +24,11 @@ void main() {
 
   print('\n--- Example 2: Simple Console Formatter (With Colors) ---');
   // Example 2: Simple Console Formatter with Colors
-  final simpleLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsole()
       ..addFilter(level: LogLevel.trace),
-  ).createLogger('SimpleLogger');
-
-  simpleLogger
+  ).createLogger('SimpleLogger')
     ..logTrace('Trace message with gray color')
     ..logDebug('Debug message with bright gray color')
     ..logInformation('Information message with bright white color')
@@ -42,31 +38,28 @@ void main() {
 
   print('\n--- Example 3: Simple Console with Custom Options ---');
   // Example 3: Simple Console with Custom Options
-  final customSimpleLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsoleWithOptions((options) {
-        options.colorBehavior = LoggerColorBehavior.enabled;
-        options.timestampFormat = 'timestamp';
-        options.singleLine = true; // Single line format
-        options.includeScopes = false;
+        options
+          ..colorBehavior = LoggerColorBehavior.enabled
+          ..timestampFormat = 'timestamp'
+          ..singleLine = true // Single line format
+          ..includeScopes = false;
       })
       ..addFilter(level: LogLevel.information),
-  ).createLogger('CustomSimple');
-
-  customSimpleLogger
+  ).createLogger('CustomSimple')
     ..logInformation('Single line format with timestamp')
     ..logWarning('Warnings are easier to spot with colors')
     ..logError('Errors stand out with bright red');
 
   print('\n--- Example 4: JSON Console Formatter ---');
   // Example 4: JSON Console Formatter
-  final jsonLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addJsonConsole()
       ..addFilter(level: LogLevel.debug),
-  ).createLogger('JsonLogger');
-
-  jsonLogger
+  ).createLogger('JsonLogger')
     ..logDebug('Debug message in JSON format')
     ..logInformation('Information message in JSON format')
     ..logWarning('Warning message in JSON format')
@@ -74,30 +67,27 @@ void main() {
 
   print('\n--- Example 5: JSON Console with Indentation ---');
   // Example 5: JSON Console with Pretty Printing
-  final prettyJsonLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addJsonConsoleWithOptions((options) {
-        options.useJsonIndentation = true; // Pretty print JSON
-        options.timestampFormat = 'timestamp';
-        options.includeScopes = true;
+        options
+          ..useJsonIndentation = true // Pretty print JSON
+          ..timestampFormat = 'timestamp'
+          ..includeScopes = true;
       })
       ..addFilter(level: LogLevel.information),
-  ).createLogger('PrettyJsonLogger');
-
-  prettyJsonLogger
+  ).createLogger('PrettyJsonLogger')
     ..logInformation('Pretty printed JSON log')
     ..logWarning('Warning with indented JSON')
     ..logError('Error with structured JSON output');
 
   print('\n--- Example 6: Systemd Console Formatter ---');
   // Example 6: Systemd Console Formatter
-  final systemdLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addSystemdConsole()
       ..addFilter(level: LogLevel.trace),
-  ).createLogger('SystemdLogger');
-
-  systemdLogger
+  ).createLogger('SystemdLogger')
     ..logTrace('Trace with priority 7')
     ..logDebug('Debug with priority 6')
     ..logInformation('Information with priority 5')
@@ -107,49 +97,45 @@ void main() {
 
   print('\n--- Example 7: Systemd with Timestamps ---');
   // Example 7: Systemd with Custom Options
-  final customSystemdLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addSystemdConsoleWithOptions((options) {
-        options.timestampFormat = 'timestamp';
-        options.includeScopes = true;
+        options
+          ..timestampFormat = 'timestamp'
+          ..includeScopes = true;
       })
       ..addFilter(level: LogLevel.information),
-  ).createLogger('CustomSystemd');
-
-  customSystemdLogger
+  ).createLogger('CustomSystemd')
     ..logInformation('Systemd log with timestamp')
     ..logWarning('Warning for systemd journal')
     ..logError('Error for systemd journal');
 
   print('\n--- Example 8: Logging with Event IDs ---');
   // Example 8: Structured Logging with Event IDs
-  final eventLogger = LoggerFactory.create(
+  LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsole()
       ..addFilter(level: LogLevel.information),
-  ).createLogger('EventLogger');
-
-  eventLogger.log(
-    logLevel: LogLevel.information,
-    eventId: EventId(1001, 'UserLogin'),
-    state: 'User successfully authenticated',
-    formatter: (state, error) => state,
-  );
-
-  eventLogger.log(
-    logLevel: LogLevel.warning,
-    eventId: EventId(2001, 'HighMemoryUsage'),
-    state: 'Memory usage exceeds 80%',
-    formatter: (state, error) => state,
-  );
-
-  eventLogger.log(
-    logLevel: LogLevel.error,
-    eventId: EventId(3001, 'DatabaseConnection'),
-    state: 'Failed to connect to database',
-    error: Exception('Connection timeout after 30 seconds'),
-    formatter: (state, error) => state,
-  );
+  ).createLogger('EventLogger')
+    ..log(
+      logLevel: LogLevel.information,
+      eventId: const EventId(1001, 'UserLogin'),
+      state: 'User successfully authenticated',
+      formatter: (state, error) => state,
+    )
+    ..log(
+      logLevel: LogLevel.warning,
+      eventId: const EventId(2001, 'HighMemoryUsage'),
+      state: 'Memory usage exceeds 80%',
+      formatter: (state, error) => state,
+    )
+    ..log(
+      logLevel: LogLevel.error,
+      eventId: const EventId(3001, 'DatabaseConnection'),
+      state: 'Failed to connect to database',
+      error: Exception('Connection timeout after 30 seconds'),
+      formatter: (state, error) => state,
+    );
 
   print('\n=== All Examples Complete ===');
 }

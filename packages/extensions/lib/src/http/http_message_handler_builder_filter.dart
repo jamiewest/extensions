@@ -1,3 +1,4 @@
+import 'default_http_client_factory.dart' show DefaultHttpClientFactory;
 import 'http_message_handler_builder.dart';
 
 /// Used by the [DefaultHttpClientFactory] to apply additional configuration

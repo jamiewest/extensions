@@ -231,7 +231,7 @@ void main() {
 
   group('MemoryCacheStatistics', () {
     test('Constructor sets all values', () {
-      final stats = MemoryCacheStatistics(
+      const stats = MemoryCacheStatistics(
         currentEntryCount: 10,
         currentEstimatedSize: 100,
         totalMisses: 5,
@@ -245,14 +245,14 @@ void main() {
     });
 
     test('Equality works correctly', () {
-      final stats1 = MemoryCacheStatistics(
+      const stats1 = MemoryCacheStatistics(
         currentEntryCount: 10,
         currentEstimatedSize: 100,
         totalMisses: 5,
         totalHits: 20,
       );
 
-      final stats2 = MemoryCacheStatistics(
+      const stats2 = MemoryCacheStatistics(
         currentEntryCount: 10,
         currentEstimatedSize: 100,
         totalMisses: 5,
@@ -264,7 +264,7 @@ void main() {
     });
 
     test('toString returns expected format', () {
-      final stats = MemoryCacheStatistics(
+      const stats = MemoryCacheStatistics(
         currentEntryCount: 10,
         currentEstimatedSize: 100,
         totalMisses: 5,

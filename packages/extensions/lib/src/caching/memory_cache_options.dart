@@ -1,3 +1,5 @@
+import '../../caching.dart' show MemoryCache, MemoryCacheEntryOptions;
+
 /// Provides configuration options for [MemoryCache].
 class MemoryCacheOptions {
   /// Creates a new instance of [MemoryCacheOptions].

@@ -21,13 +21,13 @@ void main() {
   // Define reusable log message delegates
   final logUserLogin = LoggerMessage.define2<String, int>(
     LogLevel.information,
-    EventId(1, 'UserLogin'),
+    const EventId(1, 'UserLogin'),
     'User {0} logged in from IP {1}',
   );
 
   final logProcessingTime = LoggerMessage.define1<int>(
     LogLevel.debug,
-    EventId(2, 'ProcessingTime'),
+    const EventId(2, 'ProcessingTime'),
     'Request processed in {0}ms',
   );
 
@@ -41,7 +41,7 @@ void main() {
 
   final logCriticalError = LoggerMessage.define1<String>(
     LogLevel.critical,
-    EventId(3, 'CriticalError'),
+    const EventId(3, 'CriticalError'),
     'Critical system error: {0}',
     options: LogDefineOptions(skipEnabledCheck: true),
   );
@@ -57,8 +57,9 @@ void main() {
 
   final scopedLogger = factory.createLogger('ScopedDemo');
   final scope = defineUserScope(scopedLogger, 'alice', 'sess-123');
-  scopedLogger.logInformation('Processing user request');
-  scopedLogger.logWarning('Rate limit approaching');
+  scopedLogger
+    ..logInformation('Processing user request')
+    ..logWarning('Rate limit approaching');
   scope?.dispose();
 
   // Example 5: BufferedLogRecord (data structure)
@@ -67,13 +68,13 @@ void main() {
   final bufferedRecord = BufferedLogRecordImpl(
     timestamp: DateTime.now(),
     logLevel: LogLevel.information,
-    eventId: EventId(100, 'BatchLog'),
+    eventId: const EventId(100, 'BatchLog'),
     formattedMessage: 'This is a buffered log entry',
     messageTemplate: 'This is a buffered log entry',
     attributes: [
-      MapEntry('UserId', '12345'),
-      MapEntry('Action', 'Purchase'),
-      MapEntry('Amount', 99.99),
+      const MapEntry('UserId', '12345'),
+      const MapEntry('Action', 'Purchase'),
+      const MapEntry('Amount', 99.99),
     ],
   );
 
@@ -86,8 +87,8 @@ void main() {
   // Example 6: NullTypedLogger
   print('\nExample 6: NullTypedLogger<T>');
 
-  final nullLogger = NullTypedLogger.instance<UserService>();
-  nullLogger.logInformation('This will not be logged');
+  NullTypedLogger.instance<UserService>()
+      .logInformation('This will not be logged');
   print('NullTypedLogger created (no output expected)');
 
   // Example 7: Multiple typed loggers

@@ -1,6 +1,10 @@
+import 'dart:io' show HttpClient;
+
 import 'package:http/http.dart';
 
+import '../../../http.dart' show HttpClientFactory;
 import '../../../system.dart';
+import '../http_client_factory.dart' show HttpClientFactory;
 import 'http_client_logger.dart';
 
 /// An abstraction for asyncronous custom HTTP request logging for a

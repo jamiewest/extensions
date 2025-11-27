@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'cache_entry.dart';
-import 'memory_cache.dart';
-import 'memory_cache_entry_options.dart';
 import 'memory/cache_entry_internal.dart';
 import 'memory/memory_cache_impl.dart';
+import 'memory_cache.dart';
+import 'memory_cache_entry_options.dart';
 
 /// Extension methods for [IMemoryCache].
 extension MemoryCacheExtensions on IMemoryCache {

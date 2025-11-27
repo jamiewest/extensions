@@ -75,7 +75,7 @@ void main() {
     });
 
     group('Provider Management', () {
-      // TODO: Fix implementation bug in LoggerFactory.addProvider
+      // TODO(extensions): Fix implementation bug in LoggerFactory.addProvider
       // The implementation tries to set loggerInformation[newLoggerIndex] where
       // newLoggerIndex = length, which causes RangeError. Should use .add()
       // instead.

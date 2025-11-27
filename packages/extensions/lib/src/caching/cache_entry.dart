@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import '../../caching.dart' show IMemoryCache;
 import 'cache_item_priority.dart';
+import 'memory_cache.dart' show IMemoryCache;
 import 'post_eviction_callback_registration.dart';
 
 /// Represents an entry in the [IMemoryCache].
