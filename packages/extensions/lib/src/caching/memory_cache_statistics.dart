@@ -19,7 +19,7 @@ class MemoryCacheStatistics {
   /// Gets the estimated size of the cache in bytes, or `null` if size tracking
   /// is not enabled.
   ///
-  /// The size is an estimate based on the [size] values set in
+  /// The size is an estimate based on the `size` values set in
   /// [MemoryCacheEntryOptions]. The units are arbitrary and defined by
   /// the application.
   final int? currentEstimatedSize;

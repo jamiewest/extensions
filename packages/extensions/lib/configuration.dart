@@ -5,7 +5,8 @@
 /// from multiple sources with a unified API.
 ///
 /// Configuration is performed using one or more configuration providers that
-/// read configuration data from key-value pairs using various sources including:
+/// read configuration data from key-value pairs using various sources
+/// including:
 ///
 /// - JSON files
 /// - XML files

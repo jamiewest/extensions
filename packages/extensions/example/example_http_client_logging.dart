@@ -152,8 +152,8 @@ Future<void> _makeDefaultRequest(HttpClientFactory factory) async {
     print('Response status: ${response.statusCode}');
 
     final body = await response.stream.bytesToString();
-    print(
-        'Response body preview: ${body.substring(0, body.length > 100 ? 100 : body.length)}...\n');
+    final previewLength = body.length > 100 ? 100 : body.length;
+    print('Response body preview: ${body.substring(0, previewLength)}...\n');
   } catch (e) {
     print('Request failed: $e');
   } finally {

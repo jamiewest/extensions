@@ -14,7 +14,8 @@ typedef PostEvictionDelegate = void Function(
   Object? state,
 );
 
-/// Registration for a callback that should be called when a cache entry is evicted.
+/// Registration for a callback that should be called when a cache entry
+/// is evicted.
 class PostEvictionCallbackRegistration {
   /// Creates a new instance of [PostEvictionCallbackRegistration].
   PostEvictionCallbackRegistration({

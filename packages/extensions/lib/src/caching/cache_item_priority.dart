@@ -13,6 +13,7 @@ enum CacheItemPriority {
   /// priority items during memory pressure cleanup.
   high,
 
-  /// Items with this priority will never be removed during memory pressure cleanup.
+  /// Items with this priority will never be removed during memory pressure
+  /// cleanup.
   neverRemove,
 }

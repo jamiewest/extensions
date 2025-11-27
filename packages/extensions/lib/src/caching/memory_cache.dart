@@ -14,7 +14,7 @@ abstract class IMemoryCache {
   /// Gets the value associated with [key] if it exists.
   ///
   /// Returns the cached value, or null if the key is not found.
-  /// Sets [value] to the cached value if found.
+  /// Sets `value` to the cached value if found.
   ///
   /// Returns true if the key was found.
   bool tryGetValue<T>(Object key, void Function(T? value) setValue);

@@ -1,6 +1,7 @@
 import '../../../logging.dart';
 import '../../../options.dart';
 import '../http_client_factory_options.dart';
+import '../http_client_factory_service_collection_extensions.dart';
 import '../http_message_handler_builder.dart';
 import '../http_message_handler_builder_filter.dart';
 import 'logging_http_message_handler.dart';

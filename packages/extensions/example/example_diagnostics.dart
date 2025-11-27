@@ -154,12 +154,10 @@ class _CustomMetricsListener implements MetricsListener {
     return (true, null);
   }
 
+  // Return empty handlers - in a real implementation,
+  // you would provide handlers for different instrument types
   @override
-  MeasurementHandlers getMeasurementHandlers() {
-    // Return empty handlers - in a real implementation,
-    // you would provide handlers for different instrument types
-    return MeasurementHandlers();
-  }
+  MeasurementHandlers getMeasurementHandlers() => MeasurementHandlers();
 
   @override
   bool measurementsCompleted(Instrument instrument, Object? userState) {

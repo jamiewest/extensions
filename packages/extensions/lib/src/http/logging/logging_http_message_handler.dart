@@ -25,7 +25,7 @@ class LoggingHttpMessageHandler extends DelegatingHandler {
   /// A function that determines whether to redact a header value.
   ///
   /// If this function returns `true` for a header name, the header value
-  /// will be replaced with "[REDACTED]" in logs.
+  /// will be replaced with "`REDACTED`" in logs.
   final bool Function(String)? shouldRedactHeaderValue;
 
   /// Redaction placeholder used when a header value should be hidden.
@@ -77,8 +77,7 @@ class LoggingHttpMessageHandler extends DelegatingHandler {
     }
 
     final headers = _formatHeaders(response.headers);
-    final message =
-        'HTTP ${request.method} ${request.url} responded '
+    final message = 'HTTP ${request.method} ${request.url} responded '
         '${response.statusCode} in ${elapsed.inMilliseconds}ms'
         '\nHeaders: $headers';
 
@@ -99,8 +98,7 @@ class LoggingHttpMessageHandler extends DelegatingHandler {
       return;
     }
 
-    final message =
-        'HTTP ${request.method} ${request.url} failed '
+    final message = 'HTTP ${request.method} ${request.url} failed '
         'after ${elapsed.inMilliseconds}ms';
 
     logger.log(
