@@ -1,5 +1,54 @@
-/// Provides classes that support the implementation of the dependency
-/// injection software design pattern.
+/// Provides a dependency injection container for managing services and
+/// their lifetimes.
+///
+/// This library implements the dependency injection pattern inspired by
+/// Microsoft.Extensions.DependencyInjection, enabling loose coupling and
+/// testability through constructor injection.
+///
+/// ## Service Lifetimes
+///
+/// Services can be registered with three different lifetimes:
+///
+/// - **Transient**: A new instance is created each time it's requested
+/// - **Scoped**: One instance per scope (typically per request)
+/// - **Singleton**: A single instance shared across the application
+///
+/// ## Basic Usage
+///
+/// Register and resolve services:
+///
+/// ```dart
+/// final services = ServiceCollection()
+///   ..addSingleton<ILogger, ConsoleLogger>()
+///   ..addScoped<IDatabase, SqlDatabase>()
+///   ..addTransient<IEmailService, SmtpEmailService>();
+///
+/// final provider = services.buildServiceProvider();
+/// final logger = provider.getRequiredService<ILogger>();
+/// ```
+///
+/// ## Keyed Services
+///
+/// Register multiple implementations with different keys:
+///
+/// ```dart
+/// services
+///   ..addKeyedSingleton<ICache, RedisCache>('redis')
+///   ..addKeyedSingleton<ICache, MemoryCache>('memory');
+///
+/// final redisCache = provider.getRequiredKeyedService<ICache>('redis');
+/// ```
+///
+/// ## Service Scopes
+///
+/// Create scoped services for request-scoped lifetimes:
+///
+/// ```dart
+/// await using((scope) async {
+///   final db = scope.serviceProvider.getRequiredService<IDatabase>();
+///   await db.saveChanges();
+/// }, provider.createScope());
+/// ```
 library;
 
 export 'src/dependency_injection/async_service_scope.dart';

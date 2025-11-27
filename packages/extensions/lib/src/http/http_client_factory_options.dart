@@ -25,6 +25,24 @@ class HttpClientFactoryOptions {
   /// external ownership scenarios.
   bool suppressHandlerDispose = false;
 
+  /// Gets or sets a function that determines whether to redact the HTTP header
+  /// value before logging.
+  ///
+  /// The function accepts a header name and returns `true` if the header value
+  /// should be redacted; otherwise, `false`.
+  ///
+  /// Common headers to redact include:
+  /// - Authorization
+  /// - Cookie
+  /// - Set-Cookie
+  /// - X-Api-Key
+  /// - X-Auth-Token
+  bool Function(String headerName)? shouldRedactHeaderValue;
+
+  /// Disables the default logging for HTTP requests made using clients created
+  /// by this factory.
+  bool suppressDefaultLogging = false;
+
   /// Actions that configure the message handler pipeline.
   final List<HttpMessageHandlerBuilderAction> httpMessageHandlerBuilderActions =
       <HttpMessageHandlerBuilderAction>[];

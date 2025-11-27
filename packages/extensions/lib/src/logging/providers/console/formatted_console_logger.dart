@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../../system/disposable.dart';
 import '../../event_id.dart';
 import '../../external_scope_provider.dart';
@@ -58,7 +60,7 @@ class FormattedConsoleLogger implements Logger {
     );
 
     if (buffer.isNotEmpty) {
-      print(buffer.toString().trimRight());
+      stdout.writeln(buffer.toString().trimRight());
     }
   }
 }

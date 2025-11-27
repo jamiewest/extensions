@@ -5,6 +5,7 @@ import '../dependency_injection/service_collection_descriptor_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
 import '../dependency_injection/service_provider.dart';
 import '../dependency_injection/service_provider_service_extensions.dart';
+import '../logging/logger_factory.dart';
 import '../options/options.dart';
 import '../options/options_monitor.dart';
 import '../options/options_service_collection_extensions.dart';
@@ -13,7 +14,9 @@ import 'default_http_message_handler_factory.dart';
 import 'http_client_builder.dart';
 import 'http_client_factory.dart';
 import 'http_client_factory_options.dart';
+import 'http_message_handler_builder_filter.dart';
 import 'http_message_handler_factory.dart';
+import 'logging/logging_http_message_handler_builder_filter.dart';
 
 /// ServiceCollection extensions for configuring HTTP clients.
 extension HttpClientFactoryServiceCollectionExtensions on ServiceCollection {
@@ -28,7 +31,7 @@ extension HttpClientFactoryServiceCollectionExtensions on ServiceCollection {
   }
 
   /// Registers a typed client bound to the named client.
-  HttpClientBuilder addHttpClientTyped<TClient extends Object>(
+  HttpClientBuilder addHttpClientTyped<TClient extends http.BaseClient>(
     TClient Function(
       http.BaseClient client,
       ServiceProvider services,
@@ -52,6 +55,21 @@ extension HttpClientFactoryServiceCollectionExtensions on ServiceCollection {
         (sp) => DefaultHttpClientFactory(
           sp,
           sp.getRequiredService<HttpMessageHandlerFactory>(),
+          sp.getRequiredService<OptionsMonitor<HttpClientFactoryOptions>>(),
+        ),
+      ),
+    );
+  }
+
+  /// Adds the logging filter to the HTTP client factory pipeline.
+  ///
+  /// This should be called after adding logging services to enable
+  /// automatic logging of HTTP requests.
+  void addHttpClientLogging() {
+    tryAddIterable(
+      ServiceDescriptor.singleton<HttpMessageHandlerBuilderFilter>(
+        (sp) => LoggingHttpMessageHandlerBuilderFilter(
+          sp.getRequiredService<LoggerFactory>(),
           sp.getRequiredService<OptionsMonitor<HttpClientFactoryOptions>>(),
         ),
       ),

@@ -1,6 +1,63 @@
-/// Configuration is performed using one or more configuration providers.
-/// Configuration providers read configuration data from key-value pairs
-/// using a variety of configuration sources:
+/// Contains classes for reading application configuration from various sources.
+///
+/// This library provides a flexible configuration system inspired by
+/// Microsoft.Extensions.Configuration, allowing applications to read settings
+/// from multiple sources with a unified API.
+///
+/// Configuration is performed using one or more configuration providers that
+/// read configuration data from key-value pairs using various sources including:
+///
+/// - JSON files
+/// - XML files
+/// - INI files
+/// - Command-line arguments
+/// - In-memory collections
+/// - Environment variables (via configuration_io.dart)
+///
+/// ## Basic Usage
+///
+/// Build a configuration from multiple sources:
+///
+/// ```dart
+/// final config = ConfigurationBuilder()
+///   ..addInMemoryCollection({
+///     'Logging:LogLevel:Default': 'Information',
+///     'AllowedHosts': '*',
+///   })
+///   ..addJsonFile('appsettings.json', optional: true)
+///   ..addCommandLine(args)
+///   .build();
+///
+/// // Read values
+/// final logLevel = config['Logging:LogLevel:Default'];
+/// final hosts = config['AllowedHosts'];
+/// ```
+///
+/// ## Configuration Sections
+///
+/// Access nested configuration as typed sections:
+///
+/// ```dart
+/// final loggingSection = config.getSection('Logging');
+/// final logLevel = loggingSection['LogLevel:Default'];
+///
+/// // Bind to objects
+/// final myOptions = loggingSection.get<LoggingOptions>();
+/// ```
+///
+/// ## Configuration Reloading
+///
+/// Monitor configuration changes with change tokens:
+///
+/// ```dart
+/// ChangeToken.onChangeTyped<IConfiguration>(
+///   () => config.getReloadToken(),
+///   (config) {
+///     print('Configuration reloaded!');
+///     // React to configuration changes
+///   },
+/// );
+/// ```
 library;
 
 export 'src/configuration/chained_builder_extensions.dart';

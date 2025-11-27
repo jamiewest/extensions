@@ -1,5 +1,34 @@
-/// contains the default implementation of meter factory and extension
-/// methods for registering this default meter factory to the DI.
+/// Provides metrics and instrumentation support for application telemetry.
+///
+/// This library contains the default implementation of meter factory and
+/// extension methods for registering metrics providers with dependency
+/// injection, inspired by Microsoft.Extensions.Diagnostics.
+///
+/// ## Metrics Collection
+///
+/// Create and use meters for collecting application metrics:
+///
+/// ```dart
+/// final meterFactory = provider.getRequiredService<MeterFactory>();
+/// final meter = meterFactory.create('MyApp.Metrics');
+///
+/// // Create a counter
+/// final requestCounter = meter.createCounter<int>('requests');
+/// requestCounter.add(1);
+///
+/// // Create a histogram
+/// final latencyHistogram = meter.createHistogram<double>('latency');
+/// latencyHistogram.record(42.5);
+/// ```
+///
+/// ## Metrics Listeners
+///
+/// Subscribe to metrics via listeners:
+///
+/// ```dart
+/// services.addMetrics(builder => builder
+///   .addListener<MyMetricsListener>());
+/// ```
 library;
 
 import 'dart:collection';

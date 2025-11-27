@@ -1,5 +1,70 @@
-/// Provides classes that allow you to encapsulate an app's resources and
-/// lifetime functionality.
+/// Provides classes for managing application lifetime, hosting
+/// background services, and coordinating application startup/shutdown.
+///
+/// This library implements hosting abstractions inspired by
+/// Microsoft.Extensions.Hosting, enabling structured application lifecycle
+/// management with dependency injection integration.
+///
+/// ## Basic Application Host
+///
+/// Create and run a hosted application:
+///
+/// ```dart
+/// final host = createDefaultBuilder(args)
+///   ..configureServices((context, services) {
+///     services.addSingleton<MyService>();
+///   })
+///   .build();
+///
+/// await host.run();
+/// ```
+///
+/// ## Background Services
+///
+/// Run long-lived background tasks:
+///
+/// ```dart
+/// class MyBackgroundService extends BackgroundService {
+///   @override
+///   Future<void> executeAsync(CancellationToken stoppingToken) async {
+///     while (!stoppingToken.isCancellationRequested) {
+///       // Do background work
+///       await Future.delayed(Duration(seconds: 10));
+///     }
+///   }
+/// }
+///
+/// services.addHostedService<MyBackgroundService>();
+/// ```
+///
+/// ## Application Lifetime
+///
+/// React to application lifecycle events:
+///
+/// ```dart
+/// final lifetime = host.services
+///   .getRequiredService<HostApplicationLifetime>();
+///
+/// lifetime.applicationStarted.register(() {
+///   print('Application started');
+/// });
+///
+/// lifetime.applicationStopping.register(() {
+///   print('Application is shutting down');
+/// });
+/// ```
+///
+/// ## Host Configuration
+///
+/// Configure the application environment and settings:
+///
+/// ```dart
+/// final host = createApplicationBuilder()
+///   ..environment.environmentName = 'Production'
+///   ..configuration.addJsonFile('appsettings.json')
+///   ..services.addLogging()
+///   .build();
+/// ```
 library;
 
 import 'src/hosting/host_application_builder.dart';

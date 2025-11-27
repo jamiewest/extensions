@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../../system/disposable.dart';
 import '../../event_id.dart';
 import '../../log_level.dart';
@@ -41,6 +43,6 @@ class ConsoleLogger implements Logger {
       message = '$message\n\n$error';
     }
 
-    print(message);
+    stdout.writeln(message);
   }
 }
