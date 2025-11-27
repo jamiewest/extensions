@@ -12,26 +12,33 @@ jobs:
   # against Dart dev.
   analyze:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        sdk: [stable]
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: ${{ matrix.sdk }}
+          channel: stable
       - id: Install
-        name: Install dependencies
+        name: Install dependencies (extensions)
         working-directory: ./packages/extensions
         run: dart pub get
-      - name: Check formatting
+      - name: Install dependencies (extensions_flutter)
+        working-directory: ./packages/extensions_flutter
+        run: flutter pub get
+      - name: Check formatting (extensions)
         working-directory: ./packages/extensions
         run: dart format --output=none --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
-      - name: Analyze code
+      - name: Check formatting (extensions_flutter)
+        working-directory: ./packages/extensions_flutter
+        run: dart format --output=none --set-exit-if-changed .
+        if: always() && steps.install.outcome == 'success'
+      - name: Analyze code (extensions)
         working-directory: ./packages/extensions
         run: dart analyze --fatal-infos
+        if: always() && steps.install.outcome == 'success'
+      - name: Analyze code (extensions_flutter)
+        working-directory: ./packages/extensions_flutter
+        run: flutter analyze
         if: always() && steps.install.outcome == 'success'
 
   # Run tests on a matrix consisting of two dimensions:
@@ -39,27 +46,28 @@ jobs:
   # 2. release channel: dev
   test:
     needs: analyze
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        # Add macos-latest and/or windows-latest if relevant for this package.
-        os: [ubuntu-latest]
-        sdk: [2.17.1, dev]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: dart-lang/setup-dart@v1.0
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: ${{ matrix.sdk }}
+          channel: stable
       - id: Install
-        name: Install dependencies
+        name: Install dependencies (extensions)
         working-directory: ./packages/extensions
         run: dart pub get
-      - name: Run VM tests
+      - name: Install dependencies (extensions_flutter)
+        working-directory: ./packages/extensions_flutter
+        run: flutter pub get
+      - name: Run VM tests (extensions)
         working-directory: ./packages/extensions
         run: dart test --platform vm
         if: always() && steps.install.outcome == 'success'
-      - name: Run Chrome tests
+      - name: Run Chrome tests (extensions)
         working-directory: ./packages/extensions
         run: dart test --platform chrome
+        if: always() && steps.install.outcome == 'success'
+      - name: Run Flutter tests (extensions_flutter)
+        working-directory: ./packages/extensions_flutter
+        run: flutter test
         if: always() && steps.install.outcome == 'success'
