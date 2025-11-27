@@ -1,7 +1,7 @@
 import 'package:extensions/configuration.dart';
 import 'package:test/test.dart';
 
-import '../common/configuration_provider_extensions.dart';
+import '../../common/configuration_provider_extensions.dart';
 
 void main() {
   group('IniConfigurationTest', () {

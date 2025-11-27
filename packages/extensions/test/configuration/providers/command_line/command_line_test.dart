@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:extensions/src/configuration/providers/command_line/command_line_configuration_provider.dart';
 import 'package:test/test.dart';
-import '../common/configuration_provider_extensions.dart';
+import '../../common/configuration_provider_extensions.dart';
 
 void main() {
   group('CommandLineTest', () {
