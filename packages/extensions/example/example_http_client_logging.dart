@@ -32,10 +32,8 @@ void main() async {
 
   // Configure a named HTTP client for GitHub API
   services.addHttpClient('GitHub').configureHttpClient((client, sp) {
-    if (client is http.Client) {
-      // Note: BaseClient doesn't have baseAddress, this is conceptual
-      print('Configuring GitHub client');
-    }
+    // Note: BaseClient doesn't have baseAddress, this is conceptual
+    print('Configuring GitHub client');
   }).redactLoggedHeaderNames([
     'Authorization',
     'X-GitHub-Token'

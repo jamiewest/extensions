@@ -63,8 +63,8 @@ void main() async {
         ..size = 60,
     );
 
-  print('Before compaction - Low: ${limitedCache.get('low')}');
-  print('Before compaction - High: ${limitedCache.get('high')}');
+  print('Before compaction - Low: ${limitedCache.get<String>('low')}');
+  print('Before compaction - High: ${limitedCache.get<String>('high')}');
 
   // This will trigger compaction (total size = 110 > 100)
   // Low priority items should be removed first
@@ -117,9 +117,9 @@ void main() async {
   )
     ..set('key1', 'value1')
     ..set('key2', 'value2')
-    ..get('key1') // Hit
-    ..get('key1') // Hit
-    ..get('missing'); // Miss
+    ..get<String>('key1') // Hit
+    ..get<String>('key1') // Hit
+    ..get<String>('missing'); // Miss
 
   final stats = statsCache.getCurrentStatistics();
   if (stats != null) {

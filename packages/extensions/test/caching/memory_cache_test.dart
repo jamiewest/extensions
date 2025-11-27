@@ -344,11 +344,11 @@ void main() {
           cache.set('key$i', 'value$i');
         }
 
-        cache.compact(0.5); // Remove 50%
-
-        final stats = cache.getCurrentStatistics();
-        // Note: statistics are null unless trackStatistics is enabled
-        cache.dispose();
+        cache
+          ..compact(0.5) // Remove 50%
+          ..getCurrentStatistics()
+          // Note: statistics are null unless trackStatistics is enabled
+          ..dispose();
       });
     });
 

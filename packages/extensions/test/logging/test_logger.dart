@@ -1,4 +1,3 @@
-import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/logging.dart';
 import 'package:extensions/src/options/options_monitor.dart';
 import 'package:extensions/system.dart';

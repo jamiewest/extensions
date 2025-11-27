@@ -12,8 +12,8 @@ void main() {
     (builder) => builder.addConsole(),
   );
 
-  final typedLogger = factory.createTypedLogger<UserService>();
-  typedLogger.logInformation('Typed logger for UserService created');
+  factory.createTypedLogger<UserService>()
+      .logInformation('Typed logger for UserService created');
 
   // Example 2: High-Performance LoggerMessage
   print('\nExample 2: High-Performance LoggerMessage');

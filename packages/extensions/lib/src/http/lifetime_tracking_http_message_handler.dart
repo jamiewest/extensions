@@ -1,5 +1,3 @@
-import 'package:http/http.dart';
-
 import 'delegating_handler.dart';
 import 'http_message_handler.dart';
 

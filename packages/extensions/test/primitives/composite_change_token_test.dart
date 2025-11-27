@@ -7,7 +7,7 @@ void main() {
     group('Constructor', () {
       test('Constructor_ThrowsForNullTokens', () {
         expect(
-          // ignore: unnecessary_cast
+          // ignore: cast_from_null_always_fails
           () => CompositeChangeToken(null as List<IChangeToken>),
           throwsA(isA<ArgumentNullException>()),
         );
@@ -169,10 +169,9 @@ void main() {
         final composite = CompositeChangeToken([token]);
 
         var callbackInvoked = false;
-        final disposable = composite.registerChangeCallback((_) {
+        composite.registerChangeCallback((_) {
           callbackInvoked = true;
-        }, null)
-          ..dispose();
+        }, null).dispose();
         cts.cancel();
 
         expect(callbackInvoked, isFalse);

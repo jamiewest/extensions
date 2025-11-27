@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 /// instances returned by [HttpClientFactory].
 abstract class HttpClientLogger {
   /// Logs before sending an HTTP request.
-  Object? logRequestStart(BaseRequest request) {}
+  Object? logRequestStart(BaseRequest request) => null;
 
   /// Logs after receiving an HTTP response.
   void logRequestStop(

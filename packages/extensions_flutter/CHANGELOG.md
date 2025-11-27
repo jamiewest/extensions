@@ -1,3 +1,16 @@
+## 0.3.10
+
+* Updated dependency on extensions to ^0.3.16.
+* Inherits all new features from extensions 0.3.16:
+  * Caching module (in-memory and distributed cache)
+  * HTTP client logging with formatters
+  * High-performance LoggerMessage API
+  * Advanced console formatters
+  * File system globbing
+  * Diagnostics module
+* Enhanced Flutter lifetime test coverage.
+* Code quality improvements and analyzer warning fixes.
+
 ## 0.3.9
 
 * Added exports for additional extensions package modules: configuration, diagnostics, file_providers, file_system_globbing, http, options, primitives, and system.
