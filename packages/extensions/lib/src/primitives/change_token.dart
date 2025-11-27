@@ -57,13 +57,13 @@ class _ChangeTokenRegistration<TState> implements IDisposable {
     this._changeTokenConsumer,
     this._state,
   ) {
-    var token = _changeTokenProducer();
+    final token = _changeTokenProducer();
 
     _registerChangeTokenCallback(token);
   }
 
   void _onChangeTokenFired() {
-    var token = _changeTokenProducer();
+    final token = _changeTokenProducer();
 
     try {
       _changeTokenConsumer(_state);
@@ -110,8 +110,9 @@ class _ChangeTokenRegistration<TState> implements IDisposable {
 
   @override
   void dispose() {
-    _disposable?.dispose();
-    _disposedSentinel.dispose();
+    final current = _disposable;
+    _disposable = _disposedSentinel;
+    current?.dispose();
   }
 }
 

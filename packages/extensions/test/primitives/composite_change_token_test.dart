@@ -7,8 +7,7 @@ void main() {
     group('Constructor', () {
       test('Constructor_ThrowsForNullTokens', () {
         expect(
-          // ignore: cast_from_null_always_fails
-          () => CompositeChangeToken(null as List<IChangeToken>),
+          () => CompositeChangeToken(null as List<IChangeToken>?),
           throwsA(isA<ArgumentNullException>()),
         );
       });

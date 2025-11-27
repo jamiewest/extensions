@@ -71,6 +71,8 @@ class CallSiteFactory
   ) {
     final serviceIdentifier = ServiceIdentifier.fromServiceType(serviceType);
 
+    callSiteChain.checkCircularDependency(serviceIdentifier);
+
     if (_callSiteCache
         .containsKey(ServiceCacheKey(serviceIdentifier, defaultslot))) {
       var site =
@@ -89,6 +91,8 @@ class CallSiteFactory
     ServiceIdentifier serviceIdentifier,
     CallSiteChain callSiteChain,
   ) {
+    callSiteChain.checkCircularDependency(serviceIdentifier);
+
     if (_callSiteCache
         .containsKey(ServiceCacheKey(serviceIdentifier, defaultslot))) {
       var site =
@@ -107,12 +111,18 @@ class CallSiteFactory
     ServiceIdentifier serviceIdentifier,
     CallSiteChain callSiteChain,
   ) {
-    callSiteChain.checkCircularDependency(serviceIdentifier);
+    try {
+      callSiteChain
+        ..checkCircularDependency(serviceIdentifier)
+        ..add(serviceIdentifier);
 
-    final callSite = _tryCreateExact(serviceIdentifier, callSiteChain) ??
-        tryCreateIterable(serviceIdentifier, callSiteChain);
+      final callSite = _tryCreateExact(serviceIdentifier, callSiteChain) ??
+          tryCreateIterable(serviceIdentifier, callSiteChain);
 
-    return callSite;
+      return callSite;
+    } finally {
+      callSiteChain.remove(serviceIdentifier);
+    }
   }
 
   ServiceCallSite? _tryCreateExact(

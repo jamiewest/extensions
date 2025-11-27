@@ -1,8 +1,8 @@
-import '../../configuration/configuration.dart';
-import '../../options/configure_options.dart';
-import '../log_level.dart';
-import '../logger_filter_options.dart';
-import '../logger_filter_rule.dart';
+import '../../../configuration/configuration.dart';
+import '../../../options/configure_options.dart';
+import '../../log_level.dart';
+import '../../logger_filter_options.dart';
+import '../../logger_filter_rule.dart';
 
 /// Loads logging configuration from [Configuration].
 class LoggingConfiguration implements ConfigureOptions<LoggerFilterOptions> {

@@ -1,34 +1,46 @@
 [![pub package](https://img.shields.io/pub/v/extensions.svg)](https://pub.dev/packages/extensions)
 [![package publisher](https://img.shields.io/pub/publisher/extensions.svg)](https://pub.dev/packages/extensions)
 
-## .NET Extensions for Dart
+# Extensions for Dart
 
-A set of APIs for commonly used programming patterns and utilities, such as **dependency injection**, **logging**, and **configuration**.
+Microsoft.Extensions-style hosting, dependency injection, logging, configuration, and HTTP client plumbing for Dart and Flutter.
 
-## Example
+## Highlights
+- `hosting`: Host builder with graceful startup/shutdown, background services, cancellation tokens, and lifetime notifications.
+- `dependency_injection`: Familiar `ServiceCollection` APIs with singleton/scoped/transient lifetimes and validation options.
+- `configuration`: Compose JSON, environment variables, command line, INI, XML, in-memory, and stream-based sources with reload support.
+- `logging`: Structured logging abstractions with console/debug/json/systemd formatters, filter rules, and scopes.
+- `options`: Typed options with validation, change tokens, and monitors.
+- `http`: IHttpClientFactory-style pipeline with delegating handlers, logging, handler lifetime control, and header redaction.
+- File providers, globbing, caching, and primitives that mirror the .NET ecosystem.
+
+## Install
+
+```sh
+dart pub add extensions
+```
+
+## Quick start: minimal host with logging
+
 ```dart
 import 'package:extensions/hosting.dart';
 
-Future<void> main(List<String> args) async =>
-    await Host.createDefaultBuilder(args)
-        .useConsoleLifetime()
-        .build()
-        .run();
+final _builder = Host.createApplicationBuilder()
+  ..addLogging((logging) => logging.addSimpleConsole());
+
+final host = _builder.build();
+
+Future<void> main() async => await host.run();
 ```
 
-## Code Adaptations
+## More examples
 
-The majority of code in this library is taken directly from the dotnet/runtime extension's namespace and aims to be as close a port as possible. However dart and c# dont always mix well. Below are some examples of how this library will handle scenarios that required some code modification.
+See `packages/extensions/example` for focused samples (background services, configuration, console formatters, caching, HTTP client logging, and more).
 
-### Out Parameters
+## Related packages
 
-Parameters in dart are passed by value whereas with c# they can be passed by reference using the `out` keyword. In this example, we that the method TryGetValue returns a boolean 
+- `extensions_flutter` – bootstraps Flutter with the same host/DI/logging stack.
 
-```csharp 
-Dictionary<int, long> myDic;
+## Credits
 
-if(myDic.TryGetValue(100, out var lValue))
-{
-    return lValue;
-}
-```
+This is a Dart port of the `Microsoft.Extensions.*` stack from the dotnet/runtime repository, adapted where Dart and C# differ.

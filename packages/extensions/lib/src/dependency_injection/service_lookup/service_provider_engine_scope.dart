@@ -15,6 +15,7 @@ class ServiceProviderEngineScope
 
   final Map<ServiceCacheKey, Object?> _resolvedServices;
   final DefaultServiceProvider _rootProvider;
+  final CallSiteChain _resolutionChain = CallSiteChain();
 
   ServiceProviderEngineScope(
     DefaultServiceProvider provider, {

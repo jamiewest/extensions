@@ -16,7 +16,10 @@ class CallSiteRuntimeResolver
 
     return visitCallSite(
       callSite,
-      RuntimeResolverContext(scope: scope),
+      RuntimeResolverContext(
+        scope: scope,
+        callSiteChain: scope._resolutionChain,
+      ),
     );
   }
 
@@ -47,6 +50,7 @@ class CallSiteRuntimeResolver
         RuntimeResolverContext(
           scope: serviceProviderEngine,
           acquiredLocks: argument.acquiredLocks,
+          callSiteChain: argument.callSiteChain,
         ));
 
     serviceProviderEngine.captureDisposable(resolved);
@@ -84,6 +88,7 @@ class CallSiteRuntimeResolver
         RuntimeResolverContext(
           scope: serviceProviderEngine,
           acquiredLocks: argument.acquiredLocks,
+          callSiteChain: argument.callSiteChain,
         ));
     serviceProviderEngine.captureDisposable(resolved);
     resolvedServices[callSite.cache.key] = resolved;
@@ -125,8 +130,22 @@ class CallSiteRuntimeResolver
   Object visitFactory(
     FactoryCallSite factoryCallSite,
     RuntimeResolverContext argument,
-  ) =>
-      factoryCallSite.factory(argument.scope!);
+  ) {
+    final serviceIdentifier = ServiceIdentifier(
+      serviceType: factoryCallSite.serviceType,
+      serviceKey: factoryCallSite.key,
+    );
+
+    try {
+      argument.callSiteChain
+        ..checkCircularDependency(serviceIdentifier)
+        ..add(serviceIdentifier);
+
+      return factoryCallSite.factory(argument.scope!);
+    } finally {
+      argument.callSiteChain.remove(serviceIdentifier);
+    }
+  }
 
   // @override
   // Object visitServiceScopeFactory(
@@ -140,10 +159,12 @@ class RuntimeResolverContext {
   RuntimeResolverContext({
     this.scope,
     this.acquiredLocks,
-  });
+    CallSiteChain? callSiteChain,
+  }) : callSiteChain = callSiteChain ?? CallSiteChain();
 
   ServiceProviderEngineScope? scope;
   RuntimeResolverLock? acquiredLocks;
+  CallSiteChain callSiteChain;
 }
 
 enum RuntimeResolverLock { scope, root }

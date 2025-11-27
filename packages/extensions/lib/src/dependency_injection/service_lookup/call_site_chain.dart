@@ -31,9 +31,8 @@ class CallSiteChain {
   ) {
     var messageBuilder = StringBuffer()
       ..write(
-        '''
-        A circular dependency was detected for the service of 
-        type '${serviceIdentifier.toString()}'.''',
+        'A circular dependency was detected for the service of '
+        "type '${serviceIdentifier.toString()}'.",
       )
       ..writeln();
 

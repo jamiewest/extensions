@@ -25,12 +25,13 @@ class CancellationChangeToken implements IChangeToken {
     Object? state,
   ) =>
       token.register(
-        (state) {
+        (s) {
           try {
-            callback(state);
+            callback(s);
           } catch (e) {
             _activeChangeCallbacks = false;
           }
         },
+        state,
       );
 }
