@@ -1,3 +1,7 @@
+## 0.3.17
+
+* Bug fixes and improvements.
+
 ## 0.3.16
 
 * **Major Feature Additions:**

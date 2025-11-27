@@ -1,3 +1,8 @@
+## 0.3.11
+
+* Updated dependency on extensions to ^0.3.17.
+* Bug fixes and improvements.
+
 ## 0.3.10
 
 * Updated dependency on extensions to ^0.3.16.
