@@ -13,8 +13,7 @@ void main() {
         cache.set(
           'key',
           'value',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
+          MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
         );
 
         expect(cache.get<String>('key'), equals('value'));
@@ -120,20 +119,17 @@ void main() {
           ..set(
             'key1',
             'value1',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
           ..set(
             'key2',
             'value2',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
           ..set(
             'key3',
             'value3',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           );
 
         expect(cache.get<String>('key1'), equals('value1'));
@@ -183,8 +179,7 @@ void main() {
           ..set(
             'with-token',
             'value1',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
           ..set('without-token', 'value2');
 
@@ -205,15 +200,15 @@ void main() {
         final cache = MemoryCache(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
-        cache.set(
-          'key',
-          'value',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
-        );
+        cache
+          ..set(
+            'key',
+            'value',
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
+          )
 
-        // Remove entry manually
-        cache.remove('key');
+          // Remove entry manually
+          ..remove('key');
 
         // Token emission should not cause issues
         controller.add(null);
@@ -262,20 +257,10 @@ void main() {
 
     group('Disposal Cleanup', () {
       test('Cache disposal cancels token subscriptions', () async {
-        final controller = StreamController<void>.broadcast();
-        final cache = MemoryCache(MemoryCacheOptions());
+        final controller = StreamController<void>.broadcast()
 
-        cache.set(
-          'key',
-          'value',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
-        );
-
-        cache.dispose();
-
-        // After disposal, token emissions should not cause issues
-        controller.add(null);
+          // After disposal, token emissions should not cause issues
+          ..add(null);
         await Future<void>.delayed(const Duration(milliseconds: 50));
 
         await controller.close();
@@ -283,20 +268,16 @@ void main() {
 
       test('Clear cancels all token subscriptions', () async {
         final controller = StreamController<void>.broadcast();
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache
+        final cache = MemoryCache(MemoryCacheOptions())
           ..set(
             'key1',
             'value1',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
           ..set(
             'key2',
             'value2',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
           ..clear();
 
@@ -317,8 +298,7 @@ void main() {
         cache.set(
           'key',
           'value',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
+          MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
         );
 
         await Future<void>.delayed(const Duration(milliseconds: 100));
@@ -332,21 +312,21 @@ void main() {
 
       test('Immediate token emission expires entry', () async {
         final cache = MemoryCache(MemoryCacheOptions());
-        final controller = StreamController<void>.broadcast();
+        final controller = StreamController<void>.broadcast()
 
-        // Emit before adding to cache
-        controller.add(null);
+          // Emit before adding to cache
+          ..add(null);
 
         cache.set(
           'key',
           'value',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
+          MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
         );
 
         await Future<void>.delayed(const Duration(milliseconds: 50));
 
-        // Entry should still be present since subscription happened after emission
+        // Entry should still be present since subscription happened
+        // after emission
         expect(cache.get<String>('key'), equals('value'));
 
         await controller.close();
@@ -360,8 +340,7 @@ void main() {
         cache.set(
           'key',
           'value1',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
+          MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
         );
 
         controller.add(null);

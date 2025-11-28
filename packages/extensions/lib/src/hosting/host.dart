@@ -5,7 +5,7 @@ import '../dependency_injection/service_provider_service_extensions.dart';
 import '../logging/logger.dart';
 import '../options/options.dart';
 import '../options/validate_on_start.dart';
-import '../primitives/aggregate_exception.dart';
+import '../system/exceptions/aggregate_exception.dart';
 import '../system/async_disposable.dart';
 import '../system/disposable.dart';
 import '../system/threading/cancellation_token.dart';

@@ -23,22 +23,23 @@ void main() {
           );
         }
 
-        final stats1 = cache.getCurrentStatistics();
-        // Note: stats might be null if trackStatistics is not enabled
+        cache
+          ..getCurrentStatistics()
+          // Note: stats might be null if trackStatistics is not enabled
 
-        // Add one more to exceed limit
-        cache.set(
-          'key10',
-          'value10',
-          MemoryCacheEntryOptions()
-            ..size = 10
-            ..priority = CacheItemPriority.normal,
-        );
+          // Add one more to exceed limit
 
-        // Some entries should have been removed
-        // Exact behavior depends on compaction algorithm
+          ..set(
+            'key10',
+            'value10',
+            MemoryCacheEntryOptions()
+              ..size = 10
+              ..priority = CacheItemPriority.normal,
+          )
 
-        cache.dispose();
+          // Some entries should have been removed
+          // Exact behavior depends on compaction algorithm
+          ..dispose();
       });
 
       test('Entries without size do not contribute to limit', () {
@@ -91,9 +92,7 @@ void main() {
             compactionPercentage: 0.5,
             trackStatistics: true,
           ),
-        );
-
-        cache
+        )
           ..set(
             'critical',
             'important data',
@@ -129,13 +128,11 @@ void main() {
             sizeLimit: 100,
             trackStatistics: true,
           ),
-        );
-
-        cache.set(
-          'key',
-          'value1',
-          MemoryCacheEntryOptions()..size = 50,
-        );
+        )..set(
+            'key',
+            'value1',
+            MemoryCacheEntryOptions()..size = 50,
+          );
 
         var stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(50));
@@ -159,9 +156,7 @@ void main() {
             sizeLimit: 100,
             trackStatistics: true,
           ),
-        );
-
-        cache
+        )
           ..set('key1', 'value1', MemoryCacheEntryOptions()..size = 40)
           ..set('key2', 'value2', MemoryCacheEntryOptions()..size = 35);
 
@@ -211,8 +206,7 @@ void main() {
           cache.set(
             'key$i',
             'value$i',
-            MemoryCacheEntryOptions()
-              ..priority = CacheItemPriority.low,
+            MemoryCacheEntryOptions()..priority = CacheItemPriority.low,
           );
         }
 
@@ -229,9 +223,7 @@ void main() {
       });
 
       test('Compact respects priority order', () {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache
+        final cache = MemoryCache(MemoryCacheOptions())
           ..set(
             'low1',
             'value',
@@ -251,10 +243,10 @@ void main() {
             'high',
             'value',
             MemoryCacheEntryOptions()..priority = CacheItemPriority.high,
-          );
+          )
 
-        // Compact 50% (remove 2 entries)
-        cache.compact(0.5);
+          // Compact 50% (remove 2 entries)
+          ..compact(0.5);
 
         // Low priority items should be removed first
         expect(cache.get<String>('low1'), isNull);
@@ -268,10 +260,9 @@ void main() {
       test('Compact removes entries based on priority and age', () async {
         final cache = MemoryCache(
           MemoryCacheOptions(trackStatistics: true),
-        );
+        )
 
-        // Add entries with different priorities
-        cache
+          // Add entries with different priorities
           ..set(
             'low1',
             'value',
@@ -286,10 +277,10 @@ void main() {
             'high',
             'value',
             MemoryCacheEntryOptions()..priority = CacheItemPriority.high,
-          );
+          )
 
-        // Compact 33% (remove 1 entry)
-        cache.compact(0.33);
+          // Compact 33% (remove 1 entry)
+          ..compact(0.33);
 
         final stats = cache.getCurrentStatistics();
         expect(stats?.currentEntryCount, equals(2));
@@ -301,9 +292,7 @@ void main() {
       });
 
       test('Expired entries are removed on access', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache
+        final cache = MemoryCache(MemoryCacheOptions())
           ..set(
             'expired',
             'value',
@@ -347,18 +336,14 @@ void main() {
       test('Compact with 1.0 percentage removes all non-NeverRemove', () {
         final cache = MemoryCache(
           MemoryCacheOptions(trackStatistics: true),
-        );
-
-        cache
+        )
           ..set('removable', 'value')
           ..set(
             'critical',
             'value',
-            MemoryCacheEntryOptions()
-              ..priority = CacheItemPriority.neverRemove,
-          );
-
-        cache.compact(1.0);
+            MemoryCacheEntryOptions()..priority = CacheItemPriority.neverRemove,
+          )
+          ..compact(1.0);
 
         expect(cache.get<String>('removable'), isNull);
         expect(cache.get<String>('critical'), equals('value'));
@@ -415,16 +400,14 @@ void main() {
             sizeLimit: 100,
             trackStatistics: true,
           ),
-        );
-
-        cache.set(
-          'expires-soon',
-          'value',
-          MemoryCacheEntryOptions()
-            ..size = 50
-            ..absoluteExpirationRelativeToNow =
-                const Duration(milliseconds: 50),
-        );
+        )..set(
+            'expires-soon',
+            'value',
+            MemoryCacheEntryOptions()
+              ..size = 50
+              ..absoluteExpirationRelativeToNow =
+                  const Duration(milliseconds: 50),
+          );
 
         var stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(50));
@@ -455,15 +438,13 @@ void main() {
             sizeLimit: 100,
             trackStatistics: true,
           ),
-        );
-
-        cache.set(
-          'sliding',
-          'value',
-          MemoryCacheEntryOptions()
-            ..size = 50
-            ..slidingExpiration = const Duration(milliseconds: 100),
-        );
+        )..set(
+            'sliding',
+            'value',
+            MemoryCacheEntryOptions()
+              ..size = 50
+              ..slidingExpiration = const Duration(milliseconds: 100),
+          );
 
         // Keep accessing to prevent expiration
         for (var i = 0; i < 5; i++) {

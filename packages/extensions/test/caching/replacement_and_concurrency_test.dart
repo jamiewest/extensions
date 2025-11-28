@@ -12,22 +12,22 @@ void main() {
         EvictionReason? lastReason;
         Object? lastValue;
 
-        cache.set(
-          'key',
-          'original',
-          MemoryCacheEntryOptions()
-            ..postEvictionCallbacks.add(
-              PostEvictionCallbackRegistration(
-                evictionCallback: (key, value, reason, state) {
-                  callbackCount++;
-                  lastReason = reason;
-                  lastValue = value;
-                },
+        cache
+          ..set(
+            'key',
+            'original',
+            MemoryCacheEntryOptions()
+              ..postEvictionCallbacks.add(
+                PostEvictionCallbackRegistration(
+                  evictionCallback: (key, value, reason, state) {
+                    callbackCount++;
+                    lastReason = reason;
+                    lastValue = value;
+                  },
+                ),
               ),
-            ),
-        );
-
-        cache.set('key', 'replaced');
+          )
+          ..set('key', 'replaced');
         await Future<void>.delayed(const Duration(milliseconds: 50));
 
         expect(callbackCount, equals(1));
@@ -42,20 +42,20 @@ void main() {
         final cache = MemoryCache(MemoryCacheOptions());
         var callbackCount = 0;
 
-        cache.set(
-          'key',
-          'value',
-          MemoryCacheEntryOptions()
-            ..postEvictionCallbacks.add(
-              PostEvictionCallbackRegistration(
-                evictionCallback: (key, value, reason, state) {
-                  callbackCount++;
-                },
+        cache
+          ..set(
+            'key',
+            'value',
+            MemoryCacheEntryOptions()
+              ..postEvictionCallbacks.add(
+                PostEvictionCallbackRegistration(
+                  evictionCallback: (key, value, reason, state) {
+                    callbackCount++;
+                  },
+                ),
               ),
-            ),
-        );
-
-        cache.set('key', 'value'); // Same value
+          )
+          ..set('key', 'value'); // Same value
         await Future<void>.delayed(const Duration(milliseconds: 50));
 
         expect(callbackCount, equals(1));
@@ -64,9 +64,7 @@ void main() {
       });
 
       test('Replacing entry with different type', () {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache
+        final cache = MemoryCache(MemoryCacheOptions())
           ..set('key', 'string value')
           ..set('key', 42)
           ..set('key', true)
@@ -78,21 +76,20 @@ void main() {
       });
 
       test('Replacement preserves new options', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache.set(
-          'key',
-          'original',
-          MemoryCacheEntryOptions()
-            ..absoluteExpirationRelativeToNow = const Duration(hours: 1),
-        );
-
-        cache.set(
-          'key',
-          'replaced',
-          MemoryCacheEntryOptions()
-            ..absoluteExpirationRelativeToNow = const Duration(milliseconds: 100),
-        );
+        final cache = MemoryCache(MemoryCacheOptions())
+          ..set(
+            'key',
+            'original',
+            MemoryCacheEntryOptions()
+              ..absoluteExpirationRelativeToNow = const Duration(hours: 1),
+          )
+          ..set(
+            'key',
+            'replaced',
+            MemoryCacheEntryOptions()
+              ..absoluteExpirationRelativeToNow =
+                  const Duration(milliseconds: 100),
+          );
 
         await Future<void>.delayed(const Duration(milliseconds: 150));
 
@@ -108,9 +105,7 @@ void main() {
             sizeLimit: 100,
             trackStatistics: true,
           ),
-        );
-
-        cache.set('key', 'value1', MemoryCacheEntryOptions()..size = 30);
+        )..set('key', 'value1', MemoryCacheEntryOptions()..size = 30);
 
         var stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(30));
@@ -127,15 +122,15 @@ void main() {
         final cache = MemoryCache(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
-        cache.set(
-          'key',
-          'original',
-          MemoryCacheEntryOptions()
-            ..expirationTokens.add(controller.stream),
-        );
+        cache
+          ..set(
+            'key',
+            'original',
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
+          )
 
-        // Replace without token
-        cache.set('key', 'replaced');
+          // Replace without token
+          ..set('key', 'replaced');
 
         // Fire old token - should not affect new entry
         controller.add(null);
@@ -166,9 +161,8 @@ void main() {
       });
 
       test('Set is atomic operation', () {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache.set('key', 'value', MemoryCacheEntryOptions()..size = 50);
+        final cache = MemoryCache(MemoryCacheOptions())
+          ..set('key', 'value', MemoryCacheEntryOptions()..size = 50);
 
         // Value should be immediately accessible
         expect(cache.get<String>('key'), equals('value'));
@@ -179,9 +173,8 @@ void main() {
 
     group('Null Values', () {
       test('Can store null value', () {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache.set<String?>('key', null);
+        final cache = MemoryCache(MemoryCacheOptions())
+          ..set<String?>('key', null);
 
         expect(cache.containsKey('key'), isTrue);
         expect(cache.get<String?>('key'), isNull);
@@ -190,9 +183,8 @@ void main() {
       });
 
       test('Null value different from missing key', () {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache.set<String?>('null-value', null);
+        final cache = MemoryCache(MemoryCacheOptions())
+          ..set<String?>('null-value', null);
 
         expect(cache.containsKey('null-value'), isTrue);
         expect(cache.containsKey('missing'), isFalse);
@@ -201,9 +193,8 @@ void main() {
       });
 
       test('TryGetValue distinguishes null value from missing', () {
-        final cache = MemoryCache(MemoryCacheOptions());
-
-        cache.set<String?>('null-value', null);
+        final cache = MemoryCache(MemoryCacheOptions())
+          ..set<String?>('null-value', null);
 
         String? result;
         final found =
@@ -220,8 +211,7 @@ void main() {
   group('ConcurrencyTests', () {
     group('Concurrent Access', () {
       test('Multiple concurrent reads are safe', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
-          ..set('key', 'value');
+        final cache = MemoryCache(MemoryCacheOptions())..set('key', 'value');
 
         final futures = <Future<String?>>[];
         for (var i = 0; i < 100; i++) {
@@ -240,7 +230,9 @@ void main() {
 
         final futures = <Future<void>>[];
         for (var i = 0; i < 100; i++) {
-          futures.add(Future(() => cache.set('key$i', 'value$i')));
+          futures.add(Future(() {
+            cache.set('key$i', 'value$i');
+          }));
         }
 
         await Future.wait(futures);
@@ -254,19 +246,22 @@ void main() {
       });
 
       test('Concurrent read/write on same key', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
-          ..set('key', 'initial');
+        final cache = MemoryCache(MemoryCacheOptions())..set('key', 'initial');
 
         final futures = <Future<void>>[];
 
         // Concurrent reads
         for (var i = 0; i < 50; i++) {
-          futures.add(Future(() => cache.get<String>('key')));
+          futures.add(Future(() {
+            cache.get<String>('key');
+          }));
         }
 
         // Concurrent writes
         for (var i = 0; i < 50; i++) {
-          futures.add(Future(() => cache.set('key', 'value$i')));
+          futures.add(Future(() {
+            cache.set('key', 'value$i');
+          }));
         }
 
         await Future.wait(futures);
@@ -368,8 +363,7 @@ void main() {
           cache.set(
             'key$i',
             'value$i',
-            MemoryCacheEntryOptions()
-              ..expirationTokens.add(controller.stream),
+            MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           );
         }
 

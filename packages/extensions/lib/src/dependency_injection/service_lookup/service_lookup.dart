@@ -4,7 +4,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 
-import '../../primitives/aggregate_exception.dart';
+import '../../system/exceptions/aggregate_exception.dart';
 import '../../system/async_disposable.dart';
 import '../../system/disposable.dart';
 import '../../system/exceptions/invalid_operation_exception.dart';

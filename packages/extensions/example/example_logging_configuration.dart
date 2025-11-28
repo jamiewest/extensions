@@ -78,8 +78,9 @@ void basicProviderConfiguration() {
 
   final provider = services.buildServiceProvider();
   final loggerFactory = provider.getRequiredService<LoggerFactory>();
-  final logger = loggerFactory.createLogger('MyApp')
-    ..logInformation('Logging configured with provider-specific settings');
+  loggerFactory
+      .createLogger('MyApp')
+      .logInformation('Logging configured with provider-specific settings');
   print('✓ Provider configuration applied successfully');
 }
 

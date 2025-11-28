@@ -155,7 +155,6 @@ class PollingWildcardChangeToken implements IChangeToken {
       _hasChanged = true;
       _previousState = currentState;
       _invokeCallbacks();
-      _stopPolling();
     }
   }
 

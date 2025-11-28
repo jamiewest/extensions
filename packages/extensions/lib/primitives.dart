@@ -48,7 +48,7 @@
 /// ```
 library;
 
-export 'src/primitives/aggregate_exception.dart' show AggregateException;
+export 'src/system/exceptions/aggregate_exception.dart' show AggregateException;
 export 'src/primitives/cancellation_change_token.dart'
     show CancellationChangeToken;
 export 'src/primitives/change_token.dart'

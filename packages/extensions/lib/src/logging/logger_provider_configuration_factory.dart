@@ -2,9 +2,6 @@ import '../configuration/configuration.dart';
 import '../configuration/configuration_builder.dart';
 import '../configuration/configuration_provider.dart';
 import '../configuration/configuration_source.dart';
-import '../primitives/change_token.dart';
-import '../primitives/empty_disposable.dart';
-import '../system/disposable.dart';
 import 'i_logger_provider_configuration_factory.dart';
 import 'provider_alias_utilities.dart';
 
@@ -122,7 +119,8 @@ class _InMemoryConfigurationSource implements ConfigurationSource {
   _InMemoryConfigurationSource(this._data);
 
   @override
-  ConfigurationProvider build(ConfigurationBuilder builder) => _InMemoryConfigurationProvider(_data);
+  ConfigurationProvider build(ConfigurationBuilder builder) =>
+      _InMemoryConfigurationProvider(_data);
 }
 
 /// Simple in-memory configuration provider.
