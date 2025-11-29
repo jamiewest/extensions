@@ -18,7 +18,7 @@ class PollingWildcardChangeToken implements IChangeToken {
   final Duration _pollingInterval;
   final CancellationTokenSource? _cancellationTokenSource;
   final List<_CallbackRegistration> _callbacks = [];
-  Map<String, DateTime>? _previousState;
+  Map<String, _FileState>? _previousState;
   DateTime? _lastCheckedTime;
   bool _hasChanged = false;
   Timer? _pollingTimer;
@@ -39,8 +39,8 @@ class PollingWildcardChangeToken implements IChangeToken {
     _lastCheckedTime = DateTime.now();
   }
 
-  Map<String, DateTime> _getCurrentState() {
-    final state = <String, DateTime>{};
+  Map<String, _FileState> _getCurrentState() {
+    final state = <String, _FileState>{};
 
     try {
       final glob = Glob(_pattern);
@@ -60,7 +60,13 @@ class PollingWildcardChangeToken implements IChangeToken {
 
             // Check if the file matches the glob pattern
             if (glob.matches(relativePath)) {
-              state[relativePath] = entity.lastModifiedSync();
+              try {
+                final modified = entity.lastModifiedSync();
+                final length = entity.lengthSync();
+                state[relativePath] = _FileState(modified, length);
+              } catch (e) {
+                // Skip files we can't access
+              }
             }
           } catch (e) {
             // Skip files we can't access
@@ -113,18 +119,18 @@ class PollingWildcardChangeToken implements IChangeToken {
   }
 
   bool _stateHasChanged(
-    Map<String, DateTime> previous,
-    Map<String, DateTime> current,
+    Map<String, _FileState> previous,
+    Map<String, _FileState> current,
   ) {
     // Check if number of files changed
     if (previous.length != current.length) {
       return true;
     }
 
-    // Check if any files were added or modified
+    // Check if any files were added or modified (by mtime or size)
     for (final entry in current.entries) {
-      final previousTime = previous[entry.key];
-      if (previousTime == null || previousTime != entry.value) {
+      final previousState = previous[entry.key];
+      if (previousState == null || previousState != entry.value) {
         return true;
       }
     }
@@ -235,6 +241,24 @@ class _CallbackRegistration {
   final Object? state;
 
   _CallbackRegistration(this.callback, this.state);
+}
+
+class _FileState {
+  final DateTime modified;
+  final int length;
+
+  const _FileState(this.modified, this.length);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is _FileState &&
+        other.modified == modified &&
+        other.length == length;
+  }
+
+  @override
+  int get hashCode => modified.hashCode ^ length.hashCode;
 }
 
 class _CallbackDisposable implements IDisposable {
