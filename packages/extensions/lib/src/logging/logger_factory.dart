@@ -193,11 +193,12 @@ class LoggerFactory implements Disposable {
       var logger = existingLogger.value as _Logger;
       var loggerInformation = logger.loggers;
 
-      var newLoggerIndex = loggerInformation!.length;
-      loggerInformation[newLoggerIndex] = LoggerInformation(
+      // Add the new logger information to the list
+      final newLoggerInfo = LoggerInformation(
         provider,
         existingLogger.key,
       );
+      loggerInformation!.add(newLoggerInfo);
       logger.loggers = loggerInformation;
 
       var (messageLoggers, scopeLoggers) = _applyFilters(logger.loggers!);

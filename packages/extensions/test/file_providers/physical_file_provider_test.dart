@@ -34,8 +34,8 @@ void main() {
     });
 
     test('returns PhysicalFileInfo for valid paths with leading slashes', () {
-      final testFile = io.File(p.join(tempDir.path, 'test.txt'));
-      testFile.writeAsStringSync('content');
+      io.File(p.join(tempDir.path, 'test.txt'))
+        .writeAsStringSync('content');
 
       final provider = PhysicalFileProvider(tempDir.path);
       final result = provider.getFileInfo('/test.txt');
@@ -79,8 +79,8 @@ void main() {
     });
 
     test('returns valid FileInfo for existing file', () {
-      final testFile = io.File(p.join(tempDir.path, 'existing.txt'));
-      testFile.writeAsStringSync('test content');
+      final testFile = io.File(p.join(tempDir.path, 'existing.txt'))
+        ..writeAsStringSync('test content');
 
       final provider = PhysicalFileProvider(tempDir.path);
       final result = provider.getFileInfo('existing.txt');
@@ -95,8 +95,8 @@ void main() {
       final provider = PhysicalFileProvider(tempDir.path);
       final result = provider.getFileInfo('nonexistent.txt');
 
-      // PhysicalFileProvider returns PhysicalFileInfo even for non-existent files
-      // The exists property will be false
+      // PhysicalFileProvider returns PhysicalFileInfo even for
+      // non-existent files. The exists property will be false
       expect(result.exists, isFalse);
       expect(result, isA<FileInfo>());
     });
@@ -169,8 +169,8 @@ void main() {
     });
 
     test('returns directory contents for valid subdirectory', () {
-      final subDir = io.Directory(p.join(tempDir.path, 'subdir'));
-      subDir.createSync();
+      final subDir = io.Directory(p.join(tempDir.path, 'subdir'))
+        ..createSync();
       io.File(p.join(subDir.path, 'a.txt')).writeAsStringSync('content a');
       io.File(p.join(subDir.path, 'b.txt')).writeAsStringSync('content b');
 
@@ -184,8 +184,7 @@ void main() {
     });
 
     test('includes both files and directories in contents', () {
-      final subDir = io.Directory(p.join(tempDir.path, 'nested'));
-      subDir.createSync();
+      io.Directory(p.join(tempDir.path, 'nested')).createSync();
       io.File(p.join(tempDir.path, 'file.txt')).writeAsStringSync('file');
 
       final provider = PhysicalFileProvider(tempDir.path);
@@ -373,7 +372,9 @@ void main() {
 
       final token = provider.watch('*.txt');
 
-      await Future<void>.delayed(const Duration(milliseconds: 150));
+      // Wait long enough to ensure file system timestamp will change
+      // (file systems often have 1-second granularity)
+      await Future<void>.delayed(const Duration(milliseconds: 1100));
 
       testFile.writeAsStringSync('changed');
 
@@ -470,13 +471,13 @@ void main() {
   group('PhysicalFileProvider - Disposal', () {
     test('dispose cleans up watcher resources', () {
       final provider = PhysicalFileProvider(tempDir.path);
-      expect(() => provider.dispose(), returnsNormally);
+      expect(provider.dispose, returnsNormally);
     });
 
     test('can dispose multiple times safely', () {
       final provider = PhysicalFileProvider(tempDir.path);
       provider.dispose();
-      expect(() => provider.dispose(), returnsNormally);
+      expect(provider.dispose, returnsNormally);
     });
   });
 
@@ -487,6 +488,7 @@ void main() {
 
       final provider = PhysicalFileProvider(tempDir.path);
       final result1 = provider.getFileInfo('CaseSensitive.txt');
+      // ignore: unused_local_variable
       final result2 = provider.getFileInfo('casesensitive.txt');
 
       if (io.Platform.isLinux || io.Platform.isMacOS) {

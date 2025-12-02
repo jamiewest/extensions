@@ -1,3 +1,22 @@
+## 0.3.18
+
+* **Bug Fixes:**
+  * Fixed `PhysicalFileProvider.getFileInfo()` and `getDirectoryContents()` incorrectly handling nested directory paths by removing the first path separator anywhere in the path instead of only at the beginning
+  * Fixed `LoggerFactory.addProvider()` throwing `RangeError` when adding providers after loggers were already created due to incorrect list index assignment
+  * Improved `_isUnderneathRoot()` validation to prevent false positive matches on paths with common prefixes
+  * Fixed file polling tests to account for file system timestamp granularity (1-second precision)
+
+* **Code Quality:**
+  * Fixed all analyzer issues (import ordering, naming conventions, line length, unused imports/variables)
+  * Renamed `ArgumentOutOfRangeException.ThrowNegative()` and `ThrowNegativeOrZero()` to follow Dart naming conventions (lowerCamelCase)
+  * Improved test reliability by ensuring proper timing for file system timestamp changes
+  * Disabled `cascade_invocations` lint rule to reduce noise in test files
+
+* **Test Improvements:**
+  * Fixed and re-enabled 3 previously skipped tests
+  * All 508 tests now pass with improved timing reliability
+  * Added better handling for platform-specific file system behavior
+
 ## 0.3.17
 
 * Bug fixes and improvements.

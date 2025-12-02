@@ -1,3 +1,11 @@
+## 0.3.12
+
+* Updated dependency on extensions to ^0.3.18.
+* Inherits all bug fixes and improvements from extensions 0.3.18:
+  * Fixed file provider path handling for nested directories
+  * Fixed LoggerFactory provider management
+  * Improved test reliability and code quality
+
 ## 0.3.11
 
 * Updated dependency on extensions to ^0.3.17.

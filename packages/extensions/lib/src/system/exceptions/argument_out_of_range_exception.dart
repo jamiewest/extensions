@@ -33,7 +33,7 @@ class ArgumentOutOfRangeException extends ArgumentException {
     );
   }
 
-  static void ThrowNegative<T>(T value, String? paramName) {}
+  static void throwNegative<T>(T value, String? paramName) {}
 
-  static void ThrowNegativeOrZero<T>(T value, String? paramName) {}
+  static void throwNegativeOrZero<T>(T value, String? paramName) {}
 }

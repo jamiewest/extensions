@@ -1,5 +1,5 @@
 name: extensions
-version: 0.3.17
+version: 0.3.18
 description: >-
   A set of APIs for commonly used programming patterns and utilities, 
   such as dependency injection, logging, and configuration.

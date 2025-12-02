@@ -48,7 +48,6 @@
 /// ```
 library;
 
-export 'src/system/exceptions/aggregate_exception.dart' show AggregateException;
 export 'src/primitives/cancellation_change_token.dart'
     show CancellationChangeToken;
 export 'src/primitives/change_token.dart'
@@ -62,3 +61,4 @@ export 'src/primitives/change_token.dart'
 export 'src/primitives/composite_change_token.dart' show CompositeChangeToken;
 export 'src/primitives/validation_result.dart';
 export 'src/primitives/void_callback.dart';
+export 'src/system/exceptions/aggregate_exception.dart' show AggregateException;

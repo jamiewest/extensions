@@ -53,7 +53,12 @@ class PhysicalFileProvider implements FileProvider, Disposable {
 
   @override
   FileInfo getFileInfo(String subpath) {
-    var path = subpath.trimLeft().replaceFirst(p.separator, '');
+    var path = subpath.trim();
+
+    // Remove leading separator if present
+    if (path.startsWith(p.separator)) {
+      path = path.substring(p.separator.length);
+    }
 
     if (p.isRootRelative(path)) {
       return NotFoundFileInfo(path);
@@ -89,12 +94,30 @@ class PhysicalFileProvider implements FileProvider, Disposable {
     return fullPath;
   }
 
-  bool _isUnderneathRoot(String fullPath) => fullPath.startsWith(root);
+  bool _isUnderneathRoot(String fullPath) {
+    if (!fullPath.startsWith(root)) {
+      return false;
+    }
+
+    // Ensure the path is truly under the root, not just a prefix match
+    // e.g., root="/tmp/foo" should not match fullPath="/tmp/foobar"
+    if (fullPath.length == root.length) {
+      return true; // Exact match
+    }
+
+    // The character after root must be a separator
+    return fullPath[root.length] == p.separator;
+  }
 
   @override
   DirectoryContents getDirectoryContents(String subpath) {
     try {
-      var path = subpath.trimLeft().replaceFirst(p.separator, '');
+      var path = subpath.trim();
+
+      // Remove leading separator if present
+      if (path.startsWith(p.separator)) {
+        path = path.substring(p.separator.length);
+      }
 
       if (p.isRootRelative(path)) {
         return NotFoundDirectoryContents();

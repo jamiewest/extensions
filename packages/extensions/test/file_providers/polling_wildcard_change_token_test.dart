@@ -456,13 +456,16 @@ void main() {
         callbackCount++;
       }, null);
 
-      await Future<void>.delayed(const Duration(milliseconds: 50));
+      // Wait long enough to ensure file system timestamp will change
+      // (file systems often have 1-second granularity)
+      await Future<void>.delayed(const Duration(milliseconds: 1100));
 
       // Now modify the file
       io.File(p.join(tempDir.path, 'initial.txt'))
           .writeAsStringSync('modified');
 
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      // Wait for at least 2 polling intervals to ensure change is detected
+      await Future<void>.delayed(const Duration(milliseconds: 250));
 
       // Verify change was detected and callback fired
       expect(token.hasChanged, isTrue);
@@ -478,7 +481,7 @@ void main() {
       expect(secondCallbackFired, isTrue);
 
       token.dispose();
-    }, skip: 'Timing-dependent behavior - may be flaky');
+    });
   });
 
   group('PollingWildcardChangeToken - Cancellation', () {
@@ -518,25 +521,27 @@ void main() {
         callbackCount++;
       }, null);
 
+      // Wait for at least one polling cycle
       await Future<void>.delayed(const Duration(milliseconds: 150));
 
       cts.cancel();
 
-      // Wait for cancellation to be processed
-      await Future<void>.delayed(const Duration(milliseconds: 150));
+      // Wait for cancellation to be processed (at least 2 polling intervals)
+      await Future<void>.delayed(const Duration(milliseconds: 250));
 
       final countAfterCancel = callbackCount;
 
       // Add a file - should not trigger additional callbacks
       io.File(p.join(tempDir.path, 'new.txt')).writeAsStringSync('content');
 
-      await Future<void>.delayed(const Duration(milliseconds: 200));
+      // Wait long enough for multiple polling cycles
+      await Future<void>.delayed(const Duration(milliseconds: 350));
 
       // Count should not increase after cancellation
       expect(callbackCount, countAfterCancel);
 
       token.dispose();
-    }, skip: 'Timing-dependent cancellation behavior - may be flaky');
+    });
   });
 
   group('PollingWildcardChangeToken - Disposal', () {
@@ -571,7 +576,7 @@ void main() {
       );
 
       token.dispose();
-      expect(() => token.dispose(), returnsNormally);
+      expect(token.dispose, returnsNormally);
     });
 
     test('clears all callbacks on disposal', () {

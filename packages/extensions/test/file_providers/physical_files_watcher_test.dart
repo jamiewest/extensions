@@ -1,7 +1,6 @@
 import 'dart:io' as io;
 
 import 'package:extensions/primitives.dart';
-import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 import 'mocks/mock_physical_files_watcher.dart';
@@ -310,6 +309,7 @@ void main() {
     test('dispose clears all tokens', () {
       final token = watcher.createFileChangeToken('*.txt');
 
+      // ignore: unused_local_variable
       var fired = false;
       token.registerChangeCallback((_) {
         fired = true;

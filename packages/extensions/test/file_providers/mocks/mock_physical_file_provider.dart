@@ -23,7 +23,8 @@ class MockPhysicalFileProvider implements FileProvider {
       _provider.getDirectoryContents(subpath);
 
   @override
-  IChangeToken watch(String filter) => _mockWatcher.createFileChangeToken(filter);
+  IChangeToken watch(String filter) =>
+      _mockWatcher.createFileChangeToken(filter);
 
   void dispose() {
     _provider.dispose();

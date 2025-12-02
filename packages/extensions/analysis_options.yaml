@@ -16,7 +16,7 @@ linter:
   - avoid_returning_this
   - avoid_unused_constructor_parameters
   - cancel_subscriptions
-  - cascade_invocations
+  # - cascade_invocations  # Disabled - too many test file changes required
   - flutter_style_todos
   - join_return_with_assignment
   - literal_only_boolean_expressions

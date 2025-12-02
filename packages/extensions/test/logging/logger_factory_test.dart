@@ -75,10 +75,6 @@ void main() {
     });
 
     group('Provider Management', () {
-      // TODO(extensions): Fix implementation bug in LoggerFactory.addProvider
-      // The implementation tries to set loggerInformation[newLoggerIndex] where
-      // newLoggerIndex = length, which causes RangeError. Should use .add()
-      // instead.
       test('AddProvider_CreatesLoggersForExistingCategories', () {
         final provider1 = TestLoggerProvider();
         final factory = LoggerFactory([provider1])
@@ -87,12 +83,15 @@ void main() {
 
         final provider2 = TestLoggerProvider();
 
-        // Currently throws RangeError due to implementation bug
-        expect(
-          () => factory.addProvider(provider2),
-          throwsRangeError,
-        );
-      }, skip: 'Implementation bug: addProvider uses invalid list index');
+        // Add the new provider - should work without errors
+        factory.addProvider(provider2);
+
+        // Both providers should have loggers for existing categories
+        expect(provider1.createdLoggers, contains('Category1'));
+        expect(provider1.createdLoggers, contains('Category2'));
+        expect(provider2.createdLoggers, contains('Category1'));
+        expect(provider2.createdLoggers, contains('Category2'));
+      });
 
       test('AddProvider_NewLoggersUseAllProviders', () {
         final provider1 = TestLoggerProvider();
