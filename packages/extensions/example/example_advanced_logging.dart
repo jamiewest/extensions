@@ -1,6 +1,6 @@
 import 'package:extensions/logging.dart';
 
-// Example class for typed logger demonstration.
+// Example class for typed logger demonstration
 class UserService {}
 
 void main() {
@@ -12,7 +12,8 @@ void main() {
     (builder) => builder.addConsole(),
   );
 
-  factory.createTypedLogger<UserService>()
+  factory
+      .createTypedLogger<UserService>()
       .logInformation('Typed logger for UserService created');
 
   // Example 2: High-Performance LoggerMessage
