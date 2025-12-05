@@ -1,6 +1,6 @@
 import 'package:extensions/logging.dart';
 
-// Example class for typed logger demonstration
+// Example class for typed logger demonstration.
 class UserService {}
 
 void main() {
