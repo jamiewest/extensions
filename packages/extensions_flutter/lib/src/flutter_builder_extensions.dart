@@ -3,14 +3,13 @@ import 'package:extensions/hosting.dart';
 import 'package:extensions/logging.dart';
 import 'package:flutter/widgets.dart';
 
-import 'flutter_application_wrapper.dart';
+import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
+import 'flutter_lifecycle_observer.dart';
 import 'flutter_lifetime.dart';
 import 'flutter_service_collection_extensions.dart';
 
-typedef FlutterAppBuilder = Widget Function(
-  ServiceProvider services,
-);
+typedef FlutterAppBuilder = Widget Function(ServiceProvider services);
 
 /// Registers a builder callback that wraps the the root application widget.
 ///
@@ -18,19 +17,41 @@ typedef FlutterAppBuilder = Widget Function(
 /// to provide some functionality.
 extension FlutterBuilderExtensions on FlutterBuilder {
   FlutterBuilder useApp(FlutterAppBuilder builder) {
+    addRegisteredWidget(
+      (sp, child) => FlutterLifecycleObserver(
+        lifetime:
+            sp.getRequiredService<HostApplicationLifetime>()
+                as FlutterApplicationLifetime,
+        child: child,
+      ),
+    );
+
     services
-      ..addSingleton<FlutterApplicationWrapper>(
-        (s) => FlutterApplicationWrapper(builder(s)),
-      )
+      ..addSingleton<Widget>((sp) {
+        var factories = sp.getServices<RegisteredWidgetFactory>();
+        Widget child = builder(sp);
+
+        for (final factory in factories.toList().reversed) {
+          child = factory(sp, child);
+        }
+
+        return child;
+      })
       ..addSingleton<HostLifetime>(
         (sp) => FlutterLifetime(
-          sp.getRequiredService<FlutterApplicationWrapper>(),
+          sp.getRequiredService<Widget>(),
           sp.getRequiredService<ErrorHandler>(),
           sp.getRequiredService<HostEnvironment>(),
           sp.getRequiredService<ApplicationLifetime>(),
           sp.getRequiredService<LoggerFactory>(),
         ),
       );
+    return this;
+  }
+
+  FlutterBuilder addRegisteredWidget(RegisteredWidgetFactory factory) {
+    services.addSingleton<RegisteredWidgetFactory>((_) => factory);
+
     return this;
   }
 }

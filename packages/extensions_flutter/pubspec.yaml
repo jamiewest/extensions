@@ -9,7 +9,7 @@ environment:
 resolution: workspace
 
 dependencies:
-  collection: ^1.17.0
+  collection: ^1.19.1
   
   extensions: ^0.3.18
 

@@ -1,9 +1,13 @@
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
+import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
 import 'service_provider_extensions.dart';
+
+typedef RegisteredWidgetFactory =
+    Widget Function(ServiceProvider sp, Widget child);
 
 typedef ConfigureAction = void Function(FlutterBuilder builder);
 
@@ -17,10 +21,13 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
       ),
     );
 
+    addSingleton<ApplicationLifetime>(
+      (services) => services.getRequiredService<HostApplicationLifetime>()
+          as ApplicationLifetime,
+    );
+
     addSingleton<ErrorHandler>(
-      (services) => FlutterErrorHandler(
-        services.createLogger('ErrorHandler'),
-      ),
+      (services) => FlutterErrorHandler(services.createLogger('ErrorHandler')),
     );
 
     final builder = FlutterBuilder(this);

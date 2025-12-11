@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:extensions_flutter/extensions_flutter.dart';
-import 'package:extensions_flutter/src/flutter_application_wrapper.dart';
 import 'package:extensions_flutter/src/flutter_error_handler.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -35,7 +34,7 @@ void main() {
   test('waitForStart throws when cancellation is already requested', () async {
     final lifetime = FlutterApplicationLifetime(NullLogger());
     final flutterLifetime = FlutterLifetime(
-      FlutterApplicationWrapper(const SizedBox.shrink()),
+      const SizedBox.shrink(),
       _TestErrorHandler(),
       _TestHostEnvironment(),
       lifetime,

@@ -7,19 +7,17 @@ import 'package:extensions/system.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
-import 'flutter_application_wrapper.dart';
 import 'flutter_error_handler.dart';
-import 'flutter_lifecycle_observer.dart';
 
 class FlutterLifetime implements HostLifetime {
-  final FlutterApplicationWrapper _application;
+  final Widget _application;
   final ErrorHandler _errorHandler;
   final HostEnvironment _environment;
   final FlutterApplicationLifetime _applicationLifetime;
   final Logger _logger;
 
   FlutterLifetime(
-    FlutterApplicationWrapper application,
+    Widget application,
     ErrorHandler errorHandler,
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
@@ -101,12 +99,7 @@ class FlutterLifetime implements HostLifetime {
         FlutterError.onError = _errorHandler.onFlutterError;
         PlatformDispatcher.instance.onError = _errorHandler.onError;
 
-        final app = FlutterLifecycleObserver(
-          lifetime: applicationLifetime,
-          child: _application.child,
-        );
-
-        runApp(app);
+        runApp(_application);
       }),
     );
 
