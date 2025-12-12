@@ -27,7 +27,7 @@ extension FlutterBuilderExtensions on FlutterBuilder {
     );
 
     services
-      ..addSingleton<Widget>((sp) {
+      ..addKeyedSingleton<Widget>('rootAppWidget', (sp, key) {
         var factories = sp.getServices<RegisteredWidgetFactory>();
         Widget child = builder(sp);
 
@@ -37,9 +37,12 @@ extension FlutterBuilderExtensions on FlutterBuilder {
 
         return child;
       })
+      ..addSingleton<Widget>(
+        (sp) => sp.getRequiredKeyedService<Widget>('rootAppWidget'),
+      )
       ..addSingleton<HostLifetime>(
         (sp) => FlutterLifetime(
-          sp.getRequiredService<Widget>(),
+          sp.getRequiredKeyedService<Widget>('rootAppWidget'),
           sp.getRequiredService<ErrorHandler>(),
           sp.getRequiredService<HostEnvironment>(),
           sp.getRequiredService<ApplicationLifetime>(),

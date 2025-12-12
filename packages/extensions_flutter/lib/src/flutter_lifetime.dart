@@ -120,13 +120,13 @@ class FlutterLifetime implements HostLifetime {
   void _onApplicationStopping() =>
       _logger.logInformation('Application is shutting down...');
 
-  void _onPaused() => _logger.logDebug('Application paused.');
+  void _onPaused() => _logger.logTrace('Application paused.');
 
-  void _onResumed() => _logger.logDebug('Application resumed.');
+  void _onResumed() => _logger.logTrace('Application resumed.');
 
-  void _onInactive() => _logger.logDebug('Application is inactive.');
+  void _onInactive() => _logger.logTrace('Application is inactive.');
 
-  void _onHidden() => _logger.logDebug('Application is hidden.');
+  void _onHidden() => _logger.logTrace('Application is hidden.');
 
-  void _onDetached() => _logger.logDebug('Application is detached.');
+  void _onDetached() => _logger.logTrace('Application is detached.');
 }
