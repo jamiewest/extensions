@@ -1,9 +1,11 @@
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
+import 'package:extensions_flutter/src/flutter_builder.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
+import 'flutter_lifetime_options.dart';
 import 'service_provider_extensions.dart';
 
 typedef RegisteredWidgetFactory =
@@ -22,8 +24,9 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
     );
 
     addSingleton<ApplicationLifetime>(
-      (services) => services.getRequiredService<HostApplicationLifetime>()
-          as ApplicationLifetime,
+      (services) =>
+          services.getRequiredService<HostApplicationLifetime>()
+              as ApplicationLifetime,
     );
 
     addSingleton<ErrorHandler>(
@@ -32,21 +35,14 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
 
     final builder = FlutterBuilder(this);
 
+    // configure<FlutterLifetimeOptions>(FlutterLifetimeOptions.new, (options) {
+    //   options.suppressStatusMessages = false;
+    // });
+
     if (configure != null) {
       configure(builder);
     }
 
     return this;
   }
-}
-
-/// An interface for configuring Flutter.
-class FlutterBuilder {
-  final ServiceCollection _services;
-
-  // Private constructor to ensure that the builder is created internally.
-  const FlutterBuilder(ServiceCollection services) : _services = services;
-
-  /// Gets the [ServiceCollection] where flutter services are configured.
-  ServiceCollection get services => _services;
 }

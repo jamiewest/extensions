@@ -86,7 +86,7 @@ class Host implements Disposable, AsyncDisposable {
     var exceptions = <Exception>[];
 
     _hostedServices ??= services.getServices<HostedService>();
-    _hostedLifecycleServices = getHostLifecycles(_hostedServices!);
+    _hostedLifecycleServices = _getHostLifecycles(_hostedServices!);
     _hostStarting = true;
 
     var concurrent = _options.servicesStartConcurrently;
@@ -124,7 +124,7 @@ class Host implements Disposable, AsyncDisposable {
 
     // Call starting().
     if (_hostedLifecycleServices != null) {
-      await foreachService<HostedLifecycleService>(
+      await _foreachService<HostedLifecycleService>(
         _hostedLifecycleServices!,
         cancellationToken,
         concurrent,
@@ -138,7 +138,7 @@ class Host implements Disposable, AsyncDisposable {
     }
 
     // Call start().
-    await foreachService<HostedService>(
+    await _foreachService<HostedService>(
       _hostedServices!,
       cancellationToken,
       concurrent,
@@ -158,7 +158,7 @@ class Host implements Disposable, AsyncDisposable {
 
     // Call started
     if (_hostedLifecycleServices != null) {
-      await foreachService<HostedLifecycleService>(
+      await _foreachService<HostedLifecycleService>(
         _hostedLifecycleServices!,
         cancellationToken,
         concurrent,
@@ -241,7 +241,7 @@ class Host implements Disposable, AsyncDisposable {
 
         // Call stopping.
         if (reversedLifetimeServices.isNotEmpty) {
-          await foreachService<HostedLifecycleService>(
+          await _foreachService<HostedLifecycleService>(
             reversedLifetimeServices,
             cancellationToken,
             concurrent,
@@ -256,7 +256,7 @@ class Host implements Disposable, AsyncDisposable {
         _applicationLifetime.stopApplication();
 
         if (reversedServices.isNotEmpty) {
-          await foreachService<HostedService>(
+          await _foreachService<HostedService>(
             reversedServices,
             cancellationToken,
             concurrent,
@@ -267,7 +267,7 @@ class Host implements Disposable, AsyncDisposable {
         }
 
         if (reversedLifetimeServices.isNotEmpty) {
-          await foreachService<HostedLifecycleService>(
+          await _foreachService<HostedLifecycleService>(
             reversedLifetimeServices,
             cancellationToken,
             concurrent,
@@ -307,7 +307,7 @@ class Host implements Disposable, AsyncDisposable {
     _logger.stopped();
   }
 
-  static Future<void> foreachService<T>(
+  static Future<void> _foreachService<T>(
     Iterable<T> services,
     CancellationToken token,
     bool concurrent,
@@ -357,7 +357,7 @@ class Host implements Disposable, AsyncDisposable {
     }
   }
 
-  static List<HostedLifecycleService>? getHostLifecycles(
+  static List<HostedLifecycleService>? _getHostLifecycles(
     Iterable<HostedService> hostedServices,
   ) {
     var result = <HostedLifecycleService>[];
@@ -400,5 +400,10 @@ class Host implements Disposable, AsyncDisposable {
   static HostApplicationBuilder createApplicationBuilder({
     HostApplicationBuilderSettings? settings,
   }) =>
-      HostApplicationBuilder(settings: settings);
+      DefaultHostApplicationBuilder(settings: settings);
+
+  /// Initializes a new instance of the [HostApplicationBuilder] class with
+  /// no pre-configured defaults.
+  static HostApplicationBuilder createEmptyApplicationBuilder() =>
+      DefaultHostApplicationBuilder();
 }

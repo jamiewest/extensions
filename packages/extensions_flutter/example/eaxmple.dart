@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 final _builder = Host.createApplicationBuilder()
   ..environment.applicationName = 'extensions_flutter_example'
   ..services.addFlutter(
-    (flutter) => flutter.useApp((services) => MyApp(services: services)),
+    (flutter) => flutter.runApp((services) => MyApp(services: services)),
   );
 
 final host = _builder.build();

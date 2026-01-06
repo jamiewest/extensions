@@ -35,7 +35,7 @@ class ApplicationLifetime implements HostApplicationLifetime {
   @override
   void stopApplication() {
     try {
-      _executeHandlers(_stoppingSource);
+      _stoppingSource.cancel();
     } on Exception catch (ex) {
       _logger.applicationError(
         LoggerEventIds.applicationStoppingException,
@@ -48,7 +48,7 @@ class ApplicationLifetime implements HostApplicationLifetime {
   /// Signals the ApplicationStarted event and blocks until it completes.
   void notifyStarted() {
     try {
-      _executeHandlers(_startedSource);
+      _startedSource.cancel();
     } on Exception catch (ex) {
       _logger.applicationError(
         LoggerEventIds.applicationStartupException,
@@ -61,7 +61,7 @@ class ApplicationLifetime implements HostApplicationLifetime {
   /// Signals the ApplicationStopped event and blocks until it completes.
   void notifyStopped() {
     try {
-      _executeHandlers(_stoppedSource);
+      _stoppedSource.cancel();
     } on Exception catch (ex) {
       _logger.applicationError(
         LoggerEventIds.applicationStoppedException,
@@ -69,15 +69,5 @@ class ApplicationLifetime implements HostApplicationLifetime {
         ex,
       );
     }
-  }
-
-  void _executeHandlers(CancellationTokenSource cts) {
-    // Noop if this is already cancelled
-    if (cts.isCancellationRequested) {
-      return;
-    }
-
-    // Run the cancellation token callbacks
-    cts.cancel();
   }
 }

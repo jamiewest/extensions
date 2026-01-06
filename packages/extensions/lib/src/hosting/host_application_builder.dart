@@ -1,7 +1,9 @@
 import 'package:path/path.dart' as p;
 
+import '../../diagnostics.dart';
 import '../configuration/configuration_manager.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
+import '../configuration/providers/environment_variables/environment_variables_extensions.dart';
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_container_builder_extensions.dart';
 import '../dependency_injection/service_provider.dart';
@@ -14,96 +16,155 @@ import 'host_builder.dart';
 import 'host_builder_context.dart';
 import 'host_defaults.dart';
 import 'host_environment.dart';
+import 'hosting_host_builder_extensions.dart' as HostingHostBuilderExtensions;
+import 'hosting_host_builder_extensions_io.dart'
+    as HostingHostBuilderExtensionsIO;
 import 'hosting_host_builder_extensions_io.dart';
 import 'internal/configure_container_adapter.dart';
 import 'internal/service_factory_adapter.dart';
 
-/// A builder for hosted applications and services which helps manage
-/// configuration, logging, lifetime and more.
-class HostApplicationBuilder {
+typedef ConfigureContainerBuilder<TContainerBuilder> = void Function(
+  TContainerBuilder containerBuilder,
+);
+
+typedef ConfigureContainer<TContainerBuilder> = void Function(
+  TContainerBuilder containerBuilder,
+);
+
+typedef CreateServiceProvider = ServiceProvider Function();
+
+/// Represents a hosted applications and services builder which helps manage
+/// configuration, logging, lifetime, and more.
+abstract class HostApplicationBuilder {
+  /// Initializes a new instance of the [HostApplicationBuilder] class with
+  /// optional [settings].
+  factory HostApplicationBuilder({HostApplicationBuilderSettings? settings}) =>
+      DefaultHostApplicationBuilder(settings: settings);
+
+  /// Gets a central location for sharing state between components during the
+  /// host building process.
+  Map<Object, Object> get properties;
+
+  /// Gets the set of key/value configuration properties.
+  ConfigurationManager get configuration;
+
+  /// Gets the information about the hosting environment an application is
+  /// running in.
+  HostEnvironment get environment;
+
+  /// Gets a collection of logging providers for the application to compose.
+  /// This is useful for adding new logging providers.
+  LoggingBuilder get logging;
+
+  /// Gets a builder that allows enabling metrics and directing their output.
+  MetricsBuilder get metrics;
+
+  /// Gets a collection of services for the application to compose. This is
+  /// useful for adding user provided or framework provided services.
+  ServiceCollection get services;
+
+  /// Registers a [ServiceProviderFactory<TContainerBuilder>] instance to be
+  /// used to create the [ServiceProvider].
+  void configureContainer<TContainerBuilder>(
+    ServiceProviderFactory<TContainerBuilder> factory,
+    ConfigureContainerBuilder<TContainerBuilder>? configure,
+  );
+
+  /// Builds the host. This method can only be called once.
+  Host build();
+}
+
+/// Represents a hosted applications and services builder that helps manage
+/// configuration, logging, lifetime, and more.
+class DefaultHostApplicationBuilder implements HostApplicationBuilder {
   late final HostBuilderContext _hostBuilderContext;
   final ServiceCollection _serviceCollection = ServiceCollection();
-  late final ServiceProvider Function() _createServiceProvider;
-  late void Function(Object value) _configureContainer = (_) => {};
+  late final HostEnvironment _environment;
+  late final LoggingBuilder _logging;
+  late final MetricsBuilder _metrics;
+
+  late final CreateServiceProvider _createServiceProvider;
+  ConfigureContainer<Object> _configureContainer = (_) => {};
   HostBuilderAdapter? _hostBuilderAdapter;
+
   ServiceProvider? _appServices;
-  bool _hostBuilt = false;
-  late HostEnvironment _environment;
-  late ConfigurationManager _configuration;
-  late _LoggingBuilder _logging;
+  bool _hostBuilt;
 
-  HostApplicationBuilder({HostApplicationBuilderSettings? settings}) {
-    var appSettings = settings ?? HostApplicationBuilderSettings();
-    _configuration = appSettings.configuration ?? ConfigurationManager();
+  late final ConfigurationManager _configuration;
 
-    if (!appSettings.disableDefaults) {
-      HostingHostBuilderExtensions.applyDefaultHostConfiguration(
-        configuration,
-        appSettings.args,
-      );
+  DefaultHostApplicationBuilder({HostApplicationBuilderSettings? settings})
+      : _hostBuilt = false {
+    settings ??= HostApplicationBuilderSettings();
+    _configuration = settings.configuration ?? ConfigurationManager();
+
+    if (!settings.disableDefaults) {
+      if (settings.configurationRootPath == null &&
+          configuration[HostDefaults.contentRootKey] == null) {
+        HostingHostBuilderExtensions.setDefaultContentRoot(configuration);
+      }
+
+      configuration.addEnvironmentVariables(prefix: 'DOTNET_');
     }
 
     List<MapEntry<String, String>>? optionList;
-    if (appSettings.applicationName != null) {
+    if (settings.applicationName != null) {
       optionList ??= <MapEntry<String, String>>[];
       optionList.add(
-        MapEntry(HostDefaults.applicationKey, appSettings.applicationName!),
+        MapEntry(HostDefaults.applicationKey, settings.applicationName!),
       );
     }
-    if (appSettings.environmentName != null) {
+    if (settings.environmentName != null) {
       optionList ??= <MapEntry<String, String>>[];
       optionList.add(
-        MapEntry(HostDefaults.environmentKey, appSettings.environmentName!),
+        MapEntry(HostDefaults.environmentKey, settings.environmentName!),
       );
     }
-    if (appSettings.configurationRootPath != null) {
+    if (settings.configurationRootPath != null) {
       optionList ??= <MapEntry<String, String>>[];
       optionList.add(
-        MapEntry(
-            HostDefaults.contentRootKey, appSettings.configurationRootPath!),
+        MapEntry(HostDefaults.contentRootKey, settings.configurationRootPath!),
       );
     }
     if (optionList != null) {
       configuration.addInMemoryCollection(optionList);
     }
 
-    var hostingEnvironment = createHostingEnvironment(configuration);
+    _environment = createHostingEnvironment(configuration);
 
     _hostBuilderContext = HostBuilderContext(<Object, Object>{})
-      ..hostingEnvironment = hostingEnvironment
+      ..hostingEnvironment = _environment
       ..configuration = configuration;
-
-    _environment = hostingEnvironment;
-
-    // Apply default app configuration (appsettings.json, environment
-    // variables, command line)
-    if (!appSettings.disableDefaults) {
-      HostingHostBuilderExtensions.applyDefaultAppConfiguration(
-        _hostBuilderContext,
-        configuration,
-        appSettings.args,
-      );
-    }
 
     populateServiceCollection(
       services,
       _hostBuilderContext,
-      hostingEnvironment,
+      _environment,
       configuration,
       () => _appServices!,
     );
 
     _logging = _LoggingBuilder(services);
+    _metrics = _MetricsBuilder(services);
+
+    // Apply default app configuration (appsettings.json, environment
+    // variables, command line)
+    if (!settings.disableDefaults) {
+      HostingHostBuilderExtensionsIO.applyDefaultAppConfiguration(
+        _hostBuilderContext,
+        configuration,
+        settings.args,
+      );
+    }
 
     ServiceProviderOptions? serviceProviderOptions;
 
-    if (!appSettings.disableDefaults) {
-      HostingHostBuilderExtensions.addDefaultServices(
+    if (!settings.disableDefaults) {
+      HostingHostBuilderExtensionsIO.addDefaultServices(
         _hostBuilderContext,
         services,
       );
       serviceProviderOptions =
-          HostingHostBuilderExtensions.createDefaultServiceProviderOptions(
+          HostingHostBuilderExtensionsIO.createDefaultServiceProviderOptions(
         _hostBuilderContext,
       );
     }
@@ -119,23 +180,58 @@ class HostApplicationBuilder {
     };
   }
 
-  /// Provides information about the hosting environment an application is
-  /// running in.
+  /// Gets a central location for sharing state between components
+  /// during the host building process.
+  @override
+  Map<Object, Object> get properties => _hostBuilderContext.properties;
+
+  /// Gets the information about the hosting environment an application
+  /// is running in.
+  @override
   HostEnvironment get environment => _environment;
 
-  /// A collection of services for the application to compose. This is useful
-  /// for adding user provided or framework provided services.
+  /// Gets the set of key/value configuration properties.
+  ///
+  /// This can be mutated by adding more configuration sources, which
+  /// will update its current view.
+  @override
   ConfigurationManager get configuration => _configuration;
 
-  /// A collection of services for the application to compose. This is useful
-  /// for adding user provided or framework provided services.
+  /// Gets a collection of services for the application to compose. This is
+  /// useful for adding user provided or framework provided services.
+  @override
   ServiceCollection get services => _serviceCollection;
 
-  /// A collection of logging providers for the application to compose. This is
-  /// useful for adding new logging providers.
+  /// Gets a collection of logging providers for the application to
+  /// compose. This is useful for adding new logging providers.
+  @override
   LoggingBuilder get logging => _logging;
 
-  /// Build the host. This can only be called once.
+  /// Gets a builder that allows enabling metrics and directing their output.
+  @override
+  MetricsBuilder get metrics => _metrics;
+
+  /// Registers a [ServiceProviderFactory] instance to be used to create
+  /// the [ServiceProvider].
+  @override
+  void configureContainer<TContainerBuilder>(
+    ServiceProviderFactory<TContainerBuilder> factory,
+    ConfigureContainer<TContainerBuilder>? configure,
+  ) {
+    _createServiceProvider = () {
+      var containerBuilder = factory.createBuilder(_serviceCollection);
+      configure?.call(containerBuilder);
+      return factory.createServiceProvider(containerBuilder);
+    };
+
+    // Store _configureContainer separately so it an be replaced individually
+    // by the HostBuilderAdapter.
+    _configureContainer = (containerBuilder) {
+      configure?.call(containerBuilder as TContainerBuilder);
+    };
+  }
+
+  @override
   Host build() {
     if (_hostBuilt) {
       throw Exception('Build can only be called once.');
@@ -157,16 +253,18 @@ class HostApplicationBuilder {
 
 class HostBuilderAdapter implements HostBuilder {
   final HostApplicationBuilder _hostApplicationBuilder;
+
   final List<ConfigureHostConfigurationDelegate> _configureHostConfigActions =
       <ConfigureHostConfigurationDelegate>[];
   final List<ConfigureAppConfigurationDelegate> _configureAppConfigActions =
       <ConfigureAppConfigurationDelegate>[];
+  final List<DefaultConfigureContainerAdapter<dynamic>>
+      _configureContainerActions =
+      <DefaultConfigureContainerAdapter<dynamic>>[];
   final List<ConfigureServicesDelegate> _configureServicesActions =
       <ConfigureServicesDelegate>[];
-  final List<ConfigureContainerAdapter<dynamic>> _configureContainerActions =
-      <ConfigureContainerAdapter<dynamic>>[];
 
-  IServiceFactoryAdapter? _serviceProviderFactory;
+  ServiceFactoryAdapter? _serviceProviderFactory;
 
   HostBuilderAdapter(HostApplicationBuilder hostApplicationBuilder)
       : _hostApplicationBuilder = hostApplicationBuilder;
@@ -178,8 +276,11 @@ class HostBuilderAdapter implements HostBuilder {
       var previousApplicationName = config[HostDefaults.applicationKey];
       var previousEnvironment = config[HostDefaults.environmentKey];
       var previousContentRootConfig = config[HostDefaults.contentRootKey];
-      var previousContentRootPath = _hostApplicationBuilder
-          ._hostBuilderContext.hostingEnvironment?.contentRootPath;
+      var previousContentRootPath =
+          (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+              ._hostBuilderContext
+              .hostingEnvironment
+              ?.contentRootPath;
 
       for (var configureHostAction in _configureHostConfigActions) {
         configureHostAction(config);
@@ -212,11 +313,15 @@ class HostBuilderAdapter implements HostBuilder {
     }
 
     for (var configureAppAction in _configureAppConfigActions) {
-      configureAppAction(_hostApplicationBuilder._hostBuilderContext, config);
+      configureAppAction(
+          (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+              ._hostBuilderContext,
+          config);
     }
     for (var configureServicesAction in _configureServicesActions) {
       configureServicesAction(
-        _hostApplicationBuilder._hostBuilderContext,
+        (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+            ._hostBuilderContext,
         _hostApplicationBuilder.services,
       );
 
@@ -276,8 +381,10 @@ class HostBuilderAdapter implements HostBuilder {
     ServiceProviderFactory<TContainerBuilder>? implementation,
     FactoryResolver<TContainerBuilder>? factory,
   }) {
-    _serviceProviderFactory = ServiceFactoryAdapter<TContainerBuilder>.builder(
-      () => _hostApplicationBuilder._hostBuilderContext,
+    _serviceProviderFactory =
+        DefaultServiceFactoryAdapter<TContainerBuilder>.builder(
+      () => (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+          ._hostBuilderContext,
       factory!,
     );
     return this;
@@ -288,20 +395,31 @@ class HostBuilderAdapter implements HostBuilder {
     ConfigureContainerAdapterDelegate<TContainerBuilder> configureDelegate,
   ) {
     _configureContainerActions.add(
-      ConfigureContainerAdapter<TContainerBuilder>(configureDelegate),
+      DefaultConfigureContainerAdapter<TContainerBuilder>(configureDelegate),
     );
     return this;
   }
 
   @override
   Map<Object, Object> get properties =>
-      _hostApplicationBuilder._hostBuilderContext.properties;
+      (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+          ._hostBuilderContext
+          .properties;
 }
 
 class _LoggingBuilder implements LoggingBuilder {
   final ServiceCollection _serviceCollection;
 
   _LoggingBuilder(this._serviceCollection);
+
+  @override
+  ServiceCollection get services => _serviceCollection;
+}
+
+class _MetricsBuilder implements MetricsBuilder {
+  final ServiceCollection _serviceCollection;
+
+  _MetricsBuilder(this._serviceCollection);
 
   @override
   ServiceCollection get services => _serviceCollection;

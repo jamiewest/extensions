@@ -10,19 +10,19 @@ typedef FactoryResolver<TContainerBuilder>
   HostBuilderContext hostContext,
 );
 
-abstract class IServiceFactoryAdapter {
+abstract class ServiceFactoryAdapter {
   Object createBuilder(ServiceCollection services);
 
   ServiceProvider createServiceProvider(Object containerBuilder);
 }
 
-class ServiceFactoryAdapter<TContainerBuilder>
-    implements IServiceFactoryAdapter {
+class DefaultServiceFactoryAdapter<TContainerBuilder>
+    implements ServiceFactoryAdapter {
   ServiceProviderFactory<TContainerBuilder>? _serviceProviderFactory;
   ContextResolver? _contextResolver;
   FactoryResolver<TContainerBuilder>? _factoryResolver;
 
-  ServiceFactoryAdapter._({
+  DefaultServiceFactoryAdapter._({
     ServiceProviderFactory<TContainerBuilder>? serviceProviderFactory,
     ContextResolver? contextResolver,
     FactoryResolver<TContainerBuilder>? factoryResolver,
@@ -30,15 +30,15 @@ class ServiceFactoryAdapter<TContainerBuilder>
         _contextResolver = contextResolver,
         _factoryResolver = factoryResolver;
 
-  ServiceFactoryAdapter(
+  DefaultServiceFactoryAdapter(
     ServiceProviderFactory<TContainerBuilder> serviceProviderFactory,
   ) : _serviceProviderFactory = serviceProviderFactory;
 
-  factory ServiceFactoryAdapter.builder(
+  factory DefaultServiceFactoryAdapter.builder(
     ContextResolver contextResolver,
     FactoryResolver<TContainerBuilder> factoryResolver,
   ) =>
-      ServiceFactoryAdapter._(
+      DefaultServiceFactoryAdapter._(
         contextResolver: contextResolver,
         factoryResolver: factoryResolver,
       );

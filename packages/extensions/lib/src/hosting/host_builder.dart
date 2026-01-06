@@ -1,6 +1,10 @@
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
-import '../../configuration.dart';
+import '../configuration/chained_builder_extensions.dart';
+import '../configuration/configuration.dart';
+import '../configuration/configuration_builder.dart';
+import '../configuration/memory_configuration_builder_extensions.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_descriptor_extensions.dart';
@@ -13,6 +17,7 @@ import '../logging/logger_factory.dart';
 import '../logging/logging_builder.dart';
 import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';
+import '../system/exceptions/invalid_operation_exception.dart';
 import 'environments.dart';
 import 'host.dart';
 import 'host_application_lifetime.dart';
@@ -53,12 +58,19 @@ typedef ConfigureContainerDelegate<TContainerBuilder> = TContainerBuilder
 
 /// A program initialization abstraction.
 abstract class HostBuilder {
+  factory HostBuilder() => DefaultHostBuilder();
+
   Map<Object, Object> get properties;
 
   HostBuilder configureHostConfiguration(
     ConfigureHostConfigurationDelegate configureDelegate,
   );
 
+  /// Sets up the configuration for the remainder of the build process and
+  /// application. This can be called multiple times and the results will
+  /// be additive. The results will be available at
+  /// [HostBuilderContext.configuration] for subsequent operations, as well
+  /// as in [Host.services].
   HostBuilder configureAppConfiguration(
     ConfigureAppConfigurationDelegate configureDelegate,
   );
@@ -86,11 +98,12 @@ class DefaultHostBuilder implements HostBuilder {
       <ConfigureAppConfigurationDelegate>[];
   final List<ConfigureServicesDelegate> _configureServicesActions =
       <ConfigureServicesDelegate>[];
-  final List<ConfigureContainerAdapter<dynamic>> _configureContainerActions =
-      <ConfigureContainerAdapter<dynamic>>[];
+  final List<DefaultConfigureContainerAdapter<dynamic>>
+      _configureContainerActions =
+      <DefaultConfigureContainerAdapter<dynamic>>[];
 
-  IServiceFactoryAdapter? _serviceProviderFactory =
-      ServiceFactoryAdapter<ServiceCollection>(
+  ServiceFactoryAdapter? _serviceProviderFactory =
+      DefaultServiceFactoryAdapter<ServiceCollection>(
     DefaultServiceProviderFactory(),
   );
 
@@ -152,10 +165,10 @@ class DefaultHostBuilder implements HostBuilder {
   }) {
     if (implementation != null) {
       _serviceProviderFactory =
-          ServiceFactoryAdapter<TContainerBuilder>(implementation);
+          DefaultServiceFactoryAdapter<TContainerBuilder>(implementation);
     } else {
       if (factory != null) {
-        _serviceProviderFactory = ServiceFactoryAdapter.builder(
+        _serviceProviderFactory = DefaultServiceFactoryAdapter.builder(
           () => _hostBuilderContext!,
           factory,
         );
@@ -174,7 +187,7 @@ class DefaultHostBuilder implements HostBuilder {
     ConfigureContainerAdapterDelegate<TContainerBuilder> configureDelegate,
   ) {
     _configureContainerActions.add(
-      ConfigureContainerAdapter<TContainerBuilder>(configureDelegate),
+      DefaultConfigureContainerAdapter<TContainerBuilder>(configureDelegate),
     );
     return this;
   }
@@ -184,7 +197,9 @@ class DefaultHostBuilder implements HostBuilder {
   @override
   Host build() {
     if (_hostBuilt) {
-      throw Exception('Build can only be called once.');
+      throw InvalidOperationException(
+        message: 'Build can only be called once.',
+      );
     }
     _hostBuilt = true;
 
@@ -260,6 +275,22 @@ class DefaultHostBuilder implements HostBuilder {
   }
 }
 
+@internal
+HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
+  var hostingEnvironment = HostingEnvironment()
+    ..applicationName =
+        hostConfiguration[HostDefaults.applicationKey] ?? 'application'
+    ..environmentName = hostConfiguration[HostDefaults.environmentKey] ??
+        Environments.production
+    ..contentRootPath = resolveContentRootPath(
+      hostConfiguration[HostDefaults.contentRootKey],
+      p.current,
+    );
+
+  return hostingEnvironment;
+}
+
+@internal
 void populateServiceCollection(
   ServiceCollection services,
   HostBuilderContext hostBuilderContext,
@@ -306,20 +337,7 @@ void populateServiceCollection(
   host_builder.addLifetime(services);
 }
 
-HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
-  var hostingEnvironment = HostingEnvironment()
-    ..applicationName =
-        hostConfiguration[HostDefaults.applicationKey] ?? 'application'
-    ..environmentName = hostConfiguration[HostDefaults.environmentKey] ??
-        Environments.production
-    ..contentRootPath = resolveContentRootPath(
-      hostConfiguration[HostDefaults.contentRootKey],
-      p.current,
-    );
-
-  return hostingEnvironment;
-}
-
+@internal
 String resolveContentRootPath(String? contentRootPath, String basePath) {
   if (contentRootPath == null) {
     return basePath;
@@ -330,6 +348,7 @@ String resolveContentRootPath(String? contentRootPath, String basePath) {
   return p.join(p.absolute(basePath), contentRootPath);
 }
 
+@internal
 Host resolveHost(ServiceProvider serviceProvider) {
   // resolve configuration explicitly once to mark it as resolved within the
   // service provider, ensuring it will be properly disposed with the provider

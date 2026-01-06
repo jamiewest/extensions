@@ -1,12 +1,15 @@
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
 import 'package:extensions/logging.dart';
+import 'package:extensions/options.dart';
+import 'package:extensions_flutter/src/flutter_builder.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
 import 'flutter_lifecycle_observer.dart';
 import 'flutter_lifetime.dart';
+import 'flutter_lifetime_options.dart';
 import 'flutter_service_collection_extensions.dart';
 
 typedef FlutterAppBuilder = Widget Function(ServiceProvider services);
@@ -16,7 +19,7 @@ typedef FlutterAppBuilder = Widget Function(ServiceProvider services);
 /// This is useful in scenarios where you need to wrap the root widget in order
 /// to provide some functionality.
 extension FlutterBuilderExtensions on FlutterBuilder {
-  FlutterBuilder useApp(FlutterAppBuilder builder) {
+  FlutterBuilder runApp(FlutterAppBuilder builder) {
     addRegisteredWidget(
       (sp, child) => FlutterLifecycleObserver(
         lifetime:
@@ -46,6 +49,7 @@ extension FlutterBuilderExtensions on FlutterBuilder {
           sp.getRequiredService<ErrorHandler>(),
           sp.getRequiredService<HostEnvironment>(),
           sp.getRequiredService<ApplicationLifetime>(),
+          sp.getRequiredService<Options<FlutterLifetimeOptions>>(),
           sp.getRequiredService<LoggerFactory>(),
         ),
       );

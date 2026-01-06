@@ -296,7 +296,7 @@ class CallSiteFactory
           lifetime,
           descriptor.serviceType,
           descriptor.serviceKey!,
-          (sp, a) => descriptor.keyedImplementationFactory!(sp, a),
+          descriptor.keyedImplementationFactory!,
         );
       } else {
         throw InvalidOperationException(message: 'Invalid service descriptor');

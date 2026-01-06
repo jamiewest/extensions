@@ -21,6 +21,8 @@ class FlutterLifecycleObserver extends StatefulWidget {
 
 class _FlutterLifecycleObserver extends State<FlutterLifecycleObserver>
     with WidgetsBindingObserver {
+  late final AppLifecycleListener _listener;
+
   @override
   Widget build(BuildContext context) => widget.child;
 
@@ -28,11 +30,13 @@ class _FlutterLifecycleObserver extends State<FlutterLifecycleObserver>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _listener = AppLifecycleListener();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _listener.dispose();
     super.dispose();
   }
 

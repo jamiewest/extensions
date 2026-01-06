@@ -109,7 +109,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   ) {
     var descriptor = ServiceDescriptor.keyedTransient<TService>(
       serviceKey,
-      (services) => implementationFactory,
+      implementationFactory,
     );
     tryAdd(descriptor);
   }
@@ -120,7 +120,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   ) {
     var descriptor = ServiceDescriptor.keyedScoped<TService>(
       serviceKey,
-      (services) => implementationFactory,
+      implementationFactory,
     );
     tryAdd(descriptor);
   }
@@ -135,7 +135,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   ) {
     var descriptor = ServiceDescriptor.keyedSingleton<TService>(
       serviceKey,
-      (services) => implementationFactory,
+      implementationFactory,
     );
     tryAdd(descriptor);
   }

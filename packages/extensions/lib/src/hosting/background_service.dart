@@ -24,7 +24,7 @@ abstract base class BackgroundService implements HostedService, Disposable {
   @override
   Future<void> start(CancellationToken cancellationToken) async {
     // Create linked token to allow cancelling executing
-    // task from provided token
+    // future from provided token
     _stoppingCts =
         CancellationTokenSource.createLinkedTokenSource([cancellationToken]);
 

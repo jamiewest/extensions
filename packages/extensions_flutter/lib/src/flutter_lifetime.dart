@@ -3,17 +3,20 @@ import 'dart:ui';
 
 import 'package:extensions/hosting.dart';
 import 'package:extensions/logging.dart';
+import 'package:extensions/options.dart';
 import 'package:extensions/system.dart';
 import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
+import 'flutter_lifetime_options.dart';
 
 class FlutterLifetime implements HostLifetime {
   final Widget _application;
   final ErrorHandler _errorHandler;
   final HostEnvironment _environment;
   final FlutterApplicationLifetime _applicationLifetime;
+  final FlutterLifetimeOptions _options;
   final Logger _logger;
 
   FlutterLifetime(
@@ -21,11 +24,13 @@ class FlutterLifetime implements HostLifetime {
     ErrorHandler errorHandler,
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
+    Options<FlutterLifetimeOptions> options,
     LoggerFactory loggerFactory,
   ) : _application = application,
       _errorHandler = errorHandler,
       _environment = environment,
       _applicationLifetime = applicationLifetime as FlutterApplicationLifetime,
+      _options = options.value!,
       _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
   HostEnvironment get environment => _environment;

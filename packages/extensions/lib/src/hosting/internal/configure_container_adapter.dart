@@ -5,13 +5,22 @@ typedef ConfigureContainerAdapterDelegate<TContainerBuilder> = void Function(
   TContainerBuilder containerBuilder,
 );
 
-class ConfigureContainerAdapter<TContainerBuilder> {
+abstract class ConfigureContainerAdapter {
+  void configureContainer(
+    HostBuilderContext hostContext,
+    Object containerBuilder,
+  );
+}
+
+class DefaultConfigureContainerAdapter<TContainerBuilder>
+    implements ConfigureContainerAdapter {
   final ConfigureContainerAdapterDelegate<TContainerBuilder> _action;
 
-  ConfigureContainerAdapter(
+  DefaultConfigureContainerAdapter(
     ConfigureContainerAdapterDelegate<TContainerBuilder> action,
   ) : _action = action;
 
+  @override
   void configureContainer(
     HostBuilderContext hostContext,
     Object containerBuilder,

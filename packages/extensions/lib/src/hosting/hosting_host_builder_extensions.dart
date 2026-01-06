@@ -1,7 +1,7 @@
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
-import '../configuration/configuration_builder.dart';
-import '../configuration/memory_configuration_builder_extensions.dart';
+import '../../configuration.dart';
 import '../dependency_injection/default_service_provider_factory.dart';
 import '../dependency_injection/service_provider.dart';
 import '../dependency_injection/service_provider_options.dart';
@@ -37,10 +37,10 @@ extension HostingHostBuilderExtensions on HostBuilder {
         ),
       );
 
-  /// Specify the content root directory to be used by the host.
+  /// Specifies the content root directory to be used by the host.
   ///
   /// To avoid the content root directory being overwritten by a default value,
-  /// this is called after defaults are configured.
+  /// ensure this is called after defaults are configured.
   HostBuilder useContentRoot(String contentRoot) => configureHostConfiguration(
         (configBuilder) => configBuilder.addInMemoryCollection([
           MapEntry<String, String>(
@@ -63,7 +63,7 @@ extension HostingHostBuilderExtensions on HostBuilder {
       );
 
   /// Adds a delegate for configuring the provided [LoggingBuilder].
-  /// This may be called multiple times.
+  /// This can be called multiple times.
   HostBuilder configureLogging(
     void Function(
       HostBuilderContext context,
@@ -96,28 +96,17 @@ extension HostingHostBuilderExtensions on HostBuilder {
         (context, logging) => logging.addDebug(),
       ).configureAppConfiguration(
         (context, configuration) =>
-            applyDefaultHostConfiguration(configuration),
+            _applyDefaultHostConfiguration(configuration),
       )..useServiceProviderFactory(
           factory: (context) => DefaultServiceProviderFactory(
             options: createDefaultServiceProviderOptions(context),
           ),
         );
 
-  static void applyDefaultHostConfiguration(
+  static void _applyDefaultHostConfiguration(
     ConfigurationBuilder hostConfigBuilder,
   ) {
     setDefaultContentRoot(hostConfigBuilder);
-  }
-
-  static void setDefaultContentRoot(
-    ConfigurationBuilder hostConfigBuilder,
-  ) {
-    var cwd = p.current;
-    hostConfigBuilder.addInMemoryCollection(
-      <String, String>{
-        HostDefaults.contentRootKey: cwd,
-      }.entries,
-    );
   }
 
   ServiceProviderOptions createDefaultServiceProviderOptions(
@@ -129,4 +118,26 @@ extension HostingHostBuilderExtensions on HostBuilder {
       validateOnBuild: isDevelopment,
     );
   }
+}
+
+@internal
+void addCommandLineConfig(
+    ConfigurationBuilder configBuilder, List<String>? args) {
+  if (args != null) {
+    if (args.isNotEmpty) {
+      configBuilder.addCommandLine(args);
+    }
+  }
+}
+
+@internal
+void setDefaultContentRoot(
+  ConfigurationBuilder hostConfigBuilder,
+) {
+  var cwd = p.current;
+  hostConfigBuilder.addInMemoryCollection(
+    <String, String>{
+      HostDefaults.contentRootKey: cwd,
+    }.entries,
+  );
 }

@@ -19,13 +19,14 @@ class _TestHostEnvironment implements HostEnvironment {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Print widget tree to verify FlutterLifecycleObserver',
-      (WidgetTester tester) async {
+  testWidgets('Print widget tree to verify FlutterLifecycleObserver', (
+    WidgetTester tester,
+  ) async {
     final services = ServiceCollection()
       ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
       ..addLogging()
       ..addFlutter(
-        (flutter) => flutter.useApp(
+        (flutter) => flutter.runApp(
           (_) => const Directionality(
             textDirection: TextDirection.ltr,
             child: Text('My App'),

@@ -6,10 +6,14 @@ import 'hosted_service.dart';
 
 /// Options for [Host].
 class HostOptions {
-  /// The default timeout for [Host.Stop(cancellationToken)].
+  /// Gets or sets the default timeout for `[Host.Stop(cancellationToken)]`.
+  ///
+  /// This timeout also encompasses all host services implementing
   Duration? shutdownTimeout = const Duration(seconds: 30);
 
-  /// The default timeout for [Host.start(cancellationToken)].
+  /// Gets or sets the default timeout for `[Host.start(cancellationToken)]`.
+  ///
+  /// This timeout also encompasses all host services implementing
   Duration? startupTimeout;
 
   /// Determines if the [Host] will start registered instances of
@@ -58,20 +62,21 @@ class HostOptions {
       }
     }
 
-    var backgroundServiceExceptionBehaviorConfig =
-        configuration['backgroundServiceExceptionBehavior'];
-    if (backgroundServiceExceptionBehaviorConfig != null &&
-        backgroundServiceExceptionBehaviorConfig.isNotEmpty) {
-      switch (backgroundServiceExceptionBehaviorConfig.toLowerCase()) {
-        case 'stophost':
-          backgroundServiceExceptionBehavior =
-              BackgroundServiceExceptionBehavior.stopHost;
-          break;
-        case 'ignore':
-          backgroundServiceExceptionBehavior =
-              BackgroundServiceExceptionBehavior.ignore;
-          break;
-      }
-    }
+    //   var backgroundServiceExceptionBehaviorConfig =
+    //       configuration['backgroundServiceExceptionBehavior'];
+    //   if (backgroundServiceExceptionBehaviorConfig != null &&
+    //       backgroundServiceExceptionBehaviorConfig.isNotEmpty) {
+    //     switch (backgroundServiceExceptionBehaviorConfig.toLowerCase()) {
+    //       case 'stophost':
+    //         backgroundServiceExceptionBehavior =
+    //             BackgroundServiceExceptionBehavior.stopHost;
+    //         break;
+    //       case 'ignore':
+    //         backgroundServiceExceptionBehavior =
+    //             BackgroundServiceExceptionBehavior.ignore;
+    //         break;
+    //     }
+    //   }
+    // }
   }
 }

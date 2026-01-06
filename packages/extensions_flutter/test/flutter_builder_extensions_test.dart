@@ -26,12 +26,7 @@ class _WrapperWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Column(
-        children: [
-          Text(label),
-          child,
-        ],
-      ),
+      child: Column(children: [Text(label), child]),
     );
   }
 }
@@ -45,9 +40,7 @@ void main() {
         ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
         ..addLogging()
         ..addFlutter(
-          (flutter) => flutter.useApp(
-            (_) => const Text('Root Widget'),
-          ),
+          (flutter) => flutter.runApp((_) => const Text('Root Widget')),
         );
 
       final provider = services.buildServiceProvider();
@@ -71,7 +64,7 @@ void main() {
           flutter.addRegisteredWidget(
             (sp, child) => _WrapperWidget(label: 'Wrapper 2', child: child),
           );
-          flutter.useApp((_) => const Text('Root Widget'));
+          flutter.runApp((_) => const Text('Root Widget'));
         });
 
       final provider = services.buildServiceProvider();
@@ -111,7 +104,7 @@ void main() {
             buildOrder.add('Wrapper 2');
             return _WrapperWidget(label: 'Wrapper 2', child: child);
           });
-          flutter.useApp((_) {
+          flutter.runApp((_) {
             buildOrder.add('Root');
             return const Text('Root Widget');
           });
@@ -130,9 +123,7 @@ void main() {
         ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
         ..addLogging()
         ..addFlutter(
-          (flutter) => flutter.useApp(
-            (_) => const Text('Root Widget'),
-          ),
+          (flutter) => flutter.runApp((_) => const Text('Root Widget')),
         );
 
       final provider = services.buildServiceProvider();
@@ -151,7 +142,7 @@ void main() {
             final value = sp.getRequiredService<String>();
             return _WrapperWidget(label: value, child: child);
           });
-          flutter.useApp((_) => const Text('Root Widget'));
+          flutter.runApp((_) => const Text('Root Widget'));
         });
 
       final provider = services.buildServiceProvider();
@@ -167,7 +158,7 @@ void main() {
         ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
         ..addLogging()
         ..addFlutter(
-          (flutter) => flutter.useApp((sp) {
+          (flutter) => flutter.runApp((sp) {
             final value = sp.getRequiredService<String>();
             return Text(value);
           }),
@@ -183,44 +174,47 @@ void main() {
       expect((observer.child as Text).data, 'Service Value');
     });
 
-    test('multiple registered widgets are applied in reverse registration order', () {
-      final services = ServiceCollection()
-        ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
-        ..addLogging()
-        ..addFlutter((flutter) {
-          flutter.addRegisteredWidget(
-            (sp, child) => _WrapperWidget(label: 'First', child: child),
-          );
-          flutter.addRegisteredWidget(
-            (sp, child) => _WrapperWidget(label: 'Second', child: child),
-          );
-          flutter.addRegisteredWidget(
-            (sp, child) => _WrapperWidget(label: 'Third', child: child),
-          );
-          flutter.useApp((_) => const Text('Root'));
-        });
+    test(
+      'multiple registered widgets are applied in reverse registration order',
+      () {
+        final services = ServiceCollection()
+          ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
+          ..addLogging()
+          ..addFlutter((flutter) {
+            flutter.addRegisteredWidget(
+              (sp, child) => _WrapperWidget(label: 'First', child: child),
+            );
+            flutter.addRegisteredWidget(
+              (sp, child) => _WrapperWidget(label: 'Second', child: child),
+            );
+            flutter.addRegisteredWidget(
+              (sp, child) => _WrapperWidget(label: 'Third', child: child),
+            );
+            flutter.runApp((_) => const Text('Root'));
+          });
 
-      final provider = services.buildServiceProvider();
-      final widget = provider.getRequiredService<Widget>();
+        final provider = services.buildServiceProvider();
+        final widget = provider.getRequiredService<Widget>();
 
-      // Should be wrapped as: First(Second(Third(FlutterLifecycleObserver(Root))))
-      expect(widget, isA<_WrapperWidget>());
-      final first = widget as _WrapperWidget;
-      expect(first.label, 'First');
+        // Should be wrapped as: First(Second(Third(FlutterLifecycleObserver(Root))))
+        expect(widget, isA<_WrapperWidget>());
+        final first = widget as _WrapperWidget;
+        expect(first.label, 'First');
 
-      expect(first.child, isA<_WrapperWidget>());
-      final second = first.child as _WrapperWidget;
-      expect(second.label, 'Second');
+        expect(first.child, isA<_WrapperWidget>());
+        final second = first.child as _WrapperWidget;
+        expect(second.label, 'Second');
 
-      expect(second.child, isA<_WrapperWidget>());
-      final third = second.child as _WrapperWidget;
-      expect(third.label, 'Third');
+        expect(second.child, isA<_WrapperWidget>());
+        final third = second.child as _WrapperWidget;
+        expect(third.label, 'Third');
 
-      expect(third.child, isA<FlutterLifecycleObserver>());
-      final observer = third.child as FlutterLifecycleObserver;
+        expect(third.child, isA<FlutterLifecycleObserver>());
+        final observer = third.child as FlutterLifecycleObserver;
 
-      expect(observer.child, isA<Text>());
-      expect((observer.child as Text).data, 'Root');
-    });
+        expect(observer.child, isA<Text>());
+        expect((observer.child as Text).data, 'Root');
+      },
+    );
   });
 }

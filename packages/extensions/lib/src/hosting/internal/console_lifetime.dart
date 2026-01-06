@@ -6,11 +6,11 @@ import '../../logging/logger_extensions.dart';
 import '../../logging/logger_factory.dart';
 import '../../options/options.dart';
 import '../../system/threading/cancellation_token.dart';
+import '../console_lifetime_options.dart';
 import '../host_application_lifetime.dart';
 import '../host_environment.dart';
 import '../host_lifetime.dart';
 import '../host_options.dart';
-import 'console_lifetime_options.dart';
 
 /// Listens for Ctrl+C or SIGTERM and initiates shutdown.
 class ConsoleLifetime implements HostLifetime {
@@ -84,8 +84,4 @@ class ConsoleLifetime implements HostLifetime {
   void _onApplicationStopping() {
     _logger.logInformation('Application is shutting down...');
   }
-
-  // void _onProcessExit() {
-  //   applicationLifetime.stopApplication();
-  // }
 }

@@ -57,7 +57,7 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
   ) {
     final descriptor = ServiceDescriptor.keyedTransient<TService>(
       serviceKey,
-      (services) => implementationFactory,
+      implementationFactory,
     );
     add(descriptor);
     return this;
@@ -72,7 +72,7 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
   ) {
     final descriptor = ServiceDescriptor.keyedScoped<TService>(
       serviceKey,
-      (services) => implementationFactory,
+      implementationFactory,
     );
     add(descriptor);
     return this;
@@ -87,7 +87,7 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
   ) {
     final descriptor = ServiceDescriptor.keyedSingleton<TService>(
       serviceKey,
-      (services) => implementationFactory,
+      implementationFactory,
     );
     add(descriptor);
     return this;

@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import '../configuration/configuration_builder.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
 import '../configuration/providers/command_line/command_line_configuration_extensions.dart';
@@ -27,7 +29,7 @@ import 'host_options.dart';
 import 'hosting_abstractions_host_extensions.dart';
 import 'internal/application_lifetime.dart';
 import 'internal/console_lifetime.dart';
-import 'internal/console_lifetime_options.dart';
+import 'console_lifetime_options.dart';
 
 extension HostingHostBuilderExtensions on HostBuilder {
   /// Listens for Ctrl+C or SIGTERM and calls
@@ -68,72 +70,75 @@ extension HostingHostBuilderExtensions on HostBuilder {
       ..addInMemoryCollection(
         [MapEntry<String, String>(HostDefaults.contentRootKey, '')],
       )
-      ..addEnvironmentVariables('DOTNET_');
+      ..addEnvironmentVariables(prefix: 'DOTNET_');
 
     if (args != null && args.isNotEmpty) {
       hostConfigBuilder.addCommandLine(args);
     }
   }
+}
 
-  static void applyDefaultAppConfiguration(
-    HostBuilderContext hostingContext,
-    ConfigurationBuilder appConfigBuilder,
-    List<String>? args,
-  ) {
-    var env = hostingContext.hostingEnvironment!;
-    var reloadOnChangeConfig =
-        hostingContext.configuration!['hostBuilder:reloadConfigOnChange'];
-    var reloadOnChange = reloadOnChangeConfig == 'true';
+@internal
+void addDefaultServices(
+  HostBuilderContext hostingContext,
+  ServiceCollection services,
+) {
+  services.addLogging(
+    (logging) {
+      logging
+        ..services.configure<LoggerFilterOptions>(
+          LoggerFilterOptions.new,
+          (options) => LoggingConfiguration(
+            hostingContext.configuration!,
+          ).configure(options),
+        )
+        ..addDebug();
+    },
+  );
+}
 
-    appConfigBuilder
-      ..setBasePath(env.contentRootPath)
-      ..addJson(
-        'appsettings.json',
-        optional: true,
-        reloadOnChange: reloadOnChange,
-      )
-      ..addJson(
-        'appsettings.${env.environmentName}.json',
-        optional: true,
-        reloadOnChange: reloadOnChange,
-      )
-      ..addEnvironmentVariables();
+@internal
+ServiceProviderOptions createDefaultServiceProviderOptions(
+  HostBuilderContext context,
+) {
+  final isDevelopment = context.hostingEnvironment!.isDevelopment();
+  return ServiceProviderOptions(
+    validateScopes: isDevelopment,
+    validateOnBuild: isDevelopment,
+  );
+}
 
-    if (env.isDevelopment() && env.applicationName.isNotEmpty) {
-      // In development, optionally load user secrets if available
-      // This would require additional user secrets implementation
-    }
+@internal
+void applyDefaultAppConfiguration(
+  HostBuilderContext hostingContext,
+  ConfigurationBuilder appConfigBuilder,
+  List<String>? args,
+) {
+  var env = hostingContext.hostingEnvironment!;
+  var reloadOnChangeConfig =
+      hostingContext.configuration!['hostBuilder:reloadConfigOnChange'];
+  var reloadOnChange = reloadOnChangeConfig == 'true';
 
-    if (args != null && args.isNotEmpty) {
-      appConfigBuilder.addCommandLine(args);
-    }
+  appConfigBuilder
+    ..setBasePath(env.contentRootPath)
+    ..addJson(
+      'appsettings.json',
+      optional: true,
+      reloadOnChange: reloadOnChange,
+    )
+    ..addJson(
+      'appsettings.${env.environmentName}.json',
+      optional: true,
+      reloadOnChange: reloadOnChange,
+    )
+    ..addEnvironmentVariables();
+
+  if (env.isDevelopment() && env.applicationName.isNotEmpty) {
+    // In development, optionally load user secrets if available
+    // This would require additional user secrets implementation
   }
 
-  static void addDefaultServices(
-    HostBuilderContext hostingContext,
-    ServiceCollection services,
-  ) {
-    services.addLogging(
-      (logging) {
-        logging
-          ..services.configure<LoggerFilterOptions>(
-            LoggerFilterOptions.new,
-            (options) => LoggingConfiguration(
-              hostingContext.configuration!,
-            ).configure(options),
-          )
-          ..addDebug();
-      },
-    );
-  }
-
-  static ServiceProviderOptions createDefaultServiceProviderOptions(
-    HostBuilderContext context,
-  ) {
-    final isDevelopment = context.hostingEnvironment!.isDevelopment();
-    return ServiceProviderOptions(
-      validateScopes: isDevelopment,
-      validateOnBuild: isDevelopment,
-    );
+  if (args != null && args.isNotEmpty) {
+    appConfigBuilder.addCommandLine(args);
   }
 }

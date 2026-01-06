@@ -105,6 +105,7 @@ class ServiceDescriptor {
     if (!isKeyedService) {
       throwKeyedDescriptor();
     }
+
     return _implementationFactory as KeyedImplementationFactory;
   }
 
@@ -147,7 +148,7 @@ class ServiceDescriptor {
   /// [TService], and the [ServiceLifetime.transient] lifetime.
   static ServiceDescriptor keyedTransient<TService>(
     Object? serviceKey,
-    ImplementationFactory implementationFactory,
+    KeyedImplementationFactory implementationFactory,
   ) =>
       ServiceDescriptor._factory(
         serviceType: TService,
@@ -171,7 +172,7 @@ class ServiceDescriptor {
   /// [TService], [implementationFactory] and the [ServiceLifetime.scoped].
   static ServiceDescriptor keyedScoped<TService>(
     Object? serviceKey,
-    ImplementationFactory implementationFactory,
+    KeyedImplementationFactory implementationFactory,
   ) =>
       ServiceDescriptor._factory(
         serviceType: TService,
@@ -196,7 +197,7 @@ class ServiceDescriptor {
   /// and the [ServiceLifetime.singleton] lifetime.
   static ServiceDescriptor keyedSingleton<TService>(
     Object? serviceKey,
-    ImplementationFactory implementationFactory,
+    KeyedImplementationFactory implementationFactory,
   ) =>
       ServiceDescriptor._factory(
         serviceType: TService,
