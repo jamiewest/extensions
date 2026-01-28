@@ -16,7 +16,7 @@ class FlutterLifetime implements HostLifetime {
   final ErrorHandler _errorHandler;
   final HostEnvironment _environment;
   final FlutterApplicationLifetime _applicationLifetime;
-  final FlutterLifetimeOptions _options;
+  //final FlutterLifetimeOptions _options;
   final Logger _logger;
 
   FlutterLifetime(
@@ -24,13 +24,13 @@ class FlutterLifetime implements HostLifetime {
     ErrorHandler errorHandler,
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
-    Options<FlutterLifetimeOptions> options,
+    //Options<FlutterLifetimeOptions> options,
     LoggerFactory loggerFactory,
   ) : _application = application,
       _errorHandler = errorHandler,
       _environment = environment,
       _applicationLifetime = applicationLifetime as FlutterApplicationLifetime,
-      _options = options.value!,
+      //_options = options.value!,
       _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
   HostEnvironment get environment => _environment;

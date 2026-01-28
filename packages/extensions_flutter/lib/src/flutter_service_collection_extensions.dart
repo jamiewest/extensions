@@ -35,7 +35,7 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
 
     final builder = FlutterBuilder(this);
 
-    // configure<FlutterLifetimeOptions>(FlutterLifetimeOptions.new, (options) {
+    // configure?.call(FlutterLifetimeOptions.new, (options) {
     //   options.suppressStatusMessages = false;
     // });
 

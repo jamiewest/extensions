@@ -49,7 +49,7 @@ extension FlutterBuilderExtensions on FlutterBuilder {
           sp.getRequiredService<ErrorHandler>(),
           sp.getRequiredService<HostEnvironment>(),
           sp.getRequiredService<ApplicationLifetime>(),
-          sp.getRequiredService<Options<FlutterLifetimeOptions>>(),
+          //sp.getRequiredService<Options<FlutterLifetimeOptions>>(),
           sp.getRequiredService<LoggerFactory>(),
         ),
       );
