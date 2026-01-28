@@ -1,3 +1,11 @@
+## 0.3.19
+
+* **Code Quality:**
+  * Improved export visibility in hosting libraries by hiding internal implementation functions (`addCommandLineConfig`, `addDefaultServices`, `applyDefaultAppConfiguration`, `createDefaultServiceProviderOptions`)
+  * Code formatting improvements in AI logging clients (line length fixes)
+  * Improved import naming conventions in `HostApplicationBuilder` to follow Dart style guidelines
+  * Fixed documentation reference in `FunctionInvocationContext`
+
 ## 0.3.18
 
 * **Bug Fixes:**

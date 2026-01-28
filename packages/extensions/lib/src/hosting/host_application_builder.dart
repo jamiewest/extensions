@@ -16,10 +16,8 @@ import 'host_builder.dart';
 import 'host_builder_context.dart';
 import 'host_defaults.dart';
 import 'host_environment.dart';
-import 'hosting_host_builder_extensions.dart' as HostingHostBuilderExtensions;
-import 'hosting_host_builder_extensions_io.dart'
-    as HostingHostBuilderExtensionsIO;
-import 'hosting_host_builder_extensions_io.dart';
+import 'hosting_host_builder_extensions.dart' as hosting_ext;
+import 'hosting_host_builder_extensions_io.dart' as hosting_ext_io;
 import 'internal/configure_container_adapter.dart';
 import 'internal/service_factory_adapter.dart';
 
@@ -100,7 +98,7 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
     if (!settings.disableDefaults) {
       if (settings.configurationRootPath == null &&
           configuration[HostDefaults.contentRootKey] == null) {
-        HostingHostBuilderExtensions.setDefaultContentRoot(configuration);
+        hosting_ext.setDefaultContentRoot(configuration);
       }
 
       configuration.addEnvironmentVariables(prefix: 'DOTNET_');
@@ -149,7 +147,7 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
     // Apply default app configuration (appsettings.json, environment
     // variables, command line)
     if (!settings.disableDefaults) {
-      HostingHostBuilderExtensionsIO.applyDefaultAppConfiguration(
+      hosting_ext_io.applyDefaultAppConfiguration(
         _hostBuilderContext,
         configuration,
         settings.args,
@@ -159,12 +157,12 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
     ServiceProviderOptions? serviceProviderOptions;
 
     if (!settings.disableDefaults) {
-      HostingHostBuilderExtensionsIO.addDefaultServices(
+      hosting_ext_io.addDefaultServices(
         _hostBuilderContext,
         services,
       );
       serviceProviderOptions =
-          HostingHostBuilderExtensionsIO.createDefaultServiceProviderOptions(
+          hosting_ext_io.createDefaultServiceProviderOptions(
         _hostBuilderContext,
       );
     }

@@ -37,7 +37,8 @@ class LoggingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
       _logger.logTrace(
         'generateEmbeddings invoked. '
         'Values count: ${values.length}. '
-        'Options: ${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
+        'Options: '
+        '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
       );
     }
 
@@ -79,7 +80,9 @@ class LoggingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
     }
   }
 
-  static Map<String, Object?> _optionsToMap(EmbeddingGenerationOptions options) => {
+  static Map<String, Object?> _optionsToMap(
+    EmbeddingGenerationOptions options,
+  ) => {
         if (options.modelId != null) 'modelId': options.modelId,
         if (options.dimensions != null) 'dimensions': options.dimensions,
       };

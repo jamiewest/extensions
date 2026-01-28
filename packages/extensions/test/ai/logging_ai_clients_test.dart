@@ -39,7 +39,7 @@ class _ResponseChatClient implements ChatClient {
 class _ThrowingChatClient implements ChatClient {
   _ThrowingChatClient(this.exception);
 
-  final Object exception;
+  final Exception exception;
 
   @override
   Future<ChatResponse> getChatResponse({
@@ -68,7 +68,7 @@ class _ThrowingChatClient implements ChatClient {
 class _ThrowingStreamingChatClient implements ChatClient {
   _ThrowingStreamingChatClient(this.exception);
 
-  final Object exception;
+  final Exception exception;
 
   @override
   Future<ChatResponse> getChatResponse({
@@ -130,7 +130,7 @@ class _ImageGenerator implements ImageGenerator {
 class _ThrowingImageGenerator implements ImageGenerator {
   _ThrowingImageGenerator(this.exception);
 
-  final Object exception;
+  final Exception exception;
 
   @override
   Future<ImageGenerationResponse> generate({
@@ -176,7 +176,7 @@ class _SpeechToTextClient implements SpeechToTextClient {
 class _ThrowingEmbeddingGenerator implements EmbeddingGenerator {
   _ThrowingEmbeddingGenerator(this.exception);
 
-  final Object exception;
+  final Exception exception;
 
   @override
   Future<GeneratedEmbeddings> generateEmbeddings({
@@ -197,7 +197,7 @@ class _ThrowingEmbeddingGenerator implements EmbeddingGenerator {
 class _ThrowingSpeechToTextClient implements SpeechToTextClient {
   _ThrowingSpeechToTextClient(this.exception);
 
-  final Object exception;
+  final Exception exception;
 
   @override
   Future<SpeechToTextResponse> getText({

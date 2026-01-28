@@ -4,7 +4,7 @@ import 'chat_message.dart';
 
 /// Provides context for a function invocation within a chat client pipeline.
 ///
-/// This is used by [FunctionInvokingChatClient] to provide information
+/// This is used by `FunctionInvokingChatClient` to provide information
 /// about the current invocation to filters and handlers.
 class FunctionInvocationContext {
   /// Creates a new [FunctionInvocationContext].

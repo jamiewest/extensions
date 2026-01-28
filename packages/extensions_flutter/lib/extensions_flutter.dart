@@ -11,7 +11,7 @@ export 'package:extensions/logging.dart';
 export 'package:extensions/options.dart';
 export 'package:extensions/primitives.dart';
 export 'package:extensions/system.dart';
-export 'package:extensions/hosting.dart' hide addCommandLineConfig;
+export 'package:extensions/hosting.dart';
 
 export 'src/flutter_application_lifetime.dart';
 export 'src/flutter_builder_extensions.dart';

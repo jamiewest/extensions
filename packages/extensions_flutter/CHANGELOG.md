@@ -1,3 +1,9 @@
+## 0.3.13
+
+* Updated dependency on extensions to ^0.3.19.
+* Simplified hosting exports (internal functions now properly hidden in extensions package).
+* Inherits code quality improvements from extensions 0.3.19.
+
 ## 0.3.12
 
 * Updated dependency on extensions to ^0.3.18.

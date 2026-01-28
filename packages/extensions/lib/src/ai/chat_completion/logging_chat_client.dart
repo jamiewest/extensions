@@ -114,7 +114,8 @@ class LoggingChatClient extends DelegatingChatClient {
       _logger.logTrace(
         '$methodName invoked. '
         'Messages: ${_asJson(messages.map(_messageToMap).toList())}. '
-        'Options: ${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
+        'Options: '
+        '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
       );
     }
   }

@@ -38,7 +38,8 @@ class LoggingImageGenerator extends DelegatingImageGenerator {
       _logger.logTrace(
         'generate invoked. '
         'Prompt: ${request.prompt ?? 'null'}. '
-        'Options: ${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
+        'Options: '
+        '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
       );
     }
 

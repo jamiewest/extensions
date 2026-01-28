@@ -24,8 +24,10 @@ void main() {
       expect(clone.tools, hasLength(1));
       expect(identical(clone.stopSequences, options.stopSequences), isFalse);
       expect(identical(clone.tools, options.tools), isFalse);
-      expect(identical(clone.additionalProperties, options.additionalProperties),
-          isFalse);
+      expect(
+        identical(clone.additionalProperties, options.additionalProperties),
+        isFalse,
+      );
 
       clone.stopSequences!.add('extra');
       expect(options.stopSequences, ['stop']);
@@ -48,8 +50,10 @@ void main() {
       expect(clone.modelId, 'model');
       expect(clone.dimensions, 128);
       expect(clone.additionalProperties, {'key': 1});
-      expect(identical(clone.additionalProperties, options.additionalProperties),
-          isFalse);
+      expect(
+        identical(clone.additionalProperties, options.additionalProperties),
+        isFalse,
+      );
     });
   });
 
@@ -72,8 +76,10 @@ void main() {
       expect(clone.mediaType, 'image/png');
       expect(clone.modelId, 'model');
       expect(clone.additionalProperties, {'key': 'value'});
-      expect(identical(clone.additionalProperties, options.additionalProperties),
-          isFalse);
+      expect(
+        identical(clone.additionalProperties, options.additionalProperties),
+        isFalse,
+      );
     });
   });
 
@@ -94,8 +100,10 @@ void main() {
       expect(clone.speechSampleRate, 44100);
       expect(clone.textLanguage, 'en');
       expect(clone.additionalProperties, {'key': 'value'});
-      expect(identical(clone.additionalProperties, options.additionalProperties),
-          isFalse);
+      expect(
+        identical(clone.additionalProperties, options.additionalProperties),
+        isFalse,
+      );
     });
   });
 }

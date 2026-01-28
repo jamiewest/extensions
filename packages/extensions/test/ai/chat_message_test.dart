@@ -47,8 +47,10 @@ void main() {
       final clone = message.clone();
 
       expect(identical(clone.contents, message.contents), isFalse);
-      expect(identical(clone.additionalProperties, message.additionalProperties),
-          isFalse);
+      expect(
+        identical(clone.additionalProperties, message.additionalProperties),
+        isFalse,
+      );
 
       clone.contents.add(TextContent(' there'));
       expect(message.contents, hasLength(1));

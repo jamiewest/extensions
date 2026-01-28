@@ -37,7 +37,8 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
     if (_logger.isEnabled(LogLevel.trace)) {
       _logger.logTrace(
         'getText invoked. '
-        'Options: ${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
+        'Options: '
+        '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
       );
     }
 
@@ -85,7 +86,8 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
       if (_logger.isEnabled(LogLevel.trace)) {
         _logger.logTrace(
           'getStreamingText invoked. '
-          'Options: ${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
+          'Options: '
+        '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
         );
       }
 
