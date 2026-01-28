@@ -16,7 +16,7 @@ class FlutterLifetime implements HostLifetime {
   final ErrorHandler _errorHandler;
   final HostEnvironment _environment;
   final FlutterApplicationLifetime _applicationLifetime;
-  //final FlutterLifetimeOptions _options;
+  final FlutterLifetimeOptions _options;
   final Logger _logger;
 
   FlutterLifetime(
@@ -24,13 +24,13 @@ class FlutterLifetime implements HostLifetime {
     ErrorHandler errorHandler,
     HostEnvironment environment,
     HostApplicationLifetime applicationLifetime,
-    //Options<FlutterLifetimeOptions> options,
+    Options<FlutterLifetimeOptions> options,
     LoggerFactory loggerFactory,
   ) : _application = application,
       _errorHandler = errorHandler,
       _environment = environment,
       _applicationLifetime = applicationLifetime as FlutterApplicationLifetime,
-      //_options = options.value!,
+      _options = options.value!,
       _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
   HostEnvironment get environment => _environment;
@@ -118,20 +118,40 @@ class FlutterLifetime implements HostLifetime {
   Future<void> stop(CancellationToken cancellationToken) async =>
       applicationLifetime.stopApplication();
 
-  void _onApplicationStarted() => _logger
-    ..logInformation('Application started.')
-    ..logInformation('Hosting environment: ${environment.environmentName}');
+  void _onApplicationStarted() {
+    if (_options.suppressStatusMessages) return;
+    _logger
+      ..logInformation('Application started.')
+      ..logInformation('Hosting environment: ${environment.environmentName}');
+  }
 
-  void _onApplicationStopping() =>
-      _logger.logInformation('Application is shutting down...');
+  void _onApplicationStopping() {
+    if (_options.suppressStatusMessages) return;
+    _logger.logInformation('Application is shutting down...');
+  }
 
-  void _onPaused() => _logger.logTrace('Application paused.');
+  void _onPaused() {
+    if (_options.suppressStatusMessages) return;
+    _logger.logTrace('Application paused.');
+  }
 
-  void _onResumed() => _logger.logTrace('Application resumed.');
+  void _onResumed() {
+    if (_options.suppressStatusMessages) return;
+    _logger.logTrace('Application resumed.');
+  }
 
-  void _onInactive() => _logger.logTrace('Application is inactive.');
+  void _onInactive() {
+    if (_options.suppressStatusMessages) return;
+    _logger.logTrace('Application is inactive.');
+  }
 
-  void _onHidden() => _logger.logTrace('Application is hidden.');
+  void _onHidden() {
+    if (_options.suppressStatusMessages) return;
+    _logger.logTrace('Application is hidden.');
+  }
 
-  void _onDetached() => _logger.logTrace('Application is detached.');
+  void _onDetached() {
+    if (_options.suppressStatusMessages) return;
+    _logger.logTrace('Application is detached.');
+  }
 }

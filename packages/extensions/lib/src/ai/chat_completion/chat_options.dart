@@ -1,8 +1,8 @@
 import '../additional_properties_dictionary.dart';
+import '../response_continuation_token.dart';
 import '../tools/ai_tool.dart';
 import 'chat_response_format.dart';
 import 'chat_tool_mode.dart';
-import '../response_continuation_token.dart';
 
 /// Represents the options for a chat request.
 class ChatOptions {

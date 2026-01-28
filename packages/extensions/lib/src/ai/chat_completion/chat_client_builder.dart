@@ -1,7 +1,7 @@
 import '../../dependency_injection/service_provider.dart';
-import 'chat_client_builder_service_collection_extensions.dart';
-import 'chat_client.dart';
 import '../empty_service_provider.dart';
+import 'chat_client.dart';
+import 'chat_client_builder_service_collection_extensions.dart';
 
 /// Builds a pipeline of chat client middleware.
 ///

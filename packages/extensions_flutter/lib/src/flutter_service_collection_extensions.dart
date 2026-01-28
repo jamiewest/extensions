@@ -5,17 +5,39 @@ import 'package:flutter/widgets.dart';
 
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
-import 'flutter_lifetime_options.dart';
 import 'service_provider_extensions.dart';
 
-typedef RegisteredWidgetFactory =
-    Widget Function(ServiceProvider sp, Widget child);
+/// A factory function that wraps a widget with another widget.
+///
+/// Used by [FlutterBuilderExtensions.wrapWith] to create widget wrappers
+/// such as providers, themes, or other ancestor widgets.
+///
+/// The [sp] parameter provides access to the dependency injection container.
+/// The [child] parameter is the widget to be wrapped.
+typedef WrappedWidgetFactory = Widget Function(ServiceProvider sp, Widget child);
 
+/// A configuration callback for the [FlutterBuilder].
 typedef ConfigureAction = void Function(FlutterBuilder builder);
 
-/// Extension methods for adding and setting up Flutter.
+/// Extension methods for adding Flutter support to a [ServiceCollection].
 extension FlutterServiceCollectionExtensions on ServiceCollection {
-  /// Adds required services for Flutter.
+  /// Adds required services for hosting a Flutter application.
+  ///
+  /// This registers:
+  /// - [FlutterApplicationLifetime] for lifecycle event handling
+  /// - [FlutterErrorHandler] for centralized error capture
+  ///
+  /// The [configure] callback provides a [FlutterBuilder] to set up the root
+  /// widget and any widget wrappers.
+  ///
+  /// Example:
+  /// ```dart
+  /// services.addFlutter((flutter) {
+  ///   flutter
+  ///     ..wrapWith((sp, child) => Provider(child: child))
+  ///     ..runApp((sp) => MyApp());
+  /// });
+  /// ```
   ServiceCollection addFlutter(ConfigureAction? configure) {
     addSingleton<HostApplicationLifetime>(
       (services) => FlutterApplicationLifetime(
@@ -34,10 +56,6 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
     );
 
     final builder = FlutterBuilder(this);
-
-    // configure?.call(FlutterLifetimeOptions.new, (options) {
-    //   options.suppressStatusMessages = false;
-    // });
 
     if (configure != null) {
       configure(builder);

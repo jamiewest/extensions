@@ -58,10 +58,10 @@ void main() {
         ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
         ..addLogging()
         ..addFlutter((flutter) {
-          flutter.addRegisteredWidget(
+          flutter.wrapWith(
             (sp, child) => _WrapperWidget(label: 'Wrapper 1', child: child),
           );
-          flutter.addRegisteredWidget(
+          flutter.wrapWith(
             (sp, child) => _WrapperWidget(label: 'Wrapper 2', child: child),
           );
           flutter.runApp((_) => const Text('Root Widget'));
@@ -96,11 +96,11 @@ void main() {
         ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
         ..addLogging()
         ..addFlutter((flutter) {
-          flutter.addRegisteredWidget((sp, child) {
+          flutter.wrapWith((sp, child) {
             buildOrder.add('Wrapper 1');
             return _WrapperWidget(label: 'Wrapper 1', child: child);
           });
-          flutter.addRegisteredWidget((sp, child) {
+          flutter.wrapWith((sp, child) {
             buildOrder.add('Wrapper 2');
             return _WrapperWidget(label: 'Wrapper 2', child: child);
           });
@@ -132,13 +132,13 @@ void main() {
       expect(lifetime, isA<FlutterLifetime>());
     });
 
-    test('addRegisteredWidget can access services', () {
+    test('wrapWith can access services', () {
       final services = ServiceCollection()
         ..addSingleton<String>((_) => 'Test Value')
         ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
         ..addLogging()
         ..addFlutter((flutter) {
-          flutter.addRegisteredWidget((sp, child) {
+          flutter.wrapWith((sp, child) {
             final value = sp.getRequiredService<String>();
             return _WrapperWidget(label: value, child: child);
           });
@@ -181,13 +181,13 @@ void main() {
           ..addSingleton<HostEnvironment>((_) => _TestHostEnvironment())
           ..addLogging()
           ..addFlutter((flutter) {
-            flutter.addRegisteredWidget(
+            flutter.wrapWith(
               (sp, child) => _WrapperWidget(label: 'First', child: child),
             );
-            flutter.addRegisteredWidget(
+            flutter.wrapWith(
               (sp, child) => _WrapperWidget(label: 'Second', child: child),
             );
-            flutter.addRegisteredWidget(
+            flutter.wrapWith(
               (sp, child) => _WrapperWidget(label: 'Third', child: child),
             );
             flutter.runApp((_) => const Text('Root'));

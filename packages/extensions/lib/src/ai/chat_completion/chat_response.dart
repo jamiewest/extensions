@@ -1,12 +1,12 @@
 // Source: https://github.com/dotnet/extensions/blob/main/src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatCompletion/ChatResponse.cs
 
 import '../additional_properties_dictionary.dart';
-import 'chat_finish_reason.dart';
-import 'chat_message.dart';
-import 'chat_response_update.dart';
 import '../response_continuation_token.dart';
 import '../text_content.dart';
 import '../usage_details.dart';
+import 'chat_finish_reason.dart';
+import 'chat_message.dart';
+import 'chat_response_update.dart';
 
 /// Represents the response to a chat request.
 ///

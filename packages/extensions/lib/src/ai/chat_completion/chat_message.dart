@@ -1,7 +1,7 @@
 import '../additional_properties_dictionary.dart';
 import '../ai_content.dart';
-import 'chat_role.dart';
 import '../text_content.dart';
+import 'chat_role.dart';
 
 /// Represents a chat message used by a chat client.
 class ChatMessage {

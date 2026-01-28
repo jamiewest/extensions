@@ -1,7 +1,7 @@
 import '../../system/threading/cancellation_token.dart';
-import '../tools/ai_tool.dart';
 import '../chat_completion/chat_message.dart';
 import '../chat_completion/chat_options.dart';
+import '../tools/ai_tool.dart';
 
 /// Represents a strategy capable of selecting a reduced set of tools for a
 /// chat request.

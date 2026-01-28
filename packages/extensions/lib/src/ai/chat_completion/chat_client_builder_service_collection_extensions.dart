@@ -1,8 +1,8 @@
 import '../../dependency_injection/service_collection.dart';
 import '../../dependency_injection/service_lifetime.dart';
 import '../../dependency_injection/service_provider.dart';
-import 'chat_client_builder.dart';
 import 'chat_client.dart';
+import 'chat_client_builder.dart';
 
 typedef InnerClientFactory = ChatClient Function(ServiceProvider services);
 

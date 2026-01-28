@@ -78,7 +78,7 @@ void main() {
         ..use((client) => _RecordingWrapper(client, 'second', events));
 
       final client = builder.build();
-      await client.getText(stream: Stream<List<int>>.empty());
+      await client.getText(stream: const Stream<List<int>>.empty());
 
       expect(events, ['first', 'second', 'inner']);
     });
@@ -108,7 +108,7 @@ void main() {
         },
       );
 
-      await client.getText(stream: Stream<List<int>>.empty());
+      await client.getText(stream: const Stream<List<int>>.empty());
 
       expect(inner.lastOptions?.modelId, 'configured-model');
     });

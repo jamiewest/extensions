@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'ai_content.dart';
+import 'text_content.dart';
 
 /// Represents reasoning or "thinking" content from an AI model.
 ///

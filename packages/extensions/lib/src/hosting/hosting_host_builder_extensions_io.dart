@@ -18,6 +18,7 @@ import '../logging/providers/debug/debug_logger_factory_extensions.dart';
 import '../options/options.dart';
 import '../options/options_service_collection_extensions.dart';
 import '../system/threading/cancellation_token.dart';
+import 'console_lifetime_options.dart';
 import 'host_application_lifetime.dart';
 import 'host_builder.dart';
 import 'host_builder_context.dart';
@@ -29,7 +30,6 @@ import 'host_options.dart';
 import 'hosting_abstractions_host_extensions.dart';
 import 'internal/application_lifetime.dart';
 import 'internal/console_lifetime.dart';
-import 'console_lifetime_options.dart';
 
 extension HostingHostBuilderExtensions on HostBuilder {
   /// Listens for Ctrl+C or SIGTERM and calls

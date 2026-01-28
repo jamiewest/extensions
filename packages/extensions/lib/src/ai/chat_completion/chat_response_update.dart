@@ -1,10 +1,10 @@
 import '../additional_properties_dictionary.dart';
 import '../ai_content.dart';
-import 'chat_finish_reason.dart';
-import 'chat_role.dart';
 import '../response_continuation_token.dart';
 import '../text_content.dart';
 import '../usage_details.dart';
+import 'chat_finish_reason.dart';
+import 'chat_role.dart';
 
 /// Represents a single streaming update to a chat response.
 class ChatResponseUpdate {

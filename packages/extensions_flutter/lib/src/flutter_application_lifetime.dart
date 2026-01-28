@@ -2,7 +2,20 @@ import 'package:extensions/hosting.dart';
 import 'package:extensions/logging.dart';
 import 'package:flutter/widgets.dart';
 
-/// Allows consumers to be notified of application lifetime events.
+/// Manages Flutter-specific application lifecycle events.
+///
+/// Extends [ApplicationLifetime] to add Flutter lifecycle states:
+/// paused, resumed, inactive, hidden, and detached.
+///
+/// Register callbacks by adding to the respective lists:
+/// ```dart
+/// lifetime.applicationPaused.add(() => saveState());
+/// lifetime.applicationResumed.add(() => refreshData());
+/// ```
+///
+/// Handlers are executed in reverse registration order (LIFO) to ensure
+/// proper cleanup ordering. Errors in handlers are logged but do not
+/// prevent other handlers from executing.
 class FlutterApplicationLifetime extends ApplicationLifetime {
   final Logger _logger;
   final _pausedSource = <VoidCallback>[];
@@ -30,6 +43,10 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
   /// Triggered when the application host is hidden.
   List<VoidCallback> get applicationHidden => _hiddenSource;
 
+  /// Notifies all [applicationPaused] handlers that the app has been paused.
+  ///
+  /// Called by [FlutterLifecycleObserver] when the app enters the paused state.
+  /// Handlers are executed in reverse registration order.
   void notifyPaused() {
     try {
       _executeHandlers(_pausedSource);
@@ -41,6 +58,10 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
+  /// Notifies all [applicationResumed] handlers that the app has resumed.
+  ///
+  /// Called by [FlutterLifecycleObserver] when the app returns to the foreground.
+  /// Handlers are executed in reverse registration order.
   void notifyResumed() {
     try {
       _executeHandlers(_resumedSource);
@@ -52,6 +73,11 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
+  /// Notifies all [applicationInactive] handlers that the app is inactive.
+  ///
+  /// Called by [FlutterLifecycleObserver] when the app enters an inactive state
+  /// (e.g., incoming phone call, app switcher). Handlers are executed in
+  /// reverse registration order.
   void notifyInactive() {
     try {
       _executeHandlers(_inactiveSource);
@@ -63,6 +89,10 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
+  /// Notifies all [applicationDetached] handlers that the app is detached.
+  ///
+  /// Called by [FlutterLifecycleObserver] when the app is detached from the
+  /// Flutter engine. Handlers are executed in reverse registration order.
   void notifyDetached() {
     try {
       _executeHandlers(_detachedSource);
@@ -74,6 +104,10 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
+  /// Notifies all [applicationHidden] handlers that the app is hidden.
+  ///
+  /// Called by [FlutterLifecycleObserver] when the app is hidden from view.
+  /// Handlers are executed in reverse registration order.
   void notifyHidden() {
     try {
       _executeHandlers(_hiddenSource);
@@ -85,6 +119,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
     }
   }
 
+  /// Executes handlers in reverse order (LIFO).
   void _executeHandlers(Iterable<VoidCallback> handlers) {
     for (var handler in handlers.toList().reversed) {
       handler.call();

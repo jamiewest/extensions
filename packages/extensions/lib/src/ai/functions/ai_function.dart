@@ -1,6 +1,6 @@
 import '../../system/threading/cancellation_token.dart';
-import 'ai_function_arguments.dart';
 import '../tools/ai_tool.dart';
+import 'ai_function_arguments.dart';
 
 /// Represents a function that can be invoked by an AI model.
 abstract class AIFunction extends AITool {

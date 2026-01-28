@@ -5,7 +5,7 @@ import 'package:extensions/system.dart' show CancellationToken;
 import 'package:test/test.dart';
 
 class _TestTool extends AITool {
-  _TestTool({String? name}) : super(name: name);
+  _TestTool();
 }
 
 class _RecordingFunction extends AIFunction {
@@ -54,6 +54,39 @@ void main() {
       await function.invoke(args);
 
       expect(identical(function.lastArguments, args), isTrue);
+    });
+  });
+
+  group('AIFunctionFactory', () {
+    test('creates function with metadata and invokes callback', () async {
+      AIFunctionArguments? capturedArgs;
+      CancellationToken? capturedToken;
+
+      final function = AIFunctionFactory.create(
+        name: 'factory',
+        description: 'Factory function',
+        parametersSchema: {'type': 'object'},
+        returnSchema: {'type': 'string'},
+        isStrict: true,
+        callback: (arguments, {cancellationToken}) async {
+          capturedArgs = arguments;
+          capturedToken = cancellationToken;
+          return 'ok';
+        },
+      );
+
+      final token = CancellationToken();
+      final args = AIFunctionArguments({'x': 1});
+      final result = await function.invoke(args, cancellationToken: token);
+
+      expect(function.name, 'factory');
+      expect(function.description, 'Factory function');
+      expect(function.parametersSchema, {'type': 'object'});
+      expect(function.returnSchema, {'type': 'string'});
+      expect(function.isStrict, isTrue);
+      expect(result, 'ok');
+      expect(identical(capturedArgs, args), isTrue);
+      expect(identical(capturedToken, token), isTrue);
     });
   });
 
@@ -128,8 +161,8 @@ void main() {
 
   group('ChatRole and ChatFinishReason', () {
     test('comparison is case-insensitive', () {
-      expect(ChatRole.user, equals(ChatRole('USER')));
-      expect(ChatFinishReason.stop, equals(ChatFinishReason('STOP')));
+      expect(ChatRole.user, equals(const ChatRole('USER')));
+      expect(ChatFinishReason.stop, equals(const ChatFinishReason('STOP')));
       expect(ChatRole.user.toString(), 'user');
       expect(ChatFinishReason.stop.toString(), 'stop');
     });
@@ -140,7 +173,7 @@ void main() {
       expect(ChatToolMode.auto, equals(const AutoChatToolMode()));
       expect(ChatToolMode.none, equals(const NoneChatToolMode()));
 
-      final anyTool = const RequiredChatToolMode();
+      const anyTool = RequiredChatToolMode();
       final specificA = ChatToolMode.requireSpecific('toolA');
       final specificB = ChatToolMode.requireSpecific('toolB');
 
