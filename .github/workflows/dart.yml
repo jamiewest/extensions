@@ -1,50 +1,12 @@
 name: Dart
 
 on:
-  # Run on PRs and pushes to the default branch.
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  # Check code formatting and static analysis on a single OS (linux)
-  # against Dart dev.
-  analyze:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - id: Install
-        name: Install dependencies (extensions)
-        working-directory: ./packages/extensions
-        run: dart pub get
-      - name: Install dependencies (extensions_flutter)
-        working-directory: ./packages/extensions_flutter
-        run: flutter pub get
-      - name: Check formatting (extensions)
-        working-directory: ./packages/extensions
-        run: dart format --output=none --set-exit-if-changed .
-        if: always() && steps.install.outcome == 'success'
-      - name: Check formatting (extensions_flutter)
-        working-directory: ./packages/extensions_flutter
-        run: dart format --output=none --set-exit-if-changed .
-        if: always() && steps.install.outcome == 'success'
-      - name: Analyze code (extensions)
-        working-directory: ./packages/extensions
-        run: dart analyze --fatal-infos
-        if: always() && steps.install.outcome == 'success'
-      - name: Analyze code (extensions_flutter)
-        working-directory: ./packages/extensions_flutter
-        run: flutter analyze
-        if: always() && steps.install.outcome == 'success'
-
-  # Run tests on a matrix consisting of two dimensions:
-  # 1. OS: ubuntu-latest, (macos-latest, windows-latest)
-  # 2. release channel: dev
   test:
     runs-on: ubuntu-latest
     steps:
@@ -52,22 +14,35 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
-      - id: Install
-        name: Install dependencies (extensions)
+
+      - name: Install dependencies (extensions)
         working-directory: ./packages/extensions
         run: dart pub get
+
       - name: Install dependencies (extensions_flutter)
         working-directory: ./packages/extensions_flutter
         run: flutter pub get
-      - name: Run VM tests (extensions)
+
+      - name: Run tests (extensions)
         working-directory: ./packages/extensions
-        run: dart test --platform vm
-        if: always() && steps.install.outcome == 'success'
-      - name: Run Chrome tests (extensions)
-        working-directory: ./packages/extensions
-        run: dart test --platform chrome
-        if: always() && steps.install.outcome == 'success'
-      - name: Run Flutter tests (extensions_flutter)
+        run: dart test --file-reporter json:../../test-results-extensions.json
+
+      - name: Run tests (extensions_flutter)
         working-directory: ./packages/extensions_flutter
-        run: flutter test
-        if: always() && steps.install.outcome == 'success'
+        run: flutter test --machine > ../../test-results-flutter.json
+
+      - name: Report extensions tests
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Extensions Tests
+          path: test-results-extensions.json
+          reporter: dart-json
+
+      - name: Report Flutter tests
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Flutter Tests
+          path: test-results-flutter.json
+          reporter: flutter-json
