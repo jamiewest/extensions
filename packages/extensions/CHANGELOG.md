@@ -1,3 +1,7 @@
+## 0.3.20
+
+* Updates.
+
 ## 0.3.19
 
 * **Code Quality:**

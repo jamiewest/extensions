@@ -1,3 +1,8 @@
+## 0.3.14
+
+* Updated dependency on extensions to ^0.3.20.
+* Simplified exports by using the main `extensions.dart` barrel file instead of individual library exports.
+
 ## 0.3.13
 
 * Updated dependency on extensions to ^0.3.19.
