@@ -1,29 +1,5 @@
-include: package:dart_flutter_team_lints/analysis_options.yaml
-
-analyzer:
-  language:
-    strict-casts: true
-    strict-raw-types: true
-    strict-inference: true
-  errors:
-    todo: ignore
-    avoid_returning_this: ignore
+include: package:lints/recommended.yaml
 
 linter:
   rules:
-  - avoid_bool_literals_in_conditional_expressions
-  - avoid_private_typedef_functions
-  - avoid_returning_this
-  - avoid_unused_constructor_parameters
-  - cancel_subscriptions
-  # - cascade_invocations  # Disabled - too many test file changes required
-  - flutter_style_todos
-  - join_return_with_assignment
-  - literal_only_boolean_expressions
-  - missing_whitespace_between_adjacent_strings
-  - no_adjacent_strings_in_list
-  - no_runtimeType_toString
-  - prefer_const_declarations
-  - prefer_expression_function_bodies
-  - unnecessary_await_in_return
-  - use_string_buffers
+    - lines_longer_than_80_chars: true

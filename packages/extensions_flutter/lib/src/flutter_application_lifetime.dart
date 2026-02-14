@@ -24,9 +24,7 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
   final _detachedSource = <VoidCallback>[];
   final _hiddenSource = <VoidCallback>[];
 
-  FlutterApplicationLifetime(Logger logger)
-      : _logger = logger,
-        super(logger);
+  FlutterApplicationLifetime(super.logger) : _logger = logger;
 
   /// Triggered when the application host has paused.
   List<VoidCallback> get applicationPaused => _pausedSource;

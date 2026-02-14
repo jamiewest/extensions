@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
 import 'service_provider_extensions.dart';
+import 'service_provider_scope.dart';
 
 /// A factory function that wraps a widget with another widget.
 ///
@@ -14,7 +15,8 @@ import 'service_provider_extensions.dart';
 ///
 /// The [sp] parameter provides access to the dependency injection container.
 /// The [child] parameter is the widget to be wrapped.
-typedef WrappedWidgetFactory = Widget Function(ServiceProvider sp, Widget child);
+typedef WrappedWidgetFactory =
+    Widget Function(ServiceProvider sp, Widget child);
 
 /// A configuration callback for the [FlutterBuilder].
 typedef ConfigureAction = void Function(FlutterBuilder builder);

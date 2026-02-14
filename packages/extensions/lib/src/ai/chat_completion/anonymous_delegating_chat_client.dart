@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:extensions/annotations.dart';
+
 import '../../system/threading/cancellation_token.dart';
 import 'chat_client.dart';
 import 'chat_message.dart';
@@ -17,8 +19,8 @@ typedef ChatClientResponseHandler = Future<ChatResponse> Function(
 );
 
 /// A function that handles a streaming chat response request.
-typedef ChatClientStreamingResponseHandler
-    = Stream<ChatResponseUpdate> Function(
+typedef ChatClientStreamingResponseHandler = Stream<ChatResponseUpdate>
+    Function(
   Iterable<ChatMessage> messages,
   ChatOptions? options,
   ChatClient innerClient,
@@ -30,6 +32,13 @@ typedef ChatClientStreamingResponseHandler
 ///
 /// This makes it easy to create custom middleware without subclassing
 /// [DelegatingChatClient].
+@Source(
+  name: 'AnonymousDelegatingChatClient.cs',
+  namespace: 'Microsoft.Extensions.AI',
+  repository: 'dotnet/extensions',
+  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
+  commit: 'b56aec451afe841d1865da4c9cb45fd5a379a519',
+)
 class AnonymousDelegatingChatClient extends DelegatingChatClient {
   /// Creates a new [AnonymousDelegatingChatClient].
   ///
@@ -50,7 +59,7 @@ class AnonymousDelegatingChatClient extends DelegatingChatClient {
   final ChatClientStreamingResponseHandler? streamingResponseHandler;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -63,7 +72,7 @@ class AnonymousDelegatingChatClient extends DelegatingChatClient {
         cancellationToken,
       );
     }
-    return super.getChatResponse(
+    return super.getResponse(
       messages: messages,
       options: options,
       cancellationToken: cancellationToken,
@@ -71,7 +80,7 @@ class AnonymousDelegatingChatClient extends DelegatingChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -84,7 +93,7 @@ class AnonymousDelegatingChatClient extends DelegatingChatClient {
         cancellationToken,
       );
     }
-    return super.getStreamingChatResponse(
+    return super.getStreamingResponse(
       messages: messages,
       options: options,
       cancellationToken: cancellationToken,

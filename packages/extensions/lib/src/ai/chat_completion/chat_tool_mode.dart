@@ -1,6 +1,9 @@
+import '../../../annotations.dart';
+import 'auto_chat_tool_mode.dart';
+
 /// Represents the mode in which tools are used by the chat client.
-sealed class ChatToolMode {
-  const ChatToolMode._();
+class ChatToolMode {
+  const ChatToolMode();
 
   /// Tools may optionally be used by the model.
   static const AutoChatToolMode auto = AutoChatToolMode();
@@ -16,20 +19,9 @@ sealed class ChatToolMode {
       RequiredChatToolMode(requiredFunctionName: functionName);
 }
 
-/// Tools may optionally be used by the model.
-final class AutoChatToolMode extends ChatToolMode {
-  const AutoChatToolMode() : super._();
-
-  @override
-  bool operator ==(Object other) => other is AutoChatToolMode;
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-}
-
 /// No tools should be used by the model.
 final class NoneChatToolMode extends ChatToolMode {
-  const NoneChatToolMode() : super._();
+  const NoneChatToolMode();
 
   @override
   bool operator ==(Object other) => other is NoneChatToolMode;
@@ -40,7 +32,7 @@ final class NoneChatToolMode extends ChatToolMode {
 
 /// The model must call at least one tool.
 final class RequiredChatToolMode extends ChatToolMode {
-  const RequiredChatToolMode({this.requiredFunctionName}) : super._();
+  const RequiredChatToolMode({this.requiredFunctionName});
 
   /// The specific function name that must be called, or `null` for any tool.
   final String? requiredFunctionName;

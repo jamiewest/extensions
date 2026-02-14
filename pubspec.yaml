@@ -5,3 +5,4 @@ environment:
 workspace:
   - packages/extensions
   - packages/extensions_flutter
+  - packages/extensions_flutter_services

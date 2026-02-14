@@ -1,4 +1,13 @@
+import 'package:extensions/annotations.dart';
+
 /// Represents the reason a chat response finished being generated.
+@Source(
+  name: 'ChatFinishReason.cs',
+  namespace: 'Microsoft.Extensions.AI',
+  repository: 'dotnet/extensions',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatCompletion/',
+  commit: 'c378af04f386f8c6b1980c47822b1ca0ac7bf639',
+)
 class ChatFinishReason {
   /// Creates a new [ChatFinishReason] with the given [value].
   const ChatFinishReason(this.value);

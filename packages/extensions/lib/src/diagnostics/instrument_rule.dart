@@ -1,3 +1,5 @@
+import 'package:extensions/src/system/exceptions/argument_out_of_range_exception.dart';
+
 import '../system/enum.dart';
 
 import 'meter_scope.dart';
@@ -28,8 +30,8 @@ class InstrumentRule {
   /// Gets the [MeterScope].
   int get scopes {
     if (_scopes.hasFlag(MeterScope.none)) {
-      // TODO(jamiewest): Visit when ArgumentOutOfRangeException is added.
-      // throw ArgumentOutOfRangeException();
+      // TODO: Complete with parameters.
+      throw ArgumentOutOfRangeException();
     }
     return _scopes;
   }

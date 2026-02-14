@@ -1,4 +1,114 @@
-/// AI extension library
+/// AI extension library.
+///
+/// This library provides abstractions for chat completion, embeddings,
+/// image generation, speech-to-text, and tool pipelines. You supply
+/// provider-specific clients and then layer cross-cutting concerns
+/// like logging, caching, or message reduction via builders.
+///
+/// Example: build a simple chat pipeline and send a message.
+/// ```dart
+/// import 'package:extensions/ai.dart';
+///
+/// class EchoChatClient implements ChatClient {
+///   @override
+///   Future<ChatResponse> getChatResponse({
+///     required Iterable<ChatMessage> messages,
+///     ChatOptions? options,
+///     CancellationToken? cancellationToken,
+///   }) async {
+///     final last = messages.last.text ?? '';
+///     return ChatResponse(
+///       message: ChatMessage.fromText(ChatRole.assistant, 'Echo: $last'),
+///     );
+///   }
+///
+///   @override
+///   Stream<ChatResponseUpdate> getStreamingChatResponse({
+///     required Iterable<ChatMessage> messages,
+///     ChatOptions? options,
+///     CancellationToken? cancellationToken,
+///   }) async* {}
+///
+///   @override
+///   void dispose() {}
+/// }
+///
+/// Future<void> main() async {
+///   final client = ChatClientBuilder(EchoChatClient()).build();
+///   final response = await client.getChatResponseFromText('Hello');
+///   print(response.message?.text);
+/// }
+/// ```
+///
+/// Example: streaming responses.
+/// ```dart
+/// import 'package:extensions/ai.dart';
+///
+/// class StreamingEchoChatClient implements ChatClient {
+///   @override
+///   Future<ChatResponse> getChatResponse({
+///     required Iterable<ChatMessage> messages,
+///     ChatOptions? options,
+///     CancellationToken? cancellationToken,
+///   }) async =>
+///       ChatResponse();
+///
+///   @override
+///   Stream<ChatResponseUpdate> getStreamingChatResponse({
+///     required Iterable<ChatMessage> messages,
+///     ChatOptions? options,
+///     CancellationToken? cancellationToken,
+///   }) async* {
+///     yield ChatResponseUpdate(
+///       message: ChatMessage.fromText(ChatRole.assistant, 'Hello'),
+///     );
+///     yield ChatResponseUpdate(
+///       message: ChatMessage.fromText(ChatRole.assistant, ' world'),
+///     );
+///   }
+///
+///   @override
+///   void dispose() {}
+/// }
+///
+/// Future<void> main() async {
+///   final client = ChatClientBuilder(StreamingEchoChatClient()).build();
+///   await for (final update in client.getStreamingChatResponseFromText('Hi')) {
+///     print(update.message?.text);
+///   }
+/// }
+/// ```
+///
+/// Example: registering a chat client with DI.
+/// ```dart
+/// import 'package:extensions/ai.dart';
+/// import 'package:extensions/dependency_injection.dart';
+///
+/// class MyChatClient implements ChatClient {
+///   @override
+///   Future<ChatResponse> getChatResponse({
+///     required Iterable<ChatMessage> messages,
+///     ChatOptions? options,
+///     CancellationToken? cancellationToken,
+///   }) async => ChatResponse();
+///
+///   @override
+///   Stream<ChatResponseUpdate> getStreamingChatResponse({
+///     required Iterable<ChatMessage> messages,
+///     ChatOptions? options,
+///     CancellationToken? cancellationToken,
+///   }) async* {}
+///
+///   @override
+///   void dispose() {}
+/// }
+///
+/// final services = ServiceCollection()
+///   ..addSingleton<MyChatClient>((_) => MyChatClient());
+///
+/// final provider = services.buildServiceProvider();
+/// final client = provider.getRequiredService<MyChatClient>();
+/// ```
 library;
 
 // Core content types
@@ -16,7 +126,7 @@ export 'src/ai/chat_completion/chat_client_metadata.dart';
 export 'src/ai/chat_completion/chat_finish_reason.dart';
 export 'src/ai/chat_completion/chat_message.dart';
 export 'src/ai/chat_completion/chat_options.dart';
-export 'src/ai/chat_completion/chat_reducer.dart';
+export 'src/ai/chat_reduction/chat_reducer.dart';
 export 'src/ai/chat_completion/chat_response.dart';
 export 'src/ai/chat_completion/chat_response_format.dart';
 export 'src/ai/chat_completion/chat_response_update.dart';

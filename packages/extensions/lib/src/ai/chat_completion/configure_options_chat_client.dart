@@ -20,24 +20,24 @@ class ConfigureOptionsChatClient extends DelegatingChatClient {
   final ChatOptions Function(ChatOptions options) configure;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) =>
-      super.getChatResponse(
+      super.getResponse(
         messages: messages,
         options: configure(options ?? ChatOptions()),
         cancellationToken: cancellationToken,
       );
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) =>
-      super.getStreamingChatResponse(
+      super.getStreamingResponse(
         messages: messages,
         options: configure(options ?? ChatOptions()),
         cancellationToken: cancellationToken,

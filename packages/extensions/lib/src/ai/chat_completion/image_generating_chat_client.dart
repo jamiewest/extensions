@@ -29,12 +29,12 @@ class ImageGeneratingChatClient extends DelegatingChatClient {
   final ImageGenerator imageGenerator;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) async {
-    final response = await super.getChatResponse(
+    final response = await super.getResponse(
       messages: messages,
       options: options,
       cancellationToken: cancellationToken,
@@ -87,5 +87,4 @@ class ImageGeneratingChatClient extends DelegatingChatClient {
       additionalProperties: response.additionalProperties,
     );
   }
-
 }

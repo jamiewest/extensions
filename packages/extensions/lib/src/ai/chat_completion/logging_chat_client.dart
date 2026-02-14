@@ -1,5 +1,3 @@
-// Source: https://github.com/dotnet/extensions/blob/main/src/Libraries/Microsoft.Extensions.AI/ChatCompletion/LoggingChatClient.cs
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -38,7 +36,7 @@ class LoggingChatClient extends DelegatingChatClient {
   JsonEncoder jsonEncoder = const JsonEncoder.withIndent('  ');
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -47,7 +45,7 @@ class LoggingChatClient extends DelegatingChatClient {
     _logInvokedSensitive('getChatResponse', messages, options);
 
     try {
-      final response = await super.getChatResponse(
+      final response = await super.getResponse(
         messages: messages,
         options: options,
         cancellationToken: cancellationToken,
@@ -67,7 +65,7 @@ class LoggingChatClient extends DelegatingChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -77,7 +75,7 @@ class LoggingChatClient extends DelegatingChatClient {
       _logInvokedSensitive('getStreamingChatResponse', messages, options);
 
       try {
-        await for (final update in super.getStreamingChatResponse(
+        await for (final update in super.getStreamingResponse(
           messages: messages,
           options: options,
           cancellationToken: cancellationToken,
@@ -86,12 +84,12 @@ class LoggingChatClient extends DelegatingChatClient {
           yield update;
         }
 
-        _logCompleted('getStreamingChatResponse');
+        _logCompleted('getStreamingResponse');
       } on OperationCanceledException {
-        _logInvocationCanceled('getStreamingChatResponse');
+        _logInvocationCanceled('getStreamingResponse');
         rethrow;
       } catch (e) {
-        _logInvocationFailed('getStreamingChatResponse', e);
+        _logInvocationFailed('getStreamingResponse', e);
         rethrow;
       }
     }

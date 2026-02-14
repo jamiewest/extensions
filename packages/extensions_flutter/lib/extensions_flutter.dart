@@ -1,5 +1,5 @@
 /// To use, import `package:extensions_flutter/extensions_flutter.dart`
-library extensions_flutter;
+library;
 
 export 'package:extensions/extensions.dart';
 
@@ -14,3 +14,4 @@ export 'src/service_provider_extensions.dart';
 export 'src/flutter_builder.dart';
 export 'src/flutter_error_handler.dart';
 export 'src/flutter_lifetime_options.dart';
+export 'src/service_provider_scope.dart';

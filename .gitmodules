@@ -1,0 +1,3 @@
+[submodule "packages/extensions_flutter_services"]
+	path = packages/extensions_flutter_services
+	url = https://github.com/jamiewest/extensions_flutter_services.git

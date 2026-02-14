@@ -6,5 +6,3 @@ A set of APIs for commonly used programming patterns and utilities.
 This package contains a set of libraries that make it easy to handle dependency injection (DI), logging, configuration, app shutdown, and service startup and shutdown. These libraries can be used individually as needed or via the `Host` which encapsulates the app's resource and lifetime functionality.  
 
 Code is a derived work of the [dotnet/runtime](https://github.com/dotnet/runtime) `extensions` namespace. 
-
-

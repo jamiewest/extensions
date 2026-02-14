@@ -1,3 +1,5 @@
+import 'package:extensions/annotations.dart';
+
 import '../additional_properties_dictionary.dart';
 import '../response_continuation_token.dart';
 import '../tools/ai_tool.dart';
@@ -5,6 +7,13 @@ import 'chat_response_format.dart';
 import 'chat_tool_mode.dart';
 
 /// Represents the options for a chat request.
+@Source(
+  name: 'ChatOptions.cs',
+  namespace: 'Microsoft.Extensions.AI',
+  repository: 'dotnet/extensions',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatCompletion/',
+  commit: '19172fa728d335d112581b4e75f5762903281f60',
+)
 class ChatOptions {
   /// Creates a new [ChatOptions].
   ChatOptions({

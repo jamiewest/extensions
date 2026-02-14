@@ -11,6 +11,24 @@ import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
 import 'flutter_lifetime_options.dart';
 
+/// Bridges the `Host` lifecycle to Flutter's `runApp` and lifecycle events.
+///
+/// Responsibilities:
+/// - Starts the Flutter app when the host signals `applicationStarted`.
+/// - Wires Flutter error handlers into the host's logging pipeline.
+/// - Logs lifecycle transitions (pause/resume/etc.) unless suppressed.
+///
+/// Typical usage (via `addFlutter` + `runApp`):
+/// ```dart
+/// final builder = Host.createApplicationBuilder()
+///   ..addLogging((logging) => logging.addSimpleConsole())
+///   ..services.addFlutter((flutter) {
+///     flutter.runApp((sp) => MyApp(services: sp));
+///   });
+///
+/// final host = builder.build();
+/// Future<void> main() async => host.run();
+/// ```
 class FlutterLifetime implements HostLifetime {
   final Widget _application;
   final ErrorHandler _errorHandler;
@@ -19,6 +37,15 @@ class FlutterLifetime implements HostLifetime {
   final FlutterLifetimeOptions _options;
   final Logger _logger;
 
+  /// Creates the Flutter host lifetime implementation.
+  ///
+  /// Parameters are provided by the DI container during `Host` build:
+  /// - [application] is the root widget produced by `runApp`.
+  /// - [errorHandler] is the centralized error handler.
+  /// - [environment] supplies host environment details.
+  /// - [applicationLifetime] is the Flutter-specific lifetime.
+  /// - [options] controls status message verbosity.
+  /// - [loggerFactory] creates the lifetime logger.
   FlutterLifetime(
     Widget application,
     ErrorHandler errorHandler,
@@ -33,15 +60,28 @@ class FlutterLifetime implements HostLifetime {
       _options = options.value!,
       _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
+  /// The host environment used for status messages and diagnostics.
   HostEnvironment get environment => _environment;
 
+  /// The Flutter-specific application lifetime.
   FlutterApplicationLifetime get applicationLifetime => _applicationLifetime;
 
   @override
+  /// Registers start callbacks and starts Flutter when the host starts.
+  ///
+  /// This method wires:
+  /// - Host cancellation handling
+  /// - Application lifetime events (started/stopping)
+  /// - Flutter lifecycle events (pause/resume/etc.)
+  /// - Flutter error routing
+  ///
+  /// It ultimately calls `runApp(_application)` when the host starts.
   Future<void> waitForStart(CancellationToken cancellationToken) async {
     if (cancellationToken.isCancellationRequested) {
       throw OperationCanceledException(cancellationToken: cancellationToken);
     }
+
+    WidgetsFlutterBinding.ensureInitialized();
 
     final registrations = <CancellationTokenRegistration>[];
     var cancelled = false;
@@ -99,8 +139,6 @@ class FlutterLifetime implements HostLifetime {
           return;
         }
 
-        WidgetsFlutterBinding.ensureInitialized();
-
         FlutterError.onError = _errorHandler.onFlutterError;
         PlatformDispatcher.instance.onError = _errorHandler.onError;
 
@@ -115,6 +153,7 @@ class FlutterLifetime implements HostLifetime {
   }
 
   @override
+  /// Requests application shutdown via the host lifetime.
   Future<void> stop(CancellationToken cancellationToken) async =>
       applicationLifetime.stopApplication();
 

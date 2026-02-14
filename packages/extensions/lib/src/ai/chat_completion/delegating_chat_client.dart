@@ -5,36 +5,38 @@ import 'chat_options.dart';
 import 'chat_response.dart';
 import 'chat_response_update.dart';
 
-/// A [ChatClient] that delegates all calls to an inner client.
+/// Provides an optional base class for an [ChatClient] that passes through
+/// calls to another instance.
 ///
-/// Subclass this to create middleware that wraps specific methods
-/// while delegating others.
+/// This is recommended as a base type when building clients that can be chained
+/// around an underlying [ChatClient]. The default implementation simply passes
+/// each call to the inner client instance.
 abstract class DelegatingChatClient implements ChatClient {
-  /// Creates a new [DelegatingChatClient] wrapping [innerClient].
+  /// Initializes a new instance of the [DelegatingChatClient] class.
   DelegatingChatClient(this.innerClient);
 
   /// The inner client to delegate to.
   final ChatClient innerClient;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) =>
-      innerClient.getChatResponse(
+      innerClient.getResponse(
         messages: messages,
         options: options,
         cancellationToken: cancellationToken,
       );
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) =>
-      innerClient.getStreamingChatResponse(
+      innerClient.getStreamingResponse(
         messages: messages,
         options: options,
         cancellationToken: cancellationToken,

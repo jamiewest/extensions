@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:extensions/annotations.dart';
+
 import '../../system/threading/cancellation_token.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
@@ -11,6 +13,13 @@ import 'delegating_chat_client.dart';
 ///
 /// Subclasses provide the actual caching mechanism by implementing
 /// [getCachedResponse] and [setCachedResponse].
+@Source(
+  name: 'CachingChatClient.cs',
+  namespace: 'Microsoft.Extensions.AI',
+  repository: 'dotnet/extensions',
+  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
+  commit: 'b56aec451afe841d1865da4c9cb45fd5a379a519',
+)
 abstract class CachingChatClient extends DelegatingChatClient {
   /// Creates a new [CachingChatClient].
   CachingChatClient(super.innerClient);
@@ -43,7 +52,7 @@ abstract class CachingChatClient extends DelegatingChatClient {
   Future<void> setCachedResponse(String key, ChatResponse response);
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -52,7 +61,7 @@ abstract class CachingChatClient extends DelegatingChatClient {
     final cached = await getCachedResponse(key);
     if (cached != null) return cached;
 
-    final response = await super.getChatResponse(
+    final response = await super.getResponse(
       messages: messages,
       options: options,
       cancellationToken: cancellationToken,
@@ -63,14 +72,14 @@ abstract class CachingChatClient extends DelegatingChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) =>
       // Caching of streaming responses is not supported by default.
       // Subclasses can override this to provide caching for streaming.
-      super.getStreamingChatResponse(
+      super.getStreamingResponse(
         messages: messages,
         options: options,
         cancellationToken: cancellationToken,

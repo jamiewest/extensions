@@ -1,9 +1,18 @@
+import 'package:extensions/annotations.dart';
+
 import '../additional_properties_dictionary.dart';
 import '../ai_content.dart';
 import '../text_content.dart';
 import 'chat_role.dart';
 
 /// Represents a chat message used by a chat client.
+@Source(
+  name: 'ChatMessage.cs',
+  namespace: 'Microsoft.Extensions.AI',
+  repository: 'dotnet/extensions',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatCompletion/',
+  commit: 'b56aec451afe841d1865da4c9cb45fd5a379a519',
+)
 class ChatMessage {
   /// Creates a new [ChatMessage].
   ChatMessage({

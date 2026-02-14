@@ -105,14 +105,14 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
   bool terminateOnUnknownCalls = false;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) async {
     final allTools = _getAllTools(options);
     if (allTools.isEmpty) {
-      return super.getChatResponse(
+      return super.getResponse(
         messages: messages,
         options: options,
         cancellationToken: cancellationToken,
@@ -124,7 +124,7 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
     var consecutiveErrors = 0;
 
     while (true) {
-      final response = await super.getChatResponse(
+      final response = await super.getResponse(
         messages: messageList,
         options: options,
         cancellationToken: cancellationToken,
@@ -186,14 +186,14 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) {
     final allTools = _getAllTools(options);
     if (allTools.isEmpty) {
-      return super.getStreamingChatResponse(
+      return super.getStreamingResponse(
         messages: messages,
         options: options,
         cancellationToken: cancellationToken,
@@ -210,7 +210,7 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
         final updates = <ChatResponseUpdate>[];
         final functionCalls = <FunctionCallContent>[];
 
-        await for (final update in super.getStreamingChatResponse(
+        await for (final update in super.getStreamingResponse(
           messages: messageList,
           options: options,
           cancellationToken: cancellationToken,

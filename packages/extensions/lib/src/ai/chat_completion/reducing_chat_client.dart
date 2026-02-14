@@ -3,7 +3,7 @@ import 'dart:async';
 import '../../system/threading/cancellation_token.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
-import 'chat_reducer.dart';
+import '../chat_reduction/chat_reducer.dart';
 import 'chat_response.dart';
 import 'chat_response_update.dart';
 import 'delegating_chat_client.dart';
@@ -27,7 +27,7 @@ class ReducingChatClient extends DelegatingChatClient {
   final ChatReducer reducer;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -36,7 +36,7 @@ class ReducingChatClient extends DelegatingChatClient {
       messages.toList(),
       cancellationToken: cancellationToken,
     );
-    return super.getChatResponse(
+    return super.getResponse(
       messages: reduced,
       options: options,
       cancellationToken: cancellationToken,
@@ -44,7 +44,7 @@ class ReducingChatClient extends DelegatingChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -54,7 +54,7 @@ class ReducingChatClient extends DelegatingChatClient {
         messages.toList(),
         cancellationToken: cancellationToken,
       );
-      yield* super.getStreamingChatResponse(
+      yield* super.getStreamingResponse(
         messages: reduced,
         options: options,
         cancellationToken: cancellationToken,

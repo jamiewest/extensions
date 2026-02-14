@@ -1,6 +1,6 @@
 import '../../system/threading/cancellation_token.dart';
 import 'chat_message.dart';
-import 'chat_reducer.dart';
+import '../chat_reduction/chat_reducer.dart';
 
 /// A chat reducer that keeps the most recent messages up to a target count.
 ///

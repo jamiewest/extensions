@@ -5,10 +5,10 @@ import '../extensions_flutter.dart';
 /// Widget used to monitor lifecycle event changes
 class FlutterLifecycleObserver extends StatefulWidget {
   const FlutterLifecycleObserver({
-    Key? key,
+    super.key,
     required this.child,
     required this.lifetime,
-  }) : super(key: key);
+  });
 
   /// The [child] contained by this object.
   final Widget child;

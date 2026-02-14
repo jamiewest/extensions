@@ -1,4 +1,13 @@
+import 'package:extensions/annotations.dart';
+
 /// Provides metadata about a chat client.
+@Source(
+  name: 'ChatClientMetadata.cs',
+  namespace: 'Microsoft.Extensions.AI',
+  repository: 'dotnet/extensions',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatCompletion/',
+  commit: 'd256f6b3c15f358c6b9ad28958900238da4deb9d',
+)
 class ChatClientMetadata {
   /// Creates a new [ChatClientMetadata].
   ChatClientMetadata({

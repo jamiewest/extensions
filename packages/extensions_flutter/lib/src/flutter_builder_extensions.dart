@@ -11,6 +11,7 @@ import 'flutter_lifecycle_observer.dart';
 import 'flutter_lifetime.dart';
 import 'flutter_lifetime_options.dart';
 import 'flutter_service_collection_extensions.dart';
+import 'service_provider_scope.dart';
 
 /// A builder function that creates the root application widget.
 ///
@@ -52,6 +53,8 @@ extension FlutterBuilderExtensions on FlutterBuilder {
   /// ));
   /// ```
   FlutterBuilder runApp(FlutterAppBuilder builder) {
+    wrapWith((sp, child) => ServiceProviderScope(services: sp, child: child));
+
     wrapWith(
       (sp, child) => FlutterLifecycleObserver(
         lifetime:

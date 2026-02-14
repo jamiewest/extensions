@@ -2,7 +2,7 @@ import '../../system/threading/cancellation_token.dart';
 import 'chat_client.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
-import 'chat_reducer.dart';
+import '../chat_reduction/chat_reducer.dart';
 import 'chat_role.dart';
 
 /// A [ChatReducer] that summarizes older messages using a [ChatClient].
@@ -52,7 +52,7 @@ class SummarizingChatReducer extends ChatReducer {
       ChatMessage.fromText(ChatRole.user, summarizationPrompt),
     ];
 
-    final response = await chatClient.getChatResponse(
+    final response = await chatClient.getResponse(
       messages: summarizeMessages,
       options: ChatOptions(),
       cancellationToken: cancellationToken,
