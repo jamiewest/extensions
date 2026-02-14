@@ -57,7 +57,7 @@ class ChatOptions {
   /// Seed for reproducible generation.
   int? seed;
 
-  /// Penalty for token frequency to reduce repetition.
+  /// Penalty for token frequency to reduce repetitions.
   double? frequencyPenalty;
 
   /// Penalty for token presence to reduce repetition.
