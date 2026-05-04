@@ -1,3 +1,7 @@
+## 0.3.15
+
+* Removed an unused import in `flutter_service_collection_extensions.dart`.
+
 ## 0.3.14
 
 * Updated dependency on extensions to ^0.3.20.

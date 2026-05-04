@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'flutter_application_lifetime.dart';
 import 'flutter_error_handler.dart';
 import 'service_provider_extensions.dart';
-import 'service_provider_scope.dart';
 
 /// A factory function that wraps a widget with another widget.
 ///
