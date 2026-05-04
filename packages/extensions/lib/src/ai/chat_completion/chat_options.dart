@@ -3,8 +3,10 @@ import 'package:extensions/annotations.dart';
 import '../additional_properties_dictionary.dart';
 import '../response_continuation_token.dart';
 import '../tools/ai_tool.dart';
+import 'chat_client.dart';
 import 'chat_response_format.dart';
 import 'chat_tool_mode.dart';
+import 'reasoning_options.dart';
 
 /// Represents the options for a chat request.
 @Source(
@@ -26,13 +28,16 @@ class ChatOptions {
     this.seed,
     this.frequencyPenalty,
     this.presencePenalty,
+    this.reasoning,
     this.responseFormat,
     this.stopSequences,
     this.instructions,
     this.tools,
     this.toolMode,
     this.allowMultipleToolCalls,
+    this.allowBackgroundResponses,
     this.continuationToken,
+    this.rawRepresentationFactory,
     this.additionalProperties,
   });
 
@@ -63,6 +68,9 @@ class ChatOptions {
   /// Penalty for token presence to reduce repetition.
   double? presencePenalty;
 
+  /// Options for configuring reasoning behavior.
+  ReasoningOptions? reasoning;
+
   /// The desired response format.
   ChatResponseFormat? responseFormat;
 
@@ -81,13 +89,26 @@ class ChatOptions {
   /// Whether the model may make multiple tool calls per response.
   bool? allowMultipleToolCalls;
 
+  /// Whether non-streaming responses may start a background operation and
+  /// return a continuation token for polling.
+  bool? allowBackgroundResponses;
+
   /// A token to resume an interrupted response.
   ResponseContinuationToken? continuationToken;
+
+  /// A callback that produces the implementation-specific options object.
+  ///
+  /// When the underlying [ChatClient] converts these options into its own
+  /// representation, it will call this factory (if set) to obtain a starting
+  /// object. Return a new instance on each call — do not share instances.
+  Object? Function(ChatClient)? rawRepresentationFactory;
 
   /// Additional properties.
   AdditionalPropertiesDictionary? additionalProperties;
 
   /// Creates a deep copy of this [ChatOptions].
+  ///
+  /// [rawRepresentationFactory] is not cloned — the same reference is shared.
   ChatOptions clone() => ChatOptions(
         conversationId: conversationId,
         modelId: modelId,
@@ -98,6 +119,7 @@ class ChatOptions {
         seed: seed,
         frequencyPenalty: frequencyPenalty,
         presencePenalty: presencePenalty,
+        reasoning: reasoning?.clone(),
         responseFormat: responseFormat,
         stopSequences:
             stopSequences != null ? List<String>.of(stopSequences!) : null,
@@ -105,7 +127,9 @@ class ChatOptions {
         tools: tools != null ? List<AITool>.of(tools!) : null,
         toolMode: toolMode,
         allowMultipleToolCalls: allowMultipleToolCalls,
+        allowBackgroundResponses: allowBackgroundResponses,
         continuationToken: continuationToken,
+        rawRepresentationFactory: rawRepresentationFactory,
         additionalProperties:
             additionalProperties != null ? Map.of(additionalProperties!) : null,
       );

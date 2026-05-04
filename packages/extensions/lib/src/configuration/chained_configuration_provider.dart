@@ -44,7 +44,7 @@ class ChainedConfigurationProvider
   /// Returns a change token if this provider supports change
   /// tracking, null otherwise.
   @override
-  IChangeToken getReloadToken() => _config.getReloadToken();
+  ChangeToken getReloadToken() => _config.getReloadToken();
 
   /// Loads configuration values from the source represented
   /// by this [ConfigurationProvider].

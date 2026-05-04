@@ -2,8 +2,8 @@ import '../primitives/change_token.dart';
 import '../system/disposable.dart';
 import '../system/threading/cancellation_token_source.dart';
 
-/// Implements [IChangeToken].
-class ConfigurationReloadToken implements IChangeToken {
+/// Implements [ChangeToken].
+class ConfigurationReloadToken implements ChangeToken {
   final CancellationTokenSource _cts = CancellationTokenSource();
   final bool _activeChangeCallbacks = true;
 
@@ -19,7 +19,7 @@ class ConfigurationReloadToken implements IChangeToken {
   /// Registers for a callback that will be invoked when the entry
   /// has changed. MUST be set before the callback is invoked.
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) =>

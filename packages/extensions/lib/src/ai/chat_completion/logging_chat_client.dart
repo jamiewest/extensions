@@ -84,12 +84,12 @@ class LoggingChatClient extends DelegatingChatClient {
           yield update;
         }
 
-        _logCompleted('getStreamingResponse');
+        _logCompleted('getStreamingChatResponse');
       } on OperationCanceledException {
-        _logInvocationCanceled('getStreamingResponse');
+        _logInvocationCanceled('getStreamingChatResponse');
         rethrow;
       } catch (e) {
-        _logInvocationFailed('getStreamingResponse', e);
+        _logInvocationFailed('getStreamingChatResponse', e);
         rethrow;
       }
     }

@@ -6,22 +6,22 @@ import '../memory_cache_options.dart';
 import 'cache_entry_internal.dart';
 import 'memory_cache_impl.dart';
 
-/// An implementation of [IDistributedCache] using an in-memory cache.
+/// An implementation of [DistributedCache] using an in-memory cache.
 ///
 /// This is useful for testing distributed cache code without requiring
 /// an actual distributed cache implementation, or for single-server
-/// applications that want to use the [IDistributedCache] interface.
-class MemoryDistributedCache implements IDistributedCache {
+/// applications that want to use the [DistributedCache] interface.
+class MemoryDistributedCache implements DistributedCache {
   /// Creates a new instance of [MemoryDistributedCache].
   MemoryDistributedCache([MemoryCacheOptions? options])
-      : _cache = MemoryCache(
+      : _cache = MemoryCacheImpl(
           options ??
               MemoryCacheOptions(
                 expirationScanFrequency: const Duration(minutes: 1),
               ),
         );
 
-  final MemoryCache _cache;
+  final MemoryCacheImpl _cache;
 
   @override
   Future<Uint8List?> get(String key) async {

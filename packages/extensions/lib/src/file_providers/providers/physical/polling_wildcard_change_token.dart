@@ -12,7 +12,7 @@ import '../../../system/threading/cancellation_token_source.dart';
 ///
 /// This token checks for changes to any files matching the glob pattern
 /// at regular intervals and invokes registered callbacks when changes occur.
-class PollingWildcardChangeToken implements IChangeToken {
+class PollingWildcardChangeToken implements ChangeToken {
   final String _root;
   final String _pattern;
   final Duration _pollingInterval;
@@ -192,7 +192,7 @@ class PollingWildcardChangeToken implements IChangeToken {
   bool get activeChangeCallbacks => _callbacks.isNotEmpty;
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -261,7 +261,7 @@ class _FileState {
   int get hashCode => modified.hashCode ^ length.hashCode;
 }
 
-class _CallbackDisposable implements IDisposable {
+class _CallbackDisposable implements Disposable {
   final PollingWildcardChangeToken _token;
   final _CallbackRegistration? _registration;
 

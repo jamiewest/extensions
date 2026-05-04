@@ -14,10 +14,10 @@
 ///
 /// ## Memory Caching
 ///
-/// Use [IMemoryCache] for fast, in-memory caching of objects:
+/// Use [MemoryCache] for fast, in-memory caching of objects:
 ///
 /// ```dart
-/// final cache = MemoryCache(MemoryCacheOptions());
+/// final cache = MemoryCacheImpl(MemoryCacheOptions());
 ///
 /// // Simple set/get
 /// cache.set('key', 'value');
@@ -36,7 +36,7 @@
 ///
 /// ## Distributed Caching
 ///
-/// Use [IDistributedCache] for distributed caching across multiple servers:
+/// Use [DistributedCache] for distributed caching across multiple servers:
 ///
 /// ```dart
 /// final cache = MemoryDistributedCache(MemoryDistributedCacheOptions());

@@ -3,7 +3,7 @@ import '../primitives/empty_disposable.dart';
 import '../system/disposable.dart';
 
 /// An empty change token that doesn't raise any change callbacks.
-class NullChangeToken implements IChangeToken {
+class NullChangeToken implements ChangeToken {
   NullChangeToken();
 
   /// A singleton instance of [NullChangeToken]
@@ -19,7 +19,7 @@ class NullChangeToken implements IChangeToken {
 
   /// Always returns an empty disposable object. Callbacks will never be called.
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) =>

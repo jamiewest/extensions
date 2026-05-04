@@ -3,7 +3,7 @@ import '../system/disposable.dart';
 /// Propagates notifications that a change has occurred.
 ///
 /// Adapted from [`Microsoft.Extensions.Primitives`]()
-abstract class IChangeToken {
+abstract class ChangeToken {
   /// Gets a value that indicates if a change has occurred.
   bool get hasChanged;
 
@@ -13,16 +13,14 @@ abstract class IChangeToken {
 
   /// Registers for a callback that will be invoked when the entry has changed.
   /// [hasChanged] MUST be set before the callback is invoked.
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   );
-}
 
-class ChangeToken {
   /// Registers the [changeTokenConsumer] action to be called whenever
   /// the token produced changes.
-  static IDisposable onChangeWithState<TState>(
+  static Disposable onChangeWithState<TState>(
     ChangeTokenProducer changeTokenProducer,
     ChangeTokenTypedConsumer<TState> changeTokenConsumer,
     TState? state,
@@ -33,7 +31,7 @@ class ChangeToken {
         state,
       );
 
-  static IDisposable onChange(
+  static Disposable onChange(
     ChangeTokenProducer changeTokenProducer,
     ChangeTokenConsumer changeTokenConsumer,
   ) =>
@@ -44,11 +42,11 @@ class ChangeToken {
       );
 }
 
-class _ChangeTokenRegistration<TState> implements IDisposable {
+class _ChangeTokenRegistration<TState> implements Disposable {
   final ChangeTokenProducer _changeTokenProducer;
   final ChangeTokenTypedConsumer<TState> _changeTokenConsumer;
   final TState? _state;
-  IDisposable? _disposable;
+  Disposable? _disposable;
 
   static final NoopDisposable _disposedSentinel = NoopDisposable();
 
@@ -73,7 +71,7 @@ class _ChangeTokenRegistration<TState> implements IDisposable {
     }
   }
 
-  void _registerChangeTokenCallback(IChangeToken? token) {
+  void _registerChangeTokenCallback(ChangeToken? token) {
     if (token == null) {
       return;
     }
@@ -91,7 +89,7 @@ class _ChangeTokenRegistration<TState> implements IDisposable {
     setDisposable(registration);
   }
 
-  void setDisposable(IDisposable? disposable) {
+  void setDisposable(Disposable? disposable) {
     var current = _disposable;
     if (current == _disposedSentinel) {
       disposable?.dispose();
@@ -116,13 +114,13 @@ class _ChangeTokenRegistration<TState> implements IDisposable {
   }
 }
 
-class NoopDisposable implements IDisposable {
+class NoopDisposable implements Disposable {
   @override
   void dispose() {}
 }
 
 /// Produces the change token.
-typedef ChangeTokenProducer = IChangeToken? Function();
+typedef ChangeTokenProducer = ChangeToken? Function();
 
 /// Action called when the token changes.
 typedef ChangeTokenConsumer = void Function();

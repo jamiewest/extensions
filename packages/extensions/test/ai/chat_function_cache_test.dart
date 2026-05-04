@@ -10,7 +10,7 @@ class _CountingChatClient implements ChatClient {
   int _index = 0;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -23,7 +23,7 @@ class _CountingChatClient implements ChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -81,8 +81,8 @@ void main() {
       final client = _MemoryCachingChatClient(inner);
 
       final messages = [ChatMessage.fromText(ChatRole.user, 'hi')];
-      final first = await client.getChatResponse(messages: messages);
-      final second = await client.getChatResponse(messages: messages);
+      final first = await client.getResponse(messages: messages);
+      final second = await client.getResponse(messages: messages);
 
       expect(inner.calls, hasLength(1));
       expect(identical(first, second), isTrue);
@@ -126,7 +126,7 @@ void main() {
       final client = FunctionInvokingChatClient(inner)
         ..additionalTools = [function];
 
-      final response = await client.getChatResponse(
+      final response = await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'start')],
       );
 
@@ -164,7 +164,7 @@ void main() {
         ..additionalTools = [_DummyTool('other')]
         ..terminateOnUnknownCalls = true;
 
-      final response = await client.getChatResponse(
+      final response = await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'start')],
       );
 

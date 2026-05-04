@@ -34,7 +34,7 @@
 /// ```dart
 /// services
 ///   ..addKeyedSingleton<ICache, RedisCache>('redis')
-///   ..addKeyedSingleton<ICache, MemoryCache>('memory');
+///   ..addKeyedSingleton<ICache, MemoryCacheImpl>('memory');
 ///
 /// final redisCache = provider.getRequiredKeyedService<ICache>('redis');
 /// ```

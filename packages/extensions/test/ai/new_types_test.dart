@@ -146,7 +146,7 @@ void main() {
         },
       );
 
-      await client.getChatResponse(
+      await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
       );
 
@@ -224,38 +224,38 @@ void main() {
       expect(content.serverName, 'server1');
     });
 
-    test('FunctionApprovalRequestContent creates response', () {
-      final call = FunctionCallContent(
+    test('ToolApprovalRequestContent creates response', () {
+      final call = McpServerToolCallContent(
         callId: 'fc1',
-        name: 'doSomething',
+        toolName: 'doSomething',
       );
-      final request = FunctionApprovalRequestContent(
-        id: 'req1',
-        functionCall: call,
+      final request = ToolApprovalRequestContent(
+        requestId: 'req1',
+        toolCall: call,
       );
-      final response = request.createResponse(true, 'Looks good');
+      final response = request.createResponse(true, reason: 'Looks good');
       expect(response.approved, isTrue);
       expect(response.reason, 'Looks good');
-      expect(response.id, 'req1');
+      expect(response.requestId, 'req1');
     });
 
-    test('McpServerToolApprovalRequestContent creates response', () {
+    test('ToolApprovalRequestContent with McpServerToolCallContent', () {
       final toolCall = McpServerToolCallContent(
         callId: 'mc1',
         toolName: 'search',
       );
-      final request = McpServerToolApprovalRequestContent(
-        id: 'req2',
+      final request = ToolApprovalRequestContent(
+        requestId: 'req2',
         toolCall: toolCall,
       );
       final response = request.createResponse(false);
       expect(response.approved, isFalse);
-      expect(response.id, 'req2');
+      expect(response.requestId, 'req2');
     });
 
     test('ImageGenerationToolCallContent', () {
-      final content = ImageGenerationToolCallContent(imageId: 'img1');
-      expect(content.imageId, 'img1');
+      final content = ImageGenerationToolCallContent(callId: 'img1');
+      expect(content.callId, 'img1');
     });
   });
 }
@@ -266,7 +266,7 @@ class _FakeChatClient extends DelegatingChatClient {
   ChatOptions? lastOptions;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -278,7 +278,7 @@ class _FakeChatClient extends DelegatingChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -290,7 +290,7 @@ class _FakeChatClient extends DelegatingChatClient {
 
 class _NullChatClient implements ChatClient {
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -298,7 +298,7 @@ class _NullChatClient implements ChatClient {
       ChatResponse();
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,

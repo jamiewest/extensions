@@ -110,7 +110,7 @@ class _SingleResponseChatClient implements ChatClient {
   final ChatResponse response;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -118,7 +118,7 @@ class _SingleResponseChatClient implements ChatClient {
       response;
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -135,7 +135,7 @@ class _SingleResponseChatClient implements ChatClient {
 void main() {
   group('ImageGeneratingChatClient', () {
     test('invokes image generator and appends result message', () async {
-      final imageCall = ImageGenerationToolCallContent(imageId: 'img-1');
+      final imageCall = ImageGenerationToolCallContent(callId: 'call-1', prompt: 'img-1');
       final innerResponse = ChatResponse.fromMessage(
         ChatMessage(
           role: ChatRole.assistant,
@@ -149,7 +149,7 @@ void main() {
         imageGenerator: generator,
       );
 
-      final response = await client.getChatResponse(
+      final response = await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'start')],
       );
 
@@ -174,7 +174,7 @@ void main() {
         imageGenerator: generator,
       );
 
-      final response = await client.getChatResponse(
+      final response = await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'start')],
       );
 

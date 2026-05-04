@@ -7,7 +7,7 @@ void main() {
   group('ReplacementTests', () {
     group('Value Replacement', () {
       test('Replacing entry triggers replaced eviction callback', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callbackCount = 0;
         EvictionReason? lastReason;
         Object? lastValue;
@@ -39,7 +39,7 @@ void main() {
       });
 
       test('Replacing with same value still triggers callback', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callbackCount = 0;
 
         cache
@@ -64,7 +64,7 @@ void main() {
       });
 
       test('Replacing entry with different type', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'string value')
           ..set('key', 42)
           ..set('key', true)
@@ -76,7 +76,7 @@ void main() {
       });
 
       test('Replacement preserves new options', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'key',
             'original',
@@ -100,7 +100,7 @@ void main() {
       });
 
       test('Replacement with size updates tracking', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -119,7 +119,7 @@ void main() {
       });
 
       test('Replacing entry cancels old expiration tokens', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache
@@ -145,7 +145,7 @@ void main() {
 
     group('CreateEntry vs Set', () {
       test('CreateEntry provides configuration interface', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         final entry = cache.createEntry('key')
           ..value = 'configured value'
@@ -161,7 +161,7 @@ void main() {
       });
 
       test('Set is atomic operation', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'value', MemoryCacheEntryOptions()..size = 50);
 
         // Value should be immediately accessible
@@ -173,7 +173,7 @@ void main() {
 
     group('Null Values', () {
       test('Can store null value', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set<String?>('key', null);
 
         expect(cache.containsKey('key'), isTrue);
@@ -183,7 +183,7 @@ void main() {
       });
 
       test('Null value different from missing key', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set<String?>('null-value', null);
 
         expect(cache.containsKey('null-value'), isTrue);
@@ -193,7 +193,7 @@ void main() {
       });
 
       test('TryGetValue distinguishes null value from missing', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set<String?>('null-value', null);
 
         String? result;
@@ -211,7 +211,7 @@ void main() {
   group('ConcurrencyTests', () {
     group('Concurrent Access', () {
       test('Multiple concurrent reads are safe', () async {
-        final cache = MemoryCache(MemoryCacheOptions())..set('key', 'value');
+        final cache = MemoryCacheImpl(MemoryCacheOptions())..set('key', 'value');
 
         final futures = <Future<String?>>[];
         for (var i = 0; i < 100; i++) {
@@ -226,7 +226,7 @@ void main() {
       });
 
       test('Concurrent writes are safe', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         final futures = <Future<void>>[];
         for (var i = 0; i < 100; i++) {
@@ -246,7 +246,7 @@ void main() {
       });
 
       test('Concurrent read/write on same key', () async {
-        final cache = MemoryCache(MemoryCacheOptions())..set('key', 'initial');
+        final cache = MemoryCacheImpl(MemoryCacheOptions())..set('key', 'initial');
 
         final futures = <Future<void>>[];
 
@@ -274,7 +274,7 @@ void main() {
       });
 
       test('Concurrent removes are safe', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         for (var i = 0; i < 100; i++) {
           cache.set('key$i', 'value$i');
@@ -296,7 +296,7 @@ void main() {
       });
 
       test('Concurrent compaction operations', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         for (var i = 0; i < 100; i++) {
           cache.set('key$i', 'value$i');
@@ -315,7 +315,7 @@ void main() {
 
     group('Concurrent Expiration', () {
       test('Multiple entries expiring simultaneously', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final callbackCounts = <int>[];
 
         for (var i = 0; i < 10; i++) {
@@ -353,7 +353,7 @@ void main() {
       });
 
       test('Concurrent token expiration', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controllers = <StreamController<void>>[];
 
         for (var i = 0; i < 10; i++) {
@@ -389,7 +389,7 @@ void main() {
 
     group('GetOrCreate Concurrency', () {
       test('GetOrCreate called concurrently creates value once', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var createCount = 0;
 
         final futures = <Future<String>>[];
@@ -417,7 +417,7 @@ void main() {
       });
 
       test('GetOrCreateAsync with concurrent calls', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var createCount = 0;
 
         // Create first value to avoid race conditions

@@ -9,7 +9,7 @@ import '../../../system/threading/cancellation_token_source.dart';
 ///
 /// This token checks the file's last modified time at regular intervals
 /// to detect changes and invokes registered callbacks when changes occur.
-class PollingFileChangeToken implements IChangeToken {
+class PollingFileChangeToken implements ChangeToken {
   final File _file;
   final Duration _pollingInterval;
   final CancellationTokenSource? _cancellationTokenSource;
@@ -151,7 +151,7 @@ class PollingFileChangeToken implements IChangeToken {
   bool get activeChangeCallbacks => _callbacks.isNotEmpty;
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -202,7 +202,7 @@ class _CallbackRegistration {
   _CallbackRegistration(this.callback, this.state);
 }
 
-class _CallbackDisposable implements IDisposable {
+class _CallbackDisposable implements Disposable {
   final PollingFileChangeToken _token;
   final _CallbackRegistration? _registration;
 

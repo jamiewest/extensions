@@ -17,7 +17,7 @@ class NullFileProvider implements FileProvider {
   @override
   FileInfo getFileInfo(String subpath) => NotFoundFileInfo(subpath);
 
-  /// Returns a [IChangeToken] that monitors nothing.
+  /// Returns a [ChangeToken] that monitors nothing.
   @override
-  IChangeToken watch(String filter) => NullChangeToken.singleton();
+  ChangeToken watch(String filter) => NullChangeToken.singleton();
 }

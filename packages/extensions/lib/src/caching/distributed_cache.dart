@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'distributed_cache_entry_options.dart';
 
 /// Represents a distributed cache of serialized values.
-abstract class IDistributedCache {
+abstract class DistributedCache {
   /// Gets a value with the given [key].
   ///
   /// Returns the cached value as bytes, or null if not found.

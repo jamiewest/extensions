@@ -16,7 +16,7 @@ class _RecordingChatClient implements ChatClient {
   final List<List<ChatMessage>> calls = [];
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -26,7 +26,7 @@ class _RecordingChatClient implements ChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -66,7 +66,7 @@ class _SummaryChatClient implements ChatClient {
   int callCount = 0;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -79,7 +79,7 @@ class _SummaryChatClient implements ChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -106,7 +106,7 @@ void main() {
       );
       final client = ReducingChatClient(inner, reducer: reducer);
 
-      await client.getChatResponse(messages: original);
+      await client.getResponse(messages: original);
 
       expect(reducer.lastMessages, original);
       expect(inner.calls.single, reduced);
@@ -119,7 +119,7 @@ void main() {
       final inner = _RecordingChatClient();
       final client = ReducingChatClient(inner, reducer: reducer);
 
-      await client.getStreamingChatResponse(messages: original).drain<void>();
+      await client.getStreamingResponse(messages: original).drain<void>();
 
       expect(reducer.lastMessages, original);
       expect(inner.calls.single, reduced);
@@ -191,7 +191,7 @@ void main() {
         },
       );
 
-      final response = await client.getChatResponse(
+      final response = await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
       );
 
@@ -210,7 +210,7 @@ void main() {
         },
       );
 
-      final updates = await client.getStreamingChatResponse(
+      final updates = await client.getStreamingResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
       ).toList();
 
@@ -227,7 +227,7 @@ void main() {
       );
       final client = AnonymousDelegatingChatClient(inner);
 
-      final response = await client.getChatResponse(
+      final response = await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
       );
 

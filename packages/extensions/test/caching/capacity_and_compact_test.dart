@@ -5,7 +5,7 @@ void main() {
   group('CapacityTests', () {
     group('Size Limit Enforcement', () {
       test('Adding entry beyond size limit triggers compaction', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             compactionPercentage: 0.25, // Remove 25%
@@ -43,7 +43,7 @@ void main() {
       });
 
       test('Entries without size do not contribute to limit', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -72,7 +72,7 @@ void main() {
       });
 
       test('Size limit of zero allows unlimited entries', () {
-        final cache = MemoryCache(MemoryCacheOptions(sizeLimit: 0));
+        final cache = MemoryCacheImpl(MemoryCacheOptions(sizeLimit: 0));
 
         // Add many entries
         for (var i = 0; i < 1000; i++) {
@@ -86,7 +86,7 @@ void main() {
       });
 
       test('NeverRemove priority prevents eviction during capacity', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             compactionPercentage: 0.5,
@@ -123,7 +123,7 @@ void main() {
       });
 
       test('Replacing entry updates size tracking', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -151,7 +151,7 @@ void main() {
       });
 
       test('Removing entry updates size tracking', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -172,7 +172,7 @@ void main() {
       });
 
       test('Clear resets size to zero', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -197,7 +197,7 @@ void main() {
 
     group('Compaction', () {
       test('Manual compact removes correct percentage', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         );
 
@@ -223,7 +223,7 @@ void main() {
       });
 
       test('Compact respects priority order', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'low1',
             'value',
@@ -258,7 +258,7 @@ void main() {
       });
 
       test('Compact removes entries based on priority and age', () async {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         )
 
@@ -292,7 +292,7 @@ void main() {
       });
 
       test('Expired entries are removed on access', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'expired',
             'value',
@@ -317,7 +317,7 @@ void main() {
       });
 
       test('Compact with 0 percentage removes nothing', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         );
 
@@ -334,7 +334,7 @@ void main() {
       });
 
       test('Compact with 1.0 percentage removes all non-NeverRemove', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         )
           ..set('removable', 'value')
@@ -352,7 +352,7 @@ void main() {
       });
 
       test('Compact with invalid percentage throws', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         expect(() => cache.compact(-0.1), throwsArgumentError);
         expect(() => cache.compact(1.1), throwsArgumentError);
@@ -361,7 +361,7 @@ void main() {
       });
 
       test('Compaction triggers post-eviction callbacks', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callbackCount = 0;
         final evictedKeys = <Object>[];
 
@@ -395,7 +395,7 @@ void main() {
 
     group('Mixed Scenarios', () {
       test('Size limit with expiration', () async {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -433,7 +433,7 @@ void main() {
       });
 
       test('Size limit with sliding expiration', () async {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             trackStatistics: true,
@@ -459,7 +459,7 @@ void main() {
       });
 
       test('Compaction with zero sized entries', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         );
 

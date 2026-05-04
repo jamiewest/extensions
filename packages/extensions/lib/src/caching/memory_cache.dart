@@ -4,7 +4,7 @@ import 'memory_cache_options.dart' show MemoryCacheOptions;
 import 'memory_cache_statistics.dart';
 
 /// Represents a local in-memory cache whose values are not serialized.
-abstract class IMemoryCache {
+abstract class MemoryCache {
   /// Gets a value indicating whether the cache entry associated with
   /// [key] exists.
   ///
@@ -21,7 +21,7 @@ abstract class IMemoryCache {
 
   /// Creates or overwrites an entry in the cache.
   ///
-  /// Returns an [ICacheEntry] for chaining. The entry is not added to
+  /// Returns an [CacheEntry] for chaining. The entry is not added to
   /// the cache until it is disposed.
   ///
   /// Example:
@@ -32,7 +32,7 @@ abstract class IMemoryCache {
   /// // Entry is added when the entry would naturally be disposed,
   /// // or you can manually commit it by calling a method that uses it
   /// ```
-  ICacheEntry createEntry(Object key);
+  CacheEntry createEntry(Object key);
 
   /// Removes the value associated with [key] from the cache.
   void remove(Object key);

@@ -56,8 +56,7 @@ export 'src/primitives/change_token.dart'
         ChangeToken,
         ChangeTokenConsumer,
         ChangeTokenProducer,
-        ChangeTokenTypedConsumer,
-        IChangeToken;
+        ChangeTokenTypedConsumer;
 export 'src/primitives/composite_change_token.dart' show CompositeChangeToken;
 export 'src/primitives/validation_result.dart';
 export 'src/primitives/void_callback.dart';

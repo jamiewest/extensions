@@ -6,8 +6,8 @@ import 'memory/memory_cache_impl.dart';
 import 'memory_cache.dart';
 import 'memory_cache_entry_options.dart';
 
-/// Extension methods for [IMemoryCache].
-extension MemoryCacheExtensions on IMemoryCache {
+/// Extension methods for [MemoryCache].
+extension MemoryCacheExtensions on MemoryCache {
   /// Gets the value associated with [key].
   ///
   /// Returns the cached value, or null if not found.
@@ -54,7 +54,7 @@ extension MemoryCacheExtensions on IMemoryCache {
   /// Gets the value associated with [key], or creates and caches a new
   /// value using [factory] if not found.
   ///
-  /// The [factory] function receives an [ICacheEntry] that can be configured
+  /// The [factory] function receives an [CacheEntry] that can be configured
   /// with expiration settings.
   ///
   /// Example:
@@ -64,7 +64,7 @@ extension MemoryCacheExtensions on IMemoryCache {
   ///   return 'computed value';
   /// });
   /// ```
-  T getOrCreate<T>(Object key, T Function(ICacheEntry entry) factory) {
+  T getOrCreate<T>(Object key, T Function(CacheEntry entry) factory) {
     T? result;
     if (tryGetValue<T>(key, (value) => result = value)) {
       return result as T;
@@ -92,7 +92,7 @@ extension MemoryCacheExtensions on IMemoryCache {
   /// ```
   Future<T> getOrCreateAsync<T>(
     Object key,
-    Future<T> Function(ICacheEntry entry) factory,
+    Future<T> Function(CacheEntry entry) factory,
   ) async {
     T? result;
     if (tryGetValue<T>(key, (value) => result = value)) {
@@ -109,11 +109,11 @@ extension MemoryCacheExtensions on IMemoryCache {
 
   /// Helper method to commit an entry to the cache.
   ///
-  /// In the .NET implementation, this happens when ICacheEntry is disposed.
+  /// In the .NET implementation, this happens when CacheEntry is disposed.
   /// In Dart, we call this explicitly after configuration.
-  void _commitEntry(ICacheEntry entry) {
-    if (entry is CacheEntryInternal && this is MemoryCache) {
-      (this as MemoryCache).finalizeEntry(entry);
+  void _commitEntry(CacheEntry entry) {
+    if (entry is CacheEntryInternal && this is MemoryCacheImpl) {
+      (this as MemoryCacheImpl).finalizeEntry(entry);
     }
   }
 }

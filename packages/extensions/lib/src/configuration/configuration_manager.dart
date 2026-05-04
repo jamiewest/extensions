@@ -70,7 +70,7 @@ class ConfigurationManager
   ConfigurationRoot build() => this;
 
   @override
-  IChangeToken getReloadToken() => _changeToken;
+  ChangeToken getReloadToken() => _changeToken;
 
   @override
   void reload() {

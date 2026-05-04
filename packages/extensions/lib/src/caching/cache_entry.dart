@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import '../../caching.dart' show IMemoryCache;
+import '../../caching.dart' show MemoryCache;
 import 'cache_item_priority.dart';
-import 'memory_cache.dart' show IMemoryCache;
+import 'memory_cache.dart' show MemoryCache;
 import 'post_eviction_callback_registration.dart';
 
-/// Represents an entry in the [IMemoryCache].
-abstract class ICacheEntry {
+/// Represents an entry in the [MemoryCache].
+abstract class CacheEntry {
   /// Gets the key of the cache entry.
   Object get key;
 

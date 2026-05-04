@@ -68,8 +68,8 @@ class ConfigurationSection implements IConfigurationSection {
   Iterable<ConfigurationSection> getChildren() =>
       _root.getChildrenImplementation(path);
 
-  /// Returns a [IChangeToken] that can be used to observe when
+  /// Returns a [ChangeToken] that can be used to observe when
   /// this configuration is reloaded.
   @override
-  IChangeToken getReloadToken() => _root.getReloadToken();
+  ChangeToken getReloadToken() => _root.getReloadToken();
 }

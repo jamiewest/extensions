@@ -13,7 +13,7 @@ class _ResponseChatClient implements ChatClient {
   final ChatResponse response;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -21,7 +21,7 @@ class _ResponseChatClient implements ChatClient {
       response;
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -42,7 +42,7 @@ class _ThrowingChatClient implements ChatClient {
   final Exception exception;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -51,7 +51,7 @@ class _ThrowingChatClient implements ChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -71,7 +71,7 @@ class _ThrowingStreamingChatClient implements ChatClient {
   final Exception exception;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -79,7 +79,7 @@ class _ThrowingStreamingChatClient implements ChatClient {
       ChatResponse();
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -234,7 +234,7 @@ void main() {
       );
       final client = LoggingChatClient(inner, logger: logger);
 
-      await client.getChatResponse(
+      await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
         options: ChatOptions(modelId: 'model'),
       );
@@ -251,7 +251,7 @@ void main() {
       final inner = _ResponseChatClient(ChatResponse());
       final client = LoggingChatClient(inner, logger: logger);
 
-      await client.getStreamingChatResponse(
+      await client.getStreamingResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
       ).toList();
 
@@ -272,7 +272,7 @@ void main() {
       final client = LoggingChatClient(inner, logger: logger);
 
       await expectLater(
-        client.getStreamingChatResponse(
+        client.getStreamingResponse(
           messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
         ).toList(),
         throwsA(exception),
@@ -290,7 +290,7 @@ void main() {
       final client = LoggingChatClient(inner, logger: logger);
 
       await expectLater(
-        client.getStreamingChatResponse(
+        client.getStreamingResponse(
           messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
         ).toList(),
         throwsA(exception),
@@ -307,7 +307,7 @@ void main() {
       final client = LoggingChatClient(inner, logger: logger);
 
       await expectLater(
-        client.getChatResponse(
+        client.getResponse(
           messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
         ),
         throwsA(isA<OperationCanceledException>()),
@@ -325,7 +325,7 @@ void main() {
       final client = LoggingChatClient(inner, logger: logger);
 
       await expectLater(
-        client.getChatResponse(
+        client.getResponse(
           messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
         ),
         throwsA(exception),

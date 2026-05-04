@@ -61,7 +61,7 @@ class PhysicalFilesWatcher implements Disposable {
   /// - A directory path (e.g., "logs/")
   ///
   /// The change token will report changes to any files matching the pattern.
-  IChangeToken createFileChangeToken(String filter) {
+  ChangeToken createFileChangeToken(String filter) {
     if (filter.isEmpty) {
       return NullChangeToken();
     }
@@ -95,7 +95,7 @@ class PhysicalFilesWatcher implements Disposable {
         pattern.contains('[') ||
         pattern.contains('{');
 
-  IChangeToken _createFileToken(String filePath) {
+  ChangeToken _createFileToken(String filePath) {
     if (_usePolling || _watcher == null) {
       return PollingFileChangeToken(
         File(filePath),
@@ -113,7 +113,7 @@ class PhysicalFilesWatcher implements Disposable {
     );
   }
 
-  IChangeToken _createWildcardToken(String pattern) {
+  ChangeToken _createWildcardToken(String pattern) {
     if (_usePolling || _watcher == null) {
       return PollingWildcardChangeToken(
         _root,
@@ -134,7 +134,7 @@ class PhysicalFilesWatcher implements Disposable {
   }
 
   /// Creates a composite change token that combines multiple patterns.
-  IChangeToken createCompositeToken(List<String> filters) {
+  ChangeToken createCompositeToken(List<String> filters) {
     final tokens = filters.map(createFileChangeToken).toList();
     return CompositeChangeToken(tokens);
   }

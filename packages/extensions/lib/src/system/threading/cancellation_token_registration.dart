@@ -2,7 +2,7 @@ import '../disposable.dart';
 import 'cancellation_token.dart';
 import 'cancellation_token_source.dart';
 
-class CancellationTokenRegistration implements IDisposable {
+class CancellationTokenRegistration implements Disposable {
   final int _id;
   final CallbackNode? _node;
 

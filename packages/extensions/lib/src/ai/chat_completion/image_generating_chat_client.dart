@@ -2,8 +2,8 @@ import 'dart:async';
 
 import '../../system/threading/cancellation_token.dart';
 import '../ai_content.dart';
-import '../image_generation/image_generation_tool_content.dart';
 import '../image_generation/image_generator.dart';
+import '../image_generation_tool_call_content.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
 import 'chat_response.dart';
@@ -61,7 +61,7 @@ class ImageGeneratingChatClient extends DelegatingChatClient {
     final resultContents = <AIContent>[];
     for (final call in imageGenCalls) {
       final genResponse = await imageGenerator.generate(
-        request: ImageGenerationRequest(prompt: call.imageId),
+        request: ImageGenerationRequest(prompt: call.prompt ?? ''),
         cancellationToken: cancellationToken,
       );
       resultContents.addAll(genResponse.contents);

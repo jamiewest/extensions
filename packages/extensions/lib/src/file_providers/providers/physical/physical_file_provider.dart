@@ -135,7 +135,7 @@ class PhysicalFileProvider implements FileProvider, Disposable {
   }
 
   @override
-  IChangeToken watch(String filter) => _watcher.createFileChangeToken(filter);
+  ChangeToken watch(String filter) => _watcher.createFileChangeToken(filter);
 
   @override
   void dispose() {

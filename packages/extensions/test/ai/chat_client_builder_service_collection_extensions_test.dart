@@ -11,7 +11,7 @@ class _TestServiceProvider implements ServiceProvider {
 
 class _TestChatClient implements ChatClient {
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -21,7 +21,7 @@ class _TestChatClient implements ChatClient {
       );
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,

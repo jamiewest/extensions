@@ -9,9 +9,9 @@ import '../memory_cache_options.dart';
 import '../memory_cache_statistics.dart';
 import 'cache_entry_internal.dart';
 
-/// Implementation of [IMemoryCache].
-class MemoryCache implements IMemoryCache {
-  MemoryCache(this._options) {
+/// Implementation of [MemoryCache].
+class MemoryCacheImpl implements MemoryCache {
+  MemoryCacheImpl(this._options) {
     _startExpirationScan();
   }
 
@@ -62,7 +62,7 @@ class MemoryCache implements IMemoryCache {
   }
 
   @override
-  ICacheEntry createEntry(Object key) {
+  CacheEntry createEntry(Object key) {
     // Remove existing entry if present
     if (_entries.containsKey(key)) {
       removeEntry(key, EvictionReason.replaced);
@@ -235,7 +235,7 @@ class MemoryCache implements IMemoryCache {
 }
 
 /// Extension to finalize cache entries after they're configured.
-extension CacheEntryCommit on ICacheEntry {
+extension CacheEntryCommit on CacheEntry {
   /// Commits this entry to the cache.
   ///
   /// This should be called after configuring the entry to ensure it's

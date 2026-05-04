@@ -66,7 +66,7 @@ class MockPhysicalFilesWatcher {
 }
 
 /// A mock change token that can be manually triggered.
-class MockChangeToken implements IChangeToken {
+class MockChangeToken implements ChangeToken {
   final String filter;
   final List<_CallbackRegistration> _callbacks = [];
   bool _hasChanged = false;
@@ -80,7 +80,7 @@ class MockChangeToken implements IChangeToken {
   bool get activeChangeCallbacks => _callbacks.isNotEmpty;
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -131,7 +131,7 @@ class _CallbackRegistration {
   _CallbackRegistration(this.callback, this.state);
 }
 
-class _CallbackDisposable implements IDisposable {
+class _CallbackDisposable implements Disposable {
   final MockChangeToken _token;
   final _CallbackRegistration? _registration;
 

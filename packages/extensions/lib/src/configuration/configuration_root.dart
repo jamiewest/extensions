@@ -59,10 +59,10 @@ class ConfigurationRoot implements Configuration, Disposable {
   Iterable<ConfigurationSection> getChildren() =>
       getChildrenImplementation(null);
 
-  /// Returns a [IChangeToken] that can be used to observe
+  /// Returns a [ChangeToken] that can be used to observe
   /// when this configuration is reloaded.
   @override
-  IChangeToken getReloadToken() => _changeToken;
+  ChangeToken getReloadToken() => _changeToken;
 
   /// Gets a configuration sub-section with the specified key.
   @override

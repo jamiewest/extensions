@@ -25,29 +25,29 @@ void main() {
     test('creates change token for file filter', () {
       final token = watcher.createFileChangeToken('test.txt');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
       expect(token.activeChangeCallbacks, isFalse);
     });
 
     test('creates change token for wildcard pattern', () {
       final token = watcher.createFileChangeToken('*.txt');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
       expect(token.activeChangeCallbacks, isFalse);
     });
 
     test('creates change token for double asterisk pattern', () {
       final token = watcher.createFileChangeToken('**/*.json');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
     });
 
     test('multiple tokens can be created', () {
       final token1 = watcher.createFileChangeToken('*.txt');
       final token2 = watcher.createFileChangeToken('*.json');
 
-      expect(token1, isA<IChangeToken>());
-      expect(token2, isA<IChangeToken>());
+      expect(token1, isA<ChangeToken>());
+      expect(token2, isA<ChangeToken>());
     });
   });
 
@@ -332,7 +332,7 @@ void main() {
     test('handles empty filter', () {
       final token = watcher.createFileChangeToken('');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
     });
 
     test('handles complex patterns', () {
@@ -345,14 +345,14 @@ void main() {
 
       for (final pattern in patterns) {
         final token = watcher.createFileChangeToken(pattern);
-        expect(token, isA<IChangeToken>());
+        expect(token, isA<ChangeToken>());
       }
     });
 
     test('handles special characters in filter', () {
       final token = watcher.createFileChangeToken('file-name_123.txt');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
     });
   });
 }

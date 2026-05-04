@@ -2,10 +2,10 @@ import 'package:extensions/caching.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('MemoryCache', () {
+  group('MemoryCacheImpl', () {
     group('Basic Operations', () {
       test('Set and Get returns correct value', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'value');
 
         final result = cache.get<String>('key');
@@ -15,7 +15,7 @@ void main() {
       });
 
       test('Get returns null for non-existent key', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         final result = cache.get<String>('nonexistent');
 
@@ -24,7 +24,7 @@ void main() {
       });
 
       test('ContainsKey returns true for existing key', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'value');
 
         expect(cache.containsKey('key'), isTrue);
@@ -32,14 +32,14 @@ void main() {
       });
 
       test('ContainsKey returns false for non-existent key', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         expect(cache.containsKey('nonexistent'), isFalse);
         cache.dispose();
       });
 
       test('Remove removes entry from cache', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'value')
           ..remove('key');
 
@@ -48,7 +48,7 @@ void main() {
       });
 
       test('Clear removes all entries', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key1', 'value1')
           ..set('key2', 'value2')
           ..set('key3', 'value3')
@@ -61,7 +61,7 @@ void main() {
       });
 
       test('TryGetValue returns true and sets value for existing key', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'value');
 
         String? result;
@@ -74,7 +74,7 @@ void main() {
       });
 
       test('TryGetValue returns false for non-existent key', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         String? result;
         final found =
@@ -86,7 +86,7 @@ void main() {
       });
 
       test('Set replaces existing value', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('key', 'value1')
           ..set('key', 'value2');
 
@@ -95,7 +95,7 @@ void main() {
       });
 
       test('Multiple types can be stored', () {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set('string', 'text')
           ..set('int', 42)
           ..set('bool', true)
@@ -111,7 +111,7 @@ void main() {
 
     group('GetOrCreate Pattern', () {
       test('GetOrCreate creates value on first call', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callCount = 0;
 
         final result = cache.getOrCreate<String>('key', (entry) {
@@ -125,7 +125,7 @@ void main() {
       });
 
       test('GetOrCreate returns cached value on second call', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callCount = 0;
 
         cache.getOrCreate<String>('key', (entry) {
@@ -144,7 +144,7 @@ void main() {
       });
 
       test('GetOrCreateAsync creates value on first call', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callCount = 0;
 
         final result =
@@ -160,7 +160,7 @@ void main() {
       });
 
       test('GetOrCreateAsync returns cached value on second call', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callCount = 0;
 
         await cache.getOrCreateAsync<String>('key', (entry) async {
@@ -182,7 +182,7 @@ void main() {
 
     group('Absolute Expiration', () {
       test('Entry expires after absolute expiration time', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'key',
             'value',
@@ -199,7 +199,7 @@ void main() {
       });
 
       test('Entry with absolute DateTime expires correctly', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'key',
             'value',
@@ -218,7 +218,7 @@ void main() {
 
     group('Sliding Expiration', () {
       test('Entry expires after inactivity period', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'key',
             'value',
@@ -237,7 +237,7 @@ void main() {
       });
 
       test('Accessing entry resets sliding expiration', () async {
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'key',
             'value',
@@ -260,7 +260,7 @@ void main() {
 
     group('Priority and Compaction', () {
       test('Low priority items are removed first during compaction', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
             compactionPercentage: 0.5,
@@ -289,7 +289,7 @@ void main() {
       });
 
       test('NeverRemove priority items are never evicted', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             sizeLimit: 100,
           ),
@@ -315,7 +315,7 @@ void main() {
       });
 
       test('Manual compact removes specified percentage', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         for (var i = 0; i < 10; i++) {
           cache.set('key$i', 'value$i');
@@ -331,7 +331,7 @@ void main() {
 
     group('Post-Eviction Callbacks', () {
       test('Callback is invoked when entry is removed', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callbackInvoked = false;
         Object? callbackKey;
         Object? callbackValue;
@@ -365,7 +365,7 @@ void main() {
       });
 
       test('Callback receives custom state', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         Object? receivedState;
 
         cache
@@ -390,7 +390,7 @@ void main() {
       });
 
       test('Callback is invoked on expiration', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callbackInvoked = false;
         EvictionReason? callbackReason;
 
@@ -422,7 +422,7 @@ void main() {
 
     group('Statistics', () {
       test('Statistics are null when not enabled', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         final stats = cache.getCurrentStatistics();
 
@@ -431,7 +431,7 @@ void main() {
       });
 
       test('Statistics track hits and misses', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         )
           ..set('key', 'value')
@@ -448,7 +448,7 @@ void main() {
       });
 
       test('Statistics track entry count', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(trackStatistics: true),
         )
           ..set('key1', 'value1')
@@ -461,7 +461,7 @@ void main() {
       });
 
       test('Statistics track size when enabled', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             trackStatistics: true,
             sizeLimit: 1000,
@@ -478,7 +478,7 @@ void main() {
 
     group('Expiration Scanning', () {
       test('Background scanning removes expired entries', () async {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             expirationScanFrequency: const Duration(milliseconds: 100),
           ),
@@ -497,7 +497,7 @@ void main() {
       });
 
       test('Scanning can be disabled', () {
-        final cache = MemoryCache(
+        final cache = MemoryCacheImpl(
           MemoryCacheOptions(
             expirationScanFrequency: Duration.zero,
           ),
@@ -509,7 +509,7 @@ void main() {
 
     group('Disposal', () {
       test('Dispose clears all entries', () {
-        MemoryCache(MemoryCacheOptions())
+        MemoryCacheImpl(MemoryCacheOptions())
           ..set('key1', 'value1')
           ..set('key2', 'value2')
           ..dispose();
@@ -519,7 +519,7 @@ void main() {
       });
 
       test('Dispose can be called multiple times', () {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         expect(cache.dispose, returnsNormally);
         expect(cache.dispose, returnsNormally);

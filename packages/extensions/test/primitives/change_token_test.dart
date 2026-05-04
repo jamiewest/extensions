@@ -118,7 +118,7 @@ void main() {
   });
 }
 
-class TestChangeToken implements IChangeToken {
+class TestChangeToken implements ChangeToken {
   _VoidCallback? _callback;
 
   @override
@@ -128,7 +128,7 @@ class TestChangeToken implements IChangeToken {
   bool hasChanged = false;
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -142,7 +142,7 @@ class TestChangeToken implements IChangeToken {
   }
 }
 
-class _NoopDisposable implements IDisposable {
+class _NoopDisposable implements Disposable {
   @override
   void dispose() {}
 }
@@ -154,7 +154,7 @@ class TrackableChangeTokenProvider {
 
   int disposeCalls = 0;
 
-  IChangeToken getChangeToken() => _cts;
+  ChangeToken getChangeToken() => _cts;
 
   void changed() {
     var previous = _cts;
@@ -166,7 +166,7 @@ class TrackableChangeTokenProvider {
   }
 }
 
-class TrackableChangeToken implements IChangeToken {
+class TrackableChangeToken implements ChangeToken {
   final CancellationTokenSource _cts = CancellationTokenSource();
 
   int registrationCalls = 0;
@@ -184,7 +184,7 @@ class TrackableChangeToken implements IChangeToken {
   }
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -200,7 +200,7 @@ class TrackableChangeToken implements IChangeToken {
 
 typedef _VoidCallback = void Function();
 
-class _DisposableAction implements IDisposable {
+class _DisposableAction implements Disposable {
   final _VoidCallback? _action;
 
   _DisposableAction(_VoidCallback action) : _action = action;
@@ -212,7 +212,7 @@ class _DisposableAction implements IDisposable {
 class _ResettableChangeTokenProvider {
   CancellationTokenSource _cts = CancellationTokenSource();
 
-  IChangeToken getChangeToken() => CancellationChangeToken(_cts.token);
+  ChangeToken getChangeToken() => CancellationChangeToken(_cts.token);
 
   void changed() {
     var previous = _cts;

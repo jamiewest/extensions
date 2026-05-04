@@ -19,7 +19,7 @@ class ConfigurationChangeTokenSource<TOptions>
 
   /// The name of the option instance being changed.
   @override
-  IChangeToken getChangeToken() => _config.getReloadToken();
+  ChangeToken getChangeToken() => _config.getReloadToken();
 
   /// Returns the reloadToken from the [Configuration].
   @override

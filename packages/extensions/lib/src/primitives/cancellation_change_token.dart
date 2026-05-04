@@ -2,8 +2,8 @@ import '../system/disposable.dart';
 import '../system/threading/cancellation_token.dart';
 import 'change_token.dart';
 
-/// A [IChangeToken] implementation using [CancellationToken].
-class CancellationChangeToken implements IChangeToken {
+/// A [ChangeToken] implementation using [CancellationToken].
+class CancellationChangeToken implements ChangeToken {
   final CancellationToken _cancellationToken;
   bool _activeChangeCallbacks;
 
@@ -20,7 +20,7 @@ class CancellationChangeToken implements IChangeToken {
   bool get hasChanged => token.isCancellationRequested;
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) =>

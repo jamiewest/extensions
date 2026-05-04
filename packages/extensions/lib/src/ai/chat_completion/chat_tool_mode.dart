@@ -1,4 +1,3 @@
-import '../../../annotations.dart';
 import 'auto_chat_tool_mode.dart';
 
 /// Represents the mode in which tools are used by the chat client.

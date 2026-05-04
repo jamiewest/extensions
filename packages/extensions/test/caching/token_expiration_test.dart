@@ -7,7 +7,7 @@ void main() {
   group('TokenExpirationTests', () {
     group('Stream Tokens', () {
       test('Entry expires when stream token emits', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache.set(
@@ -28,7 +28,7 @@ void main() {
       });
 
       test('Multiple tokens - first emission expires entry', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller1 = StreamController<void>.broadcast();
         final controller2 = StreamController<void>.broadcast();
 
@@ -58,7 +58,7 @@ void main() {
       });
 
       test('Token expiration triggers post-eviction callback', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         var callbackInvoked = false;
@@ -90,7 +90,7 @@ void main() {
       });
 
       test('Token expiration with value type different from entry', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<int>.broadcast();
 
         cache.set(
@@ -112,7 +112,7 @@ void main() {
       });
 
       test('Multiple entries with same token expire together', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache
@@ -148,7 +148,7 @@ void main() {
       });
 
       test('Token expiration combined with time expiration', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache.set(
@@ -172,7 +172,7 @@ void main() {
       });
 
       test('Token does not affect other entries', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache
@@ -197,7 +197,7 @@ void main() {
       });
 
       test('Removed entry unsubscribes from token', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache
@@ -222,7 +222,7 @@ void main() {
       });
 
       test('Multiple emissions on same token only expire once', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         var callbackCount = 0;
@@ -268,7 +268,7 @@ void main() {
 
       test('Clear cancels all token subscriptions', () async {
         final controller = StreamController<void>.broadcast();
-        final cache = MemoryCache(MemoryCacheOptions())
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
           ..set(
             'key1',
             'value1',
@@ -292,7 +292,7 @@ void main() {
 
     group('Edge Cases', () {
       test('Token that never emits keeps entry alive', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache.set(
@@ -311,7 +311,7 @@ void main() {
       });
 
       test('Immediate token emission expires entry', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast()
 
           // Emit before adding to cache
@@ -334,7 +334,7 @@ void main() {
       });
 
       test('Entry can be replaced after token expiration', () async {
-        final cache = MemoryCache(MemoryCacheOptions());
+        final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast();
 
         cache.set(

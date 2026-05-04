@@ -7,7 +7,7 @@ void main() {
     group('Constructor', () {
       test('Constructor_ThrowsForNullTokens', () {
         expect(
-          () => CompositeChangeToken(null as List<IChangeToken>?),
+          () => CompositeChangeToken(null as List<ChangeToken>?),
           throwsA(isA<ArgumentNullException>()),
         );
       });
@@ -331,8 +331,8 @@ class _ChangeTokenDisposable implements Disposable {
   }
 }
 
-/// Test implementation of IChangeToken for testing.
-class TestChangeToken implements IChangeToken {
+/// Test implementation of ChangeToken for testing.
+class TestChangeToken implements ChangeToken {
   TestChangeToken({this.changed = false, this.activeCallbacks = true});
 
   bool changed;
@@ -360,7 +360,7 @@ class TestChangeToken implements IChangeToken {
 }
 
 /// Tracks callback registrations for testing lazy initialization.
-class TrackingChangeToken implements IChangeToken {
+class TrackingChangeToken implements ChangeToken {
   int registrationCount = 0;
 
   @override

@@ -1,6 +1,6 @@
-import '../../caching.dart' show MemoryCache, MemoryCacheEntryOptions;
+import '../../caching.dart' show MemoryCacheImpl, MemoryCacheEntryOptions;
 
-/// Provides configuration options for [MemoryCache].
+/// Provides configuration options for [MemoryCacheImpl].
 class MemoryCacheOptions {
   /// Creates a new instance of [MemoryCacheOptions].
   MemoryCacheOptions({
@@ -50,7 +50,7 @@ class MemoryCacheOptions {
   ///
   /// When enabled, statistics such as hit count, miss count, and total
   /// entries are tracked and can be retrieved via
-  /// [MemoryCache.getCurrentStatistics].
+  /// [MemoryCacheImpl.getCurrentStatistics].
   ///
   /// Defaults to false.
   final bool trackStatistics;

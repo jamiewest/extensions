@@ -11,7 +11,7 @@ import 'cancellation_token_registration.dart';
 /// notified of cancellation or that can be used to register asynchronous
 /// operations for cancellation. That token may have cancellation requested
 /// by calling to the source's [cancel] method.
-class CancellationTokenSource implements IDisposable {
+class CancellationTokenSource implements Disposable {
   // A [CancellationTokenSource] that's already canceled.
   static final CancellationTokenSource canceledSource =
       CancellationTokenSource().._state = 2;

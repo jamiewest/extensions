@@ -51,7 +51,7 @@ class CompositeFileProvider implements FileProvider {
   }
 
   @override
-  IChangeToken watch(String filter) {
+  ChangeToken watch(String filter) {
     // Composite change tokens: combine all watches.
     var tokens = fileProviders.map((fp) => fp.watch(filter)).toList();
     return CompositeChangeToken(tokens);

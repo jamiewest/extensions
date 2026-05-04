@@ -1,6 +1,6 @@
 import 'package:extensions/file_providers.dart';
 import 'package:extensions/primitives.dart';
-import 'package:extensions/system.dart' show IDisposable;
+import 'package:extensions/system.dart' show Disposable;
 import 'package:test/test.dart';
 
 class FakeFileInfo implements FileInfo {
@@ -35,7 +35,7 @@ class FakeDirectoryContents extends DirectoryContents {
   final bool exists;
 }
 
-class FakeChangeToken implements IChangeToken {
+class FakeChangeToken implements ChangeToken {
   FakeChangeToken({this.activeChangeCallbacks = true});
 
   @override
@@ -55,7 +55,7 @@ class FakeChangeToken implements IChangeToken {
   }
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -67,7 +67,7 @@ class FakeChangeToken implements IChangeToken {
   }
 }
 
-class _CallbackDisposable implements IDisposable {
+class _CallbackDisposable implements Disposable {
   _CallbackDisposable(this._onDispose);
 
   final void Function() _onDispose;
@@ -80,14 +80,14 @@ class FakeFileProvider implements FileProvider {
   FakeFileProvider({
     Map<String, FileInfo>? files,
     Map<String, DirectoryContents>? directories,
-    IChangeToken? changeToken,
+    ChangeToken? changeToken,
   })  : _files = files ?? <String, FileInfo>{},
         _directories = directories ?? <String, DirectoryContents>{},
         _changeToken = changeToken ?? FakeChangeToken();
 
   final Map<String, FileInfo> _files;
   final Map<String, DirectoryContents> _directories;
-  final IChangeToken _changeToken;
+  final ChangeToken _changeToken;
 
   @override
   FileInfo getFileInfo(String subpath) =>
@@ -98,7 +98,7 @@ class FakeFileProvider implements FileProvider {
       _directories[subpath] ?? NotFoundDirectoryContents.singleton();
 
   @override
-  IChangeToken watch(String filter) => _changeToken;
+  ChangeToken watch(String filter) => _changeToken;
 }
 
 void main() {

@@ -10,6 +10,6 @@ abstract class FileProvider {
   /// Enumerate a directory at the given path, if any.
   DirectoryContents getDirectoryContents(String subpath);
 
-  /// Creates an [IChangeToken] for the specified [filter].
-  IChangeToken watch(String filter);
+  /// Creates an [ChangeToken] for the specified [filter].
+  ChangeToken watch(String filter);
 }

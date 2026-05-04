@@ -1,44 +1,68 @@
-import 'package:extensions/extensions.dart';
-
+import '../../system/threading/cancellation_token.dart';
+import '../chat_completion/chat_message.dart';
+import '../chat_completion/chat_options.dart';
+import '../chat_completion/chat_response.dart';
+import '../chat_completion/chat_response_update.dart';
 import '../chat_completion/delegating_chat_client.dart';
+import 'tool_reduction_strategy.dart';
 
-/// A delegating chat client that applies a tool reduction strategy
-/// before invoking the inner client.
-///
-/// Insert this into a pipeline (typically before function invocation middleware)
-/// to automatically reduce the tool list carried on [ChatOptions] for each request.
+/// A [DelegatingChatClient] that applies a [ToolReductionStrategy] to reduce
+/// the tool list on each request before passing it to the inner client.
 class ToolReducingChatClient extends DelegatingChatClient {
+  /// Creates a new [ToolReducingChatClient].
+  ToolReducingChatClient(super.innerClient, this._strategy);
+
   final ToolReductionStrategy _strategy;
 
-  /// Initializes a new instance of the [ToolReducingChatClient] class.
-  ToolReducingChatClient(super.innerClient, ToolReductionStrategy strategy)
-      : _strategy = strategy;
-
   @override
-  Future<ChatResponse> getChatResponse(
-      {required Iterable<ChatMessage> messages,
-      ChatOptions? options,
-      CancellationToken? cancellationToken}) {
-    // TODO: implement getChatResponse
-    throw UnimplementedError();
+  Future<ChatResponse> getResponse({
+    required Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  }) async {
+    final reducedOptions = await _applyStrategy(
+      messages,
+      options,
+      cancellationToken,
+    );
+    return super.getResponse(
+      messages: messages,
+      options: reducedOptions,
+      cancellationToken: cancellationToken,
+    );
   }
 
   @override
-  T? getService<T>({Object? key}) {
-    // TODO: implement getService
-    throw UnimplementedError();
+  Stream<ChatResponseUpdate> getStreamingResponse({
+    required Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  }) async* {
+    final reducedOptions = await _applyStrategy(
+      messages,
+      options,
+      cancellationToken,
+    );
+    yield* super.getStreamingResponse(
+      messages: messages,
+      options: reducedOptions,
+      cancellationToken: cancellationToken,
+    );
   }
 
-  @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse(
-      {required Iterable<ChatMessage> messages,
-      ChatOptions? options,
-      CancellationToken? cancellationToken}) {
-    // TODO: implement getStreamingChatResponse
-    throw UnimplementedError();
+  Future<ChatOptions?> _applyStrategy(
+    Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  ) async {
+    if (options?.tools == null || options!.tools!.isEmpty) return options;
+    final reduced = await _strategy.selectToolsForRequest(
+      messages,
+      options,
+      cancellationToken ?? CancellationToken.none,
+    );
+    final cloned = options.clone();
+    cloned.tools = reduced.toList();
+    return cloned;
   }
-
-  @override
-  // TODO: implement innerClient
-  ChatClient get innerClient => throw UnimplementedError();
 }

@@ -217,8 +217,8 @@ void main() {
       final token2 = mockProvider.watch('*.txt');
 
       // Tokens are independent even for same pattern
-      expect(token1, isA<IChangeToken>());
-      expect(token2, isA<IChangeToken>());
+      expect(token1, isA<ChangeToken>());
+      expect(token2, isA<ChangeToken>());
 
       mockProvider.dispose();
     });
@@ -227,7 +227,7 @@ void main() {
       final mockProvider = MockPhysicalFileProvider(tempDir.path);
       final token = mockProvider.watch('');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
 
       mockProvider.dispose();
     });
@@ -236,7 +236,7 @@ void main() {
       final mockProvider = MockPhysicalFileProvider(tempDir.path);
       final token = mockProvider.watch('../*.txt');
 
-      expect(token, isA<IChangeToken>());
+      expect(token, isA<ChangeToken>());
 
       mockProvider.dispose();
     });

@@ -3,7 +3,7 @@ import 'package:extensions/caching.dart';
 void main() async {
   // Example 1: Basic memory cache usage
   print('=== Example 1: Basic Memory Cache ===');
-  final cache = MemoryCache(MemoryCacheOptions())
+  final cache = MemoryCacheImpl(MemoryCacheOptions())
 
     // Simple set/get
     ..set('name', 'John Doe');
@@ -42,7 +42,7 @@ void main() async {
 
   // Example 4: Cache with priority and size limits
   print('\n=== Example 4: Priority-based Eviction ===');
-  final limitedCache = MemoryCache(
+  final limitedCache = MemoryCacheImpl(
     MemoryCacheOptions(
       sizeLimit: 100,
       compactionPercentage: 0.5,
@@ -112,7 +112,7 @@ void main() async {
 
   // Example 7: Statistics tracking
   print('\n=== Example 7: Cache Statistics ===');
-  final statsCache = MemoryCache(
+  final statsCache = MemoryCacheImpl(
     MemoryCacheOptions(trackStatistics: true),
   )
     ..set('key1', 'value1')
@@ -131,7 +131,7 @@ void main() async {
   // Example 8: Alphabet caching with eviction callbacks
   // Port of Microsoft.Extensions.Caching.Memory example
   print('\n=== Example 8: Alphabet Caching with Eviction ===');
-  final alphabetCache = MemoryCache(MemoryCacheOptions());
+  final alphabetCache = MemoryCacheImpl(MemoryCacheOptions());
 
   const millisecondsDelayAfterAdd = 50;
   const millisecondsAbsoluteExpiration = 750;

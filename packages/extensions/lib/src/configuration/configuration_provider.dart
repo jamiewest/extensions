@@ -15,7 +15,7 @@ abstract class ConfigurationProvider {
 
   /// Returns a change token if this provider supports change
   /// tracking, null otherwise.
-  IChangeToken getReloadToken();
+  ChangeToken getReloadToken();
 
   /// Loads configuration values from the source represented
   /// by this [ConfigurationProvider].
@@ -53,10 +53,10 @@ mixin ConfigurationProviderMixin on ConfigurationProvider {
   @override
   void set(String key, String? value) => data[key] = value;
 
-  /// Returns a [IChangeToken] that can be used to listen when this provider
+  /// Returns a [ChangeToken] that can be used to listen when this provider
   /// is reloaded.
   @override
-  IChangeToken getReloadToken() => _changeToken;
+  ChangeToken getReloadToken() => _changeToken;
 
   // /// Loads (or reloads) the data for this provider.
   @override

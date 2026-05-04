@@ -4,14 +4,14 @@ import '../system/threading/cancellation_token_source.dart';
 import 'change_token.dart';
 
 /// An [ChangeToken] which represents one or more [ChangeToken] instances.
-class CompositeChangeToken extends IChangeToken {
+class CompositeChangeToken extends ChangeToken {
   void Function(Object? state)? _onChangeDelegate;
   CancellationTokenSource? _cancellationTokenSource;
   bool _registeredCallbackProxy;
-  final List<IChangeToken> _changeTokens;
+  final List<ChangeToken> _changeTokens;
   bool? _activeChangeCallbacks;
 
-  CompositeChangeToken(List<IChangeToken>? changeTokens)
+  CompositeChangeToken(List<ChangeToken>? changeTokens)
       : _changeTokens = _validateTokens(changeTokens),
         _registeredCallbackProxy = false {
 
@@ -24,7 +24,7 @@ class CompositeChangeToken extends IChangeToken {
     _activeChangeCallbacks = false;
   }
 
-  List<IChangeToken> get changeTokens => _changeTokens;
+  List<ChangeToken> get changeTokens => _changeTokens;
 
   @override
   bool get activeChangeCallbacks => _activeChangeCallbacks!;
@@ -46,7 +46,7 @@ class CompositeChangeToken extends IChangeToken {
   }
 
   @override
-  IDisposable registerChangeCallback(
+  Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
   ) {
@@ -88,7 +88,7 @@ class CompositeChangeToken extends IChangeToken {
     } catch (e) {}
   }
 
-  static List<IChangeToken> _validateTokens(List<IChangeToken>? tokens) {
+  static List<ChangeToken> _validateTokens(List<ChangeToken>? tokens) {
     ArgumentNullException.throwIfNull(tokens, 'changeTokens');
     return tokens!;
   }

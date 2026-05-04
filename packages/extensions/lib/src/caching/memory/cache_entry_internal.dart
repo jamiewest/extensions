@@ -11,8 +11,8 @@ typedef RemoveEntryCallback = void Function(Object key, EvictionReason reason);
 /// Callback type for finalizing entries.
 typedef FinalizeEntryCallback = void Function(CacheEntryInternal entry);
 
-/// Internal implementation of [ICacheEntry].
-class CacheEntryInternal implements ICacheEntry {
+/// Internal implementation of [CacheEntry].
+class CacheEntryInternal implements CacheEntry {
   CacheEntryInternal(
     this.key,
     this.onRemoveEntry,

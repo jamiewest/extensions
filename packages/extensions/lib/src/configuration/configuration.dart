@@ -22,9 +22,9 @@ abstract class IConfiguration {
   /// Gets the immediate descendant configuration sub-sections.
   Iterable<IConfigurationSection> getChildren();
 
-  /// Returns a [IChangeToken] that can be used to observe when
+  /// Returns a [ChangeToken] that can be used to observe when
   /// this configuration is reloaded.
-  IChangeToken getReloadToken();
+  ChangeToken getReloadToken();
 }
 
 /// Alias for [IConfiguration] for backwards compatibility.

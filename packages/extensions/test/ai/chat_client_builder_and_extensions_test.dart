@@ -22,7 +22,7 @@ class _RecordingChatClient implements ChatClient {
   bool disposed = false;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -35,7 +35,7 @@ class _RecordingChatClient implements ChatClient {
   }
 
   @override
-  Stream<ChatResponseUpdate> getStreamingChatResponse({
+  Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
@@ -62,13 +62,13 @@ class _RecordingWrapper extends DelegatingChatClient {
   final List<String> events;
 
   @override
-  Future<ChatResponse> getChatResponse({
+  Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
   }) {
     events.add(label);
-    return super.getChatResponse(
+    return super.getResponse(
       messages: messages,
       options: options,
       cancellationToken: cancellationToken,
@@ -86,7 +86,7 @@ void main() {
         ..use((client) => _RecordingWrapper(client, 'second', events));
 
       final client = builder.build();
-      await client.getChatResponse(
+      await client.getResponse(
         messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
       );
 

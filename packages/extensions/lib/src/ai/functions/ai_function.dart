@@ -1,23 +1,17 @@
 import '../../system/threading/cancellation_token.dart';
-import '../tools/ai_tool.dart';
 import 'ai_function_arguments.dart';
+import 'ai_function_declaration.dart';
 
-/// Represents a function that can be invoked by an AI model.
-abstract class AIFunction extends AITool {
+/// Represents a function that can be described to and invoked by an AI model.
+abstract class AIFunction extends AIFunctionDeclaration {
   /// Creates a new [AIFunction].
   AIFunction({
     required super.name,
     super.description,
-    this.parametersSchema,
-    this.returnSchema,
+    super.parametersSchema,
+    super.returnSchema,
     this.isStrict,
   });
-
-  /// The JSON schema describing the function's parameters.
-  final Map<String, dynamic>? parametersSchema;
-
-  /// The JSON schema describing the function's return value.
-  final Map<String, dynamic>? returnSchema;
 
   /// Whether the function requires strict schema adherence.
   final bool? isStrict;
