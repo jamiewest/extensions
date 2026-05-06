@@ -6,9 +6,8 @@ import 'package:extensions/logging.dart';
 /// - JSON console formatter (structured JSON logs)
 /// - Systemd console formatter (systemd journal compatible)
 void main() {
-  print('=== Console Formatter Examples ===\n');
+  print('=== Console Formatter Examples ===');
 
-  // Example 1: Basic Console Logger
   print('--- Example 1: Basic Console Logger (No Colors) ---');
   LoggerFactory.create(
     (builder) => builder
@@ -23,7 +22,6 @@ void main() {
     ..logCritical('Critical message');
 
   print('\n--- Example 2: Simple Console Formatter (With Colors) ---');
-  // Example 2: Simple Console Formatter with Colors
   LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsole()
@@ -37,14 +35,14 @@ void main() {
     ..logCritical('Critical message with bright red color');
 
   print('\n--- Example 3: Simple Console with Custom Options ---');
-  // Example 3: Simple Console with Custom Options
   LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsoleWithOptions((options) {
         options
           ..colorBehavior = LoggerColorBehavior.enabled
           ..timestampFormat = 'timestamp'
-          ..singleLine = true // Single line format
+          // Single-line output is easier to scan in dense terminal logs.
+          ..singleLine = true
           ..includeScopes = false;
       })
       ..addFilter(level: LogLevel.information),
@@ -54,7 +52,6 @@ void main() {
     ..logError('Errors stand out with bright red');
 
   print('\n--- Example 4: JSON Console Formatter ---');
-  // Example 4: JSON Console Formatter
   LoggerFactory.create(
     (builder) => builder
       ..addJsonConsole()
@@ -66,12 +63,12 @@ void main() {
     ..logError('Error message in JSON format');
 
   print('\n--- Example 5: JSON Console with Indentation ---');
-  // Example 5: JSON Console with Pretty Printing
   LoggerFactory.create(
     (builder) => builder
       ..addJsonConsoleWithOptions((options) {
         options
-          ..useJsonIndentation = true // Pretty print JSON
+          // Indentation is useful while developing or debugging locally.
+          ..useJsonIndentation = true
           ..timestampFormat = 'timestamp'
           ..includeScopes = true;
       })
@@ -82,7 +79,6 @@ void main() {
     ..logError('Error with structured JSON output');
 
   print('\n--- Example 6: Systemd Console Formatter ---');
-  // Example 6: Systemd Console Formatter
   LoggerFactory.create(
     (builder) => builder
       ..addSystemdConsole()
@@ -96,7 +92,6 @@ void main() {
     ..logCritical('Critical with priority 2');
 
   print('\n--- Example 7: Systemd with Timestamps ---');
-  // Example 7: Systemd with Custom Options
   LoggerFactory.create(
     (builder) => builder
       ..addSystemdConsoleWithOptions((options) {
@@ -110,8 +105,7 @@ void main() {
     ..logWarning('Warning for systemd journal')
     ..logError('Error for systemd journal');
 
-  print('\n--- Example 8: Logging with Event IDs ---');
-  // Example 8: Structured Logging with Event IDs
+  print('\n--- Example 8: Logging With Event IDs ---');
   LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsole()

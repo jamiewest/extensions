@@ -1,11 +1,21 @@
 import 'package:extensions/hosting.dart';
 
+/// Demonstrates creating, starting, and stopping a host.
+///
+/// Run this file to keep the host alive briefly before a graceful shutdown.
 void main() {
-  var builder = Host.createApplicationBuilder();
+  print('=== Hosting Example ===');
+
+  final hostBuilder = Host.createApplicationBuilder();
   // ..logging.addDebug()
   // ..logging.setMinimumLevel(LogLevel.trace);
 
-  var host = builder.build()..start();
+  print('--- Start Host ---');
+  final host = hostBuilder.build()..start();
 
-  Future.delayed(const Duration(seconds: 5), () => host.stop());
+  // Delay stop so you can observe host lifetime behavior.
+  Future.delayed(const Duration(seconds: 5), () {
+    print('--- Stop Host ---');
+    host.stop();
+  });
 }

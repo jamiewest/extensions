@@ -1,4 +1,4 @@
-import 'dart:io' as io;
+import 'dart:io';
 
 import 'package:extensions/file_system_globbing.dart';
 import 'package:file/local.dart';
@@ -12,21 +12,21 @@ import 'package:file/local.dart';
 /// - Include/exclude patterns
 /// - In-memory file system matching
 /// - File system abstraction for testability
-Future<void> main() async {
-  io.stdout.writeln('=== File System Globbing Examples ===\n');
+void main() {
+  print('=== File System Globbing Examples ===');
 
-  await _basicGlobbingExample();
-  await _advancedPatternsExample();
-  await _excludePatternsExample();
-  await _inMemoryMatchingExample();
-  await _matchWithoutFileSystemExample();
-  await _stemCalculationExample();
-  await _realWorldExample();
+  _basicGlobbingExample();
+  _advancedPatternsExample();
+  _excludePatternsExample();
+  _inMemoryMatchingExample();
+  _matchWithoutFileSystemExample();
+  _stemCalculationExample();
+  _realWorldExample();
 }
 
 /// Example 1: Basic glob pattern matching
-Future<void> _basicGlobbingExample() async {
-  io.stdout.writeln('--- Example 1: Basic Glob Pattern Matching ---');
+void _basicGlobbingExample() {
+  print('\n--- Example 1: Basic Glob Pattern Matching ---');
 
   // Create a matcher with simple patterns
   final matcher = Matcher()
@@ -39,20 +39,18 @@ Future<void> _basicGlobbingExample() async {
   if (exampleDir.existsSync()) {
     final result = matcher.execute(DirectoryInfoWrapper(exampleDir));
 
-    io.stdout.writeln(
-      'Found ${result.files.length} Dart files in example directory:',
-    );
+    print('Found ${result.files.length} Dart files in example directory:');
     for (final match in result.files) {
-      io.stdout.writeln('  - ${match.path}');
+      print('  - ${match.path}');
     }
   }
 
-  io.stdout.writeln();
+  print('');
 }
 
 /// Example 2: Advanced glob patterns
-Future<void> _advancedPatternsExample() async {
-  io.stdout.writeln('--- Example 2: Advanced Glob Patterns ---');
+void _advancedPatternsExample() {
+  print('--- Example 2: Advanced Glob Patterns ---');
 
   // Create a matcher with multiple patterns
   final matcher = Matcher()
@@ -63,26 +61,26 @@ Future<void> _advancedPatternsExample() async {
     ..addInclude('test/**/*.dart');
 
   // Use the convenience extension to get full paths
-  final projectDir = io.Directory.current.path;
+  final projectDir = Directory.current.path;
   final fullPaths = matcher.getResultsInFullPath(projectDir);
 
-  io.stdout.writeln('Found ${fullPaths.length} Dart files in project:');
+  print('Found ${fullPaths.length} Dart files in project:');
 
   // Show first 10 matches
   for (final path in fullPaths.take(10)) {
-    io.stdout.writeln('  - $path');
+    print('  - $path');
   }
 
   if (fullPaths.length > 10) {
-    io.stdout.writeln('  ... and ${fullPaths.length - 10} more files');
+    print('  ... and ${fullPaths.length - 10} more files');
   }
 
-  io.stdout.writeln();
+  print('');
 }
 
 /// Example 3: Using exclude patterns
-Future<void> _excludePatternsExample() async {
-  io.stdout.writeln('--- Example 3: Include/Exclude Patterns ---');
+void _excludePatternsExample() {
+  print('--- Example 3: Include/Exclude Patterns ---');
 
   // Create a matcher that includes Dart files but excludes generated ones
   final matcher = Matcher()
@@ -96,31 +94,31 @@ Future<void> _excludePatternsExample() async {
     // Exclude build artifacts
     ..addExclude('**/build/**');
 
-  final projectDir = io.Directory.current.path;
+  final projectDir = Directory.current.path;
   final fullPaths = matcher.getResultsInFullPath(projectDir);
 
-  io.stdout.writeln(
+  print(
     'Found ${fullPaths.length} Dart files with exclude patterns applied:',
   );
 
   // Filter and show only lib files for clearer demonstration
   final libFiles = fullPaths.where((path) => path.contains('/lib/')).take(10);
 
-  io.stdout.writeln('\nSample lib files (non-generated):');
+  print('\nSample lib files (non-generated):');
   for (final path in libFiles) {
-    io.stdout.writeln('  - $path');
+    print('  - $path');
   }
 
   if (fullPaths.length > 10) {
-    io.stdout.writeln('  ... and ${fullPaths.length - 10} more files');
+    print('  ... and ${fullPaths.length - 10} more files');
   }
 
-  io.stdout.writeln();
+  print('');
 }
 
 /// Example 4: In-memory directory structures
-Future<void> _inMemoryMatchingExample() async {
-  io.stdout.writeln('--- Example 4: In-Memory Directory Structures ---');
+void _inMemoryMatchingExample() {
+  print('--- Example 4: In-Memory Directory Structures ---');
 
   // The InMemoryDirectoryInfo and InMemoryFileInfo classes allow you
   // to create virtual file system structures for testing or abstraction.
@@ -164,28 +162,28 @@ Future<void> _inMemoryMatchingExample() async {
     files: [srcDir, libDir, testDir],
   );
 
-  io.stdout.writeln('Created in-memory file system structure:');
-  io.stdout.writeln('  /${rootDir.name}');
+  print('Created in-memory file system structure:');
+  print('  /${rootDir.name}');
   for (final child in rootDir.enumerateFileSystemInfos()) {
-    io.stdout.writeln('    ${child.name}/');
+    print('    ${child.name}/');
     if (child is InMemoryDirectoryInfo) {
       for (final file in child.enumerateFileSystemInfos()) {
-        io.stdout.writeln('      ${file.name}');
+        print('      ${file.name}');
       }
     }
   }
 
-  io.stdout.writeln(
+  print(
     '\nNote: These structures are useful for testing file provider',
   );
-  io.stdout.writeln('logic without accessing the actual file system.');
+  print('logic without accessing the actual file system.');
 
-  io.stdout.writeln();
+  print('');
 }
 
 /// Example 5: Match files without accessing file system
-Future<void> _matchWithoutFileSystemExample() async {
-  io.stdout.writeln('--- Example 5: Match Without File System Access ---');
+void _matchWithoutFileSystemExample() {
+  print('--- Example 5: Match Without File System Access ---');
 
   // Create a matcher for Dart source files, excluding tests
   final matcher = Matcher()
@@ -203,29 +201,29 @@ Future<void> _matchWithoutFileSystemExample() async {
     '/project/main.dart',
   ];
 
-  io.stdout.writeln('Testing file paths against patterns:');
+  print('Testing file paths against patterns:');
   for (final file in files) {
     final result = matcher.matchFile(file, '/project');
-    final matches = result.hasFiles ? '✓ MATCH' : '✗ NO MATCH';
+    final matches = result.hasFiles ? 'MATCH' : 'NO MATCH';
     final displayPath = file.substring('/project/'.length);
-    io.stdout.writeln('  $matches - $displayPath');
+    print('  $matches - $displayPath');
   }
 
-  io.stdout.writeln();
+  print('');
 
   // Match multiple files at once
   final multiResult = matcher.matchFiles(files, '/project');
-  io.stdout.writeln('Matched ${multiResult.files.length} files from the list:');
+  print('Matched ${multiResult.files.length} files from the list:');
   for (final match in multiResult.files) {
-    io.stdout.writeln('  - ${match.path}');
+    print('  - ${match.path}');
   }
 
-  io.stdout.writeln();
+  print('');
 }
 
 /// Example 6: Understanding stem calculation
-Future<void> _stemCalculationExample() async {
-  io.stdout.writeln('--- Example 6: Stem Calculation ---');
+void _stemCalculationExample() {
+  print('--- Example 6: Stem Calculation ---');
 
   // Stem is the subpath relative to the first wildcard in the pattern
   final matcher = Matcher()
@@ -238,23 +236,23 @@ Future<void> _stemCalculationExample() async {
     '/project/lib/models/data/product.dart',
   ];
 
-  io.stdout.writeln('File path → Stem (relative to first wildcard):');
+  print('File path -> stem (relative to first wildcard):');
   for (final file in files) {
     final result = matcher.matchFile(file, '/project');
     if (result.hasFiles) {
       final match = result.files.first;
-      io.stdout.writeln('  ${match.path}');
-      io.stdout.writeln('    → stem: ${match.stem ?? "(null)"}');
+      print('  ${match.path}');
+      print('    -> stem: ${match.stem ?? "(null)"}');
     }
   }
 
-  io.stdout.writeln();
+  print('');
 }
 
 /// Example 7: Real-world use case - Finding source files for linting
-Future<void> _realWorldExample() async {
-  io.stdout.writeln('--- Example 7: Real-World Use Case ---');
-  io.stdout.writeln('Finding all source files for linting/analysis:\n');
+void _realWorldExample() {
+  print('--- Example 7: Real-World Use Case ---');
+  print('Finding all source files for linting/analysis:\n');
 
   // Create a matcher that finds all source files but excludes:
   // - Generated files
@@ -279,26 +277,25 @@ Future<void> _realWorldExample() async {
     // Exclude hidden directories
     ..addExclude('**/.*/**');
 
-  final projectDir = io.Directory.current.path;
+  final projectDir = Directory.current.path;
   final fullPaths = matcher.getResultsInFullPath(projectDir);
 
-  io.stdout.writeln('Files to lint: ${fullPaths.length}');
-  io.stdout.writeln('\nSample files:');
+  print('Files to lint: ${fullPaths.length}');
+  print('\nSample files:');
   for (final path in fullPaths.take(5)) {
-    io.stdout.writeln('  - $path');
+    print('  - $path');
   }
 
   if (fullPaths.length > 5) {
-    io.stdout.writeln('  ... and ${fullPaths.length - 5} more files');
+    print('  ... and ${fullPaths.length - 5} more files');
   }
 
-  io.stdout.writeln('\n--- Summary ---');
-  io.stdout
-      .writeln('The Matcher class provides powerful glob pattern matching:');
-  io.stdout.writeln('  • Include/exclude patterns for flexible filtering');
-  io.stdout.writeln('  • Recursive directory matching with **');
-  io.stdout.writeln('  • Works with real or in-memory file systems');
-  io.stdout.writeln('  • Can match without file system access');
-  io.stdout.writeln('  • Calculates stems for relative path handling');
-  io.stdout.writeln('  • Prevents duplicate matches automatically');
+  print('\n--- Summary ---');
+  print('The Matcher class provides powerful glob pattern matching:');
+  print('  - Include/exclude patterns for flexible filtering');
+  print('  - Recursive directory matching with **');
+  print('  - Works with real or in-memory file systems');
+  print('  - Can match without file system access');
+  print('  - Calculates stems for relative path handling');
+  print('  - Prevents duplicate matches automatically');
 }

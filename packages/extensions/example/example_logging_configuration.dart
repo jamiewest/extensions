@@ -13,32 +13,29 @@ import 'package:extensions/logging.dart';
 /// - Hierarchical configuration with colon-separated keys
 /// - Multiple configuration source merging
 void main() {
-  print('=== Logging Configuration Example ===\n');
+  print('=== Logging Configuration Example ===');
 
   // Example 1: Basic provider configuration using aliases
-  print('Example 1: Provider configuration with aliases');
+  print('\n--- Example 1: Provider Configuration With Aliases ---');
   basicProviderConfiguration();
-  print('');
 
   // Example 2: Provider configuration using full type names
-  print('Example 2: Provider configuration with full type names');
+  print('\n--- Example 2: Provider Configuration With Full Type Names ---');
   fullTypeNameConfiguration();
-  print('');
 
   // Example 3: Merging multiple configuration sources
-  print('Example 3: Merging multiple configuration sources');
+  print('\n--- Example 3: Merge Multiple Configuration Sources ---');
   multipleConfigurationSources();
-  print('');
 
   // Example 4: Nested provider-specific settings
-  print('Example 4: Nested provider-specific settings');
+  print('\n--- Example 4: Nested Provider-Specific Settings ---');
   nestedProviderSettings();
-  print('');
 
   // Example 5: Using configuration factory directly
-  print('Example 5: Using configuration factory directly');
+  print('\n--- Example 5: Using Configuration Factory Directly ---');
   usingConfigurationFactory();
-  print('');
+
+  print('\n=== Logging Configuration Example Complete ===');
 }
 
 /// Example 1: Configure logging providers using their aliases.
@@ -81,7 +78,7 @@ void basicProviderConfiguration() {
   loggerFactory
       .createLogger('MyApp')
       .logInformation('Logging configured with provider-specific settings');
-  print('✓ Provider configuration applied successfully');
+  print('Success: provider configuration applied.');
 }
 
 /// Example 2: Configure providers using their full type names.
@@ -108,7 +105,7 @@ void fullTypeNameConfiguration() {
     'Console provider LogLevel:Default = '
     '${consoleConfig['LogLevel:Default']}',
   );
-  print('✓ Full type name configuration works correctly');
+  print('Success: full type name configuration works.');
 }
 
 /// Example 3: Merge configuration from multiple sources.
@@ -145,7 +142,7 @@ void multipleConfigurationSources() {
   print('Default level (overridden): ${consoleConfig['LogLevel:Default']}');
   print('MyApp level (from base): ${consoleConfig['LogLevel:MyApp']}');
   print('System level (from env): ${consoleConfig['LogLevel:System']}');
-  print('✓ Multiple configuration sources merged successfully');
+  print('Success: multiple configuration sources merged.');
 }
 
 /// Example 4: Provider-specific nested settings.
@@ -173,7 +170,7 @@ void nestedProviderSettings() {
   print('Max size: ${fileConfig['MaxSizeInBytes']} bytes');
   print('Retained files: ${fileConfig['RetainedFileCount']}');
   print('Log level: ${fileConfig['LogLevel:Default']}');
-  print('✓ Nested provider settings retrieved successfully');
+  print('Success: nested provider settings retrieved.');
 }
 
 /// Example 5: Using the configuration factory directly.
@@ -211,7 +208,7 @@ void usingConfigurationFactory() {
   print('  LogLevel:Default = ${consoleConfig['LogLevel:Default']}');
   print('  IncludeScopes = ${consoleConfig['IncludeScopes']}');
   print('  TimestampFormat = ${consoleConfig['TimestampFormat']}');
-  print('✓ Configuration factory injected and used successfully');
+  print('Success: configuration factory resolved from DI.');
 }
 
 /// Example provider types for demonstration.

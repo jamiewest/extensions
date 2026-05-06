@@ -13,7 +13,11 @@ import 'package:http/http.dart' as http;
 /// 2. Redact sensitive headers like Authorization
 /// 3. Use named HTTP clients with different configurations
 /// 4. Integrate with the Microsoft.Extensions.Logging pattern
-void main() async {
+///
+/// Note: Request results depend on network availability and upstream APIs.
+Future<void> main() async {
+  print('=== HTTP Client Logging Example ===');
+
   // Create service collection
   final services = ServiceCollection()
 
@@ -54,17 +58,18 @@ void main() async {
   // Get HTTP client factory
   final factory = provider.getRequiredService<HttpClientFactory>();
 
-  print('\n=== Example 1: GitHub API Request ===\n');
+  print('\n--- Example 1: GitHub API Request ---');
   await _makeGitHubRequest(factory);
 
-  print('\n=== Example 2: Weather API Request ===\n');
+  print('\n--- Example 2: Weather API Request ---');
   await _makeWeatherRequest(factory);
 
-  print('\n=== Example 3: Default Client Request ===\n');
+  print('\n--- Example 3: Default Client Request ---');
   await _makeDefaultRequest(factory);
 
   // Cleanup
   await (provider as AsyncDisposable).disposeAsync();
+  print('\n=== HTTP Client Logging Example Complete ===');
 }
 
 Future<void> _makeGitHubRequest(HttpClientFactory factory) async {

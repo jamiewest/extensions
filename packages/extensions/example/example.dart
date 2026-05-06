@@ -4,6 +4,9 @@ import 'package:extensions/logging.dart';
 import 'package:extensions/src/hosting/hosting_host_builder_extensions_io.dart';
 import 'package:extensions/system.dart';
 
+/// Demonstrates hosted-service lifecycle callbacks in a default host.
+///
+/// Run this file to observe ordered start/stop and lifetime event logs.
 Future<void> main(List<String> args) async => Host.createDefaultBuilder()
     .configureServices(
       (_, services) => services.addHostedService<ExampleHostedService>(
@@ -34,25 +37,26 @@ class ExampleHostedService extends HostedService {
 
   @override
   Future<void> start(CancellationToken cancellationToken) async {
-    _logger.logInformation('1. Start has been called.');
+    _logger.logInformation('=== Host Lifecycle Example ===');
+    _logger.logInformation('1. `start` has been called.');
     return;
   }
 
   @override
   Future<void> stop(CancellationToken cancellationToken) async {
-    _logger.logInformation('4. Stop has been called.');
+    _logger.logInformation('4. `stop` has been called.');
     return;
   }
 
   void _onStarted() {
-    _logger.logInformation('2. OnStarted has been called.');
+    _logger.logInformation('2. `applicationStarted` callback ran.');
   }
 
   void _onStopping() {
-    _logger.logInformation('3. OnStopping has been called.');
+    _logger.logInformation('3. `applicationStopping` callback ran.');
   }
 
   void _onStopped() {
-    _logger.logInformation('5. OnStopped has been called.');
+    _logger.logInformation('5. `applicationStopped` callback ran.');
   }
 }

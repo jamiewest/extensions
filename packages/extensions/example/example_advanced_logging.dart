@@ -1,13 +1,15 @@
 import 'package:extensions/logging.dart';
 
-// Example class for typed logger demonstration.
+/// Marker type used for typed logger examples.
 class UserService {}
 
+/// Demonstrates advanced logging APIs such as typed loggers and `LoggerMessage`.
+///
+/// Run this file to see structured output for several advanced patterns.
 void main() {
-  print('=== Advanced Logging Features Demo ===\n');
+  print('=== Advanced Logging Features ===');
 
-  // Example 1: Typed Logger
-  print('Example 1: Typed Logger (Logger<T>)');
+  print('\n--- Example 1: Typed Logger (Logger<T>) ---');
   final factory = LoggerFactory.create(
     (builder) => builder.addConsole(),
   );
@@ -16,10 +18,9 @@ void main() {
       .createTypedLogger<UserService>()
       .logInformation('Typed logger for UserService created');
 
-  // Example 2: High-Performance LoggerMessage
-  print('\nExample 2: High-Performance LoggerMessage');
+  print('\n--- Example 2: High-Performance LoggerMessage ---');
 
-  // Define reusable log message delegates
+  // Cache delegates once and reuse them to avoid repeated allocations.
   final logUserLogin = LoggerMessage.define2<String, int>(
     LogLevel.information,
     const EventId(1, 'UserLogin'),
@@ -32,13 +33,11 @@ void main() {
     'Request processed in {0}ms',
   );
 
-  // Use the cached delegates (no allocations on subsequent calls)
   final logger = factory.createLogger('PerformanceDemo');
   logUserLogin(logger, 'john.doe', 192168001001, null);
   logProcessingTime(logger, 42, null);
 
-  // Example 3: High-Performance LoggerMessage with SkipEnabledCheck
-  print('\nExample 3: LoggerMessage with Skip Enabled Check');
+  print('\n--- Example 3: Skip Enabled Check ---');
 
   final logCriticalError = LoggerMessage.define1<String>(
     LogLevel.critical,
@@ -49,8 +48,7 @@ void main() {
 
   logCriticalError(logger, 'Database connection failed', null);
 
-  // Example 4: Log Scopes with LoggerMessage
-  print('\nExample 4: Log Scopes with LoggerMessage');
+  print('\n--- Example 4: Log Scopes ---');
 
   final defineUserScope = LoggerMessage.defineScope2<String, String>(
     'User: {0}, Session: {1}',
@@ -63,8 +61,7 @@ void main() {
     ..logWarning('Rate limit approaching');
   scope?.dispose();
 
-  // Example 5: BufferedLogRecord (data structure)
-  print('\nExample 5: BufferedLogRecord Structure');
+  print('\n--- Example 5: BufferedLogRecord Structure ---');
 
   final bufferedRecord = BufferedLogRecordImpl(
     timestamp: DateTime.now(),
@@ -85,15 +82,13 @@ void main() {
   print('  Message: ${bufferedRecord.formattedMessage}');
   print('  Attributes: ${bufferedRecord.attributes.length}');
 
-  // Example 6: NullTypedLogger
-  print('\nExample 6: NullTypedLogger<T>');
+  print('\n--- Example 6: NullTypedLogger<T> ---');
 
   NullTypedLogger.instance<UserService>()
       .logInformation('This will not be logged');
   print('NullTypedLogger created (no output expected)');
 
-  // Example 7: Multiple typed loggers
-  print('\nExample 7: Multiple Typed Loggers');
+  print('\n--- Example 7: Multiple Typed Loggers ---');
 
   final logger1 = factory.createTypedLogger<UserService>();
   final logger2 = factory.createTypedLogger<String>();
@@ -104,5 +99,5 @@ void main() {
   // Cleanup
   factory.dispose();
 
-  print('\n=== Demo Complete ===');
+  print('\n=== Advanced Logging Complete ===');
 }

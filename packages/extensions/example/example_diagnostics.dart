@@ -7,29 +7,29 @@ import 'package:extensions/src/diagnostics/metrics_service_extensions.dart';
 import 'package:extensions/src/diagnostics/system/diagnostics.dart';
 import 'package:extensions/src/diagnostics/system/meter_options.dart';
 
-void main() async {
-  // Example 1: Basic meter creation and usage
-  print('=== Example 1: Basic Meter Creation ===');
+/// Demonstrates meter creation, listeners, and DI-based metrics setup.
+///
+/// Run this file to see several focused diagnostics scenarios.
+Future<void> main() async {
+  print('=== Diagnostics Examples ===');
+
+  print('\n--- Example 1: Basic Meter Creation ---');
   basicMeterExample();
 
-  // Example 2: Using metrics with dependency injection
-  print('\n=== Example 2: Metrics with Dependency Injection ===');
+  print('\n--- Example 2: Metrics With Dependency Injection ---');
   await metricsWithDIExample();
 
-  // Example 3: Custom metrics listener
-  print('\n=== Example 3: Custom Metrics Listener ===');
+  print('\n--- Example 3: Custom Metrics Listener ---');
   await customListenerExample();
 
-  // Example 4: Meter with rules and filtering
-  print('\n=== Example 4: Meter Rules and Filtering ===');
+  print('\n--- Example 4: Meter Rules And Filtering ---');
   await metricsWithRulesExample();
 
-  print('\n=== Examples Complete ===');
+  print('\n=== Diagnostics Examples Complete ===');
 }
 
 /// Example 1: Creating and using a basic meter
 void basicMeterExample() {
-  // Create a meter options
   final meterOptions = MeterOptions('MyApplication')
     ..version = '1.0.0'
     ..tags = {
@@ -37,7 +37,6 @@ void basicMeterExample() {
       'service': 'example-service',
     };
 
-  // Create a meter
   final meter = Meter.from(meterOptions);
 
   print('Meter created:');
@@ -45,7 +44,6 @@ void basicMeterExample() {
   print('  Version: ${meter.version}');
   print('  Tags: ${meter.tags}');
 
-  // Cleanup
   meter.dispose();
   print('Meter disposed');
 }
@@ -60,10 +58,9 @@ Future<void> metricsWithDIExample() async {
 
   final provider = services.buildServiceProvider();
 
-  // Get the meter factory from DI
+  // Factory-based creation centralizes meter lifecycle management.
   final meterFactory = provider.getRequiredService<MeterFactory>();
 
-  // Create meters using the factory
   final appMeter = meterFactory.create(
     MeterOptions('Application')..version = '1.0.0',
   );
@@ -149,13 +146,11 @@ class _CustomMetricsListener implements MetricsListener {
       print('  Unit: ${instrument.unit}');
     }
 
-    // Return true to indicate we're listening to this instrument
-    // Return false and null if we don't want to listen
+    // Return `(true, state)` to subscribe to this instrument.
     return (true, null);
   }
 
-  // Return empty handlers - in a real implementation,
-  // you would provide handlers for different instrument types
+  // Real listeners usually provide handlers for counters/histograms here.
   @override
   MeasurementHandlers getMeasurementHandlers() => MeasurementHandlers();
 

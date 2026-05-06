@@ -15,8 +15,8 @@ import 'package:path/path.dart' as p;
 /// - Directory enumeration
 /// - Security features (path traversal protection)
 /// - NullFileProvider usage
-void main() async {
-  print('=== FileProvider Examples ===\n');
+Future<void> main() async {
+  print('=== File Provider Examples ===');
 
   // Example 1: Basic PhysicalFileProvider usage
   await basicPhysicalFileProviderExample();
@@ -49,8 +49,7 @@ void main() async {
 
 /// Example 1: Basic PhysicalFileProvider usage
 Future<void> basicPhysicalFileProviderExample() async {
-  print('Example 1: Basic PhysicalFileProvider Usage');
-  print('-' * 50);
+  print('\n--- Example 1: Basic PhysicalFileProvider Usage ---');
 
   // Create a temporary directory for demonstration
   final tempDir = io.Directory.systemTemp.createTempSync('file_provider_ex1_');
@@ -104,8 +103,7 @@ Future<void> basicPhysicalFileProviderExample() async {
 
 /// Example 2: Watching for file changes
 Future<void> fileChangeNotificationExample() async {
-  print('Example 2: File Change Notification');
-  print('-' * 50);
+  print('\n--- Example 2: File Change Notification ---');
 
   final tempDir = io.Directory.systemTemp.createTempSync('file_provider_ex2_');
   final rootPath = tempDir.path;
@@ -132,7 +130,7 @@ Future<void> fileChangeNotificationExample() async {
     // Register a callback for when changes occur
     var changeDetected = false;
     changeToken.registerChangeCallback((_) {
-      print('\n🔔 Change detected in *.txt files!');
+      print('\nChange detected in *.txt files.');
       changeDetected = true;
     }, null);
 
@@ -162,8 +160,7 @@ Future<void> fileChangeNotificationExample() async {
 
 /// Example 3: Composite file provider
 Future<void> compositeFileProviderExample() async {
-  print('Example 3: CompositeFileProvider');
-  print('-' * 50);
+  print('\n--- Example 3: CompositeFileProvider ---');
 
   final tempDir1 = io.Directory.systemTemp.createTempSync('provider1_');
   final tempDir2 = io.Directory.systemTemp.createTempSync('provider2_');
@@ -232,8 +229,7 @@ Future<void> compositeFileProviderExample() async {
 
 /// Example 4: Directory enumeration
 Future<void> directoryEnumerationExample() async {
-  print('Example 4: Directory Enumeration');
-  print('-' * 50);
+  print('\n--- Example 4: Directory Enumeration ---');
 
   final tempDir = io.Directory.systemTemp.createTempSync('file_provider_ex4_');
   final rootPath = tempDir.path;
@@ -284,8 +280,7 @@ Future<void> directoryEnumerationExample() async {
 
 /// Example 5: Security and path validation
 Future<void> securityExample() async {
-  print('Example 5: Security and Path Validation');
-  print('-' * 50);
+  print('\n--- Example 5: Security And Path Validation ---');
 
   final tempDir = io.Directory.systemTemp.createTempSync('file_provider_ex5_');
   final rootPath = tempDir.path;
@@ -321,7 +316,7 @@ Future<void> securityExample() async {
       print('  $attackPath exists: ${attackFile.exists}');
     }
 
-    print('\n✓ PhysicalFileProvider protects against path traversal attacks');
+    print('\nPhysicalFileProvider protects against path traversal attacks.');
 
     // Exclusion filters example
     print('\nExclusion filters (configured in options):');
@@ -356,8 +351,7 @@ Future<void> securityExample() async {
 
 /// Example 6: NullFileProvider usage
 void nullFileProviderExample() {
-  print('Example 6: NullFileProvider');
-  print('-' * 50);
+  print('\n--- Example 6: NullFileProvider ---');
 
   // NullFileProvider is an empty provider with no contents
   final provider = NullFileProvider();

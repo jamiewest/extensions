@@ -1,15 +1,21 @@
 import 'package:extensions/dependency_injection.dart';
 
+/// Demonstrates registering multiple services and resolving one from DI.
+///
+/// Run this file to see which `int` registration is returned by `getService`.
 void main() {
-  var collection = ServiceCollection()
+  print('=== Dependency Injection Example ===');
+
+  final serviceCollection = ServiceCollection()
     ..addSingleton<String>((services) => '1')
     ..addSingleton<String>((services) => '2')
     ..addSingleton<int>((services) => 3)
     ..addSingleton<int>((services) => 4)
     ..addSingleton<int>((services) => 5);
-  var sp = collection.buildServiceProvider();
+  final serviceProvider = serviceCollection.buildServiceProvider();
 
-  var result = sp.getService<int>();
+  print('--- Resolve int Service ---');
+  final resolvedValue = serviceProvider.getService<int>();
 
-  print(result);
+  print('Resolved value: $resolvedValue');
 }

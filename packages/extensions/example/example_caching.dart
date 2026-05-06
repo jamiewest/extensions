@@ -1,8 +1,13 @@
 import 'package:extensions/caching.dart';
 
-void main() async {
+/// Demonstrates memory and distributed caching features with small scenarios.
+///
+/// Run this file to see expiration, priorities, callbacks, and stats.
+Future<void> main() async {
+  print('=== Caching Examples ===');
+
   // Example 1: Basic memory cache usage
-  print('=== Example 1: Basic Memory Cache ===');
+  print('\n--- Example 1: Basic Memory Cache ---');
   final cache = MemoryCacheImpl(MemoryCacheOptions())
 
     // Simple set/get
@@ -11,7 +16,7 @@ void main() async {
   print('Name: $name');
 
   // Example 2: Cache with expiration
-  print('\n=== Example 2: Cache with Expiration ===');
+  print('\n--- Example 2: Cache with Expiration ---');
   cache.set(
     'temp_value',
     'This will expire',
@@ -23,7 +28,7 @@ void main() async {
   print('Value after expiration: ${cache.get<String>('temp_value')}');
 
   // Example 3: Get or create pattern
-  print('\n=== Example 3: Get or Create Pattern ===');
+  print('\n--- Example 3: Get Or Create Pattern ---');
   var callCount = 0;
   final result1 = cache.getOrCreate<String>('expensive', (entry) {
     callCount++;
@@ -41,7 +46,7 @@ void main() async {
   print('Factory was called $callCount times');
 
   // Example 4: Cache with priority and size limits
-  print('\n=== Example 4: Priority-based Eviction ===');
+  print('\n--- Example 4: Priority-Based Eviction ---');
   final limitedCache = MemoryCacheImpl(
     MemoryCacheOptions(
       sizeLimit: 100,
@@ -70,7 +75,7 @@ void main() async {
   // Low priority items should be removed first
 
   // Example 5: Distributed cache (in-memory implementation)
-  print('\n=== Example 5: Distributed Cache ===');
+  print('\n--- Example 5: Distributed Cache ---');
   final distributedCache = MemoryDistributedCache();
 
   await distributedCache.setString('user:123', 'Alice');
@@ -89,7 +94,7 @@ void main() async {
   print('Session refreshed');
 
   // Example 6: Post-eviction callbacks
-  print('\n=== Example 6: Eviction Callbacks ===');
+  print('\n--- Example 6: Eviction Callbacks ---');
   cache.set(
     'tracked',
     'Tracked value',
@@ -97,7 +102,7 @@ void main() async {
       ..absoluteExpirationRelativeToNow = const Duration(seconds: 1)
       ..postEvictionCallbacks.add(
         PostEvictionCallbackRegistration(
-          evictionCallback: (key, value, reason, state) {
+          evictionCallback: (key, value, reason, _) {
             print(
               'Item evicted: key=$key, value=$value, reason=$reason',
             );
@@ -111,7 +116,7 @@ void main() async {
   await Future<void>.delayed(const Duration(milliseconds: 100));
 
   // Example 7: Statistics tracking
-  print('\n=== Example 7: Cache Statistics ===');
+  print('\n--- Example 7: Cache Statistics ---');
   final statsCache = MemoryCacheImpl(
     MemoryCacheOptions(trackStatistics: true),
   )
@@ -130,17 +135,17 @@ void main() async {
 
   // Example 8: Alphabet caching with eviction callbacks
   // Port of Microsoft.Extensions.Caching.Memory example
-  print('\n=== Example 8: Alphabet Caching with Eviction ===');
+  print('\n--- Example 8: Alphabet Caching With Eviction ---');
   final alphabetCache = MemoryCacheImpl(MemoryCacheOptions());
 
   const millisecondsDelayAfterAdd = 50;
   const millisecondsAbsoluteExpiration = 750;
 
   void onPostEviction(
-    Object key,
+    Object _,
     Object? value,
     EvictionReason reason,
-    Object? state,
+    Object? __,
   ) {
     if (value is AlphabetLetter) {
       print('${value.letter} was evicted for $reason.');
@@ -148,13 +153,13 @@ void main() async {
   }
 
   Future<void> iterateAlphabetAsync(
-    Future<void> Function(String) asyncFunc,
+    Future<void> Function(String) onLetter,
   ) async {
     for (var charCode = 'A'.codeUnitAt(0);
         charCode <= 'Z'.codeUnitAt(0);
         charCode++) {
       final letter = String.fromCharCode(charCode);
-      await asyncFunc(letter);
+      await onLetter(letter);
     }
     print('');
   }
@@ -194,7 +199,7 @@ void main() async {
   statsCache.dispose();
   alphabetCache.dispose();
 
-  print('\n=== Examples Complete ===');
+  print('\n=== Caching Examples Complete ===');
 }
 
 /// Record representing a letter in the alphabet with a descriptive message.
