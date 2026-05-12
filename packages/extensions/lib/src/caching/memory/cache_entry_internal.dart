@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
+
 import '../cache_entry.dart';
 import '../cache_item_priority.dart';
 import '../eviction_reason.dart';
@@ -110,16 +112,16 @@ class CacheEntryInternal implements CacheEntry {
   List<PostEvictionCallbackRegistration> get postEvictionCallbacks =>
       _postEvictionCallbacks ??= <PostEvictionCallbackRegistration>[];
 
-  DateTime get lastAccessed => _lastAccessed ?? DateTime.now();
+  DateTime get lastAccessed => _lastAccessed ?? clock.now();
 
   /// Updates the last accessed time to now.
   void updateLastAccessed() {
-    _lastAccessed = DateTime.now();
+    _lastAccessed = clock.now();
   }
 
   /// Checks if the entry has expired.
   bool get isExpired {
-    final now = DateTime.now();
+    final now = clock.now();
 
     // Check absolute expiration
     if (_absoluteExpiration != null && now.isAfter(_absoluteExpiration!)) {
@@ -140,7 +142,7 @@ class CacheEntryInternal implements CacheEntry {
   /// Calculates the absolute expiration time.
   DateTime? calculateAbsoluteExpiration() {
     if (_absoluteExpirationRelativeToNow != null) {
-      return DateTime.now().add(_absoluteExpirationRelativeToNow!);
+      return clock.now().add(_absoluteExpirationRelativeToNow!);
     }
     return _absoluteExpiration;
   }
@@ -152,7 +154,7 @@ class CacheEntryInternal implements CacheEntry {
     }
 
     _isCommitted = true;
-    _lastAccessed = DateTime.now();
+    _lastAccessed = clock.now();
 
     // Apply relative absolute expiration
     if (_absoluteExpirationRelativeToNow != null) {

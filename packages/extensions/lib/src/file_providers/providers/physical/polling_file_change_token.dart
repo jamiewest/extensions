@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:clock/clock.dart';
+
 import '../../../primitives/change_token.dart';
 import '../../../system/disposable.dart';
 import '../../../system/threading/cancellation_token_source.dart';
@@ -38,7 +40,7 @@ class PollingFileChangeToken implements ChangeToken {
       // File may not exist or be accessible
       _previousWriteTime = null;
     }
-    _lastCheckedTime = DateTime.now();
+    _lastCheckedTime = clock.now();
   }
 
   @override
@@ -54,7 +56,7 @@ class PollingFileChangeToken implements ChangeToken {
     }
 
     // Only check if enough time has passed since last check
-    final now = DateTime.now();
+    final now = clock.now();
     if (_lastCheckedTime != null &&
         now.difference(_lastCheckedTime!) < _pollingInterval) {
       return false;

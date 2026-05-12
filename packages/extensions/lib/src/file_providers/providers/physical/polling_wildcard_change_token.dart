@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:clock/clock.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as p;
 
@@ -36,7 +37,7 @@ class PollingWildcardChangeToken implements ChangeToken {
 
   void _initializeState() {
     _previousState = _getCurrentState();
-    _lastCheckedTime = DateTime.now();
+    _lastCheckedTime = clock.now();
   }
 
   Map<String, _FileState> _getCurrentState() {
@@ -93,7 +94,7 @@ class PollingWildcardChangeToken implements ChangeToken {
     }
 
     // Only check if enough time has passed since last check
-    final now = DateTime.now();
+    final now = clock.now();
     if (_lastCheckedTime != null &&
         now.difference(_lastCheckedTime!) < _pollingInterval) {
       return false;
