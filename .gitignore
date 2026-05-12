@@ -13,9 +13,16 @@ doc/api/
 # VS Code
 .vscode/
 
+usage.md
+packages.md
+
 # Mac
 .DS_Store
 
+AGENTS.md
+GEMINI.md
 CLAUDE.md
+rules.md
+documentation.md
 
 .claude/

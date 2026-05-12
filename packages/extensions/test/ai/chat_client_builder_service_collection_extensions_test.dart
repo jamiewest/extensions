@@ -1,13 +1,7 @@
 import 'package:extensions/ai.dart';
-import 'package:extensions/dependency_injection.dart'
-    show ServiceCollection, ServiceProvider;
+import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/system.dart' show CancellationToken;
 import 'package:test/test.dart';
-
-class _TestServiceProvider implements ServiceProvider {
-  @override
-  Object? getServiceFromType(Type type) => null;
-}
 
 class _TestChatClient implements ChatClient {
   @override
@@ -37,22 +31,47 @@ class _TestChatClient implements ChatClient {
 
 void main() {
   group('ChatClientBuilderServiceCollectionExtensions', () {
-    test('addChatClient returns builder without mutating collection', () {
+    test('addChatClient registers a ChatClient descriptor and returns builder',
+        () {
       final services = ServiceCollection();
-      ServiceProvider? captured;
 
-      final builder = services.addChatClient((provider) {
-        captured = provider;
-        return _TestChatClient();
-      });
+      final builder = services.addChatClient((_) => _TestChatClient());
 
-      expect(services, isEmpty);
+      expect(services, hasLength(1));
+      expect(services.first.serviceType, ChatClient);
+      expect(services.first.lifetime, ServiceLifetime.singleton);
       expect(builder, isA<ChatClientBuilder>());
+    });
 
-      final provider = _TestServiceProvider();
+    test('addChatClient respects the provided lifetime', () {
+      final services = ServiceCollection();
+
+      services.addChatClient(
+        (_) => _TestChatClient(),
+        ServiceLifetime.transient,
+      );
+
+      expect(services.first.lifetime, ServiceLifetime.transient);
+    });
+
+    test('builder builds client using the factory with the service provider',
+        () {
+      final services = ServiceCollection();
+      final provider = services.buildServiceProvider();
+
+      final builder = services.addChatClient((_) => _TestChatClient());
       final client = builder.build(provider);
 
-      expect(identical(captured, provider), isTrue);
+      expect(client, isA<_TestChatClient>());
+    });
+
+    test('registered descriptor resolves ChatClient via service provider', () {
+      final services = ServiceCollection()
+        ..addChatClient((_) => _TestChatClient());
+      final provider = services.buildServiceProvider();
+
+      final client = provider.getService<ChatClient>();
+
       expect(client, isA<_TestChatClient>());
     });
   });
