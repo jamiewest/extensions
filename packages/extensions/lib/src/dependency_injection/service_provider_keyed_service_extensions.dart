@@ -42,13 +42,32 @@ extension ServiceProviderKeyedServiceExtensions on ServiceProvider {
       getRequiredKeyedServiceFromType(T, serviceKey) as T;
 
   /// Get an enumeration of services of type [T] from the [ServiceProvider].
-  Iterable<T> getKeyedServices<T>(Object? serviceKey) =>
-      getKeyedServicesFromType(T, serviceKey) as Iterable<T>;
+  Iterable<T> getKeyedServices<T>(Object? serviceKey) {
+    if (this is KeyedServiceProvider) {
+      final result = (this as KeyedServiceProvider)
+          .getKeyedServiceFromType(Iterable<T>, serviceKey);
+      if (result is List<dynamic>) {
+        return result.cast<T>();
+      }
+      return List<T>.empty();
+    }
+    throw InvalidOperationException(
+      message: 'This service provider doesn\'t support keyed services.',
+    );
+  }
 
   /// Get an enumeration of services of type [serviceType] from
   /// the [ServiceProvider].
+  ///
+  /// This overload is not supported because Dart cannot construct
+  /// `Iterable<T>` from a runtime [Type] value. Use
+  /// [getKeyedServices] with a type argument instead.
   Iterable<Object> getKeyedServicesFromType(
-          Type serviceType, Object? serviceKey) =>
-      getRequiredKeyedServiceFromType(serviceType, serviceKey)
-          as Iterable<Object>;
+    Type serviceType,
+    Object? serviceKey,
+  ) =>
+      throw UnsupportedError(
+        'getKeyedServicesFromType cannot construct Iterable<T> from a '
+        'runtime Type. Use getKeyedServices<T>(serviceKey) instead.',
+      );
 }

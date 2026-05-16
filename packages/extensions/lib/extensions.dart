@@ -11,3 +11,4 @@ export 'logging.dart';
 export 'options.dart';
 export 'primitives.dart';
 export 'system.dart';
+export 'vector_data.dart';
