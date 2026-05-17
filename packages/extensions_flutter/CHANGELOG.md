@@ -1,3 +1,19 @@
+## 0.3.16
+
+* Updated dependency on extensions to ^0.3.22.
+* Inherits the full Microsoft.Extensions.AI port from extensions 0.3.22:
+  * Core API additions: `ReasoningOptions`, `ToolCallContent`/`ToolResultContent`
+    hierarchies, `AIFunctionDeclaration`, `ToolApprovalRequestContent`/`ToolApprovalResponseContent`,
+    `HostedToolSearchTool`, `HostedMcpServerTool`, and `AIContentExtensions`.
+  * New client pipelines: `TextToSpeechClient` and `HostedFileClient` with
+    delegating, logging, and builder support.
+  * OpenTelemetry middleware for all client types (`OpenTelemetryChatClient`,
+    `OpenTelemetryEmbeddingGenerator`, `OpenTelemetryImageGenerator`,
+    `OpenTelemetryTextToSpeechClient`).
+  * Evaluation framework: NLP evaluators (BLEU, F1, GLEU), quality evaluators
+    (coherence, completeness, fluency, groundedness, etc.), safety evaluators,
+    and a disk-based reporting/response-caching pipeline.
+
 ## 0.3.15
 
 * Removed an unused import in `flutter_service_collection_extensions.dart`.
