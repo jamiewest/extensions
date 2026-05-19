@@ -11,7 +11,7 @@ import 'i_logger_provider_configuration_factory.dart';
 ///
 /// Type parameter [T] represents the logger provider type.
 class LoggerProviderConfigurationImpl<T>
-    implements ILoggerProviderConfiguration<T> {
+    implements LoggerProviderConfiguration<T> {
   final IConfiguration _configuration;
 
   /// Creates a new instance of [LoggerProviderConfigurationImpl].
@@ -19,7 +19,7 @@ class LoggerProviderConfigurationImpl<T>
   /// The [providerConfigurationFactory] is used to retrieve the
   /// configuration specific to the provider type [T].
   LoggerProviderConfigurationImpl(
-    ILoggerProviderConfigurationFactory providerConfigurationFactory,
+    LoggerProviderConfigurationFactory providerConfigurationFactory,
   ) : _configuration = providerConfigurationFactory.getConfiguration(T);
 
   @override

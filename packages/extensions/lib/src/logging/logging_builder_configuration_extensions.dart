@@ -23,7 +23,7 @@ extension LoggingBuilderConfigurationExtensions on LoggingBuilder {
   /// [ILoggerProviderConfigurationFactory] to access their configuration.
   LoggingBuilder addConfiguration(IConfiguration configuration) {
     // Register the configuration factory as a singleton
-    services.tryAddSingleton<ILoggerProviderConfigurationFactory>(
+    services.tryAddSingleton<LoggerProviderConfigurationFactory>(
       (sp) => LoggerProviderConfigurationFactoryImpl([configuration]),
     );
 
@@ -48,7 +48,7 @@ extension LoggingBuilderConfigurationExtensions on LoggingBuilder {
   /// ```
   LoggingBuilder addConfigurations(Iterable<IConfiguration> configurations) {
     // Register the configuration factory with multiple sources
-    services.tryAddSingleton<ILoggerProviderConfigurationFactory>(
+    services.tryAddSingleton<LoggerProviderConfigurationFactory>(
       (sp) => LoggerProviderConfigurationFactoryImpl(configurations),
     );
 

@@ -8,12 +8,10 @@ import '../configuration/configuration.dart';
 ///
 /// Type parameter [T] represents the logger provider type (e.g.,
 /// ConsoleLoggerProvider, DebugLoggerProvider).
-abstract class ILoggerProviderConfiguration<T> {
+abstract class LoggerProviderConfiguration<T> {
   /// Gets the configuration for the logger provider.
   ///
   /// Returns an [IConfiguration] containing the provider-specific
   /// configuration settings extracted from the application configuration.
   IConfiguration get configuration;
 }
-
-typedef LoggerProviderConfiguration<T> = ILoggerProviderConfiguration<T>;

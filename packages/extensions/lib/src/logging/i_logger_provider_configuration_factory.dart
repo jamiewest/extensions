@@ -6,7 +6,7 @@ import '../configuration/configuration.dart';
 /// configuration from the application's configuration system. The factory
 /// is responsible for extracting the relevant configuration section for
 /// a given provider type.
-abstract class ILoggerProviderConfigurationFactory {
+abstract class LoggerProviderConfigurationFactory {
   /// Gets the configuration for the specified logger provider type.
   ///
   /// The [providerType] parameter should be the Type of the logger provider
@@ -20,6 +20,3 @@ abstract class ILoggerProviderConfigurationFactory {
   /// all matching sections.
   IConfiguration getConfiguration(Type providerType);
 }
-
-typedef LoggerProviderConfigurationFactory
-    = ILoggerProviderConfigurationFactory;

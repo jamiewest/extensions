@@ -5,6 +5,7 @@ class FunctionResultContent extends AIContent {
   /// Creates a new [FunctionResultContent].
   FunctionResultContent({
     required this.callId,
+    this.name,
     this.result,
     this.exception,
   });
@@ -12,6 +13,9 @@ class FunctionResultContent extends AIContent {
   /// The call ID corresponding to the function call this is a
   /// result for.
   final String callId;
+
+  /// The name of the function that was called.
+  final String? name;
 
   /// The result of the function call.
   final Object? result;

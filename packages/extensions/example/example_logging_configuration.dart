@@ -199,7 +199,7 @@ void usingConfigurationFactory() {
 
   // Retrieve the factory from DI
   final factory =
-      provider.getRequiredService<ILoggerProviderConfigurationFactory>();
+      provider.getRequiredService<LoggerProviderConfigurationFactory>();
 
   // Get provider-specific configuration
   final consoleConfig = factory.getConfiguration(ConsoleLoggerProvider);

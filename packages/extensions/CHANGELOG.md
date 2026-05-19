@@ -1,3 +1,7 @@
+## 0.3.23
+
+* Fixed missing `export 'ai.dart'` in the `extensions.dart` barrel file.
+
 ## 0.3.22
 
 * **AI — Microsoft.Extensions.AI port (Phases 1–4):**

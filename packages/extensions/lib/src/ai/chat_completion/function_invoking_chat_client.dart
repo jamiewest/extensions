@@ -172,6 +172,7 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
       final resultContents = results
           .map((r) => FunctionResultContent(
                 callId: r.callContent.callId,
+                name: r.callContent.name,
                 result: r.result,
                 exception:
                     r.exception is Exception ? r.exception as Exception : null,

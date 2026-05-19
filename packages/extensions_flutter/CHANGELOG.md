@@ -1,3 +1,8 @@
+## 0.3.17
+
+* Updated dependency on extensions to ^0.3.23.
+* Fixes missing `ai.dart` barrel export (extensions 0.3.23).
+
 ## 0.3.16
 
 * Updated dependency on extensions to ^0.3.22.

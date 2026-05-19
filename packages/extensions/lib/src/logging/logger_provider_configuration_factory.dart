@@ -24,7 +24,7 @@ class _LoggingConfiguration {
 /// All matching sections are merged together with later sources taking
 /// precedence.
 class LoggerProviderConfigurationFactoryImpl
-    implements ILoggerProviderConfigurationFactory {
+    implements LoggerProviderConfigurationFactory {
   final List<_LoggingConfiguration> _configurations;
 
   /// Creates a new instance of [LoggerProviderConfigurationFactoryImpl].
