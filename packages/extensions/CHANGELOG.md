@@ -1,3 +1,27 @@
+## 0.3.24
+
+* **VectorData — expanded abstractions:**
+  * Added annotation types: `VectorStoreDataAttribute`, `VectorStoreKeyAttribute`, `VectorStoreVectorAttribute` for decorating record classes (intended for code generators or explicit schema construction).
+  * Added `DistanceFunction` and `IndexKind` string-constant classes for use in vector property configuration.
+  * Added full `VectorStoreCollectionDefinition` record schema with `VectorStoreProperty`, `VectorStoreKeyProperty`, `VectorStoreDataProperty`, and `VectorStoreVectorProperty`.
+  * Added `VectorSearchOptions`, `VectorSearchResult<TRecord>`, and `RecordRetrievalOptions`.
+  * Added `FilteredRecordRetrievalOptions<TRecord>` for filtered, ordered, paginated record retrieval, with `OrderByClause.ascending` / `OrderByClause.descending` helpers.
+  * Added `HybridSearchOptions` for keyword + vector hybrid search.
+  * Added `IVectorSearchable<TRecord>` and `IKeywordHybridSearchable<TRecord>` interfaces.
+  * Added deprecated legacy filter clause hierarchy (`FilterClause`, `EqualToFilterClause`, `AnyTagEqualToFilterClause`) for compatibility with code targeting the old C# API surface; prefer `VectorStoreFilter` and its sealed subclasses.
+
+* **AI — Bug fix:**
+  * Added `name` field to `FunctionResultContent`; `FunctionInvokingChatClient` now populates it so providers can correlate results back to the originating function declaration.
+
+* **Logging — Cleanup:**
+  * Renamed `ILoggerProviderConfiguration<T>` to `LoggerProviderConfiguration<T>` — the `I`-prefixed name and its typedef alias have been removed. Update any direct references to the abstract class.
+
+* **Dependency Injection — Bug fix:**
+  * Fixed `getRequiredService` error message: was printing `Type.runtimeType` (always `"Type"`) instead of the actual type name.
+
+* **System — Bug fix:**
+  * `ExceptionBase.toString()` now returns `"TypeName: message"` instead of the default `Instance of 'TypeName'`.
+
 ## 0.3.23
 
 * Fixed missing `export 'ai.dart'` in the `extensions.dart` barrel file.

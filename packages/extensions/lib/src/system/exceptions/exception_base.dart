@@ -27,4 +27,7 @@ class ExceptionBase implements Exception {
   StackTrace? get stackTrace => _stackTrace;
 
   String _getClassName() => _typeName;
+
+  @override
+  String toString() => '$_typeName: $message';
 }

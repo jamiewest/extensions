@@ -1,3 +1,13 @@
+## 0.3.18
+
+* Updated dependency on extensions to ^0.3.24.
+* Inherits all additions and fixes from extensions 0.3.24:
+  * Expanded VectorData abstractions (annotations, record schema, search options, hybrid search, legacy filter clauses).
+  * `FunctionResultContent.name` field for AI function call correlation.
+  * `LoggerProviderConfiguration<T>` rename (was `ILoggerProviderConfiguration<T>`).
+  * `getRequiredService` error message fix.
+  * `ExceptionBase.toString()` override.
+
 ## 0.3.17
 
 * Updated dependency on extensions to ^0.3.23.
