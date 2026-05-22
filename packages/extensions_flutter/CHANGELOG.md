@@ -1,3 +1,7 @@
+## 0.3.20
+
+* Updated `extensions` dependency to `^0.3.26`.
+
 ## 0.3.19
 
 * Updated dependency on extensions to ^0.3.25.

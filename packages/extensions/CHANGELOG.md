@@ -1,3 +1,11 @@
+## 0.3.26
+
+* **AI — OpenAI provider:**
+  * `OpenAIChatClient` now honours `ChatOptions.rawRepresentationFactory`: if
+    the factory returns a `Map<String, dynamic>`, its entries are merged into
+    the HTTP request body before the request is sent, providing an escape hatch
+    for provider-specific parameters not covered by `ChatOptions`.
+
 ## 0.3.25
 
 * **AI — OpenAI provider:**
