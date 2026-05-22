@@ -1,3 +1,30 @@
+## 0.3.25
+
+* **AI — OpenAI provider:**
+  * Added `OpenAIChatClient` — a `ChatClient` implementation for the OpenAI
+    chat completions API (`POST /chat/completions`). Supports streaming (SSE),
+    tool calls, response format control (`text`, `json_object`, `json_schema`),
+    and all `ChatOptions` fields. Configuring `OpenAIClientOptions.endpoint`
+    to a local server (e.g. `http://localhost:1234/v1`) makes it compatible
+    with LM Studio, Ollama, and other OpenAI-compatible servers.
+  * Added `OpenAIEmbeddingGenerator` — an `EmbeddingGenerator<String, float>`
+    for the OpenAI embeddings API, with optional `dimensions` and
+    `defaultModelDimensions` support.
+  * Added `OpenAIImageGenerator` — an `ImageGenerator` for DALL-E and
+    `gpt-image-1`, returning `DataContent` (base-64) or `UriContent` (URL).
+  * Added `OpenAISpeechToTextClient` — a `SpeechToTextClient` backed by the
+    Whisper transcription and translation endpoints via multipart upload.
+  * Added `OpenAITextToSpeechClient` — a `TextToSpeechClient` with both
+    non-streaming and streaming audio delivery.
+  * Added `OpenAIClientOptions` — holds `endpoint` URI (default:
+    `https://api.openai.com/v1`) and an injectable `http.Client` for testing.
+  * Added `OpenAIServiceCollectionExtensions` — DI convenience methods
+    (`addOpenAIChatClient`, `addOpenAIEmbeddingGenerator`, etc.) on
+    `ServiceCollection`.
+  * Added `LoggingChatClientBuilderExtensions.useLogging()` — integrates
+    `LoggingChatClient` into a `ChatClientBuilder` pipeline, skipping the
+    logging step when the resolved factory is `NullLoggerFactory`.
+
 ## 0.3.24
 
 * **VectorData — expanded abstractions:**

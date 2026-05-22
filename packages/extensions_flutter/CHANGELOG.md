@@ -1,3 +1,13 @@
+## 0.3.19
+
+* Updated dependency on extensions to ^0.3.25.
+* Inherits OpenAI provider additions from extensions 0.3.25:
+  * `OpenAIChatClient`, `OpenAIEmbeddingGenerator`, `OpenAIImageGenerator`,
+    `OpenAISpeechToTextClient`, `OpenAITextToSpeechClient` — full OpenAI
+    provider suite, compatible with LM Studio and other OpenAI-compatible
+    local servers via `OpenAIClientOptions.endpoint`.
+  * `LoggingChatClientBuilderExtensions.useLogging()` builder integration.
+
 ## 0.3.18
 
 * Updated dependency on extensions to ^0.3.24.
