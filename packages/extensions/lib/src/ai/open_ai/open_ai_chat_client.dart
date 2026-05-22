@@ -152,7 +152,9 @@ final class OpenAIChatClient implements ChatClient {
     };
 
     if (options != null) {
-      if (options.temperature != null) body['temperature'] = options.temperature;
+      if (options.temperature != null) {
+        body['temperature'] = options.temperature;
+      }
       if (options.topP != null) body['top_p'] = options.topP;
       if (options.maxOutputTokens != null) {
         body['max_tokens'] = options.maxOutputTokens;
@@ -168,12 +170,18 @@ final class OpenAIChatClient implements ChatClient {
         body['stop'] = options.stopSequences;
       }
       if (options.responseFormat != null) {
-        body['response_format'] = _toOpenAIResponseFormat(options.responseFormat!);
+        body['response_format'] =
+            _toOpenAIResponseFormat(options.responseFormat!);
       }
     }
 
     if (stream) {
       body['stream_options'] = {'include_usage': true};
+    }
+
+    final raw = options?.rawRepresentationFactory?.call(this);
+    if (raw is Map<String, dynamic>) {
+      body.addAll(raw);
     }
 
     return body;
@@ -212,9 +220,8 @@ final class OpenAIChatClient implements ChatClient {
                   'type': 'function',
                   'function': {
                     'name': c.name,
-                    'arguments': c.arguments != null
-                        ? jsonEncode(c.arguments)
-                        : '{}',
+                    'arguments':
+                        c.arguments != null ? jsonEncode(c.arguments) : '{}',
                   },
                 })
             .toList();
@@ -355,8 +362,7 @@ final class OpenAIChatClient implements ChatClient {
     return ChatResponseUpdate(
       role: role,
       contents: contents,
-      finishReason:
-          rawReason != null ? ChatFinishReason(rawReason) : null,
+      finishReason: rawReason != null ? ChatFinishReason(rawReason) : null,
       responseId: responseId,
       modelId: modelId,
       createdAt: created != null
@@ -367,8 +373,7 @@ final class OpenAIChatClient implements ChatClient {
   }
 
   List<AIContent> _parseContents(Map<String, dynamic> message) {
-    final toolCalls =
-        message['tool_calls'] as List<dynamic>?;
+    final toolCalls = message['tool_calls'] as List<dynamic>?;
     if (toolCalls != null && toolCalls.isNotEmpty) {
       return toolCalls.map((tc) {
         final t = tc as Map<String, dynamic>;
