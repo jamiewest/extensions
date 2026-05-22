@@ -98,6 +98,7 @@ export 'src/ai/chat_completion/function_invoking_chat_client.dart';
 export 'src/ai/chat_completion/function_invoking_chat_client_builder_extensions.dart';
 export 'src/ai/chat_completion/image_generating_chat_client.dart';
 export 'src/ai/chat_completion/logging_chat_client.dart';
+export 'src/ai/chat_completion/logging_chat_client_builder_extensions.dart';
 export 'src/ai/chat_completion/message_counting_chat_reducer.dart';
 export 'src/ai/chat_completion/reasoning_effort.dart';
 export 'src/ai/chat_completion/reasoning_options.dart';
@@ -253,3 +254,11 @@ export 'src/ai/evaluation/reporting/storage/disk_based_reporting_configuration.d
 export 'src/ai/evaluation/reporting/storage/disk_based_response_cache.dart';
 export 'src/ai/evaluation/reporting/storage/disk_based_response_cache_provider.dart';
 export 'src/ai/evaluation/reporting/storage/disk_based_result_store.dart';
+// OpenAI
+export 'src/ai/open_ai/open_ai_chat_client.dart';
+export 'src/ai/open_ai/open_ai_client_extensions.dart';
+export 'src/ai/open_ai/open_ai_client_options.dart';
+export 'src/ai/open_ai/open_ai_embedding_generator.dart';
+export 'src/ai/open_ai/open_ai_image_generator.dart';
+export 'src/ai/open_ai/open_ai_speech_to_text_client.dart';
+export 'src/ai/open_ai/open_ai_text_to_speech_client.dart';
