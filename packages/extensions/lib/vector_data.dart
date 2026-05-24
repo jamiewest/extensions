@@ -74,6 +74,17 @@ export 'src/vector_data/record_definition/vector_store_data_property.dart';
 export 'src/vector_data/record_definition/vector_store_vector_property.dart';
 export 'src/vector_data/record_definition/vector_store_collection_definition.dart';
 
+// Provider services (support types for provider implementors)
+export 'src/vector_data/provider_services/property_model.dart';
+export 'src/vector_data/provider_services/key_property_model.dart';
+export 'src/vector_data/provider_services/data_property_model.dart';
+export 'src/vector_data/provider_services/vector_property_model.dart';
+export 'src/vector_data/provider_services/collection_model.dart';
+export 'src/vector_data/provider_services/collection_model_building_options.dart';
+export 'src/vector_data/provider_services/collection_model_builder.dart';
+export 'src/vector_data/provider_services/embedding_generation_dispatcher.dart';
+export 'src/vector_data/provider_services/vector_data_strings.dart';
+
 // Deprecated filter clauses (kept for source compatibility)
 // ignore: deprecated_member_use_from_same_package
 export 'src/vector_data/filter_clauses/filter_clause.dart';
