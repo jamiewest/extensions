@@ -1,3 +1,12 @@
+## 0.2.0
+
+- `GenkitChatClient` now extends `DelegatingChatClient` instead of implementing
+  `ChatClient` directly, enabling correct service resolution through middleware
+  chains.
+- `getService()` now returns `this` when the client itself satisfies the
+  requested type and delegates to the inner client otherwise; previously it
+  always returned `null`.
+
 ## 0.1.0
 
 - Initial release.

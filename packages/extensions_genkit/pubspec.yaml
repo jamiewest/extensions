@@ -1,14 +1,14 @@
 name: extensions_genkit
-version: 0.1.0
+version: 0.2.0
 description: >-
   Genkit adapter for the extensions AI abstractions. Plug Genkit models into
   the ChatClient pipeline — including logging, caching, and function-invocation
   middleware — without modifying the core packages.
 repository: https://www.github.com/jamiewest/extensions
-issue_tracker: https://github.com/jamiewest/extensions/issues
+issue_tracker: https://github.com/jamiewest/extensions/issues?q=is%3Aissue+is%3Aopen+label%3Aextensions_genkit
 
 environment:
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: ^3.6.0
 resolution: workspace
 
 topics:
