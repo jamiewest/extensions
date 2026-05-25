@@ -51,6 +51,10 @@ Genkit _fakeGenkit({required _ChunkBuilder buildChunks}) {
 
 final _testModel = modelRef('test/model');
 
+final class _PassthroughClient extends DelegatingChatClient {
+  _PassthroughClient(super.innerClient);
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -171,6 +175,38 @@ void main() {
       );
 
       expect(response.text, 'Part one. Part two.');
+    });
+  });
+
+  group('GenkitChatClient.getService', () {
+    late Genkit ai;
+    late GenkitChatClient client;
+
+    setUp(() {
+      ai = _fakeGenkit(buildChunks: () => []);
+      client = GenkitChatClient(genkit: ai, model: _testModel);
+    });
+
+    tearDown(() async {
+      client.dispose();
+      await ai.shutdown();
+    });
+
+    test('is a DelegatingChatClient', () {
+      expect(client, isA<DelegatingChatClient>());
+    });
+
+    test('resolves itself', () {
+      expect(client.getService<GenkitChatClient>(), same(client));
+    });
+
+    test('returns null for unregistered types', () {
+      expect(client.getService<String>(), isNull);
+    });
+
+    test('resolves through wrapping middleware', () {
+      final wrapper = _PassthroughClient(client);
+      expect(wrapper.getService<GenkitChatClient>(), same(client));
     });
   });
 }

@@ -9,11 +9,12 @@ import '../functions/ai_function_genkit_extensions.dart';
 /// Converts between the `extensions` message/content types and Genkit's
 /// [Message]/[Part] types. Tool calls are returned as [FunctionCallContent]
 /// so that [FunctionInvokingChatClient] middleware can handle the loop.
-class GenkitChatClient implements ChatClient {
+class GenkitChatClient extends DelegatingChatClient {
   /// Creates a [GenkitChatClient].
   GenkitChatClient({required Genkit genkit, required ModelRef model})
       : _genkit = genkit,
-        _model = model;
+        _model = model,
+        super(_NoOpChatClient());
 
   final Genkit _genkit;
   final ModelRef _model;
@@ -65,10 +66,10 @@ class GenkitChatClient implements ChatClient {
   }
 
   @override
-  void dispose() {}
-
-  @override
-  T? getService<T>({Object? key}) => null;
+  T? getService<T>({Object? key}) {
+    if (this is T) return this as T;
+    return innerClient.getService<T>(key: key);
+  }
 
   Message _toGenkitMessage(ChatMessage msg) => Message(
         role: _toGenkitRole(msg.role),
@@ -123,4 +124,28 @@ class GenkitChatClient implements ChatClient {
     }
     return ChatResponseUpdate(role: ChatRole.assistant, contents: contents);
   }
+}
+
+final class _NoOpChatClient implements ChatClient {
+  @override
+  Future<ChatResponse> getResponse({
+    required Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  }) =>
+      throw UnimplementedError();
+
+  @override
+  Stream<ChatResponseUpdate> getStreamingResponse({
+    required Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  }) =>
+      throw UnimplementedError();
+
+  @override
+  T? getService<T>({Object? key}) => null;
+
+  @override
+  void dispose() {}
 }
