@@ -1,3 +1,12 @@
+## 0.4.0
+
+* Narrowed barrel exports: `extensions_flutter` now selectively re-exports
+  `configuration`, `dependency_injection`, `hosting`, `logging`, `options`,
+  and `system` from `extensions` instead of the full `extensions.dart` barrel.
+  Consumers that relied on transitive access to `ai`, `caching`, `http`,
+  `file_providers`, or `primitives` must now import those directly from
+  `package:extensions/`.
+
 ## 0.3.20
 
 * Updated `extensions` dependency to `^0.3.26`.

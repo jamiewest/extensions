@@ -1,3 +1,10 @@
+## 0.3.0
+
+- Barrel re-exports `package:extensions/ai.dart` and
+  `package:extensions/dependency_injection.dart`, so consumers can import
+  AI and DI types directly from `package:extensions_genkit/` without a
+  secondary import.
+
 ## 0.2.0
 
 - `GenkitChatClient` now extends `DelegatingChatClient` instead of implementing
