@@ -63,8 +63,10 @@ abstract base class BackgroundService implements HostedService, Disposable {
         c.complete();
       });
 
+      // Mirror C# Task.WhenAny: wait for completion without observing the
+      // execute operation's error or cancellation.
       await Future.any([
-        _executeOperation!.value,
+        _executeOperation!.value.catchError((Object _) {}),
         c.future,
       ]);
     }
@@ -72,6 +74,6 @@ abstract base class BackgroundService implements HostedService, Disposable {
 
   @override
   void dispose() {
-    _stoppingCts!.cancel();
+    _stoppingCts?.cancel();
   }
 }

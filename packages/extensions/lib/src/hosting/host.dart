@@ -8,6 +8,7 @@ import '../options/validate_on_start.dart';
 import '../system/async_disposable.dart';
 import '../system/disposable.dart';
 import '../system/exceptions/aggregate_exception.dart';
+import '../system/exceptions/operation_cancelled_exception.dart';
 import '../system/threading/cancellation_token.dart';
 import '../system/threading/cancellation_token_source.dart';
 import 'background_service.dart';
@@ -148,7 +149,7 @@ class Host implements Disposable, AsyncDisposable {
         await service.start(token);
 
         if (service is BackgroundService) {
-          await _tryExecuteBackgroundService(service);
+          unawaited(_tryExecuteBackgroundService(service));
         }
       },
     );
@@ -182,7 +183,12 @@ class Host implements Disposable, AsyncDisposable {
     } on Exception catch (ex) {
       // When the host is being stopped, it cancels the background services.
       // This isn't an error condition, so don't log it as an error.
-      if (_stopCalled && backgroundService.executeOperation!.isCanceled) {
+      // Cancellation flows through the linked stopping token, so the operation
+      // observes an OperationCanceledException rather than being marked
+      // canceled on the CancelableOperation itself.
+      if (_stopCalled &&
+          (backgroundService.executeOperation!.isCanceled ||
+              ex is OperationCanceledException)) {
         return;
       }
       _logger.backgroundServiceFaulted(ex);

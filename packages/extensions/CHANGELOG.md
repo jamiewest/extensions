@@ -1,3 +1,17 @@
+## 0.3.27
+
+* **Hosting — `BackgroundService` / `Host` lifecycle fixes:**
+  * `Host.startAsync` no longer awaits a `BackgroundService`'s `execute`
+    operation, so startup completes once `start` returns instead of blocking
+    on long-running services (mirrors C# `StartAsync` semantics).
+  * `BackgroundService.stop` now mirrors C# `Task.WhenAny` by waiting for the
+    execute operation to complete without observing its error or cancellation,
+    so stopping a faulted or cancelled service no longer rethrows.
+  * `Host` treats an `OperationCanceledException` from a background service
+    during shutdown as a normal stop rather than logging it as a fault.
+  * `BackgroundService.dispose` is now null-safe when the service was never
+    started.
+
 ## 0.3.26
 
 * **AI — OpenAI provider:**

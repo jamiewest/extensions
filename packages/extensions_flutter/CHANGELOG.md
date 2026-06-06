@@ -1,3 +1,11 @@
+## 0.4.1
+
+* Updated `extensions` dependency to `^0.3.27`.
+* Inherits `BackgroundService`/`Host` lifecycle fixes from extensions 0.3.27:
+  startup no longer blocks on long-running background services, stopping a
+  faulted or cancelled service no longer rethrows, and `dispose` is null-safe
+  before the service has started.
+
 ## 0.4.0
 
 * Narrowed barrel exports: `extensions_flutter` now selectively re-exports

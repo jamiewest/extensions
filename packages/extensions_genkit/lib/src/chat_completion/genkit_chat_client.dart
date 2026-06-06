@@ -4,13 +4,18 @@ import 'package:genkit/genkit.dart';
 
 import '../functions/ai_function_genkit_extensions.dart';
 
-/// A [ChatClient] that delegates to a Genkit model.
+/// A [ChatClient] that forwards requests to a Genkit model.
 ///
 /// Converts between the `extensions` message/content types and Genkit's
-/// [Message]/[Part] types. Tool calls are returned as [FunctionCallContent]
-/// so that [FunctionInvokingChatClient] middleware can handle the loop.
+/// [Message]/[Part] types in both directions. Tool calls returned by the
+/// model are surfaced as [FunctionCallContent] rather than executed
+/// immediately, so the [FunctionInvokingChatClient] middleware can own
+/// the call/respond loop.
 class GenkitChatClient extends DelegatingChatClient {
   /// Creates a [GenkitChatClient].
+  ///
+  /// The [genkit] instance must have the appropriate model plugin registered.
+  /// The [model] reference selects which Genkit model receives each request.
   GenkitChatClient({required Genkit genkit, required ModelRef model})
       : _genkit = genkit,
         _model = model,
@@ -19,6 +24,15 @@ class GenkitChatClient extends DelegatingChatClient {
   final Genkit _genkit;
   final ModelRef _model;
 
+  /// Streams response chunks from the Genkit model for [messages].
+  ///
+  /// Each yielded [ChatResponseUpdate] contains either text or tool-call
+  /// content. Cancellation is checked between chunks; the stream stops
+  /// early if [cancellationToken] is cancelled.
+  ///
+  /// Tools in [ChatOptions.tools] are converted to Genkit [ToolDefinition]
+  /// values and passed with `returnToolRequests: true` so Genkit does not
+  /// execute them itself.
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
@@ -47,6 +61,9 @@ class GenkitChatClient extends DelegatingChatClient {
     }
   }
 
+  /// Returns a single [ChatResponse] for [messages].
+  ///
+  /// Accumulates all updates from [getStreamingResponse] into one response.
   @override
   Future<ChatResponse> getResponse({
     required Iterable<ChatMessage> messages,
@@ -65,17 +82,25 @@ class GenkitChatClient extends DelegatingChatClient {
     );
   }
 
+  /// Returns a service of type [T] from this client or its inner chain.
+  ///
+  /// Returns `this` if this client satisfies [T]; otherwise delegates to
+  /// [innerClient].
   @override
   T? getService<T>({Object? key}) {
     if (this is T) return this as T;
     return innerClient.getService<T>(key: key);
   }
 
+  // Converts a ChatMessage to a Genkit Message.
   Message _toGenkitMessage(ChatMessage msg) => Message(
         role: _toGenkitRole(msg.role),
         content: msg.contents.map(_toGenkitPart).toList(),
       );
 
+  // Maps a ChatRole string value to the corresponding Genkit Role.
+  // Unknown roles fall back to Role.user to avoid a hard failure when
+  // a provider extends the standard role set.
   Role _toGenkitRole(ChatRole role) => switch (role.value) {
         'system' => Role.system,
         'user' => Role.user,
@@ -84,6 +109,8 @@ class GenkitChatClient extends DelegatingChatClient {
         _ => Role.user,
       };
 
+  // Converts a single AIContent value to a Genkit Part.
+  // Throws for content types not yet supported (image, audio, etc.).
   Part _toGenkitPart(AIContent content) => switch (content) {
         TextContent(:final text) => TextPart(text: text),
         FunctionCallContent(:final callId, :final name, :final arguments) =>
@@ -107,6 +134,8 @@ class GenkitChatClient extends DelegatingChatClient {
           ),
       };
 
+  // Extracts text and tool-request parts from a chunk.
+  // Other part types are skipped; the caller filters empty updates.
   ChatResponseUpdate _chunkToUpdate(GenerateResponseChunk chunk) {
     final contents = <AIContent>[];
     for (final part in chunk.content) {
@@ -126,6 +155,9 @@ class GenkitChatClient extends DelegatingChatClient {
   }
 }
 
+// Placeholder inner client required by DelegatingChatClient's constructor.
+// Never reached: GenkitChatClient overrides getStreamingResponse and
+// getResponse, so the inner client is never invoked.
 final class _NoOpChatClient implements ChatClient {
   @override
   Future<ChatResponse> getResponse({

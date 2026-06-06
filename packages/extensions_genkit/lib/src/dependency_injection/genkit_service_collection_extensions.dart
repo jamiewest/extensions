@@ -6,6 +6,9 @@ import '../chat_completion/genkit_chat_client.dart';
 
 /// Extension methods for registering Genkit services with a
 /// [ServiceCollection].
+///
+/// Each method returns a [ChatClientBuilder] to allow fluent
+/// middleware chaining.
 extension GenkitServiceCollectionExtensions on ServiceCollection {
   /// Registers a [GenkitChatClient] for [model] and returns a
   /// [ChatClientBuilder] for attaching middleware.
