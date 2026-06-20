@@ -1,10 +1,11 @@
 import '../../caching.dart' show MemoryCacheOptions;
+import '../system/disposable.dart';
 import 'cache_entry.dart';
 import 'memory_cache_options.dart' show MemoryCacheOptions;
 import 'memory_cache_statistics.dart';
 
 /// Represents a local in-memory cache whose values are not serialized.
-abstract class MemoryCache {
+abstract class MemoryCache implements Disposable {
   /// Gets a value indicating whether the cache entry associated with
   /// [key] exists.
   ///

@@ -69,5 +69,7 @@ export 'src/caching/memory_cache.dart';
 export 'src/caching/memory_cache_entry_options.dart';
 export 'src/caching/memory_cache_extensions.dart';
 export 'src/caching/memory_cache_options.dart';
+export 'src/caching/memory_cache_service_collection_extensions.dart';
 export 'src/caching/memory_cache_statistics.dart';
+export 'src/caching/memory_distributed_cache_options.dart';
 export 'src/caching/post_eviction_callback_registration.dart';

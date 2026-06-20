@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import '../../system/disposable.dart';
 import '../distributed_cache.dart';
 import '../distributed_cache_entry_options.dart';
 import '../memory_cache_options.dart';
@@ -11,7 +12,7 @@ import 'memory_cache_impl.dart';
 /// This is useful for testing distributed cache code without requiring
 /// an actual distributed cache implementation, or for single-server
 /// applications that want to use the [DistributedCache] interface.
-class MemoryDistributedCache implements DistributedCache {
+class MemoryDistributedCache implements DistributedCache, Disposable {
   /// Creates a new instance of [MemoryDistributedCache].
   MemoryDistributedCache([MemoryCacheOptions? options])
       : _cache = MemoryCacheImpl(
@@ -64,6 +65,7 @@ class MemoryDistributedCache implements DistributedCache {
   }
 
   /// Disposes the underlying memory cache.
+  @override
   void dispose() {
     _cache.dispose();
   }

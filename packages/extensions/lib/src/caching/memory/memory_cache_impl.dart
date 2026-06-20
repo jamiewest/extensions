@@ -227,6 +227,7 @@ class MemoryCacheImpl implements MemoryCache {
   }
 
   /// Disposes the cache and stops the expiration timer.
+  @override
   void dispose() {
     _expirationTimer?.cancel();
     _expirationTimer = null;

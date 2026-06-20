@@ -15,7 +15,7 @@ class MemoryCacheOptions {
   /// for expired items.
   ///
   /// Defaults to 1 minute.
-  final Duration expirationScanFrequency;
+  Duration expirationScanFrequency;
 
   /// Gets or sets the maximum size of the cache.
   ///
@@ -24,7 +24,7 @@ class MemoryCacheOptions {
   /// value defined by the application through [MemoryCacheEntryOptions.size].
   ///
   /// When null (default), the cache has no size limit.
-  final int? sizeLimit;
+  int? sizeLimit;
 
   /// Gets or sets the amount to compact the cache by when the maximum
   /// size is exceeded.
@@ -33,7 +33,7 @@ class MemoryCacheOptions {
   /// For example, 0.05 means 5% of entries will be removed.
   ///
   /// Defaults to 0.05 (5%).
-  final double compactionPercentage;
+  double compactionPercentage;
 
   /// Gets or sets a value that determines whether cache entries should
   /// track hierarchical relationships.
@@ -43,7 +43,7 @@ class MemoryCacheOptions {
   /// cause child entries to expire as well.
   ///
   /// Defaults to false.
-  final bool trackLinkedCacheEntries;
+  bool trackLinkedCacheEntries;
 
   /// Gets or sets a value that determines whether statistics should be
   /// collected for the cache.
@@ -53,5 +53,5 @@ class MemoryCacheOptions {
   /// [MemoryCacheImpl.getCurrentStatistics].
   ///
   /// Defaults to false.
-  final bool trackStatistics;
+  bool trackStatistics;
 }
