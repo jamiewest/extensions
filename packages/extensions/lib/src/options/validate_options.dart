@@ -51,8 +51,8 @@ class ValidateOptions0<TOptions> implements ValidateOptions<TOptions> {
     this.failureMessage,
   );
 
-  /// The options name.
-  final String name;
+  /// The options name, or `null` to validate all named instances.
+  final String? name;
 
   /// The validation function.
   final ValidationCallback0<TOptions>? validation;
@@ -63,8 +63,8 @@ class ValidateOptions0<TOptions> implements ValidateOptions<TOptions> {
   /// Validates a specific named options instance (or all when [name] is null).
   @override
   ValidateOptionsResult validate(String name, TOptions options) {
-    // null name is used to configure all named options
-    if (name == name || name == name) {
+    // A null configured name validates all named options instances.
+    if (this.name == null || name == this.name) {
       if (validation != null) {
         if (validation!.call(options)) {
           return ValidateOptionsResult.success;
@@ -87,8 +87,8 @@ class ValidateOptions1<TOptions, TDep> implements ValidateOptions<TOptions> {
     this.dependency,
   );
 
-  /// The options name.
-  final String name;
+  /// The options name, or `null` to validate all named instances.
+  final String? name;
 
   /// The validation function.
   final ValidationCallback1<TOptions, TDep>? validation;
@@ -102,8 +102,8 @@ class ValidateOptions1<TOptions, TDep> implements ValidateOptions<TOptions> {
   /// Validates a specific named options instance (or all when [name] is null).
   @override
   ValidateOptionsResult validate(String name, TOptions options) {
-    // null name is used to configure all named options
-    if (name == name || name == name) {
+    // A null configured name validates all named options instances.
+    if (this.name == null || name == this.name) {
       if (validation != null) {
         if (validation!.call(options, dependency)) {
           return ValidateOptionsResult.success;
@@ -128,8 +128,8 @@ class ValidateOptions2<TOptions, TDep1, TDep2>
     this.dependency2,
   );
 
-  /// The options name.
-  final String name;
+  /// The options name, or `null` to validate all named instances.
+  final String? name;
 
   /// The validation function.
   final ValidationCallback2<TOptions, TDep1, TDep2>? validation;
@@ -145,8 +145,8 @@ class ValidateOptions2<TOptions, TDep1, TDep2>
 
   @override
   ValidateOptionsResult validate(String name, TOptions options) {
-    // null name is used to configure all named options
-    if (name == name || name == name) {
+    // A null configured name validates all named options instances.
+    if (this.name == null || name == this.name) {
       if (validation != null) {
         if (validation!.call(
           options,
@@ -176,8 +176,8 @@ class ValidateOptions3<TOptions, TDep1, TDep2, TDep3>
     this.dependency3,
   );
 
-  /// The options name.
-  final String name;
+  /// The options name, or `null` to validate all named instances.
+  final String? name;
 
   /// The validation function.
   final ValidationCallback3<TOptions, TDep1, TDep2, TDep3>? validation;
@@ -196,8 +196,8 @@ class ValidateOptions3<TOptions, TDep1, TDep2, TDep3>
 
   @override
   ValidateOptionsResult validate(String name, TOptions options) {
-    // null name is used to configure all named options
-    if (name == name || name == name) {
+    // A null configured name validates all named options instances.
+    if (this.name == null || name == this.name) {
       if (validation != null) {
         if (validation!.call(
           options,
@@ -229,8 +229,8 @@ class ValidateOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>
     this.dependency4,
   );
 
-  /// The options name.
-  final String name;
+  /// The options name, or `null` to validate all named instances.
+  final String? name;
 
   /// The validation function.
   final ValidationCallback4<TOptions, TDep1, TDep2, TDep3, TDep4>? validation;
@@ -252,8 +252,8 @@ class ValidateOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>
 
   @override
   ValidateOptionsResult validate(String name, TOptions options) {
-    // null name is used to configure all named options
-    if (name == name || name == name) {
+    // A null configured name validates all named options instances.
+    if (this.name == null || name == this.name) {
       if (validation != null) {
         if (validation!.call(
           options,
@@ -287,8 +287,8 @@ class ValidateOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
     this.dependency5,
   );
 
-  /// The options name.
-  final String name;
+  /// The options name, or `null` to validate all named instances.
+  final String? name;
 
   /// The validation function.
   final ValidationCallback5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>?
@@ -314,8 +314,8 @@ class ValidateOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
 
   @override
   ValidateOptionsResult validate(String name, TOptions options) {
-    // null name is used to configure all named options
-    if (name == name || name == name) {
+    // A null configured name validates all named options instances.
+    if (this.name == null || name == this.name) {
       if (validation != null) {
         if (validation!.call(
           options,

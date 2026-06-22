@@ -1,9 +1,13 @@
 import 'package:extensions/configuration.dart';
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
+import 'package:extensions/options.dart';
+import 'package:extensions/src/hosting/host_options.dart';
 import 'package:extensions/system.dart' hide equals;
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+
+import 'fakes/fake_hosted_service.dart';
 
 void main() {
   group('HostTests', () {
@@ -14,6 +18,28 @@ void main() {
       final cts = CancellationTokenSource()..cancel();
       expect(cts.isCancellationRequested, equals(true));
       await host.stop(cts.token);
+    });
+
+    test('stop() stops hosted services when shutdownTimeout is null', () async {
+      final service = FakeHostedService();
+      final builder = Host.createApplicationBuilder();
+      builder.services
+        ..configure<HostOptions>(
+          HostOptions.new,
+          (options) => options.shutdownTimeout = null,
+        )
+        ..addHostedService<FakeHostedService>((_) => service);
+      final host = builder.build();
+
+      // Precondition: the bug only manifests when no timeout is configured.
+      final options = host.services.getRequiredService<Options<HostOptions>>();
+      expect(options.value!.shutdownTimeout, isNull);
+
+      await host.start();
+      expect(service.startCount, equals(1));
+
+      await host.stop();
+      expect(service.stopCount, equals(1));
     });
 
     test('CreateDefaultBuilder_IncludesContentRootByDefault', () {

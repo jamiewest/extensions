@@ -1,4 +1,5 @@
 import '../system/disposable.dart';
+import '../system/exceptions/object_disposed_exception.dart';
 import '../system/threading/cancellation_token.dart';
 import 'change_token.dart';
 
@@ -23,15 +24,19 @@ class CancellationChangeToken implements ChangeToken {
   Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
-  ) =>
-      token.register(
-        (s) {
-          try {
-            callback(s);
-          } catch (e) {
-            _activeChangeCallbacks = false;
-          }
-        },
-        state,
-      );
+  ) {
+    if (!token.canBeCanceled) {
+      return NoopDisposable();
+    }
+
+    try {
+      return token.register(callback, state);
+    } on ObjectDisposedException {
+      // Registration failed because the underlying source is disposed; signal
+      // that proactive callbacks won't fire so consumers can poll [hasChanged].
+      _activeChangeCallbacks = false;
+    }
+
+    return NoopDisposable();
+  }
 }

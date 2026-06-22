@@ -222,7 +222,7 @@ class Host implements Disposable, AsyncDisposable {
       cancellationToken = cts.token;
     }
 
-    if (cts != null) {
+    try {
       var exceptions = <Exception>[];
       if (!_hostStarting) {
         // Started?
@@ -309,6 +309,8 @@ class Host implements Disposable, AsyncDisposable {
           throw ex;
         }
       }
+    } finally {
+      cts?.dispose();
     }
     _logger.stopped();
   }

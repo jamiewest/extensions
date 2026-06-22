@@ -15,7 +15,8 @@ class OptionsMonitor<TOptions> implements Disposable {
   final OptionsMonitorCache<TOptions> _cache;
   final OptionsFactory<TOptions> _factory;
   final List<Disposable> _registrations = <Disposable>[];
-  OnChangeListener<TOptions>? _onChange;
+  final List<_ChangeTrackerDisposable<TOptions>> _listeners =
+      <_ChangeTrackerDisposable<TOptions>>[];
 
   OptionsMonitor(
     OptionsFactory<TOptions> factory,
@@ -38,8 +39,8 @@ class OptionsMonitor<TOptions> implements Disposable {
     var newName = name ?? Options.defaultName;
     _cache.tryRemove(newName);
     var options = get(newName);
-    if (_onChange != null) {
-      _onChange!.call(options, name);
+    for (var listener in _listeners.toList()) {
+      listener.onChange(options, name);
     }
   }
 
@@ -63,7 +64,7 @@ class OptionsMonitor<TOptions> implements Disposable {
   /// Registers a listener to be called whenever a named [TOptions] changes.
   Disposable? onChange(OnChangeListener<TOptions> listener) {
     var disposable = _ChangeTrackerDisposable<TOptions>(this, listener);
-    _onChange = disposable.onChange;
+    _listeners.add(disposable);
     return disposable;
   }
 }
@@ -82,5 +83,5 @@ class _ChangeTrackerDisposable<TOptions> implements Disposable {
       _listener.call(options, name);
 
   @override
-  void dispose() => _monitor._onChange = null;
+  void dispose() => _monitor._listeners.remove(this);
 }

@@ -21,8 +21,7 @@ class MemoryCacheEntryOptions {
         _expirationTokens = expirationTokens,
         _postEvictionCallbacks = postEvictionCallbacks {
     if (absoluteExpirationRelativeToNow != null &&
-        !absoluteExpirationRelativeToNow.isNegative &&
-        absoluteExpirationRelativeToNow == Duration.zero) {
+        absoluteExpirationRelativeToNow <= Duration.zero) {
       throw ArgumentError.value(
         absoluteExpirationRelativeToNow,
         'absoluteExpirationRelativeToNow',
@@ -30,9 +29,7 @@ class MemoryCacheEntryOptions {
       );
     }
 
-    if (slidingExpiration != null &&
-        !slidingExpiration.isNegative &&
-        slidingExpiration == Duration.zero) {
+    if (slidingExpiration != null && slidingExpiration <= Duration.zero) {
       throw ArgumentError.value(
         slidingExpiration,
         'slidingExpiration',
@@ -61,7 +58,7 @@ class MemoryCacheEntryOptions {
   Duration? get absoluteExpirationRelativeToNow =>
       _absoluteExpirationRelativeToNow;
   set absoluteExpirationRelativeToNow(Duration? value) {
-    if (value != null && !value.isNegative && value == Duration.zero) {
+    if (value != null && value <= Duration.zero) {
       throw ArgumentError.value(
         value,
         'absoluteExpirationRelativeToNow',
@@ -76,7 +73,7 @@ class MemoryCacheEntryOptions {
   /// beyond the absolute expiration (if set).
   Duration? get slidingExpiration => _slidingExpiration;
   set slidingExpiration(Duration? value) {
-    if (value != null && !value.isNegative && value == Duration.zero) {
+    if (value != null && value <= Duration.zero) {
       throw ArgumentError.value(
         value,
         'slidingExpiration',

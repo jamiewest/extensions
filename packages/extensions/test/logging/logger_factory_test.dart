@@ -15,6 +15,14 @@ void main() {
         );
       });
 
+      test('AddProvider_ThrowsAfterDisposed', () {
+        final factory = LoggerFactory()..dispose();
+        expect(
+          () => factory.addProvider(TestLoggerProvider()),
+          throwsA(isA<ObjectDisposedException>()),
+        );
+      });
+
       test('Dispose_CanBeCalledMultipleTimes', () {
         final factory = LoggerFactory()..dispose();
         expect(factory.dispose, returnsNormally);

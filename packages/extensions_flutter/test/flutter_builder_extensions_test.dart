@@ -47,9 +47,12 @@ void main() {
       final provider = services.buildServiceProvider();
       final widget = provider.getRequiredService<Widget>();
 
-      // The widget should be wrapped in FlutterLifecycleObserver
-      expect(widget, isA<FlutterLifecycleObserver>());
-      final observer = widget as FlutterLifecycleObserver;
+      // The widget is wrapped in ServiceProviderScope, then
+      // FlutterLifecycleObserver, then the root widget.
+      expect(widget, isA<ServiceProviderScope>());
+      final scope = widget as ServiceProviderScope;
+      expect(scope.child, isA<FlutterLifecycleObserver>());
+      final observer = scope.child as FlutterLifecycleObserver;
       expect(observer.child, isA<Text>());
       expect((observer.child as Text).data, 'Root Widget');
     });
@@ -81,9 +84,13 @@ void main() {
       final wrapper2 = wrapper1.child as _WrapperWidget;
       expect(wrapper2.label, 'Wrapper 2');
 
+      // Then ServiceProviderScope
+      expect(wrapper2.child, isA<ServiceProviderScope>());
+      final scope = wrapper2.child as ServiceProviderScope;
+
       // Then FlutterLifecycleObserver
-      expect(wrapper2.child, isA<FlutterLifecycleObserver>());
-      final observer = wrapper2.child as FlutterLifecycleObserver;
+      expect(scope.child, isA<FlutterLifecycleObserver>());
+      final observer = scope.child as FlutterLifecycleObserver;
 
       // Finally the root Text widget
       expect(observer.child, isA<Text>());
@@ -168,9 +175,12 @@ void main() {
       final provider = services.buildServiceProvider();
       final widget = provider.getRequiredService<Widget>();
 
-      // The widget should be wrapped in FlutterLifecycleObserver
-      expect(widget, isA<FlutterLifecycleObserver>());
-      final observer = widget as FlutterLifecycleObserver;
+      // The widget is wrapped in ServiceProviderScope, then
+      // FlutterLifecycleObserver, then the root widget.
+      expect(widget, isA<ServiceProviderScope>());
+      final scope = widget as ServiceProviderScope;
+      expect(scope.child, isA<FlutterLifecycleObserver>());
+      final observer = scope.child as FlutterLifecycleObserver;
       expect(observer.child, isA<Text>());
       expect((observer.child as Text).data, 'Service Value');
     });
@@ -197,7 +207,8 @@ void main() {
         final provider = services.buildServiceProvider();
         final widget = provider.getRequiredService<Widget>();
 
-        // Should be wrapped as: First(Second(Third(FlutterLifecycleObserver(Root))))
+        // Wrapped as: First(Second(Third(ServiceProviderScope(
+        //   FlutterLifecycleObserver(Root)))))
         expect(widget, isA<_WrapperWidget>());
         final first = widget as _WrapperWidget;
         expect(first.label, 'First');
@@ -210,8 +221,11 @@ void main() {
         final third = second.child as _WrapperWidget;
         expect(third.label, 'Third');
 
-        expect(third.child, isA<FlutterLifecycleObserver>());
-        final observer = third.child as FlutterLifecycleObserver;
+        expect(third.child, isA<ServiceProviderScope>());
+        final scope = third.child as ServiceProviderScope;
+
+        expect(scope.child, isA<FlutterLifecycleObserver>());
+        final observer = scope.child as FlutterLifecycleObserver;
 
         expect(observer.child, isA<Text>());
         expect((observer.child as Text).data, 'Root');

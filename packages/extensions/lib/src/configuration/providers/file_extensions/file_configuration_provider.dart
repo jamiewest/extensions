@@ -18,8 +18,13 @@ abstract class FileConfigurationProvider extends ConfigurationProvider
     if (source.reloadOnChange && source.fileProvider != null) {
       _changeTokenRegistration = ChangeToken.onChange(
         () => source.fileProvider!.watch(source.path!),
-        () {
-          io.sleep(Duration(milliseconds: source.reloadDelay));
+        // .NET blocks the watcher thread with Thread.Sleep here; in Dart a
+        // blocking sleep would freeze the whole isolate, so the reload delay
+        // is awaited instead (the change callback is fire-and-forget).
+        () async {
+          await Future<void>.delayed(
+            Duration(milliseconds: source.reloadDelay),
+          );
           _loadInternal(reload: true);
         },
       );

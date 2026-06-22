@@ -187,6 +187,10 @@ class LoggerFactory implements Disposable {
 
   /// Adds an [LoggerProvider] to the logging system.
   void addProvider(LoggerProvider provider) {
+    if (_checkDisposed()) {
+      throw ObjectDisposedException(objectName: 'LoggerFactory');
+    }
+
     _addProviderRegistration(provider, true);
 
     for (var existingLogger in _loggers.entries) {

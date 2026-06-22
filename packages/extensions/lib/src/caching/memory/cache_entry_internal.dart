@@ -58,7 +58,7 @@ class CacheEntryInternal implements CacheEntry {
 
   @override
   set absoluteExpirationRelativeToNow(Duration? val) {
-    if (val != null && !val.isNegative && val == Duration.zero) {
+    if (val != null && val <= Duration.zero) {
       throw ArgumentError.value(
         val,
         'absoluteExpirationRelativeToNow',
@@ -73,7 +73,7 @@ class CacheEntryInternal implements CacheEntry {
 
   @override
   set slidingExpiration(Duration? val) {
-    if (val != null && !val.isNegative && val == Duration.zero) {
+    if (val != null && val <= Duration.zero) {
       throw ArgumentError.value(
         val,
         'slidingExpiration',

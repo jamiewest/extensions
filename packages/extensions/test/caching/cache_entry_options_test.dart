@@ -46,6 +46,34 @@ void main() {
       );
     });
 
+    test('Negative duration throws ArgumentError', () {
+      expect(
+        () => MemoryCacheEntryOptions()
+          ..absoluteExpirationRelativeToNow = const Duration(seconds: -1),
+        throwsArgumentError,
+      );
+
+      expect(
+        () => MemoryCacheEntryOptions()
+          ..slidingExpiration = const Duration(seconds: -1),
+        throwsArgumentError,
+      );
+
+      expect(
+        () => MemoryCacheEntryOptions(
+          absoluteExpirationRelativeToNow: const Duration(seconds: -1),
+        ),
+        throwsArgumentError,
+      );
+
+      expect(
+        () => MemoryCacheEntryOptions(
+          slidingExpiration: const Duration(seconds: -1),
+        ),
+        throwsArgumentError,
+      );
+    });
+
     test('Negative size throws ArgumentError', () {
       expect(
         () => MemoryCacheEntryOptions()..size = -1,
@@ -93,6 +121,37 @@ void main() {
       options.postEvictionCallbacks.add(callback);
 
       expect(options.postEvictionCallbacks, contains(callback));
+    });
+  });
+
+  group('CacheEntry expiration validation', () {
+    test('Negative duration throws ArgumentError', () {
+      final cache = MemoryCacheImpl(MemoryCacheOptions());
+      final entry = cache.createEntry('key');
+
+      expect(
+        () =>
+            entry.absoluteExpirationRelativeToNow = const Duration(seconds: -1),
+        throwsArgumentError,
+      );
+      expect(
+        () => entry.slidingExpiration = const Duration(seconds: -1),
+        throwsArgumentError,
+      );
+    });
+
+    test('Zero duration throws ArgumentError', () {
+      final cache = MemoryCacheImpl(MemoryCacheOptions());
+      final entry = cache.createEntry('key');
+
+      expect(
+        () => entry.absoluteExpirationRelativeToNow = Duration.zero,
+        throwsArgumentError,
+      );
+      expect(
+        () => entry.slidingExpiration = Duration.zero,
+        throwsArgumentError,
+      );
     });
   });
 

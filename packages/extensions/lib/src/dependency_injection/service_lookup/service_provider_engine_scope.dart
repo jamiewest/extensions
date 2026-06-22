@@ -76,7 +76,10 @@ class ServiceProviderEngineScope
     }
 
     if (_disposed) {
+      // The scope is gone; dispose the service immediately and signal the
+      // misuse instead of tracking it on a list that will never be drained.
       service.dispose();
+      ThrowHelper.throwObjectDisposedException();
     }
 
     _disposables ??= <Object>[];

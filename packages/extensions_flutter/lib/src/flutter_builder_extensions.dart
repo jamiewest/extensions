@@ -40,8 +40,10 @@ extension FlutterBuilderExtensions on FlutterBuilder {
   /// Registers the root application widget and sets up the Flutter host lifetime.
   ///
   /// The [builder] callback receives a [ServiceProvider] and returns the root
-  /// widget for the application. The widget is automatically wrapped with a
-  /// [FlutterLifecycleObserver] to enable lifecycle event handling.
+  /// widget for the application. The root widget is automatically wrapped with
+  /// a [ServiceProviderScope] (exposing the [ServiceProvider] to the widget
+  /// tree) and then a [FlutterLifecycleObserver] (enabling lifecycle event
+  /// handling).
   ///
   /// Widgets registered via [wrapWith] are applied in reverse registration
   /// order, wrapping the root widget from innermost to outermost.
@@ -108,7 +110,8 @@ extension FlutterBuilderExtensions on FlutterBuilder {
   ///   ..wrapWith((sp, child) => ThemeProvider(child: child))
   ///   ..wrapWith((sp, child) => LocalizationProvider(child: child))
   ///   ..runApp((_) => MyApp());
-  /// // Result: ThemeProvider(LocalizationProvider(FlutterLifecycleObserver(MyApp())))
+  /// // Result: ThemeProvider(LocalizationProvider(
+  /// //   ServiceProviderScope(FlutterLifecycleObserver(MyApp()))))
   /// ```
   FlutterBuilder wrapWith(WrappedWidgetFactory factory) {
     services.addSingleton<WrappedWidgetFactory>((_) => factory);

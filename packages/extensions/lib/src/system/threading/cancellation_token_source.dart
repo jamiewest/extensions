@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import '../disposable.dart';
+import '../exceptions/aggregate_exception.dart';
+import '../exceptions/object_disposed_exception.dart';
 import 'cancellation_token.dart';
 import 'cancellation_token_registration.dart';
 
@@ -86,10 +88,9 @@ class CancellationTokenSource implements Disposable {
       return;
     }
 
-    if (delay == Duration.zero) {
-      _state = _notifyingCompleteState;
-    }
-
+    // A zero delay still schedules the timer so callbacks run on the next
+    // event-loop tick; setting the completed state directly here would mark
+    // cancellation done without ever notifying registered callbacks.
     _timer ??= Timer(delay, () => onTimer(this));
   }
 
@@ -121,41 +122,43 @@ class CancellationTokenSource implements Disposable {
 
     List<Exception>? exceptionsList;
 
-    while (true) {
-      CallbackNode? node;
+    try {
+      while (true) {
+        CallbackNode? node;
 
-      node = _registrations!.callbacks;
-      if (node == null) {
-        // No more registrations to process.
-        break;
+        node = _registrations!.callbacks;
+        if (node == null) {
+          // No more registrations to process.
+          break;
+        }
+
+        assert(node.registrations.source == this);
+        assert(node.prev == null);
+
+        if (node.next != null) {
+          node.next?.prev = null;
+        }
+        _registrations!.callbacks = node.next;
+
+        node.id = 0;
+
+        try {
+          node.executeCallback();
+        } on Exception catch (ex) {
+          if (throwOnFirstException) {
+            rethrow;
+          }
+          (exceptionsList ??= <Exception>[]).add(ex);
+        }
       }
-
-      assert(node.registrations.source == this);
-      assert(node.prev == null);
-
-      if (node.next != null) {
-        node.next?.prev = null;
-      }
-      _registrations!.callbacks = node.next;
-
-      //_registrations!._executingCallbackId = node.id;
-
-      node.id = 0;
-
-      try {
-        node.executeCallback();
-      } on Exception catch (ex) {
-        exceptionsList ??= <Exception>[ex];
-      }
+    } finally {
+      _state = _notifyingCompleteState;
     }
-
-    _state = _notifyingCompleteState;
-    //_registrations!._executingCallbackId = 0;
 
     if (exceptionsList != null) {
       assert(
           exceptionsList.isNotEmpty, 'Expected ${exceptionsList.length} > 0');
-      throw Exception('arrrgh too many errs.');
+      throw AggregateException(innerExceptions: exceptionsList);
     }
   }
 
@@ -167,7 +170,9 @@ class CancellationTokenSource implements Disposable {
     // callback synchronously.
     if (!isCancellationRequested) {
       if (_disposed) {
-        // return CancellationTokenRegistration(id, node)
+        // Do not attach callbacks to a disposed source; hand back an empty
+        // registration so the caller's dispose() is a safe no-op.
+        return CancellationTokenRegistration(0, null);
       }
 
       _registrations ??= Registrations(this);
@@ -216,12 +221,10 @@ class CancellationTokenSource implements Disposable {
     return CancellationTokenRegistration(0, null);
   }
 
-  /// Throws an exception if the source has been disposed;
+  /// Throws an [ObjectDisposedException] if the source has been disposed.
   void _throwIfDisposed() {
     if (_disposed) {
-      throw Exception();
-      // ThrowHelper.ThrowObjectDisposedException
-      // (ExceptionResource.CancellationTokenSource_Disposed);
+      throw ObjectDisposedException(objectName: 'CancellationTokenSource');
     }
   }
 
