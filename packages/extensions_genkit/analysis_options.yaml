@@ -1,5 +1,0 @@
-include: package:lints/recommended.yaml
-
-linter:
-  rules:
-    lines_longer_than_80_chars: true

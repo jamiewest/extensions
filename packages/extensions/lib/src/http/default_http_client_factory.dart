@@ -32,7 +32,6 @@ class DefaultHttpClientFactory implements HttpClientFactory {
   final Map<String, _HandlerEntry> _activeHandlers = <String, _HandlerEntry>{};
 
   @override
-  @override
   http.BaseClient createClient([String? name = Options.defaultName]) {
     var clientName = name ?? Options.defaultName;
     var options = _optionsMonitor.get(clientName);

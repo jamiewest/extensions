@@ -1,3 +1,9 @@
+## 0.4.2
+
+* Updated `extensions` dependency to `^0.3.28`.
+* Inherits experimental realtime function invocation support and the
+  `EmptyServiceProvider` optional lookup fix from extensions 0.3.28.
+
 ## 0.4.1
 
 * Updated `extensions` dependency to `^0.3.27`.

@@ -6,17 +6,15 @@ class EmptyServiceProvider implements KeyedServiceProvider {
   static final EmptyServiceProvider instance = EmptyServiceProvider();
 
   @override
-  Object? getKeyedServiceFromType(Type serviceType, Object? serviceKey) {
-    throw UnimplementedError();
-  }
+  Object? getKeyedServiceFromType(Type serviceType, Object? serviceKey) => null;
 
   @override
   Object getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey) {
-    throw UnimplementedError();
+    throw StateError(
+      'No service for type \'$serviceType\' has been registered.',
+    );
   }
 
   @override
-  Object? getServiceFromType(Type type) {
-    throw UnimplementedError();
-  }
+  Object? getServiceFromType(Type type) => null;
 }

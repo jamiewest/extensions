@@ -1,3 +1,23 @@
+## 0.3.28
+
+* **AI Realtime — Function invocation:**
+  * Added experimental `FunctionInvokingRealtimeClient`,
+    `FunctionInvokingRealtimeClientSession`, and
+    `RealtimeClientBuilder.useFunctionInvocation()` for automatically invoking
+    `AIFunction` tools requested by realtime model responses.
+  * Function results are sent back to the realtime session as conversation
+    items and the model is prompted to continue the response.
+  * Added controls for detailed errors, concurrent invocation, iteration/error
+    limits, additional tools, and unknown-function handling.
+
+* **AI — Bug fix:**
+  * `EmptyServiceProvider` now behaves as an empty provider instead of throwing
+    `UnimplementedError` for optional service lookups.
+
+* **HTTP — Cleanup:**
+  * Removed a duplicate `@override` annotation in
+    `DefaultHttpClientFactory.createClient`.
+
 ## 0.3.27
 
 * **Hosting — `BackgroundService` / `Host` lifecycle fixes:**
