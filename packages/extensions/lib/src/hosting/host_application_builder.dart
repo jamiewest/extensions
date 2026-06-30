@@ -3,7 +3,6 @@ import 'package:path/path.dart' as p;
 import '../../diagnostics.dart';
 import '../configuration/configuration_manager.dart';
 import '../configuration/memory_configuration_builder_extensions.dart';
-import '../configuration/providers/environment_variables/environment_variables_extensions.dart';
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_container_builder_extensions.dart';
 import '../dependency_injection/service_provider.dart';
@@ -16,8 +15,9 @@ import 'host_builder.dart';
 import 'host_builder_context.dart';
 import 'host_defaults.dart';
 import 'host_environment.dart';
+import 'host_application_builder_defaults.dart' as defaults;
+import 'host_default_services.dart';
 import 'hosting_host_builder_extensions.dart' as hosting_ext;
-import 'hosting_host_builder_extensions_io.dart' as hosting_ext_io;
 import 'internal/configure_container_adapter.dart';
 import 'internal/service_factory_adapter.dart';
 
@@ -101,7 +101,7 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
         hosting_ext.setDefaultContentRoot(configuration);
       }
 
-      configuration.addEnvironmentVariables(prefix: 'DOTNET_');
+      defaults.applyDefaultHostConfiguration(configuration);
     }
 
     List<MapEntry<String, String>>? optionList;
@@ -147,7 +147,7 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
     // Apply default app configuration (appsettings.json, environment
     // variables, command line)
     if (!settings.disableDefaults) {
-      hosting_ext_io.applyDefaultAppConfiguration(
+      defaults.applyDefaultAppConfiguration(
         _hostBuilderContext,
         configuration,
         settings.args,
@@ -157,12 +157,11 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
     ServiceProviderOptions? serviceProviderOptions;
 
     if (!settings.disableDefaults) {
-      hosting_ext_io.addDefaultServices(
+      addDefaultServices(
         _hostBuilderContext,
         services,
       );
-      serviceProviderOptions =
-          hosting_ext_io.createDefaultServiceProviderOptions(
+      serviceProviderOptions = createDefaultServiceProviderOptions(
         _hostBuilderContext,
       );
     }

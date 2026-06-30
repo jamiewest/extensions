@@ -1,3 +1,25 @@
+## 0.4.0
+
+* **Web compatibility:**
+  * `package:extensions/configuration.dart`, `hosting.dart`, and `logging.dart`
+    are now web-safe and can be compiled to JavaScript. Console logging falls
+    back to `print` and disables ANSI colors on web, and the default
+    `HostApplicationBuilder` skips file-backed configuration and environment
+    variables on web.
+  * `package:extensions_flutter/extensions_flutter.dart` is now web-compatible
+    as a result.
+* **BREAKING — JSON file configuration moved to `configuration_io.dart`:**
+  * `addJson` is no longer exported from `package:extensions/configuration.dart`
+    because it depends on `dart:io`. It now lives in
+    `package:extensions/configuration_io.dart` (also re-exported from `io.dart`
+    and the aggregate `package:extensions/extensions.dart`).
+  * Migration: code that imports `configuration.dart` directly and calls
+    `addJson` must add `import 'package:extensions/configuration_io.dart';`.
+    Code importing `package:extensions/extensions.dart` is unaffected.
+* **Dependencies:**
+  * Added `universal_platform` for web-safe platform detection in the console
+    log formatter.
+
 ## 0.3.28
 
 * **AI Realtime — Function invocation:**

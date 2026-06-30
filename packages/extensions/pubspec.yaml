@@ -1,5 +1,5 @@
 name: extensions
-version: 0.3.28
+version: 0.4.0
 description: >-
   A set of APIs for commonly used programming patterns and utilities,  such as
   dependency injection, logging, and configuration.
@@ -21,6 +21,7 @@ dependencies:
   meta: ^1.17.0
   path: ^1.8.1
   stream_transform: ^2.1.0
+  universal_platform: ^1.1.0
   watcher: ^1.0.1
   xml: ^6.6.1
 

@@ -18,8 +18,4 @@
 /// ```
 library;
 
-export '../src/hosting/hosting_host_builder_extensions_io.dart'
-    hide
-        addDefaultServices,
-        applyDefaultAppConfiguration,
-        createDefaultServiceProviderOptions;
+export '../src/hosting/hosting_host_builder_extensions_io.dart';

@@ -8,12 +8,15 @@
 /// read configuration data from key-value pairs using various sources
 /// including:
 ///
-/// - JSON files
 /// - XML files
 /// - INI files
 /// - Command-line arguments
 /// - In-memory collections
-/// - Environment variables (via configuration_io.dart)
+/// - Streams
+/// - JSON files and environment variables (via configuration_io.dart)
+///
+/// This library is web-safe. Sources that require `dart:io` (JSON files and
+/// environment variables) live in `configuration_io.dart`.
 ///
 /// ## Basic Usage
 ///
@@ -25,7 +28,6 @@
 ///     'Logging:LogLevel:Default': 'Information',
 ///     'AllowedHosts': '*',
 ///   })
-///   ..addJsonFile('appsettings.json', optional: true)
 ///   ..addCommandLine(args)
 ///   .build();
 ///
@@ -89,7 +91,6 @@ export 'src/configuration/providers/ini/ini_configuration_provider.dart';
 export 'src/configuration/providers/ini/ini_configuration_source.dart';
 export 'src/configuration/providers/ini/ini_stream_configuration_provider.dart';
 export 'src/configuration/providers/ini/ini_stream_configuration_source.dart';
-export 'src/configuration/providers/json/json_configuration_extensions.dart';
 export 'src/configuration/providers/json/json_configuration_parser.dart';
 export 'src/configuration/providers/json/json_configuration_provider.dart';
 export 'src/configuration/providers/json/json_configuration_source.dart';

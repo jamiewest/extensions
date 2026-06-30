@@ -1,11 +1,10 @@
-import 'dart:io';
-
 import '../../../system/disposable.dart';
 import '../../event_id.dart';
 import '../../log_level.dart';
 
 import '../../logger.dart';
 import '../../null_scope.dart';
+import 'console_support.dart';
 
 /// A logger that writes messages to the console output.
 class ConsoleLogger implements Logger {
@@ -43,6 +42,6 @@ class ConsoleLogger implements Logger {
       message = '$message\n\n$error';
     }
 
-    stdout.writeln(message);
+    writeConsoleLine(message);
   }
 }

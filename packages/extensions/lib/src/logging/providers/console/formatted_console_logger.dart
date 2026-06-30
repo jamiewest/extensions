@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import '../../../system/disposable.dart';
 import '../../event_id.dart';
 import '../../external_scope_provider.dart';
@@ -7,6 +5,7 @@ import '../../log_level.dart';
 import '../../logger.dart';
 import '../../null_scope.dart';
 import 'console_formatter.dart';
+import 'console_support.dart';
 import 'log_entry.dart';
 
 /// A logger that writes formatted messages to the console output.
@@ -60,7 +59,7 @@ class FormattedConsoleLogger implements Logger {
     );
 
     if (buffer.isNotEmpty) {
-      stdout.writeln(buffer.toString().trimRight());
+      writeConsoleLine(buffer.toString().trimRight());
     }
   }
 }

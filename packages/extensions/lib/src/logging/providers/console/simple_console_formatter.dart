@@ -1,9 +1,10 @@
-import 'dart:io';
+import 'package:universal_platform/universal_platform.dart';
 
 import '../../external_scope_provider.dart';
 import '../../log_level.dart';
 import 'console_formatter.dart';
 import 'console_formatter_names.dart';
+import 'console_support.dart';
 import 'log_entry.dart';
 import 'logger_color_behavior.dart';
 import 'simple_console_formatter_options.dart';
@@ -162,13 +163,14 @@ class SimpleConsoleFormatter extends ConsoleFormatter {
       case LoggerColorBehavior.disabled:
         return false;
       case LoggerColorBehavior.defaultBehavior:
-        // Check if we're running in a terminal that supports colors
-        // On mobile platforms (Android/iOS), disable colors
-        if (Platform.isAndroid || Platform.isIOS) {
+        // On mobile and web platforms there is no ANSI-capable terminal, so
+        // disable colors there.
+        if (UniversalPlatform.isAndroid ||
+            UniversalPlatform.isIOS ||
+            UniversalPlatform.isWeb) {
           return false;
         }
-        // Check if stdout supports ANSI
-        return stdout.supportsAnsiEscapes;
+        return consoleSupportsAnsi;
     }
   }
 
