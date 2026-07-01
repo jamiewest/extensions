@@ -1,3 +1,10 @@
+## 0.4.4
+
+* Updated `extensions` dependency to `^0.4.1`.
+* Inherits web-compatible file configuration, memory-backed
+  `PhysicalFileProvider` support, and filesystem-abstraction globbing from
+  extensions 0.4.1.
+
 ## 0.4.3
 
 * **Web compatibility:**

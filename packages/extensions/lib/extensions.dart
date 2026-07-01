@@ -4,7 +4,7 @@ export 'configuration.dart';
 export 'configuration_io.dart';
 export 'dependency_injection.dart';
 export 'diagnostics.dart';
-export 'file_providers.dart';
+export 'file_providers.dart' hide FileSystemException;
 export 'file_system_globbing.dart';
 export 'hosting.dart';
 export 'http.dart';

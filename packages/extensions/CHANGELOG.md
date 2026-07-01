@@ -1,3 +1,19 @@
+## 0.4.1
+
+* **Web-compatible file configuration:**
+  * File-based JSON configuration is now available from
+    `package:extensions/configuration.dart` and can read from an injected
+    `FileProvider`, including memory-backed providers on web.
+  * Added a web-safe `FileSystemException` stand-in for file configuration
+    errors.
+* **File providers and globbing:**
+  * `PhysicalFileProvider` now supports injected `package:file` filesystems,
+    allowing in-memory filesystem use in browser and test environments.
+  * Polling change tokens, wildcard watching, and `Matcher` globbing now work
+    through filesystem abstractions instead of direct `dart:io` access.
+  * Resolved a `FileSystemException` export ambiguity in the aggregate
+    `package:extensions/extensions.dart` barrel.
+
 ## 0.4.0
 
 * **Web compatibility:**
