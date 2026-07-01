@@ -1,3 +1,11 @@
+## 0.4.5
+
+* **Fix:** `wrapWith` widget wrappers registered via `FlutterBuilder` are now
+  keyed by a concrete `WrappedWidget` holder instead of the
+  `WrappedWidgetFactory` function type, which is not a reliable dependency
+  injection key. Registered wrappers now resolve consistently.
+* Added the `WrappedWidget` class to the public API.
+
 ## 0.4.4
 
 * Updated `extensions` dependency to `^0.4.1`.

@@ -17,6 +17,19 @@ import 'service_provider_extensions.dart';
 typedef WrappedWidgetFactory =
     Widget Function(ServiceProvider sp, Widget child);
 
+/// A concrete holder for a [WrappedWidgetFactory].
+///
+/// Registrations are keyed by this class rather than the [WrappedWidgetFactory]
+/// function type, because function typedefs are not reliable dependency
+/// injection keys.
+class WrappedWidget {
+  /// Creates a holder for the given wrapper [factory].
+  const WrappedWidget(this.factory);
+
+  /// The factory that wraps a widget with another widget.
+  final WrappedWidgetFactory factory;
+}
+
 /// A configuration callback for the [FlutterBuilder].
 typedef ConfigureAction = void Function(FlutterBuilder builder);
 

@@ -71,11 +71,11 @@ extension FlutterBuilderExtensions on FlutterBuilder {
 
     services
       ..addKeyedSingleton<Widget>('rootAppWidget', (sp, key) {
-        var factories = sp.getServices<WrappedWidgetFactory>();
+        var factories = sp.getServices<WrappedWidget>();
         Widget child = builder(sp);
 
-        for (final factory in factories.toList().reversed) {
-          child = factory(sp, child);
+        for (final wrapper in factories.toList().reversed) {
+          child = wrapper.factory(sp, child);
         }
 
         return child;
@@ -114,7 +114,7 @@ extension FlutterBuilderExtensions on FlutterBuilder {
   /// //   ServiceProviderScope(FlutterLifecycleObserver(MyApp()))))
   /// ```
   FlutterBuilder wrapWith(WrappedWidgetFactory factory) {
-    services.addSingleton<WrappedWidgetFactory>((_) => factory);
+    services.addSingleton<WrappedWidget>((_) => WrappedWidget(factory));
 
     return this;
   }
