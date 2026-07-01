@@ -1,42 +1,42 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:file/file.dart';
 import 'package:glob/glob.dart';
-import 'package:path/path.dart' as p;
-import 'package:stream_transform/stream_transform.dart';
-import 'package:watcher/watcher.dart';
 
 import '../../../primitives/change_token.dart';
 import '../../../primitives/composite_change_token.dart';
 import '../../../system/disposable.dart';
 import '../../../system/threading/cancellation_token_source.dart';
 import '../../null_change_token.dart';
+import 'event_watcher.dart';
+import 'event_watcher_factory.dart';
 import 'polling_file_change_token.dart';
 import 'polling_wildcard_change_token.dart';
 
 /// A file watcher that watches a physical filesystem for changes.
 ///
-/// Supports both event-based watching (using [Watcher]) and polling-based
-/// watching for compatibility with different file systems.
+/// Supports both event-based watching (using an [EventWatcher], available only
+/// on VM/native targets) and polling-based watching for filesystems without
+/// event support (such as an in-memory filesystem on web).
 class PhysicalFilesWatcher implements Disposable {
+  final FileSystem _fileSystem;
   final String _root;
   final bool _usePolling;
   final Duration _pollingInterval;
   final CancellationTokenSource _cancellationTokenSource =
       CancellationTokenSource();
-  Watcher? _watcher;
-  final StreamController<WatchEvent> _eventsController =
-      StreamController<WatchEvent>.broadcast();
-  StreamSubscription<WatchEvent>? _watcherSubscription;
+  EventWatcher? _eventWatcher;
 
   /// Creates a new [PhysicalFilesWatcher] for the specified root directory.
   ///
+  /// [fileSystem] - The filesystem backing the watched root.
   /// [root] - The root directory to watch.
-  /// [useEventBasedWatcher] - If true, subscribes to filesystem events and
-  /// debounces bursts; otherwise polls on each token's interval.
+  /// [useEventBasedWatcher] - If true, subscribes to filesystem events (when
+  /// the platform supports them); otherwise polls on each token's interval.
   /// [pollingInterval] - The interval at which polling tokens check for
   /// changes.
   PhysicalFilesWatcher(
+    this._fileSystem,
     String root,
     bool useEventBasedWatcher, {
     Duration pollingInterval = const Duration(seconds: 4),
@@ -44,18 +44,7 @@ class PhysicalFilesWatcher implements Disposable {
         _usePolling = !useEventBasedWatcher,
         _pollingInterval = pollingInterval {
     if (useEventBasedWatcher) {
-      _initializeEventWatcher();
-    }
-  }
-
-  void _initializeEventWatcher() {
-    try {
-      _watcher = Watcher(_root);
-      _watcherSubscription = _watcher!.events
-          .debounce(const Duration(milliseconds: 200))
-          .listen(_eventsController.add);
-    } catch (_) {
-      _watcher = null;
+      _eventWatcher = createEventWatcher(root);
     }
   }
 
@@ -70,20 +59,19 @@ class PhysicalFilesWatcher implements Disposable {
       return NullChangeToken();
     }
 
-    final normalizedFilter = p.normalize(filter);
+    final context = _fileSystem.path;
+    final normalizedFilter = context.normalize(filter);
 
     if (_isWildcardPattern(normalizedFilter)) {
       return _createWildcardToken(normalizedFilter);
     }
 
-    final fullPath = p.isAbsolute(normalizedFilter)
+    final fullPath = context.isAbsolute(normalizedFilter)
         ? normalizedFilter
-        : p.join(_root, normalizedFilter);
+        : context.join(_root, normalizedFilter);
 
-    final entity = FileSystemEntity.typeSync(fullPath);
-
-    if (entity == FileSystemEntityType.directory) {
-      return _createWildcardToken(p.join(normalizedFilter, '*'));
+    if (_fileSystem.isDirectorySync(fullPath)) {
+      return _createWildcardToken(context.join(normalizedFilter, '*'));
     }
 
     return _createFileToken(fullPath);
@@ -96,32 +84,35 @@ class PhysicalFilesWatcher implements Disposable {
       pattern.contains('{');
 
   ChangeToken _createFileToken(String filePath) {
-    if (!_usePolling && _watcher != null) {
-      return _WatcherChangeToken(
-        _eventsController.stream.where((e) => e.path == filePath),
+    final watcher = _eventWatcher;
+    if (!_usePolling && watcher != null) {
+      return _EventChangeToken(
+        watcher.events.where((path) => path == filePath),
         _cancellationTokenSource,
       );
     }
     return PollingFileChangeToken(
-      File(filePath),
+      _fileSystem.file(filePath),
       pollingInterval: _pollingInterval,
       cancellationTokenSource: _cancellationTokenSource,
     );
   }
 
   ChangeToken _createWildcardToken(String pattern) {
-    if (!_usePolling && _watcher != null) {
+    final watcher = _eventWatcher;
+    if (!_usePolling && watcher != null) {
       final glob = Glob(pattern);
-      return _WatcherChangeToken(
-        _eventsController.stream.where((e) {
-          final relative = p.relative(e.path, from: _root);
+      final context = _fileSystem.path;
+      return _EventChangeToken(
+        watcher.events.where((path) {
+          final relative = context.relative(path, from: _root);
           return glob.matches(relative);
         }),
         _cancellationTokenSource,
       );
     }
     return PollingWildcardChangeToken(
-      _root,
+      _fileSystem.directory(_root),
       pattern,
       pollingInterval: _pollingInterval,
       cancellationTokenSource: _cancellationTokenSource,
@@ -136,22 +127,21 @@ class PhysicalFilesWatcher implements Disposable {
 
   @override
   void dispose() {
-    _watcherSubscription?.cancel();
-    _eventsController.close();
+    _eventWatcher?.dispose();
+    _eventWatcher = null;
     _cancellationTokenSource.cancel();
-    _watcher = null;
   }
 }
 
 /// A change token backed by an event stream rather than a polling timer.
-class _WatcherChangeToken implements ChangeToken {
-  final Stream<WatchEvent> _events;
+class _EventChangeToken implements ChangeToken {
+  final Stream<Object?> _events;
   final CancellationTokenSource _cts;
   bool _hasChanged = false;
   final List<_Registration> _callbacks = [];
-  StreamSubscription<WatchEvent>? _subscription;
+  StreamSubscription<Object?>? _subscription;
 
-  _WatcherChangeToken(this._events, this._cts);
+  _EventChangeToken(this._events, this._cts);
 
   @override
   bool get hasChanged {
@@ -212,7 +202,7 @@ class _Registration {
 }
 
 class _RegistrationDisposable implements Disposable {
-  final _WatcherChangeToken _token;
+  final _EventChangeToken _token;
   final _Registration _registration;
 
   _RegistrationDisposable(this._token, this._registration);

@@ -2,8 +2,11 @@ import 'dart:io' as io;
 
 import 'package:extensions/file_providers.dart';
 import 'package:extensions/system.dart' hide equals;
+import 'package:file/local.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+
+Directory _localDir(String path) => const LocalFileSystem().directory(path);
 
 void main() {
   late io.Directory tempDir;
@@ -21,7 +24,7 @@ void main() {
   group('PollingWildcardChangeToken - Initial State', () {
     test('hasChanged returns false if no files exist', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -38,7 +41,7 @@ void main() {
           .writeAsStringSync('content');
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -56,7 +59,7 @@ void main() {
 
     test('activeChangeCallbacks is false when no callbacks registered', () {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -68,7 +71,7 @@ void main() {
 
     test('activeChangeCallbacks is true when callback registered', () {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -84,7 +87,7 @@ void main() {
   group('PollingWildcardChangeToken - File Changes', () {
     test('hasChanged returns true if new files were added', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -111,7 +114,7 @@ void main() {
       testFile.writeAsStringSync('to remove');
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -138,7 +141,7 @@ void main() {
         ..writeAsStringSync('initial');
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -170,7 +173,7 @@ void main() {
       final originalTime = testFile.lastModifiedSync();
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -201,7 +204,7 @@ void main() {
   group('PollingWildcardChangeToken - Pattern Matching', () {
     test('detects changes only for matching file extensions', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -226,7 +229,7 @@ void main() {
 
     test('matches files with single asterisk pattern', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.json',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -253,7 +256,7 @@ void main() {
       subDir.createSync(recursive: true);
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '**/*.md',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -280,7 +283,7 @@ void main() {
       subDir.createSync();
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         'config/*.json',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -307,7 +310,7 @@ void main() {
       subDir.createSync();
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         'config/*.json',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -333,7 +336,7 @@ void main() {
   group('PollingWildcardChangeToken - Callback Management', () {
     test('invokes callback when changes detected', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -356,7 +359,7 @@ void main() {
 
     test('invokes multiple callbacks', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -386,7 +389,7 @@ void main() {
 
     test('callback not invoked after disposal', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -411,7 +414,7 @@ void main() {
 
     test('exception in callback does not affect other callbacks', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -445,7 +448,7 @@ void main() {
       io.File(p.join(tempDir.path, 'initial.txt')).writeAsStringSync('content');
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -489,7 +492,7 @@ void main() {
       final cts = CancellationTokenSource();
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
         cancellationTokenSource: cts,
@@ -510,7 +513,7 @@ void main() {
       final cts = CancellationTokenSource();
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
         cancellationTokenSource: cts,
@@ -547,7 +550,7 @@ void main() {
   group('PollingWildcardChangeToken - Disposal', () {
     test('dispose stops polling', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -570,7 +573,7 @@ void main() {
 
     test('can dispose multiple times safely', () {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -581,7 +584,7 @@ void main() {
 
     test('clears all callbacks on disposal', () {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -600,7 +603,7 @@ void main() {
   group('PollingWildcardChangeToken - Polling Behavior', () {
     test('respects polling interval', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 200),
       );
@@ -622,7 +625,7 @@ void main() {
 
     test('starts polling when first callback registered', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -649,7 +652,7 @@ void main() {
 
     test('stops polling when last callback unregistered', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -672,7 +675,7 @@ void main() {
       final nonExistent = p.join(tempDir.path, 'nonexistent');
 
       final token = PollingWildcardChangeToken(
-        nonExistent,
+        _localDir(nonExistent),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -686,7 +689,7 @@ void main() {
       io.File(p.join(tempDir.path, 'file.txt')).writeAsStringSync('content');
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -698,7 +701,7 @@ void main() {
 
     test('handles empty pattern', () {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -713,7 +716,7 @@ void main() {
       subDir.createSync(recursive: true);
 
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         'src/**/*.dart',
         pollingInterval: const Duration(milliseconds: 100),
       );
@@ -738,7 +741,7 @@ void main() {
 
     test('handles multiple file changes in quick succession', () async {
       final token = PollingWildcardChangeToken(
-        tempDir.path,
+        _localDir(tempDir.path),
         '*.txt',
         pollingInterval: const Duration(milliseconds: 100),
       );

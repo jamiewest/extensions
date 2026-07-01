@@ -1,3 +1,10 @@
+## 0.4.3
+
+* **Web compatibility:**
+  * `package:extensions_flutter/extensions_flutter.dart` now compiles and runs
+    on web, backed by the web-safe barrels in extensions 0.4.0.
+* Updated `extensions` dependency to `^0.4.0`.
+
 ## 0.4.2
 
 * Updated `extensions` dependency to `^0.3.28`.

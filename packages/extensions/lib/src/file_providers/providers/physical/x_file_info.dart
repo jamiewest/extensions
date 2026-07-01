@@ -1,6 +1,5 @@
-import 'dart:io' as io;
-
 import 'package:cross_file/cross_file.dart';
+import 'package:file/file.dart';
 
 import '../../file_info.dart';
 
@@ -9,24 +8,25 @@ import '../../file_info.dart';
 /// This implementation works on both VM and web platforms.
 class XFileInfo implements FileInfo {
   final XFile _file;
-  final io.File? _ioFile;
+  final File? _backing;
 
   /// Creates an [XFileInfo] from an [XFile].
-  XFileInfo(this._file) : _ioFile = null;
+  XFileInfo(this._file) : _backing = null;
 
-  /// Creates an [XFileInfo] from a Dart IO [io.File].
+  /// Creates an [XFileInfo] from a `package:file` [File].
   ///
-  /// This constructor is only available on VM platforms.
-  XFileInfo.fromFile(io.File file)
+  /// The backing file enables synchronous access to length and modification
+  /// time; without it those values are only available asynchronously.
+  XFileInfo.fromFile(File file)
       : _file = XFile(file.path),
-        _ioFile = file;
+        _backing = file;
 
   @override
   bool get exists {
-    // On VM platforms, use the IO file if available
-    final ioFile = _ioFile;
-    if (ioFile != null) {
-      return ioFile.existsSync();
+    // Use the synchronous backing file when available.
+    final backing = _backing;
+    if (backing != null) {
+      return backing.existsSync();
     }
 
     // On web, XFile.length returns a future, so we can't easily check existence
@@ -37,10 +37,10 @@ class XFileInfo implements FileInfo {
   @override
   int get length {
     try {
-      // For VM platforms with IO file
-      final ioFile = _ioFile;
-      if (ioFile != null) {
-        return ioFile.lengthSync();
+      // Use the synchronous backing file when available.
+      final backing = _backing;
+      if (backing != null) {
+        return backing.lengthSync();
       }
 
       // For web, XFile.length returns a Future<int>, but we need sync access.
@@ -64,10 +64,10 @@ class XFileInfo implements FileInfo {
   @override
   DateTime get lastModified {
     try {
-      // For VM platforms with IO file
-      final ioFile = _ioFile;
-      if (ioFile != null) {
-        return ioFile.lastModifiedSync();
+      // Use the synchronous backing file when available.
+      final backing = _backing;
+      if (backing != null) {
+        return backing.lastModifiedSync();
       }
 
       // For web, XFile.lastModified returns a Future<DateTime>, but we need
@@ -87,10 +87,10 @@ class XFileInfo implements FileInfo {
 
   @override
   Stream<dynamic> createReadStream() {
-    // For VM platforms
-    final ioFile = _ioFile;
-    if (ioFile != null) {
-      return ioFile.openRead();
+    // Use the synchronous backing file when available.
+    final backing = _backing;
+    if (backing != null) {
+      return backing.openRead();
     }
 
     // For web platforms, we need to read the entire file and emit it

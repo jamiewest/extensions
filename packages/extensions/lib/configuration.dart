@@ -8,8 +8,8 @@
 /// read configuration data from key-value pairs using various sources
 /// including:
 ///
-/// - XML files
-/// - INI files
+/// - XML (string/stream)
+/// - INI (string/stream)
 /// - Command-line arguments
 /// - In-memory collections
 /// - Streams
@@ -91,9 +91,17 @@ export 'src/configuration/providers/ini/ini_configuration_provider.dart';
 export 'src/configuration/providers/ini/ini_configuration_source.dart';
 export 'src/configuration/providers/ini/ini_stream_configuration_provider.dart';
 export 'src/configuration/providers/ini/ini_stream_configuration_source.dart';
+export 'src/configuration/providers/file_extensions/file_configuration_extensions.dart';
+export 'src/configuration/providers/file_extensions/file_configuration_provider.dart';
+export 'src/configuration/providers/file_extensions/file_configuration_source.dart';
+export 'src/configuration/providers/file_extensions/file_load_exception_context.dart';
+export 'src/configuration/providers/file_extensions/file_system_exception.dart';
+export 'src/configuration/providers/json/json_configuration_extensions.dart';
 export 'src/configuration/providers/json/json_configuration_parser.dart';
 export 'src/configuration/providers/json/json_configuration_provider.dart';
 export 'src/configuration/providers/json/json_configuration_source.dart';
+export 'src/configuration/providers/json/json_file_configuration_provider.dart';
+export 'src/configuration/providers/json/json_file_configuration_source.dart';
 export 'src/configuration/providers/xml/xml_configuration_extensions.dart';
 export 'src/configuration/providers/xml/xml_configuration_parser.dart';
 export 'src/configuration/providers/xml/xml_configuration_provider.dart';

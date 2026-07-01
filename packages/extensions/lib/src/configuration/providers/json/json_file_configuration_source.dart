@@ -1,6 +1,3 @@
-import '../../../../configuration.dart' show ConfigurationSource;
-import '../../../../configuration_io.dart' show ConfigurationSource;
-import '../../../../io.dart' show ConfigurationSource;
 import '../../configuration_builder.dart';
 import '../../configuration_provider.dart';
 import '../../configuration_source.dart' show ConfigurationSource;

@@ -1,4 +1,4 @@
-import 'package:file/local.dart';
+import 'package:file/file.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../primitives/change_token.dart';
@@ -8,6 +8,7 @@ import '../../file_info.dart';
 import '../../file_provider.dart';
 import '../../not_found_directory_contents.dart';
 import '../../not_found_file_info.dart';
+import 'default_file_system.dart';
 import 'internal/path_utils.dart';
 import 'physical_directory_contents.dart';
 import 'physical_file_info.dart';
@@ -16,8 +17,12 @@ import 'physical_files_watcher.dart';
 
 /// Looks up files using the on-disk file system.
 ///
-/// This provider supports file change notifications and exclusion filters.
+/// This provider supports file change notifications and exclusion filters. By
+/// default it is backed by the platform filesystem (a `LocalFileSystem` on
+/// VM/native, an empty `MemoryFileSystem` on web); pass [fileSystem] to supply
+/// a seeded in-memory filesystem or any other `package:file` implementation.
 class PhysicalFileProvider implements FileProvider, Disposable {
+  final FileSystem _fileSystem;
   final String _root;
   final PhysicalFilesWatcher _watcher;
   final PhysicalFileProviderOptions options;
@@ -25,42 +30,60 @@ class PhysicalFileProvider implements FileProvider, Disposable {
   /// Creates a new instance of [PhysicalFileProvider] at the given
   /// root directory.
   ///
-  /// The [root] path must be an absolute path.
-  PhysicalFileProvider(
+  /// The [root] path must be an absolute path for [fileSystem].
+  factory PhysicalFileProvider(
     String root, {
+    FileSystem? fileSystem,
     PhysicalFileProviderOptions? options,
-  })  : _root = p.absolute(root),
-        options = options ?? PhysicalFileProviderOptions(),
-        _watcher = PhysicalFilesWatcher(
-          p.absolute(root),
-          !(options?.usePollingFileWatcher ?? false),
-          pollingInterval:
-              options?.pollingInterval ?? const Duration(seconds: 4),
-        ) {
-    if (!p.isAbsolute(root)) {
+  }) {
+    final fs = fileSystem ?? defaultFileSystem();
+    final opts = options ?? PhysicalFileProviderOptions();
+
+    if (!fs.path.isAbsolute(root)) {
       throw ArgumentError.value(
         root,
         'root',
         'Root path must be an absolute path.',
       );
     }
+
+    return PhysicalFileProvider._(fs, fs.path.absolute(root), opts);
   }
+
+  PhysicalFileProvider._(
+    FileSystem fileSystem,
+    String root,
+    PhysicalFileProviderOptions options,
+  )   : _fileSystem = fileSystem,
+        _root = root,
+        options = options,
+        _watcher = PhysicalFilesWatcher(
+          fileSystem,
+          root,
+          !options.usePollingFileWatcher,
+          pollingInterval: options.pollingInterval,
+        );
+
+  /// The filesystem backing this provider.
+  FileSystem get fileSystem => _fileSystem;
 
   PhysicalFilesWatcher get watcher => _watcher;
 
   /// The root directory for this instance.
   String get root => _root;
 
+  p.Context get _path => _fileSystem.path;
+
   @override
   FileInfo getFileInfo(String subpath) {
     var path = subpath.trim();
 
     // Remove leading separator if present
-    if (path.startsWith(p.separator)) {
-      path = path.substring(p.separator.length);
+    if (path.startsWith(_path.separator)) {
+      path = path.substring(_path.separator.length);
     }
 
-    if (p.isRootRelative(path)) {
+    if (_path.isRootRelative(path)) {
       return NotFoundFileInfo(path);
     }
 
@@ -69,20 +92,18 @@ class PhysicalFileProvider implements FileProvider, Disposable {
       return NotFoundFileInfo(path);
     }
 
-    var fileInfo = const LocalFileSystem().file(fullPath);
-
-    return PhysicalFileInfo(fileInfo);
+    return PhysicalFileInfo(_fileSystem.file(fullPath));
   }
 
   String? _getFullPath(String path) {
-    if (PathUtils.pathNavigatesAboveRoot(path)) {
+    if (PathUtils.pathNavigatesAboveRoot(path, _path)) {
       return null;
     }
 
     String fullPath;
 
     try {
-      fullPath = p.join(root, path);
+      fullPath = _path.join(root, path);
     } on Exception {
       return null;
     }
@@ -106,7 +127,7 @@ class PhysicalFileProvider implements FileProvider, Disposable {
     }
 
     // The character after root must be a separator
-    return fullPath[root.length] == p.separator;
+    return fullPath[root.length] == _path.separator;
   }
 
   @override
@@ -115,11 +136,11 @@ class PhysicalFileProvider implements FileProvider, Disposable {
       var path = subpath.trim();
 
       // Remove leading separator if present
-      if (path.startsWith(p.separator)) {
-        path = path.substring(p.separator.length);
+      if (path.startsWith(_path.separator)) {
+        path = path.substring(_path.separator.length);
       }
 
-      if (p.isRootRelative(path)) {
+      if (_path.isRootRelative(path)) {
         return NotFoundDirectoryContents();
       }
 
@@ -128,7 +149,7 @@ class PhysicalFileProvider implements FileProvider, Disposable {
         return NotFoundDirectoryContents();
       }
 
-      return PhysicalDirectoryContents(fullPath);
+      return PhysicalDirectoryContents(_fileSystem, fullPath);
     } catch (e) {
       return NotFoundDirectoryContents();
     }

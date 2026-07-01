@@ -1,18 +1,11 @@
 /// Extends the configuration library with IO-specific providers that read
-/// configuration from environment variables and JSON files.
+/// configuration from environment variables.
 ///
 /// This library adds platform-specific configuration sources that depend on
-/// `dart:io` and are therefore not web-safe: environment variables and JSON
-/// file support (`addJson`). Import this barrel (or `io.dart`) on the Dart VM
-/// when these sources are needed.
-///
-/// ## JSON Files
-///
-/// ```dart
-/// final config = ConfigurationBuilder()
-///   ..addJson('appsettings.json', optional: true)
-///   .build();
-/// ```
+/// `dart:io` and are therefore not web-safe. Environment variables live here;
+/// JSON file support is web-safe and available from `configuration.dart`.
+/// Import this barrel (or `io.dart`) on the Dart VM when environment variables
+/// are needed.
 ///
 /// ## Environment Variables
 ///
@@ -42,4 +35,3 @@ export 'configuration.dart';
 export 'src/configuration/providers/environment_variables/environment_variables_configuration_provider.dart';
 export 'src/configuration/providers/environment_variables/environment_variables_configuration_source.dart';
 export 'src/configuration/providers/environment_variables/environment_variables_extensions.dart';
-export 'src/configuration/providers/json/json_configuration_extensions.dart';

@@ -1,10 +1,10 @@
-import 'dart:io' as io;
-
+import '../../../file_providers/file_info.dart';
 import '../../../primitives/change_token.dart';
 import '../../../system/disposable.dart';
 import '../../configuration_provider.dart';
 import 'file_configuration_source.dart';
 import 'file_load_exception_context.dart';
+import 'file_system_exception.dart';
 
 /// Provides the base class for file-based [ConfigurationProvider] providers.
 abstract class FileConfigurationProvider extends ConfigurationProvider
@@ -41,7 +41,7 @@ abstract class FileConfigurationProvider extends ConfigurationProvider
 
   /// Loads the contents of the file at [FileConfigurationSource.path].
   ///
-  /// Throws [io.FileSystemException] if [FileConfigurationSource.optional] is
+  /// Throws [FileSystemException] if [FileConfigurationSource.optional] is
   /// false and a file does not exist at specified path.
   ///
   /// Throws [FormatException] if an exception was thrown by the concrete
@@ -55,7 +55,7 @@ abstract class FileConfigurationProvider extends ConfigurationProvider
   ///
   /// The derived class must implement this method to read and parse the file
   /// contents and populate the [data] dictionary.
-  void loadFromFile(String filePath);
+  void loadFromFile(FileInfo file);
 
   void _loadInternal({required bool reload}) {
     final file = source.fileProvider?.getFileInfo(source.path ?? '');
@@ -75,18 +75,12 @@ abstract class FileConfigurationProvider extends ConfigurationProvider
           );
         }
         _handleException(
-          io.FileSystemException(error.toString(), source.path),
+          FileSystemException(error.toString(), source.path),
         );
       }
     } else {
       try {
-        if (file.physicalPath == null) {
-          throw io.FileSystemException(
-            'File does not have a physical path',
-            source.path,
-          );
-        }
-        loadFromFile(file.physicalPath!);
+        loadFromFile(file);
       } catch (ex) {
         if (reload) {
           data.clear();

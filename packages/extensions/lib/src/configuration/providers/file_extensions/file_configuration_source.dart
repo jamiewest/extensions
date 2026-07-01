@@ -1,15 +1,13 @@
-import 'dart:io' as io;
-
 import 'package:path/path.dart' as p;
 
 import '../../../file_providers/file_provider.dart';
-import '../../../file_providers/providers/physical/physical_file_provider.dart';
 import '../../configuration_builder.dart';
 import '../../configuration_provider.dart';
 import '../../configuration_source.dart';
 import 'file_configuration_extensions.dart';
 import 'file_configuration_provider.dart' show FileConfigurationProvider;
 import 'file_load_exception_context.dart';
+import 'physical_provider_resolver.dart';
 
 /// Represents a base class for file based [ConfigurationSource].
 abstract class FileConfigurationSource implements ConfigurationSource {
@@ -58,21 +56,10 @@ abstract class FileConfigurationSource implements ConfigurationSource {
         path != null &&
         path!.isNotEmpty &&
         p.isAbsolute(path!)) {
-      String? directory = p.dirname(path!);
-      String? pathToFile = p.basename(path!);
-
-      while (directory != null &&
-          directory.isNotEmpty &&
-          !io.Directory(directory).existsSync()) {
-        pathToFile = p.join(p.basename(directory), pathToFile);
-        directory = p.dirname(directory);
-      }
-
-      if (directory != null &&
-          directory.isNotEmpty &&
-          io.Directory(directory).existsSync()) {
-        fileProvider = PhysicalFileProvider(directory);
-        path = pathToFile;
+      final resolved = resolvePhysicalProvider(path!);
+      if (resolved != null) {
+        fileProvider = resolved.provider;
+        path = resolved.path;
       }
     }
   }

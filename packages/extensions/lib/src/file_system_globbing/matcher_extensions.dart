@@ -1,7 +1,8 @@
-import 'package:file/local.dart';
+import 'package:file/file.dart';
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as p;
 
+import '../file_providers/providers/physical/default_file_system.dart';
 import 'abstractions/directory_info_wrapper.dart';
 import 'file_pattern_match.dart';
 import 'matcher.dart';
@@ -37,8 +38,13 @@ extension MatcherExtensions on Matcher {
   /// their full paths.
   ///
   /// [directoryPath] - The root directory to search
-  Iterable<String> getResultsInFullPath(String directoryPath) {
-    const fs = LocalFileSystem();
+  /// [fileSystem] - The filesystem to search; defaults to the platform
+  /// filesystem so that in-memory filesystems can be searched on web.
+  Iterable<String> getResultsInFullPath(
+    String directoryPath, [
+    FileSystem? fileSystem,
+  ]) {
+    final fs = fileSystem ?? defaultFileSystem();
     final dir = fs.directory(directoryPath);
     if (!dir.existsSync()) {
       return const [];

@@ -1,9 +1,9 @@
-import 'dart:io';
-
 import 'package:glob/glob.dart';
 import 'package:path/path.dart' as p;
 
 import 'abstractions/directory_info_base.dart';
+import 'abstractions/file_info_base.dart';
+import 'abstractions/file_system_info_base.dart';
 import 'file_pattern_match.dart';
 import 'pattern_matching_result.dart';
 
@@ -49,48 +49,57 @@ class Matcher {
     final matches = <FilePatternMatch>[];
     final matchedPaths = <String>{};
 
+    // Enumerate every file under the root once, traversing the abstraction so
+    // the matcher works over any filesystem (including in-memory ones).
+    final files = <String>[];
+    _collectFiles(directoryInfo, files);
+
     // Process include patterns
     for (final pattern in _includePatterns) {
       final glob = Glob(pattern);
 
-      try {
-        // List all files recursively from the root
-        final rootDir = Directory(rootPath);
-        if (!rootDir.existsSync()) {
-          continue;
-        }
+      for (final fullName in files) {
+        try {
+          final relativePath = p.relative(fullName, from: rootPath);
 
-        final entities = rootDir.listSync(recursive: true, followLinks: false);
-
-        for (final entity in entities) {
-          if (entity is File) {
-            try {
-              final relativePath = p.relative(entity.path, from: rootPath);
-
-              // Check if the file matches the include pattern
-              if (glob.matches(relativePath)) {
-                // Check against exclude patterns
-                if (!_isExcluded(relativePath)) {
-                  // Avoid duplicates
-                  if (matchedPaths.add(relativePath)) {
-                    matches.add(FilePatternMatch(
-                      relativePath,
-                      _calculateStem(pattern, relativePath),
-                    ));
-                  }
-                }
+          // Check if the file matches the include pattern
+          if (glob.matches(relativePath)) {
+            // Check against exclude patterns
+            if (!_isExcluded(relativePath)) {
+              // Avoid duplicates
+              if (matchedPaths.add(relativePath)) {
+                matches.add(FilePatternMatch(
+                  relativePath,
+                  _calculateStem(pattern, relativePath),
+                ));
               }
-            } catch (e) {
-              // Skip files we can't access
             }
           }
+        } catch (e) {
+          // Skip files we can't access
         }
-      } catch (e) {
-        // Skip patterns that fail to process
       }
     }
 
     return PatternMatchingResult(matches);
+  }
+
+  void _collectFiles(DirectoryInfoBase directory, List<String> files) {
+    Iterable<FileSystemInfoBase> entries;
+    try {
+      entries = directory.enumerateFileSystemInfos();
+    } catch (e) {
+      // Skip directories we can't access
+      return;
+    }
+
+    for (final entry in entries) {
+      if (entry is FileInfoBase) {
+        files.add(entry.fullName);
+      } else if (entry is DirectoryInfoBase) {
+        _collectFiles(entry, files);
+      }
+    }
   }
 
   bool _isExcluded(String relativePath) {

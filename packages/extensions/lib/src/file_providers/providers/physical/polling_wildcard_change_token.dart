@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:clock/clock.dart';
+import 'package:file/file.dart';
 import 'package:glob/glob.dart';
-import 'package:path/path.dart' as p;
 
 import '../../../primitives/change_token.dart';
 import '../../../system/disposable.dart';
@@ -14,7 +13,7 @@ import '../../../system/threading/cancellation_token_source.dart';
 /// This token checks for changes to any files matching the glob pattern
 /// at regular intervals and invokes registered callbacks when changes occur.
 class PollingWildcardChangeToken implements ChangeToken {
-  final String _root;
+  final Directory _root;
   final String _pattern;
   final Duration _pollingInterval;
   final CancellationTokenSource? _cancellationTokenSource;
@@ -45,7 +44,7 @@ class PollingWildcardChangeToken implements ChangeToken {
 
     try {
       final glob = Glob(_pattern);
-      final rootDir = Directory(_root);
+      final rootDir = _root;
 
       if (!rootDir.existsSync()) {
         return state;
@@ -53,11 +52,13 @@ class PollingWildcardChangeToken implements ChangeToken {
 
       // List all files in the root directory recursively
       final entities = rootDir.listSync(recursive: true, followLinks: false);
+      final context = rootDir.fileSystem.path;
 
       for (final entity in entities) {
         if (entity is File) {
           try {
-            final relativePath = p.relative(entity.path, from: _root);
+            final relativePath =
+                context.relative(entity.path, from: rootDir.path);
 
             // Check if the file matches the glob pattern
             if (glob.matches(relativePath)) {

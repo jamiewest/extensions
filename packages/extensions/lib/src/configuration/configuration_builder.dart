@@ -7,13 +7,14 @@ import 'configuration_source.dart';
 /// application.
 class ConfigurationBuilder {
   final List<ConfigurationSource> _sources = <ConfigurationSource>[];
+  final Map<String, Object> _properties = <String, Object>{};
 
   /// Gets the sources used to obtain configuration values.
   List<ConfigurationSource> get sources => _sources;
 
   /// Gets a key/value collection that can be used to share data between
   /// the [ConfigurationBuilder] and the registered [ConfigurationSource]s.
-  Map<String, Object> get properties => <String, Object>{};
+  Map<String, Object> get properties => _properties;
 
   /// Adds a new configuration source.
   void add(ConfigurationSource source) {

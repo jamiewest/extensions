@@ -11,8 +11,9 @@ class PathUtils {
     return path;
   }
 
-  static bool pathNavigatesAboveRoot(String path) {
-    var items = path.split(p.separator);
+  static bool pathNavigatesAboveRoot(String path, [p.Context? context]) {
+    var separator = (context ?? p.context).separator;
+    var items = path.split(separator);
 
     var depth = 0;
 

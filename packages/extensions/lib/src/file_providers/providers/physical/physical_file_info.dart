@@ -32,4 +32,13 @@ class PhysicalFileInfo implements FileInfo {
 
   @override
   Stream<dynamic> createReadStream() => _info.openRead();
+
+  /// Reads the entire file contents as a string synchronously.
+  ///
+  /// Supported by both local and in-memory `package:file` implementations and
+  /// used by synchronous callers such as file-based configuration providers.
+  String readAsStringSync() => _info.readAsStringSync();
+
+  /// Reads the entire file contents as bytes synchronously.
+  List<int> readAsBytesSync() => _info.readAsBytesSync();
 }

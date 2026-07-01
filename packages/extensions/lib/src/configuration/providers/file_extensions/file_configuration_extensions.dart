@@ -1,9 +1,8 @@
-import 'dart:io' as io;
-
 import '../../../file_providers/file_provider.dart';
 import '../../../file_providers/providers/physical/physical_file_provider.dart';
 import '../../configuration_builder.dart';
 import 'file_load_exception_context.dart';
+import 'physical_provider_resolver.dart';
 
 const String _fileProviderKey = 'FileProvider';
 const String _fileLoadExceptionHandlerKey = 'FileLoadExceptionHandler';
@@ -38,7 +37,7 @@ extension FileConfigurationExtensions on ConfigurationBuilder {
 
     // Use current directory as default, similar to .NET's
     // AppContext.BaseDirectory
-    return PhysicalFileProvider(io.Directory.current.path);
+    return PhysicalFileProvider(currentDirectoryPath());
   }
 
   /// Sets the FileProvider for file-based providers to a PhysicalFileProvider

@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:path/path.dart' as p;
 
 import '../../../file_providers/providers/physical/physical_file_provider.dart';
 import '../../configuration_builder.dart';
 import '../file_extensions/file_configuration_extensions.dart';
+import '../file_extensions/physical_provider_resolver.dart';
 import 'json_configuration_provider.dart';
 import 'json_configuration_source.dart';
 import 'json_file_configuration_source.dart';
@@ -82,7 +81,7 @@ extension JsonConfigurationExtensions on ConfigurationBuilder {
       }
 
       var fullPath = p.join(basePath, input);
-      return File(fullPath).existsSync() || File(input).existsSync();
+      return fileExistsSync(fullPath) || fileExistsSync(input);
     } catch (_) {
       return false;
     }
