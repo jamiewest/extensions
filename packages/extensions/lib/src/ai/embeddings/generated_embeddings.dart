@@ -29,8 +29,7 @@ class GeneratedEmbeddings {
   void add(Embedding embedding) => _embeddings.add(embedding);
 
   /// Adds all embeddings from [embeddings].
-  void addAll(Iterable<Embedding> embeddings) =>
-      _embeddings.addAll(embeddings);
+  void addAll(Iterable<Embedding> embeddings) => _embeddings.addAll(embeddings);
 
   /// Returns an iterator over the embeddings.
   Iterator<Embedding> get iterator => _embeddings.iterator;

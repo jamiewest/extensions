@@ -10,8 +10,12 @@ class F1Algorithm {
   /// Computes the F1 score between [groundTruth] and [response] token lists.
   static double calculateF1Score(
       List<String> groundTruth, List<String> response) {
-    if (groundTruth.isEmpty) throw ArgumentError('groundTruth cannot be empty.');
-    if (response.isEmpty) throw ArgumentError('response cannot be empty.');
+    if (groundTruth.isEmpty) {
+      throw ArgumentError('groundTruth cannot be empty.');
+    }
+    if (response.isEmpty) {
+      throw ArgumentError('response cannot be empty.');
+    }
 
     final refCounts = MatchCounter<String>(groundTruth);
     final predCounts = MatchCounter<String>(response);

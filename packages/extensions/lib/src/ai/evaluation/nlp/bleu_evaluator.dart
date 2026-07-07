@@ -53,7 +53,8 @@ class BLEUEvaluator implements Evaluator {
       return result;
     }
 
-    final ctx = additionalContext?.whereType<BLEUEvaluatorContext>().firstOrNull;
+    final ctx =
+        additionalContext?.whereType<BLEUEvaluatorContext>().firstOrNull;
     if (ctx == null) {
       metric.addDiagnostic(EvaluationDiagnostic.error(
           'A BLEUEvaluatorContext was not found in additionalContext.'));
@@ -66,9 +67,8 @@ class BLEUEvaluator implements Evaluator {
     }
 
     final start = DateTime.now();
-    final references = ctx.references
-        .map((r) => SimpleWordTokenizer.wordTokenize(r))
-        .toList();
+    final references =
+        ctx.references.map((r) => SimpleWordTokenizer.wordTokenize(r)).toList();
     final hypothesis = SimpleWordTokenizer.wordTokenize(responseText);
     final score = BLEUAlgorithm.sentenceBLEU(
       references,

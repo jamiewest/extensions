@@ -48,6 +48,5 @@ class HttpClientFactoryOptions {
       <HttpMessageHandlerBuilderAction>[];
 
   /// Actions that configure the final HTTP client instance.
-  final List<HttpClientAction> httpClientActions =
-      <HttpClientAction>[];
+  final List<HttpClientAction> httpClientActions = <HttpClientAction>[];
 }

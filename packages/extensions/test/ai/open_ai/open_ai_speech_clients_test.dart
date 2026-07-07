@@ -269,8 +269,7 @@ void main() {
           options: OpenAIClientOptions(httpClient: fakeHttp),
         );
 
-        final updates =
-            await client.getStreamingAudio('Hello world').toList();
+        final updates = await client.getStreamingAudio('Hello world').toList();
 
         expect(updates, isNotEmpty);
         for (final update in updates) {

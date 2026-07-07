@@ -17,8 +17,7 @@ import '../response_cache.dart';
   name: 'DiskBasedResponseCache.cs',
   namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
 )
 class DiskBasedResponseCache implements ResponseCache {
   /// Creates a [DiskBasedResponseCache] under [cacheDir].

@@ -5,15 +5,15 @@ import 'package:test/test.dart';
 import 'fakes/fake_service.dart';
 
 void main() {
-    group('ServiceCollectionTests', () {
-      test('TestMakeReadOnly', () {
-        var descriptor = ServiceDescriptor(
-          serviceType: FakeService,
-          implementationInstance: FakeServiceImplementation(),
-        );
-        var serviceCollection = ServiceCollection()
-          ..add(descriptor)
-          ..makeReadOnly();
+  group('ServiceCollectionTests', () {
+    test('TestMakeReadOnly', () {
+      var descriptor = ServiceDescriptor(
+        serviceType: FakeService,
+        implementationInstance: FakeServiceImplementation(),
+      );
+      var serviceCollection = ServiceCollection()
+        ..add(descriptor)
+        ..makeReadOnly();
 
       var descriptor2 = ServiceDescriptor(
         serviceType: FakeEveryService,

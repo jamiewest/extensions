@@ -23,6 +23,5 @@ extension AIContentExtensions on Iterable<AIContent> {
   }
 
   /// Concatenates the text of all [TextContent] items.
-  String concatText() =>
-      whereType<TextContent>().map((c) => c.text).join();
+  String concatText() => whereType<TextContent>().map((c) => c.text).join();
 }

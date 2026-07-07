@@ -140,8 +140,7 @@ void main() {
       test('combines two filters when predefined combination exists', () {
         // Combining dotPrefixed + hidden doesn't have a predefined enum value
         // so it returns none. Only combinations that exist as enum values work.
-        final combined =
-            ExclusionFilters.dotPrefixed | ExclusionFilters.hidden;
+        final combined = ExclusionFilters.dotPrefixed | ExclusionFilters.hidden;
 
         // Since there's no enum value for dotPrefixed | hidden, returns none
         expect(combined, ExclusionFilters.none);

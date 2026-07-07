@@ -1,3 +1,12 @@
+## 0.4.6
+
+* Updated `extensions` dependency to `^0.5.0`.
+* Inherits the upstream-faithful FileSystemGlobbing rewrite (note:
+  `package:glob` is no longer re-exported and glob-specific `?`, `[abc]`,
+  `{a,b}` syntax is no longer supported) and the new AI features from
+  extensions 0.5.0: structured chat output, distributed caching for chat
+  and embeddings, and the completed builder pipeline extensions.
+
 ## 0.4.5
 
 * **Fix:** `wrapWith` widget wrappers registered via `FlutterBuilder` are now

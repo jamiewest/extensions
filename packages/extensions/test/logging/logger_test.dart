@@ -10,8 +10,7 @@ void main() {
       test('Log_CallsProviderLogger', () {
         final provider = TestLoggerProvider();
         final factory = LoggerFactory([provider]);
-        factory.createLogger('TestCategory')
-            .logInformation('Test message');
+        factory.createLogger('TestCategory').logInformation('Test message');
 
         final testLogger = provider.loggers['TestCategory'] as TestLogger;
         expect(testLogger.loggedMessages, hasLength(1));
@@ -194,8 +193,7 @@ void main() {
         final throwingProvider = ThrowingLoggerProvider(throwOnLog: true);
         final workingProvider = FilterableLoggerProvider();
         final factory = LoggerFactory([throwingProvider, workingProvider]);
-        factory.createLogger('TestCategory')
-            .logInformation('Test message');
+        factory.createLogger('TestCategory').logInformation('Test message');
 
         // Working provider should still receive the log
         final testLogger = workingProvider.loggers['TestCategory']!;
@@ -209,8 +207,7 @@ void main() {
         final provider2 = FilterableLoggerProvider();
         final provider3 = FilterableLoggerProvider();
         final factory = LoggerFactory([provider1, provider2, provider3]);
-        factory.createLogger('TestCategory')
-            .logInformation('Test message');
+        factory.createLogger('TestCategory').logInformation('Test message');
 
         expect(
           provider1.loggers['TestCategory']!.loggedMessages,
@@ -230,8 +227,7 @@ void main() {
         final provider1 = FilterableLoggerProvider(LogLevel.error);
         final provider2 = FilterableLoggerProvider(LogLevel.debug);
         final factory = LoggerFactory([provider1, provider2]);
-        factory.createLogger('TestCategory')
-            .logInformation('Test message');
+        factory.createLogger('TestCategory').logInformation('Test message');
 
         // Only provider2 should log (provider1 requires Error or higher)
         expect(provider1.loggers['TestCategory']!.loggedMessages, isEmpty);

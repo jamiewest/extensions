@@ -41,7 +41,8 @@ class GroundednessEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx = additionalContext.whereType<GroundednessEvaluatorContext>().firstOrNull;
+    final ctx =
+        additionalContext.whereType<GroundednessEvaluatorContext>().firstOrNull;
     if (ctx == null) return null;
 
     final userRequest = messages.lastUserMessage?.text ?? '';

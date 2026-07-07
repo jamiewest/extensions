@@ -8,8 +8,7 @@ import 'package:extensions/annotations.dart';
   name: 'PropertyModel.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 abstract class PropertyModel {
@@ -85,6 +84,5 @@ abstract class PropertyModel {
   T getValue<T>(Object record) => getValueAsObject(record) as T;
 
   /// Writes a typed [value] to the property on [record].
-  void setValue<T>(Object record, T value) =>
-      setValueAsObject(record, value);
+  void setValue<T>(Object record, T value) => setValueAsObject(record, value);
 }

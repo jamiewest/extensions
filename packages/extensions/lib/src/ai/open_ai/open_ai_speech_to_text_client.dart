@@ -57,7 +57,8 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
   }) async {
     final bytes = await _collectBytes(stream);
     final isTranslation = _isTranslationRequest(options);
-    final endpoint = isTranslation ? 'audio/translations' : 'audio/transcriptions';
+    final endpoint =
+        isTranslation ? 'audio/translations' : 'audio/transcriptions';
 
     final client = _options.httpClient ?? http.Client();
     final owned = _options.httpClient == null;

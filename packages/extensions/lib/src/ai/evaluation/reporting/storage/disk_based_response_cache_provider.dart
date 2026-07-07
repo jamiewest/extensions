@@ -12,10 +12,10 @@ import 'disk_based_response_cache.dart';
   name: 'DiskBasedResponseCacheProvider.cs',
   namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
 )
-class DiskBasedResponseCacheProvider implements EvaluationResponseCacheProvider {
+class DiskBasedResponseCacheProvider
+    implements EvaluationResponseCacheProvider {
   /// Creates a [DiskBasedResponseCacheProvider] rooted at [storageRootPath].
   ///
   /// [timeToLive] controls how long cached responses remain valid; defaults to
@@ -65,8 +65,7 @@ class DiskBasedResponseCacheProvider implements EvaluationResponseCacheProvider 
     if (!cacheRoot.existsSync()) return;
 
     for (final scenarioDir in cacheRoot.listSync().whereType<Directory>()) {
-      for (final iterDir
-          in scenarioDir.listSync().whereType<Directory>()) {
+      for (final iterDir in scenarioDir.listSync().whereType<Directory>()) {
         final cache = DiskBasedResponseCache(
           iterDir.path,
           timeToLive: _timeToLive,

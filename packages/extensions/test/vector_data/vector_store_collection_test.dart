@@ -3,7 +3,8 @@ import 'package:extensions/vector_data.dart';
 import 'package:test/test.dart';
 
 // A minimal concrete implementation used to verify the abstract contract.
-class _FakeCollection extends VectorStoreCollection<String, Map<String, Object?>> {
+class _FakeCollection
+    extends VectorStoreCollection<String, Map<String, Object?>> {
   _FakeCollection(this._name);
 
   final String _name;
@@ -121,8 +122,7 @@ void main() {
     });
 
     test('searchAsync emits nothing from stub', () async {
-      final results =
-          await collection.searchAsync([0.1, 0.2]).toList();
+      final results = await collection.searchAsync([0.1, 0.2]).toList();
 
       expect(results, isEmpty);
     });
@@ -135,8 +135,8 @@ void main() {
       expect(() => collection.dispose(), returnsNormally);
     });
 
-    test('implements IVectorSearchable', () {
-      expect(collection, isA<IVectorSearchable<Map<String, Object?>>>());
+    test('implements VectorSearchable', () {
+      expect(collection, isA<VectorSearchable<Map<String, Object?>>>());
     });
   });
 }

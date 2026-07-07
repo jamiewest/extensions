@@ -14,7 +14,6 @@ class CompositeChangeToken extends ChangeToken {
   CompositeChangeToken(List<ChangeToken>? changeTokens)
       : _changeTokens = _validateTokens(changeTokens),
         _registeredCallbackProxy = false {
-
     for (var i = 0; i < _changeTokens.length; i++) {
       if (_changeTokens[i].activeChangeCallbacks) {
         _activeChangeCallbacks = true;

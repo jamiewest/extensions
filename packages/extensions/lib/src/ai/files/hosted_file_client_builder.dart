@@ -19,7 +19,11 @@ typedef InnerHostedFileClientFactory = HostedFileClient Function(
 )
 class HostedFileClientBuilder {
   late final InnerHostedFileClientFactory _innerFactory;
-  final List<HostedFileClient Function(HostedFileClient)> _factories = [];
+  final List<
+      HostedFileClient Function(
+        HostedFileClient inner,
+        ServiceProvider services,
+      )> _factories = [];
 
   HostedFileClientBuilder._(InnerHostedFileClientFactory innerFactory)
       : _innerFactory = innerFactory;
@@ -36,7 +40,16 @@ class HostedFileClientBuilder {
 
   /// Adds a middleware factory to the pipeline.
   HostedFileClientBuilder use(
-      HostedFileClient Function(HostedFileClient) factory) {
+          HostedFileClient Function(HostedFileClient) factory) =>
+      useWithServices((inner, _) => factory(inner));
+
+  /// Adds a middleware factory that also receives the active
+  /// [ServiceProvider].
+  HostedFileClientBuilder useWithServices(
+      HostedFileClient Function(
+        HostedFileClient inner,
+        ServiceProvider services,
+      ) factory) {
     _factories.add(factory);
     return this;
   }
@@ -46,7 +59,7 @@ class HostedFileClientBuilder {
     services ??= EmptyServiceProvider.instance;
     var client = _innerFactory(services);
     for (var i = _factories.length - 1; i >= 0; i--) {
-      client = _factories[i](client);
+      client = _factories[i](client, services);
     }
     return client;
   }

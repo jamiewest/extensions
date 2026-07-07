@@ -45,11 +45,11 @@ void main() {
       var services = ServiceCollection()
         ..addOptions<MetricsOptions>(MetricsOptions.new);
       _FakeBuilder(services).enableMetrics(
-          meterName: 'meter',
-          instrumentName: 'instance',
-          listenerName: 'listener',
-          scopes: MeterScope.local.value,
-        );
+        meterName: 'meter',
+        instrumentName: 'instance',
+        listenerName: 'listener',
+        scopes: MeterScope.local.value,
+      );
 
       var container = services.buildServiceProvider();
       var options = container.getRequiredService<Options<MetricsOptions>>();
@@ -154,11 +154,11 @@ void main() {
       var services = ServiceCollection()
         ..addOptions<MetricsOptions>(MetricsOptions.new);
       _FakeBuilder(services).disableMetrics(
-          meterName: 'meter',
-          instrumentName: 'instance',
-          listenerName: 'listener',
-          scopes: MeterScope.local.value,
-        );
+        meterName: 'meter',
+        instrumentName: 'instance',
+        listenerName: 'listener',
+        scopes: MeterScope.local.value,
+      );
 
       var container = services.buildServiceProvider();
       var options = container.getRequiredService<Options<MetricsOptions>>();

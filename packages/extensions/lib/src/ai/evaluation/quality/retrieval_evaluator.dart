@@ -37,11 +37,14 @@ class RetrievalEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx = additionalContext.whereType<RetrievalEvaluatorContext>().firstOrNull;
+    final ctx =
+        additionalContext.whereType<RetrievalEvaluatorContext>().firstOrNull;
     if (ctx == null) return null;
 
     final userRequest = messages.lastUserMessage?.text ?? '';
-    final chunks = ctx.retrievedContextChunks.asMap().entries
+    final chunks = ctx.retrievedContextChunks
+        .asMap()
+        .entries
         .map((e) => '[${e.key + 1}] ${e.value}')
         .join('\n');
     final prompt = '''

@@ -103,10 +103,8 @@ class SpeechToTextResponseUpdate {
   UsageDetails? usage;
 
   /// Gets concatenated text from all [TextContent] items.
-  String get text => contents
-      .whereType<TextContent>()
-      .map((c) => c.text)
-      .join();
+  String get text =>
+      contents.whereType<TextContent>().map((c) => c.text).join();
 
   @override
   String toString() => text;

@@ -38,8 +38,11 @@ class TaskAdherenceEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx = additionalContext.whereType<TaskAdherenceEvaluatorContext>().firstOrNull;
-    final conversationHistory = messages.map((m) => '[${m.role.value}]: ${m.text}').join('\n');
+    final ctx = additionalContext
+        .whereType<TaskAdherenceEvaluatorContext>()
+        .firstOrNull;
+    final conversationHistory =
+        messages.map((m) => '[${m.role.value}]: ${m.text}').join('\n');
     final response = modelResponse.text;
     final toolsSection = ctx != null && ctx.toolDefinitions.isNotEmpty
         ? '\nAVAILABLE TOOLS:\n${ctx.contents.map((c) => c.toString()).join("\n")}'

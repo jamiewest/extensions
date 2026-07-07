@@ -12,8 +12,7 @@ class OpenAIClientOptions {
   OpenAIClientOptions({Uri? endpoint, this.httpClient})
       : endpoint = endpoint ?? _defaultEndpoint;
 
-  static final Uri _defaultEndpoint =
-      Uri.parse('https://api.openai.com/v1');
+  static final Uri _defaultEndpoint = Uri.parse('https://api.openai.com/v1');
 
   /// The base URI of the OpenAI-compatible API.
   ///

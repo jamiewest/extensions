@@ -1,10 +1,9 @@
 import 'package:file/file.dart';
-import 'package:glob/glob.dart';
 import 'package:path/path.dart' as p;
 
 import '../file_providers/providers/physical/default_file_system.dart';
 import 'abstractions/directory_info_wrapper.dart';
-import 'file_pattern_match.dart';
+import 'in_memory_directory_info.dart';
 import 'matcher.dart';
 import 'pattern_matching_result.dart';
 
@@ -50,83 +49,23 @@ extension MatcherExtensions on Matcher {
       return const [];
     }
 
-    final directoryInfo = DirectoryInfoWrapper(dir);
-    final result = execute(directoryInfo);
+    final result = execute(DirectoryInfoWrapper(dir));
 
-    return result.files.map((match) => p.join(directoryPath, match.path));
+    return result.files
+        .map((match) => p.normalize(p.join(directoryPath, match.path)));
   }
 
   /// Matches a single file path without accessing the file system.
   ///
   /// [file] - The file path to match
   /// [root] - Optional root directory (defaults to current directory)
-  PatternMatchingResult matchFile(String file, [String? root]) {
-    final rootPath = root ?? p.current;
-    final relativePath = p.relative(file, from: rootPath);
-
-    // Check if the file matches any include patterns
-    final includeMatches = _matchesIncludePatterns(relativePath);
-
-    if (!includeMatches) {
-      return PatternMatchingResult(const []);
-    }
-
-    // Check if the file is excluded
-    if (_matchesExcludePatterns(relativePath)) {
-      return PatternMatchingResult(const []);
-    }
-
-    return PatternMatchingResult([FilePatternMatch(relativePath)]);
-  }
+  PatternMatchingResult matchFile(String file, [String? root]) =>
+      matchFiles([file], root);
 
   /// Matches multiple file paths without accessing the file system.
   ///
   /// [files] - The file paths to match
   /// [root] - Optional root directory (defaults to current directory)
-  PatternMatchingResult matchFiles(Iterable<String> files, [String? root]) {
-    final rootPath = root ?? p.current;
-    final matches = <FilePatternMatch>[];
-
-    for (final file in files) {
-      final relativePath = p.relative(file, from: rootPath);
-
-      // Check if the file matches any include patterns
-      if (!_matchesIncludePatterns(relativePath)) {
-        continue;
-      }
-
-      // Check if the file is excluded
-      if (_matchesExcludePatterns(relativePath)) {
-        continue;
-      }
-
-      matches.add(FilePatternMatch(relativePath));
-    }
-
-    return PatternMatchingResult(matches);
-  }
-
-  bool _matchesIncludePatterns(String path) {
-    if (includePatterns.isEmpty) {
-      return true; // No include patterns means include everything
-    }
-
-    for (final pattern in includePatterns) {
-      if (Glob(pattern).matches(path)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  bool _matchesExcludePatterns(String path) {
-    for (final pattern in excludePatterns) {
-      if (Glob(pattern).matches(path)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+  PatternMatchingResult matchFiles(Iterable<String> files, [String? root]) =>
+      execute(InMemoryDirectoryInfo.fromPaths(root ?? p.current, files));
 }

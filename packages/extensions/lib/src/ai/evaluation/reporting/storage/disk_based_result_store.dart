@@ -32,8 +32,7 @@ import '../scenario_run_result.dart';
   name: 'DiskBasedResultStore.cs',
   namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
 )
 class DiskBasedResultStore implements EvaluationResultStore {
   /// Creates a [DiskBasedResultStore] rooted at [storageRootPath].
@@ -127,8 +126,7 @@ class DiskBasedResultStore implements EvaluationResultStore {
     if (!resultsDir.existsSync()) return [];
 
     final dirs = resultsDir.listSync().whereType<Directory>().toList()
-      ..sort((a, b) =>
-          b.statSync().modified.compareTo(a.statSync().modified));
+      ..sort((a, b) => b.statSync().modified.compareTo(a.statSync().modified));
 
     return dirs.take(count).map((d) => _dirName(d.path)).toList();
   }

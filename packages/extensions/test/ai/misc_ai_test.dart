@@ -133,9 +133,17 @@ void main() {
       expect(content.hasTopLevelMediaType('image'), isTrue);
       expect(content.hasTopLevelMediaType('audio'), isFalse);
 
-      final fromUri = DataContent.fromUri('data:image/png;base64,abc');
-      expect(fromUri.uri, 'data:image/png;base64,abc');
-      expect(fromUri.hasTopLevelMediaType('image'), isFalse);
+      final fromUri = DataContent.fromUri('data:image/png;base64,AQID');
+      expect(fromUri.uri, 'data:image/png;base64,AQID');
+      expect(fromUri.data, equals([1, 2, 3]));
+      expect(fromUri.mediaType, equals('image/png'));
+      expect(fromUri.hasTopLevelMediaType('image'), isTrue);
+
+      final fromHttpUri = DataContent.fromUri('https://example.com/a.png');
+      expect(fromHttpUri.data, isNull);
+      expect(fromHttpUri.uri, 'https://example.com/a.png');
+
+      expect(content.uri, startsWith('data:image/png;base64,'));
     });
 
     test('UriContent media type helpers', () {

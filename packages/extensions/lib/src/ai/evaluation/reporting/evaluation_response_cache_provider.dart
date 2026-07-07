@@ -27,5 +27,6 @@ abstract class EvaluationResponseCacheProvider {
   Future<void> reset({CancellationToken? cancellationToken});
 
   /// Removes all expired cache entries.
-  Future<void> deleteExpiredCacheEntries({CancellationToken? cancellationToken});
+  Future<void> deleteExpiredCacheEntries(
+      {CancellationToken? cancellationToken});
 }

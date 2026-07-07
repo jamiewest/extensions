@@ -27,8 +27,7 @@ abstract class DelegatingImageGenerator implements ImageGenerator {
       );
 
   @override
-  T? getService<T>({Object? key}) =>
-      innerGenerator.getService<T>(key: key);
+  T? getService<T>({Object? key}) => innerGenerator.getService<T>(key: key);
 
   @override
   void dispose() => innerGenerator.dispose();

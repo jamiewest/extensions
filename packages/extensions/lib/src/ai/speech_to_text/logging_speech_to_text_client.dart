@@ -87,7 +87,7 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
         _logger.logTrace(
           'getStreamingText invoked. '
           'Options: '
-        '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
+          '${options != null ? _asJson(_optionsToMap(options)) : 'null'}.',
         );
       }
 
@@ -138,8 +138,7 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
         if (options.textLanguage != null) 'textLanguage': options.textLanguage,
       };
 
-  static Map<String, Object?> _responseToMap(SpeechToTextResponse response) =>
-      {
+  static Map<String, Object?> _responseToMap(SpeechToTextResponse response) => {
         if (response.responseId != null) 'responseId': response.responseId,
         if (response.modelId != null) 'modelId': response.modelId,
         'text': response.text,

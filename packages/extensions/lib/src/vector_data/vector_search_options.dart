@@ -4,7 +4,7 @@ import 'vector_store_filter.dart';
 
 /// Options for a vector similarity search.
 ///
-/// Pass to [IVectorSearchable.searchAsync].
+/// Pass to [VectorSearchable.searchAsync].
 ///
 /// ```dart
 /// final results = await collection.searchAsync(

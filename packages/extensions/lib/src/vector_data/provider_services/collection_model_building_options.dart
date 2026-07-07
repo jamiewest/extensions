@@ -8,8 +8,7 @@ import 'package:extensions/annotations.dart';
   name: 'CollectionModelBuildingOptions.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 final class CollectionModelBuildingOptions {

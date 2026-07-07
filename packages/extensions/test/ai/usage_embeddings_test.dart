@@ -43,7 +43,9 @@ void main() {
       expect(embeddings.isEmpty, isFalse);
 
       embeddings.add(Embedding(vector: [3.0]));
-      embeddings.addAll([Embedding(vector: [4.0, 5.0])]);
+      embeddings.addAll([
+        Embedding(vector: [4.0, 5.0])
+      ]);
 
       expect(embeddings.length, 3);
 

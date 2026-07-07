@@ -22,8 +22,7 @@ class EmbeddingGenerationOptions {
   EmbeddingGenerationOptions clone() => EmbeddingGenerationOptions(
         modelId: modelId,
         dimensions: dimensions,
-        additionalProperties: additionalProperties != null
-            ? Map.of(additionalProperties!)
-            : null,
+        additionalProperties:
+            additionalProperties != null ? Map.of(additionalProperties!) : null,
       );
 }

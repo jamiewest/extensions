@@ -50,9 +50,9 @@ abstract class QualityEvaluatorBase implements Evaluator {
     );
 
     if (instructions == null) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'Could not build evaluation instructions. '
-          'A required evaluation context may be missing.'));
+      metric.addDiagnostic(
+          EvaluationDiagnostic.error('Could not build evaluation instructions. '
+              'A required evaluation context may be missing.'));
       return result;
     }
 

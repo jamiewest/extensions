@@ -40,7 +40,8 @@ class EquivalenceEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx = additionalContext.whereType<EquivalenceEvaluatorContext>().firstOrNull;
+    final ctx =
+        additionalContext.whereType<EquivalenceEvaluatorContext>().firstOrNull;
     if (ctx == null) return null;
 
     final response = modelResponse.text;

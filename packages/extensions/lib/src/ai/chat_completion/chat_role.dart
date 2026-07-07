@@ -20,8 +20,7 @@ class ChatRole {
 
   @override
   bool operator ==(Object other) =>
-      other is ChatRole &&
-      value.toLowerCase() == other.value.toLowerCase();
+      other is ChatRole && value.toLowerCase() == other.value.toLowerCase();
 
   @override
   int get hashCode => value.toLowerCase().hashCode;

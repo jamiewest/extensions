@@ -45,8 +45,7 @@ void main() {
 
   group('HostedVectorStoreContent', () {
     test('stores vectorStoreId', () {
-      final content =
-          HostedVectorStoreContent(vectorStoreId: 'vs-123');
+      final content = HostedVectorStoreContent(vectorStoreId: 'vs-123');
       expect(content.vectorStoreId, 'vs-123');
       expect(content.toString(), 'vs-123');
     });
@@ -313,8 +312,7 @@ class _NullChatClient implements ChatClient {
 }
 
 class _TestFunction extends AIFunction {
-  _TestFunction()
-      : super(name: 'test_fn', description: 'A test function');
+  _TestFunction() : super(name: 'test_fn', description: 'A test function');
 
   @override
   Future<Object?> invokeCore(

@@ -30,11 +30,24 @@ class SpeechToTextClientBuilder {
           InnerSpeechToTextClientFactory innerFactory) =>
       SpeechToTextClientBuilder._(innerFactory);
 
-  final List<SpeechToTextClient Function(SpeechToTextClient)> _factories = [];
+  final List<
+      SpeechToTextClient Function(
+        SpeechToTextClient inner,
+        ServiceProvider services,
+      )> _factories = [];
 
   /// Adds a middleware factory to the pipeline.
   SpeechToTextClientBuilder use(
-      SpeechToTextClient Function(SpeechToTextClient) factory) {
+          SpeechToTextClient Function(SpeechToTextClient) factory) =>
+      useWithServices((inner, _) => factory(inner));
+
+  /// Adds a middleware factory that also receives the active
+  /// [ServiceProvider].
+  SpeechToTextClientBuilder useWithServices(
+      SpeechToTextClient Function(
+        SpeechToTextClient inner,
+        ServiceProvider services,
+      ) factory) {
     _factories.add(factory);
     return this;
   }
@@ -45,7 +58,7 @@ class SpeechToTextClientBuilder {
 
     var client = _innerFactory(services);
     for (var i = _factories.length - 1; i >= 0; i--) {
-      client = _factories[i](client);
+      client = _factories[i](client, services);
     }
     return client;
   }

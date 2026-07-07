@@ -37,8 +37,10 @@ class MatchCounter<T> {
   /// each shared key (BLEU clipping semantics).
   MatchCounter<T> intersect(MatchCounter<T> other) {
     final result = MatchCounter<T>.empty();
-    final smaller = _counts.length <= other._counts.length ? _counts : other._counts;
-    final larger = _counts.length <= other._counts.length ? other._counts : _counts;
+    final smaller =
+        _counts.length <= other._counts.length ? _counts : other._counts;
+    final larger =
+        _counts.length <= other._counts.length ? other._counts : _counts;
     for (final entry in smaller.entries) {
       final otherCount = larger[entry.key];
       if (otherCount != null) {

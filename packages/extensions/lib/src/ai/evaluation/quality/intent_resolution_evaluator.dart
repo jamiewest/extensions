@@ -37,7 +37,9 @@ class IntentResolutionEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx = additionalContext.whereType<IntentResolutionEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        .whereType<IntentResolutionEvaluatorContext>()
+        .firstOrNull;
     final userRequest = messages.lastUserMessage?.text ?? '';
     final response = modelResponse.text;
 

@@ -34,8 +34,7 @@ void main() {
     });
 
     test('returns PhysicalFileInfo for valid paths with leading slashes', () {
-      io.File(p.join(tempDir.path, 'test.txt'))
-        .writeAsStringSync('content');
+      io.File(p.join(tempDir.path, 'test.txt')).writeAsStringSync('content');
 
       final provider = PhysicalFileProvider(tempDir.path);
       final result = provider.getFileInfo('/test.txt');
@@ -169,8 +168,7 @@ void main() {
     });
 
     test('returns directory contents for valid subdirectory', () {
-      final subDir = io.Directory(p.join(tempDir.path, 'subdir'))
-        ..createSync();
+      final subDir = io.Directory(p.join(tempDir.path, 'subdir'))..createSync();
       io.File(p.join(subDir.path, 'a.txt')).writeAsStringSync('content a');
       io.File(p.join(subDir.path, 'b.txt')).writeAsStringSync('content b');
 

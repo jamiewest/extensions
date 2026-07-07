@@ -44,8 +44,7 @@ class FakeChangeToken implements ChangeToken {
   @override
   final bool activeChangeCallbacks;
 
-  final List<void Function(Object?)> _callbacks =
-      <void Function(Object?)>[];
+  final List<void Function(Object?)> _callbacks = <void Function(Object?)>[];
 
   void trigger() {
     hasChanged = true;

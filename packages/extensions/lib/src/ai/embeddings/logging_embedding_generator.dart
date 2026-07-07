@@ -82,7 +82,8 @@ class LoggingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
 
   static Map<String, Object?> _optionsToMap(
     EmbeddingGenerationOptions options,
-  ) => {
+  ) =>
+      {
         if (options.modelId != null) 'modelId': options.modelId,
         if (options.dimensions != null) 'dimensions': options.dimensions,
       };

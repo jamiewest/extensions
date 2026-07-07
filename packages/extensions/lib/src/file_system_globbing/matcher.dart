@@ -1,154 +1,116 @@
-import 'package:glob/glob.dart';
-import 'package:path/path.dart' as p;
-
 import 'abstractions/directory_info_base.dart';
-import 'abstractions/file_info_base.dart';
-import 'abstractions/file_system_info_base.dart';
-import 'file_pattern_match.dart';
+import 'internal/i_pattern.dart';
+import 'internal/include_or_exclude_value.dart';
+import 'internal/matcher_context.dart';
+import 'internal/patterns/pattern_builder.dart';
 import 'pattern_matching_result.dart';
+import 'util/string_comparison.dart';
 
-/// Searches the file system for files with names that match specified patterns.
+/// Searches the file system for files with names that match specified
+/// patterns.
 ///
-/// Supports both include and exclude glob patterns for flexible file matching.
+/// Patterns given to [addInclude] and [addExclude] are relative to the root
+/// directory passed to [execute] and can use the following formats:
+///
+/// - exact names: `"one.txt"`, `"dir/two.txt"`
+/// - `*` matches zero or more characters within a file or directory name:
+///   `"*.txt"`, `"readme.*"`, `"styles/*.css"`
+/// - `**` matches an arbitrary number of directory levels: `"**/*.cs"`,
+///   `"dir/**/*"`
+/// - `..` at the beginning of a pattern refers to the parent directory
 class Matcher {
-  final _includePatterns = <String>[];
-  final _excludePatterns = <String>[];
+  final List<IPattern>? _includePatterns;
+  final List<IPattern>? _excludePatterns;
+  final List<IncludeOrExcludeValue<IPattern>>? _includeOrExcludePatterns;
+  final List<String> _includePatternStrings = [];
+  final List<String> _excludePatternStrings = [];
+  final PatternBuilder _builder;
+  final bool _preserveFilterOrder;
 
-  /// Gets the list of include patterns.
-  List<String> get includePatterns => List.unmodifiable(_includePatterns);
+  /// The string comparison used when matching patterns against names.
+  final StringComparison comparisonType;
 
-  /// Gets the list of exclude patterns.
-  List<String> get excludePatterns => List.unmodifiable(_excludePatterns);
-
-  /// Adds a glob pattern to include files in the search results.
+  /// Creates a matcher.
   ///
-  /// Patterns can include:
-  /// - Exact paths: `"file.txt"` or `"dir/file.txt"`
-  /// - Wildcards: `"*.txt"` matches all .txt files
-  /// - Deep matching: `"**/*.cs"` matches .cs files in any subdirectory
+  /// Matching is case-insensitive unless [comparisonType] is
+  /// [StringComparison.ordinal]. When [preserveFilterOrder] is `true`,
+  /// filters are applied in the order they were added, so a later include
+  /// can re-admit a file dropped by an earlier exclude; otherwise all
+  /// includes are applied before all excludes.
+  Matcher({
+    this.comparisonType = StringComparison.ordinalIgnoreCase,
+    bool preserveFilterOrder = false,
+  })  : _builder = PatternBuilder(comparisonType),
+        _preserveFilterOrder = preserveFilterOrder,
+        _includeOrExcludePatterns = preserveFilterOrder ? [] : null,
+        _includePatterns = preserveFilterOrder ? null : [],
+        _excludePatterns = preserveFilterOrder ? null : [];
+
+  /// The include pattern strings added so far.
+  List<String> get includePatterns => List.unmodifiable(
+        _includePatternStrings,
+      );
+
+  /// The exclude pattern strings added so far.
+  List<String> get excludePatterns => List.unmodifiable(
+        _excludePatternStrings,
+      );
+
+  /// Adds a pattern for files the matcher should discover.
+  ///
+  /// Use `/` as the directory separator, `*` for wildcards within a name,
+  /// `**` for arbitrary directory depth, and `..` for a parent directory.
   Matcher addInclude(String pattern) {
-    _includePatterns.add(pattern);
+    _includePatternStrings.add(pattern);
+    if (_preserveFilterOrder) {
+      _includeOrExcludePatterns!.add(
+        IncludeOrExcludeValue<IPattern>(
+          value: _builder.build(pattern),
+          isInclude: true,
+        ),
+      );
+    } else {
+      _includePatterns!.add(_builder.build(pattern));
+    }
+
     return this;
   }
 
-  /// Adds a glob pattern to exclude files from the search results.
+  /// Adds a pattern for files the matcher should exclude from the results.
   ///
-  /// Exclude patterns are applied after include patterns to filter out
-  /// unwanted matches.
+  /// Use `/` as the directory separator, `*` for wildcards within a name,
+  /// `**` for arbitrary directory depth, and `..` for a parent directory.
   Matcher addExclude(String pattern) {
-    _excludePatterns.add(pattern);
+    _excludePatternStrings.add(pattern);
+    if (_preserveFilterOrder) {
+      _includeOrExcludePatterns!.add(
+        IncludeOrExcludeValue<IPattern>(
+          value: _builder.build(pattern),
+          isInclude: false,
+        ),
+      );
+    } else {
+      _excludePatterns!.add(_builder.build(pattern));
+    }
+
     return this;
   }
 
-  /// Executes the matcher against the specified directory.
+  /// Searches [directoryInfo] for all files matching the patterns added to
+  /// this matcher.
   ///
-  /// Returns a [PatternMatchingResult] containing all files that match
-  /// the include patterns and don't match any exclude patterns.
-  PatternMatchingResult execute(DirectoryInfoBase directoryInfo) {
-    final rootPath = directoryInfo.fullName;
-    final matches = <FilePatternMatch>[];
-    final matchedPaths = <String>{};
-
-    // Enumerate every file under the root once, traversing the abstraction so
-    // the matcher works over any filesystem (including in-memory ones).
-    final files = <String>[];
-    _collectFiles(directoryInfo, files);
-
-    // Process include patterns
-    for (final pattern in _includePatterns) {
-      final glob = Glob(pattern);
-
-      for (final fullName in files) {
-        try {
-          final relativePath = p.relative(fullName, from: rootPath);
-
-          // Check if the file matches the include pattern
-          if (glob.matches(relativePath)) {
-            // Check against exclude patterns
-            if (!_isExcluded(relativePath)) {
-              // Avoid duplicates
-              if (matchedPaths.add(relativePath)) {
-                matches.add(FilePatternMatch(
-                  relativePath,
-                  _calculateStem(pattern, relativePath),
-                ));
-              }
-            }
-          }
-        } catch (e) {
-          // Skip files we can't access
-        }
-      }
-    }
-
-    return PatternMatchingResult(matches);
-  }
-
-  void _collectFiles(DirectoryInfoBase directory, List<String> files) {
-    Iterable<FileSystemInfoBase> entries;
-    try {
-      entries = directory.enumerateFileSystemInfos();
-    } catch (e) {
-      // Skip directories we can't access
-      return;
-    }
-
-    for (final entry in entries) {
-      if (entry is FileInfoBase) {
-        files.add(entry.fullName);
-      } else if (entry is DirectoryInfoBase) {
-        _collectFiles(entry, files);
-      }
-    }
-  }
-
-  bool _isExcluded(String relativePath) {
-    for (final pattern in _excludePatterns) {
-      final glob = Glob(pattern);
-      if (glob.matches(relativePath)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  String? _calculateStem(String pattern, String matchedPath) {
-    // Find the first wildcard in the pattern
-    final wildcardIndex = _findFirstWildcardIndex(pattern);
-
-    if (wildcardIndex == -1) {
-      // No wildcard, return null
-      return null;
-    }
-
-    // Get the pattern up to the wildcard
-    final patternPrefix = pattern.substring(0, wildcardIndex);
-
-    // Find the last directory separator before the wildcard
-    final lastSepIndex = patternPrefix.lastIndexOf('/');
-
-    if (lastSepIndex == -1) {
-      // Wildcard is in the root, stem is the whole match
-      return matchedPath;
-    }
-
-    // Calculate the stem relative to the wildcard position
-    final prefixDirs = patternPrefix.substring(0, lastSepIndex + 1);
-    if (matchedPath.startsWith(prefixDirs)) {
-      return matchedPath.substring(prefixDirs.length);
-    }
-
-    return matchedPath;
-  }
-
-  int _findFirstWildcardIndex(String pattern) {
-    final wildcards = ['*', '?', '[', '{'];
-    for (final wildcard in wildcards) {
-      final index = pattern.indexOf(wildcard);
-      if (index != -1) {
-        return index;
-      }
-    }
-    return -1;
-  }
+  /// Always returns a [PatternMatchingResult], even when no files matched.
+  PatternMatchingResult execute(DirectoryInfoBase directoryInfo) =>
+      _preserveFilterOrder
+          ? MatcherContext.preserveOrder(
+              _includeOrExcludePatterns!,
+              directoryInfo,
+              comparisonType,
+            ).execute()
+          : MatcherContext(
+              _includePatterns!,
+              _excludePatterns!,
+              directoryInfo,
+              comparisonType,
+            ).execute();
 }

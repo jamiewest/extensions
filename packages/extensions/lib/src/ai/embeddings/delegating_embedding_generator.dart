@@ -27,8 +27,7 @@ abstract class DelegatingEmbeddingGenerator implements EmbeddingGenerator {
       );
 
   @override
-  T? getService<T>({Object? key}) =>
-      innerGenerator.getService<T>(key: key);
+  T? getService<T>({Object? key}) => innerGenerator.getService<T>(key: key);
 
   @override
   void dispose() => innerGenerator.dispose();

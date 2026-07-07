@@ -17,8 +17,7 @@ import 'vector_property_model.dart';
   name: 'CollectionModel.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 final class CollectionModel {
@@ -58,8 +57,7 @@ final class CollectionModel {
   /// The single key property.
   ///
   /// Throws [StateError] if the record has more than one key property.
-  KeyPropertyModel get keyProperty =>
-      keyProperties.single;
+  KeyPropertyModel get keyProperty => keyProperties.single;
 
   /// The single vector property.
   ///

@@ -25,8 +25,7 @@ void main() {
             'other-key', FakeServiceImplementation());
 
       final sp = services.buildServiceProvider();
-      final result =
-          sp.getKeyedServices<FakeService>('unknown-key').toList();
+      final result = sp.getKeyedServices<FakeService>('unknown-key').toList();
 
       expect(result, isEmpty);
     });

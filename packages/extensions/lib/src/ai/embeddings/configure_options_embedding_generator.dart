@@ -5,8 +5,7 @@ import 'generated_embeddings.dart';
 
 /// A delegating embedding generator that applies configuration to
 /// [EmbeddingGenerationOptions] before each request.
-class ConfigureOptionsEmbeddingGenerator
-    extends DelegatingEmbeddingGenerator {
+class ConfigureOptionsEmbeddingGenerator extends DelegatingEmbeddingGenerator {
   /// Creates a new [ConfigureOptionsEmbeddingGenerator].
   ///
   /// [configure] is called before each request to modify the options.

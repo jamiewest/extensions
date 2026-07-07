@@ -21,7 +21,8 @@ void main() {
       'data': vectors
           .asMap()
           .entries
-          .map((e) => {'object': 'embedding', 'index': e.key, 'embedding': e.value})
+          .map((e) =>
+              {'object': 'embedding', 'index': e.key, 'embedding': e.value})
           .toList(),
       'usage': {
         'prompt_tokens': promptTokens,
@@ -132,8 +133,7 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      final result =
-          await gen.generateEmbeddings(values: ['hello', 'world']);
+      final result = await gen.generateEmbeddings(values: ['hello', 'world']);
 
       expect(result.length, equals(2));
       expect(result[0].vector, equals([0.1, 0.2, 0.3]));

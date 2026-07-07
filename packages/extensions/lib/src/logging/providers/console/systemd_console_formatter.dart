@@ -11,8 +11,7 @@ import 'systemd_console_formatter_options.dart';
 /// structured logging, including priority levels compatible with syslog.
 class SystemdConsoleFormatter extends ConsoleFormatter {
   /// Creates a new instance of [SystemdConsoleFormatter].
-  SystemdConsoleFormatter(this._options)
-      : super(ConsoleFormatterNames.systemd);
+  SystemdConsoleFormatter(this._options) : super(ConsoleFormatterNames.systemd);
 
   final SystemdConsoleFormatterOptions _options;
 
@@ -33,9 +32,8 @@ class SystemdConsoleFormatter extends ConsoleFormatter {
 
     // Write timestamp if configured
     if (_options.timestampFormat != null) {
-      final dateTime = _options.useUtcTimestamp
-          ? DateTime.now().toUtc()
-          : DateTime.now();
+      final dateTime =
+          _options.useUtcTimestamp ? DateTime.now().toUtc() : DateTime.now();
       textWriter
         ..write(_formatTimestamp(dateTime))
         ..write(' ');

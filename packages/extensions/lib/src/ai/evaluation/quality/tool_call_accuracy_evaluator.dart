@@ -39,7 +39,9 @@ class ToolCallAccuracyEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx = additionalContext.whereType<ToolCallAccuracyEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        .whereType<ToolCallAccuracyEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) return null;
 
     final toolCalls = modelResponse.messages

@@ -43,8 +43,8 @@ library;
 // Core abstractions
 export 'src/vector_data/vector_store.dart';
 export 'src/vector_data/vector_store_collection.dart';
-export 'src/vector_data/i_vector_searchable.dart';
-export 'src/vector_data/i_keyword_hybrid_searchable.dart';
+export 'src/vector_data/vector_searchable.dart';
+export 'src/vector_data/keyword_hybrid_searchable.dart';
 
 // Search results & options
 export 'src/vector_data/vector_search_result.dart';

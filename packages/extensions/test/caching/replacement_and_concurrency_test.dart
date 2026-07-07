@@ -211,7 +211,8 @@ void main() {
   group('ConcurrencyTests', () {
     group('Concurrent Access', () {
       test('Multiple concurrent reads are safe', () async {
-        final cache = MemoryCacheImpl(MemoryCacheOptions())..set('key', 'value');
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
+          ..set('key', 'value');
 
         final futures = <Future<String?>>[];
         for (var i = 0; i < 100; i++) {
@@ -246,7 +247,8 @@ void main() {
       });
 
       test('Concurrent read/write on same key', () async {
-        final cache = MemoryCacheImpl(MemoryCacheOptions())..set('key', 'initial');
+        final cache = MemoryCacheImpl(MemoryCacheOptions())
+          ..set('key', 'initial');
 
         final futures = <Future<void>>[];
 

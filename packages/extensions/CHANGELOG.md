@@ -1,3 +1,63 @@
+## 0.5.0
+
+* **VectorData — interfaces renamed to Dart conventions:**
+  * `IVectorSearchable` → `VectorSearchable` and `IKeywordHybridSearchable`
+    → `KeywordHybridSearchable`. The old names remain as deprecated
+    typedefs.
+* **BREAKING — FileSystemGlobbing rewritten as a faithful upstream port:**
+  * `Matcher` now uses a full port of the upstream pattern engine (literal,
+    linear, and ragged patterns with pattern contexts) instead of delegating
+    to `package:glob`.
+  * `package:glob`'s `Glob` is no longer re-exported from
+    `package:extensions/file_system_globbing.dart`. Code that relied on the
+    re-export must import `package:glob/glob.dart` directly.
+  * Pattern syntax now follows upstream semantics: exact names, `*` within a
+    name segment, `**` across directory levels, a leading `..` for the
+    parent directory, and a trailing `/` treated as `dir/**`. The
+    glob-specific `?`, `[abc]`, and `{a,b}` forms are no longer supported.
+  * New `Matcher` constructor parameters: `comparisonType`
+    (`StringComparison.ordinal` or `ordinalIgnoreCase`, matching upstream
+    case-insensitive default) and `preserveFilterOrder` (applies filters in
+    the order added so a later include can re-admit an excluded file).
+  * `matchFile`/`matchFiles` now run through the real matcher against an
+    in-memory tree built by the new `InMemoryDirectoryInfo.fromPaths`, so
+    in-memory results agree with disk-based matching.
+    `getResultsInFullPath` now returns normalized paths.
+  * Fixed the `PatternMatchingResult.files` setter, which previously
+    assigned the field to itself.
+* **AI — chat client structured output:**
+  * Added `ChatClient.getStructuredResponse<T>()` and
+    `StructuredChatResponse<T>` for requesting JSON responses that
+    deserialize into a typed result, with support for schema injection,
+    wrapped-object envelopes, and native JSON response formats.
+* **AI — distributed caching:**
+  * Added `DistributedCachingChatClient` and
+    `ChatClientBuilder.useDistributedCache()`.
+  * Added `CachingEmbeddingGenerator`,
+    `DistributedCachingEmbeddingGenerator`, and
+    `EmbeddingGeneratorBuilder.useDistributedCache()`.
+* **AI — builder pipeline glue:**
+  * `ChatClientBuilder` gained `useConfigureOptions`, `useChatReducer`, and
+    `useImageGeneration` extensions.
+  * `EmbeddingGeneratorBuilder`, `ImageGeneratorBuilder`,
+    `TextToSpeechClientBuilder`, `SpeechToTextClientBuilder`, and
+    `HostedFileClientBuilder` gained `useLogging` and (where applicable)
+    `useConfigureOptions` extensions, `asBuilder()` on the corresponding
+    client/generator types, and `ServiceCollection` registration extensions
+    (`addEmbeddingGenerator`, `addImageGenerator`, `addTextToSpeechClient`,
+    `addSpeechToTextClient`).
+* **AI — chat response accumulation:**
+  * Added public `toChatResponse()` extensions on
+    `Iterable<ChatResponseUpdate>` and `Stream<ChatResponseUpdate>` plus a
+    `ChatResponseAccumulator`, replacing the private accumulation logic in
+    `ChatClientBuilder`.
+* **AI — `DataContent`:**
+  * `DataContent.fromUri` now parses `data:` URIs so `data` and `mediaType`
+    are populated from the URI contents, and throws `FormatException` on
+    malformed data URIs.
+  * The `uri` getter now synthesizes a data URI from `data` and `mediaType`
+    when the content was created from raw bytes.
+
 ## 0.4.1
 
 * **Web-compatible file configuration:**

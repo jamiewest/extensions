@@ -28,11 +28,24 @@ class EmbeddingGeneratorBuilder {
           InnerEmbeddingGeneratorFactory innerFactory) =>
       EmbeddingGeneratorBuilder._(innerFactory);
 
-  final List<EmbeddingGenerator Function(EmbeddingGenerator)> _factories = [];
+  final List<
+      EmbeddingGenerator Function(
+        EmbeddingGenerator inner,
+        ServiceProvider services,
+      )> _factories = [];
 
   /// Adds a middleware factory to the pipeline.
   EmbeddingGeneratorBuilder use(
-      EmbeddingGenerator Function(EmbeddingGenerator) factory) {
+          EmbeddingGenerator Function(EmbeddingGenerator) factory) =>
+      useWithServices((inner, _) => factory(inner));
+
+  /// Adds a middleware factory that also receives the active
+  /// [ServiceProvider].
+  EmbeddingGeneratorBuilder useWithServices(
+      EmbeddingGenerator Function(
+        EmbeddingGenerator inner,
+        ServiceProvider services,
+      ) factory) {
     _factories.add(factory);
     return this;
   }
@@ -43,7 +56,7 @@ class EmbeddingGeneratorBuilder {
 
     var generator = _innerFactory(services);
     for (var i = _factories.length - 1; i >= 0; i--) {
-      generator = _factories[i](generator);
+      generator = _factories[i](generator, services);
     }
     return generator;
   }

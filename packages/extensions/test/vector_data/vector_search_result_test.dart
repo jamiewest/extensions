@@ -27,7 +27,8 @@ void main() {
     });
 
     test('is sealed (final class)', () {
-      expect(VectorSearchResult<String>('r'), isA<VectorSearchResult<String>>());
+      expect(
+          VectorSearchResult<String>('r'), isA<VectorSearchResult<String>>());
     });
   });
 }

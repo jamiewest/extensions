@@ -51,7 +51,8 @@ class GLEUEvaluator implements Evaluator {
       return result;
     }
 
-    final ctx = additionalContext?.whereType<GLEUEvaluatorContext>().firstOrNull;
+    final ctx =
+        additionalContext?.whereType<GLEUEvaluatorContext>().firstOrNull;
     if (ctx == null) {
       metric.addDiagnostic(EvaluationDiagnostic.error(
           'A GLEUEvaluatorContext was not found in additionalContext.'));
@@ -64,9 +65,8 @@ class GLEUEvaluator implements Evaluator {
     }
 
     final start = DateTime.now();
-    final references = ctx.references
-        .map((r) => SimpleWordTokenizer.wordTokenize(r))
-        .toList();
+    final references =
+        ctx.references.map((r) => SimpleWordTokenizer.wordTokenize(r)).toList();
     final hypothesis = SimpleWordTokenizer.wordTokenize(responseText);
     final score = GLEUAlgorithm.sentenceGLEU(references, hypothesis);
     final duration = DateTime.now().difference(start);

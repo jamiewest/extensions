@@ -41,9 +41,8 @@ class SpeechToTextOptions {
         speechLanguage: speechLanguage,
         speechSampleRate: speechSampleRate,
         textLanguage: textLanguage,
-        additionalProperties: additionalProperties != null
-            ? Map.of(additionalProperties!)
-            : null,
+        additionalProperties:
+            additionalProperties != null ? Map.of(additionalProperties!) : null,
       );
 }
 
@@ -99,10 +98,8 @@ class SpeechToTextResponse {
   UsageDetails? usage;
 
   /// Gets concatenated text from all [TextContent] items.
-  String get text => contents
-      .whereType<TextContent>()
-      .map((c) => c.text)
-      .join();
+  String get text =>
+      contents.whereType<TextContent>().map((c) => c.text).join();
 
   @override
   String toString() => text;

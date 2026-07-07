@@ -15,8 +15,7 @@ import 'disk_based_result_store.dart';
   name: 'DiskBasedReportingConfiguration.cs',
   namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
+  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
 )
 class DiskBasedReportingConfiguration {
   DiskBasedReportingConfiguration._();

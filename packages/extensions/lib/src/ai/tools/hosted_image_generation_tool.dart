@@ -8,8 +8,7 @@ class HostedImageGenerationTool extends AITool {
   /// Creates a new [HostedImageGenerationTool].
   HostedImageGenerationTool({
     this.options,
-  }) : super(
-            name: 'image_generation', description: 'Image generation');
+  }) : super(name: 'image_generation', description: 'Image generation');
 
   /// Options for image generation.
   final ImageGenerationOptions? options;

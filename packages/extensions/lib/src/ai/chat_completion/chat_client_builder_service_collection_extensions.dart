@@ -28,14 +28,14 @@ extension ChatClientBuilderServiceCollectionExtensions on ServiceCollection {
     final builder = ChatClientBuilder.fromFactory(innerClientFactory);
     add(switch (lifetime) {
       ServiceLifetime.singleton => ServiceDescriptor.singleton<ChatClient>(
-        (sp) => builder.build(sp),
-      ),
+          (sp) => builder.build(sp),
+        ),
       ServiceLifetime.scoped => ServiceDescriptor.scoped<ChatClient>(
-        (sp) => builder.build(sp),
-      ),
+          (sp) => builder.build(sp),
+        ),
       ServiceLifetime.transient => ServiceDescriptor.transient<ChatClient>(
-        (sp) => builder.build(sp),
-      ),
+          (sp) => builder.build(sp),
+        ),
     });
     return builder;
   }

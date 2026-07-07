@@ -16,7 +16,7 @@ import 'vector_search_result.dart';
   path:
       'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
 )
-abstract interface class IKeywordHybridSearchable<TRecord> {
+abstract interface class KeywordHybridSearchable<TRecord> {
   /// Searches for records that are similar to [value] and match [keywords].
   ///
   /// [value] is the query vector or embedding input. [keywords] is the list of
@@ -34,3 +34,8 @@ abstract interface class IKeywordHybridSearchable<TRecord> {
   /// Gets a service of the specified type provided by the underlying store.
   T? getService<T>({Object? key}) => null;
 }
+
+/// Former name of [KeywordHybridSearchable], kept for backwards
+/// compatibility.
+@Deprecated('Use KeywordHybridSearchable instead.')
+typedef IKeywordHybridSearchable<TRecord> = KeywordHybridSearchable<TRecord>;

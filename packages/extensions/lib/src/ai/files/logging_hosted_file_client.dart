@@ -39,7 +39,8 @@ class LoggingHostedFileClient extends DelegatingHostedFileClient {
       options: options,
       cancellationToken: cancellationToken,
     );
-    developer.log('Upload succeeded: ${result.fileId}', name: _loggerName, level: 500);
+    developer.log('Upload succeeded: ${result.fileId}',
+        name: _loggerName, level: 500);
     return result;
   }
 
@@ -50,7 +51,8 @@ class LoggingHostedFileClient extends DelegatingHostedFileClient {
     CancellationToken? cancellationToken,
   }) async {
     developer.log('Delete invoked: $fileId', name: _loggerName, level: 500);
-    final result = await super.delete(fileId, options: options, cancellationToken: cancellationToken);
+    final result = await super
+        .delete(fileId, options: options, cancellationToken: cancellationToken);
     developer.log('Delete result: $result', name: _loggerName, level: 500);
     return result;
   }

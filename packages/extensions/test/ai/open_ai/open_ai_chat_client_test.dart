@@ -434,32 +434,32 @@ void main() {
     test('yields text from SSE chunks', () async {
       final sseLines = [
         'data: ${jsonEncode({
-          'id': 'chatcmpl-1',
-          'model': 'gpt-4o-mini',
-          'choices': [
-            {
-              'delta': {'role': 'assistant', 'content': 'Hello'},
-              'finish_reason': null,
-            },
-          ],
-        })}',
+              'id': 'chatcmpl-1',
+              'model': 'gpt-4o-mini',
+              'choices': [
+                {
+                  'delta': {'role': 'assistant', 'content': 'Hello'},
+                  'finish_reason': null,
+                },
+              ],
+            })}',
         'data: ${jsonEncode({
-          'id': 'chatcmpl-1',
-          'model': 'gpt-4o-mini',
-          'choices': [
-            {
-              'delta': {'content': ' world'},
-              'finish_reason': null,
-            },
-          ],
-        })}',
+              'id': 'chatcmpl-1',
+              'model': 'gpt-4o-mini',
+              'choices': [
+                {
+                  'delta': {'content': ' world'},
+                  'finish_reason': null,
+                },
+              ],
+            })}',
         'data: ${jsonEncode({
-          'id': 'chatcmpl-1',
-          'model': 'gpt-4o-mini',
-          'choices': [
-            {'delta': {}, 'finish_reason': 'stop'},
-          ],
-        })}',
+              'id': 'chatcmpl-1',
+              'model': 'gpt-4o-mini',
+              'choices': [
+                {'delta': {}, 'finish_reason': 'stop'},
+              ],
+            })}',
         'data: [DONE]',
       ];
 
@@ -470,11 +470,9 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      final updates = await client
-          .getStreamingResponse(
-            messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
-          )
-          .toList();
+      final updates = await client.getStreamingResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
+      ).toList();
 
       expect(updates.map((u) => u.text).join(), equals('Hello world'));
     });
@@ -487,11 +485,9 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      await client
-          .getStreamingResponse(
-            messages: [ChatMessage.fromText(ChatRole.user, 'x')],
-          )
-          .drain<void>();
+      await client.getStreamingResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'x')],
+      ).drain<void>();
 
       final req = fakeHttp.lastRequest as http.Request;
       final body = jsonDecode(req.body) as Map<String, dynamic>;
@@ -501,19 +497,22 @@ void main() {
     test('finish_reason surfaced on final update', () async {
       final sseLines = [
         'data: ${jsonEncode({
-          'id': 'chatcmpl-1',
-          'model': 'gpt-4o-mini',
-          'choices': [
-            {'delta': {'content': 'Hi'}, 'finish_reason': null},
-          ],
-        })}',
+              'id': 'chatcmpl-1',
+              'model': 'gpt-4o-mini',
+              'choices': [
+                {
+                  'delta': {'content': 'Hi'},
+                  'finish_reason': null
+                },
+              ],
+            })}',
         'data: ${jsonEncode({
-          'id': 'chatcmpl-1',
-          'model': 'gpt-4o-mini',
-          'choices': [
-            {'delta': {}, 'finish_reason': 'stop'},
-          ],
-        })}',
+              'id': 'chatcmpl-1',
+              'model': 'gpt-4o-mini',
+              'choices': [
+                {'delta': {}, 'finish_reason': 'stop'},
+              ],
+            })}',
         'data: [DONE]',
       ];
 
@@ -524,11 +523,9 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      final updates = await client
-          .getStreamingResponse(
-            messages: [ChatMessage.fromText(ChatRole.user, 'x')],
-          )
-          .toList();
+      final updates = await client.getStreamingResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'x')],
+      ).toList();
 
       final withReason = updates.where((u) => u.finishReason != null).toList();
       expect(withReason, isNotEmpty);

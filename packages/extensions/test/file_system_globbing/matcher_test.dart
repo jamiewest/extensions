@@ -39,7 +39,7 @@ void main() {
       final result = matcher.matchFile('/root/docs/readme.txt', '/root');
 
       expect(result.hasFiles, isTrue);
-      expect(result.files.single.path, equals(p.join('docs', 'readme.txt')));
+      expect(result.files.single.path, equals('docs/readme.txt'));
     });
 
     test('returns no match when nothing includes the file', () {
@@ -63,18 +63,105 @@ void main() {
       expect(excluded.hasFiles, isFalse);
     });
 
-    test('**/ only matches nested files, not the root (glob semantics)', () {
+    test('**/ matches files at the root and in subdirectories', () {
       final matcher = Matcher()..addInclude('**/*.txt');
 
-      expect(matcher.matchFile('/root/a.txt', '/root').hasFiles, isFalse);
+      expect(matcher.matchFile('/root/a.txt', '/root').hasFiles, isTrue);
       expect(matcher.matchFile('/root/sub/a.txt', '/root').hasFiles, isTrue);
+    });
+
+    test('matching is case-insensitive by default', () {
+      final matcher = Matcher()..addInclude('*.TXT');
+
+      expect(matcher.matchFile('/root/a.txt', '/root').hasFiles, isTrue);
+    });
+
+    test('ordinal comparison makes matching case-sensitive', () {
+      final matcher = Matcher(comparisonType: StringComparison.ordinal)
+        ..addInclude('*.TXT');
+
+      expect(matcher.matchFile('/root/a.txt', '/root').hasFiles, isFalse);
+      expect(matcher.matchFile('/root/a.TXT', '/root').hasFiles, isTrue);
+    });
+
+    test('*.* is treated as *', () {
+      final matcher = Matcher()..addInclude('*.*');
+
+      expect(matcher.matchFile('/root/a.txt', '/root').hasFiles, isTrue);
+    });
+
+    test('a trailing slash matches the whole directory', () {
+      final matcher = Matcher()..addInclude('lib/');
+
+      expect(
+        matcher.matchFile('/root/lib/src/a.dart', '/root').hasFiles,
+        isTrue,
+      );
+      expect(
+          matcher.matchFile('/root/other/a.dart', '/root').hasFiles, isFalse);
+    });
+  });
+
+  group('stems', () {
+    test('stem is relative to the first wildcard', () {
+      final matcher = Matcher()..addInclude('src/project/**/*.cs');
+
+      final result = matcher.matchFile(
+        '/root/src/project/interfaces/file.cs',
+        '/root',
+      );
+
+      expect(
+          result.files.single.path, equals('src/project/interfaces/file.cs'));
+      expect(result.files.single.stem, equals('interfaces/file.cs'));
+    });
+
+    test('literal pattern stem is the file name', () {
+      final matcher = Matcher()..addInclude('sub/one.txt');
+
+      final result = matcher.matchFile('/root/sub/one.txt', '/root');
+
+      expect(result.files.single.stem, equals('one.txt'));
+    });
+  });
+
+  group('preserveFilterOrder', () {
+    test('a later include re-admits a previously excluded file', () {
+      final matcher = Matcher(preserveFilterOrder: true)
+        ..addInclude('**/*.txt')
+        ..addExclude('sub/**')
+        ..addInclude('sub/keep.txt');
+
+      final result = matcher.matchFiles(
+        ['a.txt', 'sub/drop.txt', 'sub/keep.txt'],
+        '/root',
+      );
+
+      final paths = result.files.map((m) => m.path).toList();
+      expect(paths, containsAll(['a.txt', 'sub/keep.txt']));
+      expect(paths, isNot(contains('sub/drop.txt')));
+    });
+
+    test('default mode applies includes before excludes regardless of order',
+        () {
+      final matcher = Matcher()
+        ..addInclude('**/*.txt')
+        ..addExclude('sub/**')
+        ..addInclude('sub/keep.txt');
+
+      final result = matcher.matchFiles(
+        ['a.txt', 'sub/keep.txt'],
+        '/root',
+      );
+
+      final paths = result.files.map((m) => m.path).toList();
+      expect(paths, equals(['a.txt']));
     });
   });
 
   group('matchFiles (no file system access)', () {
     test('filters a list by include and exclude patterns', () {
       final matcher = Matcher()
-        ..addInclude('*.dart')
         ..addInclude('**/*.dart')
         ..addExclude('**/*.g.dart');
 
@@ -87,8 +174,8 @@ void main() {
 
       final paths = result.files.map((m) => m.path).toList();
       expect(paths, contains('main.dart'));
-      expect(paths, contains(p.join('lib', 'widget.dart')));
-      expect(paths, isNot(contains(p.join('lib', 'widget.g.dart'))));
+      expect(paths, contains('lib/widget.dart'));
+      expect(paths, isNot(contains('lib/widget.g.dart')));
       expect(paths, isNot(contains('readme.md')));
     });
   });
@@ -108,9 +195,7 @@ void main() {
     tearDown(() => tempDir.deleteSync(recursive: true));
 
     test('include pattern returns only matching files', () {
-      final matcher = Matcher()
-        ..addInclude('*.txt')
-        ..addInclude('**/*.txt');
+      final matcher = Matcher()..addInclude('**/*.txt');
 
       final results = matcher.getResultsInFullPath(tempDir.path).toList();
 
@@ -120,7 +205,6 @@ void main() {
 
     test('exclude pattern removes files from the results', () {
       final matcher = Matcher()
-        ..addInclude('*.txt')
         ..addInclude('**/*.txt')
         ..addExclude('sub/**');
 

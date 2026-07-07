@@ -33,7 +33,8 @@ class ConfigureOptionsTextToSpeechClient extends DelegatingTextToSpeechClient {
   }) {
     final opts = (options ?? TextToSpeechOptions()).clone();
     _configure(opts);
-    return super.getAudio(text, options: opts, cancellationToken: cancellationToken);
+    return super
+        .getAudio(text, options: opts, cancellationToken: cancellationToken);
   }
 
   @override
@@ -44,6 +45,7 @@ class ConfigureOptionsTextToSpeechClient extends DelegatingTextToSpeechClient {
   }) {
     final opts = (options ?? TextToSpeechOptions()).clone();
     _configure(opts);
-    return super.getStreamingAudio(text, options: opts, cancellationToken: cancellationToken);
+    return super.getStreamingAudio(text,
+        options: opts, cancellationToken: cancellationToken);
   }
 }

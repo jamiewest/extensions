@@ -3,7 +3,7 @@ import 'package:extensions/annotations.dart';
 import '../system/disposable.dart';
 import '../system/threading/cancellation_token.dart';
 import 'filtered_record_retrieval_options.dart';
-import 'i_vector_searchable.dart';
+import 'vector_searchable.dart';
 import 'record_retrieval_options.dart';
 import 'vector_search_options.dart';
 import 'vector_search_result.dart';
@@ -34,7 +34,7 @@ import 'vector_store_filter.dart';
       'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
 )
 abstract class VectorStoreCollection<TKey, TRecord>
-    implements IVectorSearchable<TRecord>, Disposable {
+    implements VectorSearchable<TRecord>, Disposable {
   /// The name of the collection.
   String get name;
 

@@ -13,8 +13,7 @@ import 'simple_console_formatter_options.dart';
 /// log levels, categories, and exception details.
 class SimpleConsoleFormatter extends ConsoleFormatter {
   /// Creates a new instance of [SimpleConsoleFormatter].
-  SimpleConsoleFormatter(this._options)
-      : super(ConsoleFormatterNames.simple);
+  SimpleConsoleFormatter(this._options) : super(ConsoleFormatterNames.simple);
 
   final SimpleConsoleFormatterOptions _options;
 
@@ -41,9 +40,8 @@ class SimpleConsoleFormatter extends ConsoleFormatter {
     String? timestamp;
     final timestampFormat = _options.timestampFormat;
     if (timestampFormat != null) {
-      final dateTime = _options.useUtcTimestamp
-          ? DateTime.now().toUtc()
-          : DateTime.now();
+      final dateTime =
+          _options.useUtcTimestamp ? DateTime.now().toUtc() : DateTime.now();
       timestamp = _formatTimestamp(dateTime, timestampFormat);
     }
 

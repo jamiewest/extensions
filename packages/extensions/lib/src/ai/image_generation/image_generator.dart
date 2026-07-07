@@ -43,9 +43,8 @@ class ImageGenerationOptions {
         imageHeight: imageHeight,
         mediaType: mediaType,
         modelId: modelId,
-        additionalProperties: additionalProperties != null
-            ? Map.of(additionalProperties!)
-            : null,
+        additionalProperties:
+            additionalProperties != null ? Map.of(additionalProperties!) : null,
       );
 }
 

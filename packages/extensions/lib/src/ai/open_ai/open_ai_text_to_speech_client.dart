@@ -185,4 +185,3 @@ final class OpenAITextToSpeechClient implements TextToSpeechClient {
         _ => 'audio/mpeg',
       };
 }
-

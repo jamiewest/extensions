@@ -89,16 +89,15 @@ class BLEUAlgorithm {
 
     final precisions = <RationalNumber>[];
     for (var i = 0; i < w.length; i++) {
-      final prec =
-          modifiedPrecision(references, hypothesis, n: i + 1);
+      final prec = modifiedPrecision(references, hypothesis, n: i + 1);
       if (i == 0 && prec.numerator == 0) return 0.0;
       precisions.add(prec);
     }
 
     final hypLen = hypothesis.length;
     final bp = brevityPenalty(closestRefLength(references, hypLen), hypLen);
-    final smooth = (smoothingFunction ?? SmoothingFunction.method0)(
-        precisions, hypLen);
+    final smooth =
+        (smoothingFunction ?? SmoothingFunction.method0)(precisions, hypLen);
 
     var score = 0.0;
     for (var i = 0; i < w.length; i++) {

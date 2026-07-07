@@ -30,11 +30,23 @@ class ImageGeneratorBuilder {
           InnerImageGeneratorFactory innerFactory) =>
       ImageGeneratorBuilder._(innerFactory);
 
-  final List<ImageGenerator Function(ImageGenerator)> _factories = [];
+  final List<
+      ImageGenerator Function(
+        ImageGenerator inner,
+        ServiceProvider services,
+      )> _factories = [];
 
   /// Adds a middleware factory to the pipeline.
-  ImageGeneratorBuilder use(
-      ImageGenerator Function(ImageGenerator) factory) {
+  ImageGeneratorBuilder use(ImageGenerator Function(ImageGenerator) factory) =>
+      useWithServices((inner, _) => factory(inner));
+
+  /// Adds a middleware factory that also receives the active
+  /// [ServiceProvider].
+  ImageGeneratorBuilder useWithServices(
+      ImageGenerator Function(
+        ImageGenerator inner,
+        ServiceProvider services,
+      ) factory) {
     _factories.add(factory);
     return this;
   }
@@ -45,7 +57,7 @@ class ImageGeneratorBuilder {
 
     var generator = _innerFactory(services);
     for (var i = _factories.length - 1; i >= 0; i--) {
-      generator = _factories[i](generator);
+      generator = _factories[i](generator, services);
     }
     return generator;
   }

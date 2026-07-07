@@ -4,7 +4,7 @@ import 'vector_store_filter.dart';
 
 /// Options for a hybrid vector-and-keyword search.
 ///
-/// Pass to [IKeywordHybridSearchable.hybridSearchAsync].
+/// Pass to [KeywordHybridSearchable.hybridSearchAsync].
 @Source(
   name: 'HybridSearchOptions.cs',
   namespace: 'Microsoft.Extensions.VectorData',

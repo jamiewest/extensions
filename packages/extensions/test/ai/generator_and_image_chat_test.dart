@@ -135,7 +135,8 @@ class _SingleResponseChatClient implements ChatClient {
 void main() {
   group('ImageGeneratingChatClient', () {
     test('invokes image generator and appends result message', () async {
-      final imageCall = ImageGenerationToolCallContent(callId: 'call-1', prompt: 'img-1');
+      final imageCall =
+          ImageGenerationToolCallContent(callId: 'call-1', prompt: 'img-1');
       final innerResponse = ChatResponse.fromMessage(
         ChatMessage(
           role: ChatRole.assistant,

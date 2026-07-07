@@ -39,8 +39,7 @@ abstract class DelegatingSpeechToTextClient implements SpeechToTextClient {
       );
 
   @override
-  T? getService<T>({Object? key}) =>
-      innerClient.getService<T>(key: key);
+  T? getService<T>({Object? key}) => innerClient.getService<T>(key: key);
 
   @override
   void dispose() => innerClient.dispose();

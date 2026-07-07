@@ -15,7 +15,7 @@ import 'vector_search_result.dart';
   path:
       'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
 )
-abstract interface class IVectorSearchable<TRecord> {
+abstract interface class VectorSearchable<TRecord> {
   /// Searches for records that are similar to [value].
   ///
   /// [value] is the query vector or embedding input. The type accepted depends
@@ -36,3 +36,7 @@ abstract interface class IVectorSearchable<TRecord> {
   /// abstract interface.
   T? getService<T>({Object? key}) => null;
 }
+
+/// Former name of [VectorSearchable], kept for backwards compatibility.
+@Deprecated('Use VectorSearchable instead.')
+typedef IVectorSearchable<TRecord> = VectorSearchable<TRecord>;

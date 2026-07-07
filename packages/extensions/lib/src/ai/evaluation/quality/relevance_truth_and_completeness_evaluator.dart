@@ -56,12 +56,10 @@ class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
     final relevance = NumericMetric(relevanceMetricName);
     final truth = NumericMetric(truthMetricName);
     final completeness = NumericMetric(completenessMetricName);
-    final result =
-        EvaluationResult.fromList([relevance, truth, completeness]);
+    final result = EvaluationResult.fromList([relevance, truth, completeness]);
 
     if (chatConfiguration == null) {
-      const msg =
-          'chatConfiguration is required for AI-based evaluators.';
+      const msg = 'chatConfiguration is required for AI-based evaluators.';
       relevance.addDiagnostic(EvaluationDiagnostic.error(msg));
       truth.addDiagnostic(EvaluationDiagnostic.error(msg));
       completeness.addDiagnostic(EvaluationDiagnostic.error(msg));
@@ -97,8 +95,7 @@ class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
         _buildPrompt(lastUser.text, modelResponse.text, history);
 
     final start = DateTime.now();
-    final evalResponse =
-        await chatConfiguration.chatClient.getResponse(
+    final evalResponse = await chatConfiguration.chatClient.getResponse(
       messages: [ChatMessage.fromText(ChatRole.user, instructions)],
       options: _chatOptions,
       cancellationToken: cancellationToken,

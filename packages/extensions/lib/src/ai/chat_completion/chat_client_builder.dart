@@ -11,8 +11,8 @@ import 'chat_client_builder_service_collection_extensions.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
 import 'chat_response.dart';
+import 'chat_response_extensions.dart';
 import 'chat_response_update.dart';
-import 'chat_role.dart';
 
 /// A factory that creates middleware by wrapping an inner [ChatClient].
 typedef ChatClientFactory = ChatClient Function(ChatClient innerClient);
@@ -118,7 +118,8 @@ class ChatClientBuilder {
           final result = response;
           if (result == null) {
             throw StateError(
-              'The wrapper completed successfully without producing a ChatResponse.',
+              'The wrapper completed successfully without producing '
+              'a ChatResponse.',
             );
           }
 
@@ -176,19 +177,19 @@ class ChatClientBuilder {
   ) {
     if (getResponseFunc == null && getStreamingResponseFunc == null) {
       throw ArgumentError(
-        'At least one of getResponseFunc or getStreamingResponseFunc must be non-null.',
+        'At least one of getResponseFunc or getStreamingResponseFunc '
+        'must be non-null.',
       );
     }
 
     final responseHandler = getResponseFunc ??
-        (messages, options, innerClient, cancellationToken) => _toChatResponse(
-              getStreamingResponseFunc!(
-                messages,
-                options,
-                innerClient,
-                cancellationToken,
-              ),
-            );
+        (messages, options, innerClient, cancellationToken) =>
+            getStreamingResponseFunc!(
+              messages,
+              options,
+              innerClient,
+              cancellationToken,
+            ).toChatResponse();
 
     final streamingHandler = getStreamingResponseFunc ??
         (messages, options, innerClient, cancellationToken) async* {
@@ -227,88 +228,4 @@ class ChatClientBuilder {
 
     return chatClient;
   }
-
-  static Future<ChatResponse> _toChatResponse(
-    Stream<ChatResponseUpdate> updates,
-  ) async {
-    final response = ChatResponse();
-    ChatMessage? currentMessage;
-
-    await for (final update in updates) {
-      final needsNewMessage = _needsNewMessage(currentMessage, update);
-      if (needsNewMessage) {
-        currentMessage = ChatMessage(
-          role: update.role ?? ChatRole.assistant,
-          authorName: update.authorName,
-          contents: [],
-        );
-
-        currentMessage.messageId = update.messageId;
-        currentMessage.createdAt = update.createdAt;
-        currentMessage.rawRepresentation = update.rawRepresentation;
-        response.messages.add(currentMessage);
-      }
-
-      if (update.contents.isNotEmpty) {
-        currentMessage ??= ChatMessage(
-          role: update.role ?? ChatRole.assistant,
-          authorName: update.authorName,
-          contents: [],
-        );
-        currentMessage.contents.addAll(update.contents);
-      }
-
-      if (update.responseId != null && update.responseId!.isNotEmpty) {
-        response.responseId = update.responseId;
-      }
-      if (update.conversationId != null) {
-        response.conversationId = update.conversationId;
-      }
-      if (response.createdAt == null && update.createdAt != null) {
-        response.createdAt = update.createdAt;
-      }
-      if (update.finishReason != null) {
-        response.finishReason = update.finishReason;
-      }
-      if (update.modelId != null) {
-        response.modelId = update.modelId;
-      }
-      if (update.usage != null) {
-        response.usage = update.usage;
-      }
-      if (update.continuationToken != null) {
-        response.continuationToken = update.continuationToken;
-      }
-      if (update.rawRepresentation != null) {
-        response.rawRepresentation = update.rawRepresentation;
-      }
-    }
-
-    return response;
-  }
-
-  static bool _needsNewMessage(
-    ChatMessage? currentMessage,
-    ChatResponseUpdate update,
-  ) {
-    if (currentMessage == null) {
-      return true;
-    }
-
-    if (_hasText(update.authorName) &&
-        _hasText(currentMessage.authorName) &&
-        update.authorName != currentMessage.authorName) {
-      return true;
-    }
-
-    if (_hasText(update.messageId) &&
-        _hasText(currentMessage.messageId) &&
-        update.messageId != currentMessage.messageId) {
-      return true;
-    }
-
-    return update.role != null && update.role != currentMessage.role;
-  }
-
-  static bool _hasText(String? value) => value != null && value.isNotEmpty;
 }

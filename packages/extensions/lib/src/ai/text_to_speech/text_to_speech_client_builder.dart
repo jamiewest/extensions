@@ -24,7 +24,11 @@ typedef InnerTextToSpeechClientFactory = TextToSpeechClient Function(
 )
 class TextToSpeechClientBuilder {
   late final InnerTextToSpeechClientFactory _innerFactory;
-  final List<TextToSpeechClient Function(TextToSpeechClient)> _factories = [];
+  final List<
+      TextToSpeechClient Function(
+        TextToSpeechClient inner,
+        ServiceProvider services,
+      )> _factories = [];
 
   TextToSpeechClientBuilder._(InnerTextToSpeechClientFactory innerFactory)
       : _innerFactory = innerFactory;
@@ -41,7 +45,16 @@ class TextToSpeechClientBuilder {
 
   /// Adds a middleware factory to the pipeline.
   TextToSpeechClientBuilder use(
-      TextToSpeechClient Function(TextToSpeechClient) factory) {
+          TextToSpeechClient Function(TextToSpeechClient) factory) =>
+      useWithServices((inner, _) => factory(inner));
+
+  /// Adds a middleware factory that also receives the active
+  /// [ServiceProvider].
+  TextToSpeechClientBuilder useWithServices(
+      TextToSpeechClient Function(
+        TextToSpeechClient inner,
+        ServiceProvider services,
+      ) factory) {
     _factories.add(factory);
     return this;
   }
@@ -51,7 +64,7 @@ class TextToSpeechClientBuilder {
     services ??= EmptyServiceProvider.instance;
     var client = _innerFactory(services);
     for (var i = _factories.length - 1; i >= 0; i--) {
-      client = _factories[i](client);
+      client = _factories[i](client, services);
     }
     return client;
   }

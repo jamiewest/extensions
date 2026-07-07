@@ -1,5 +1,3 @@
-
 import '../delegating_handler.dart';
 
-sealed class HttpClientLoggerHandler extends DelegatingHandler {
-}
+sealed class HttpClientLoggerHandler extends DelegatingHandler {}

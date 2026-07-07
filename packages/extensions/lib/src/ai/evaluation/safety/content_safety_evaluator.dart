@@ -61,8 +61,8 @@ abstract class ContentSafetyEvaluator implements Evaluator {
     final metrics = {
       for (final name in evaluationMetricNames) name: NumericMetric(name),
     };
-    final result = EvaluationResult(
-        metrics: {for (final m in metrics.values) m.name: m});
+    final result =
+        EvaluationResult(metrics: {for (final m in metrics.values) m.name: m});
 
     try {
       final serviceResult = await _callService(
@@ -127,10 +127,10 @@ abstract class ContentSafetyEvaluator implements Evaluator {
     return Uri.https(
       'management.azure.com',
       '/subscriptions/${configuration.subscriptionId}'
-      '/resourceGroups/${configuration.resourceGroupName}'
-      '/providers/Microsoft.MachineLearningServices'
-      '/workspaces/${configuration.projectName}'
-      '/evaluations/run',
+          '/resourceGroups/${configuration.resourceGroupName}'
+          '/providers/Microsoft.MachineLearningServices'
+          '/workspaces/${configuration.projectName}'
+          '/evaluations/run',
     );
   }
 
@@ -140,8 +140,7 @@ abstract class ContentSafetyEvaluator implements Evaluator {
     List<EvaluationContext> additionalContext,
   ) {
     final conversation = [
-      for (final m in messages)
-        {'role': m.role.value, 'content': m.text},
+      for (final m in messages) {'role': m.role.value, 'content': m.text},
       {'role': 'assistant', 'content': modelResponse.text},
     ];
     return {

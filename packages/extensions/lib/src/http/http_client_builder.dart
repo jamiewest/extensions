@@ -111,8 +111,7 @@ class HttpClientBuilder {
   ///   .redactLoggedHeaderNames(['Authorization', 'X-Api-Key']);
   /// ```
   HttpClientBuilder redactLoggedHeaderNames(List<String> headerNames) {
-    final lowerCaseNames =
-        headerNames.map((n) => n.toLowerCase()).toSet();
+    final lowerCaseNames = headerNames.map((n) => n.toLowerCase()).toSet();
     return redactLoggedHeaders(
       (name) => lowerCaseNames.contains(name.toLowerCase()),
     );

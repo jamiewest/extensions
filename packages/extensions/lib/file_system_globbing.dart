@@ -1,9 +1,8 @@
 /// Provides support for matching file system paths using glob patterns
 /// with include/exclude semantics.
 ///
-/// This library enables pattern-based file matching inspired by
-/// Microsoft.Extensions.FileSystemGlobbing, supporting wildcards and
-/// directory recursion for flexible file selection.
+/// A port of Microsoft.Extensions.FileSystemGlobbing, supporting wildcards
+/// and directory recursion for flexible file selection.
 ///
 /// ## Basic Glob Matching
 ///
@@ -25,28 +24,27 @@
 ///
 /// Supported glob pattern features:
 ///
-/// - `*` - matches any characters except directory separator
-/// - `**` - matches any characters including directory separators
-/// - `?` - matches any single character
-/// - `[abc]` - matches any character in the set
-/// - `{a,b}` - matches any of the alternatives
+/// - exact names: `one.txt`, `dir/two.txt`
+/// - `*` - matches zero or more characters within a file or directory
+///   name, e.g. `*.txt`, `readme.*`, `styles/*.css`
+/// - `**` - matches an arbitrary number of directory levels, e.g.
+///   `**/*.cs`, `dir/**/*`
+/// - `..` - at the beginning of a pattern, refers to the parent directory
+/// - a trailing `/` treats the pattern as a directory, e.g. `lib/` is
+///   equivalent to `lib/**`
 ///
 /// ## In-Memory Matching
 ///
-/// Test glob patterns against in-memory directory structures:
+/// Test glob patterns against file paths without touching the disk:
 ///
 /// ```dart
-/// final dir = InMemoryDirectoryInfo('/', [
-///   InMemoryFileInfo('file1.dart', dir),
-///   InMemoryFileInfo('file2.txt', dir),
-/// ]);
-///
 /// final matcher = Matcher()..addInclude('*.dart');
-/// final result = matcher.execute(dir);
+/// final result = matcher.matchFiles(
+///   ['file1.dart', 'file2.txt'],
+///   '/root',
+/// );
 /// ```
 library;
-
-export 'package:glob/glob.dart';
 
 // Abstractions
 export 'src/file_system_globbing/abstractions/directory_info_base.dart';
@@ -61,3 +59,4 @@ export 'src/file_system_globbing/in_memory_directory_info.dart';
 export 'src/file_system_globbing/matcher.dart';
 export 'src/file_system_globbing/matcher_extensions.dart';
 export 'src/file_system_globbing/pattern_matching_result.dart';
+export 'src/file_system_globbing/util/string_comparison.dart';
