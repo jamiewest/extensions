@@ -25,4 +25,5 @@ CLAUDE.md
 rules.md
 documentation.md
 
-.claude/
+.claude/*
+!.claude/rules/

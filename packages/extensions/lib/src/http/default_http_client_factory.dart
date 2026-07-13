@@ -1,38 +1,58 @@
+import 'dart:async';
+
 import 'package:http/http.dart' as http;
 
 import '../dependency_injection/service_provider.dart';
 import '../options/options.dart';
 import '../options/options_monitor.dart';
+import '../system/disposable.dart';
 import '../system/exceptions/object_disposed_exception.dart';
+import 'active_handler_tracking_entry.dart';
+import 'expired_handler_tracking_entry.dart';
 import 'http_client_factory.dart';
 import 'http_client_factory_options.dart';
 import 'http_message_handler.dart';
 import 'http_message_handler_factory.dart';
-
-class _HandlerEntry {
-  _HandlerEntry(this.handler, this.expiration);
-
-  final HttpMessageHandler handler;
-  final DateTime? expiration;
-}
+import 'lifetime_tracking_http_message_handler.dart';
 
 /// Default implementation of [HttpClientFactory] modeled after .NET's
 /// IHttpClientFactory.
-class DefaultHttpClientFactory implements HttpClientFactory {
+///
+/// Handlers are cached per client name and rotated after their
+/// configured lifetime. Rotated handlers are not disposed while
+/// requests are in flight; a timer-driven cleanup cycle disposes them
+/// once idle. Upstream uses weak references and finalizers for this;
+/// the timer approach also works on the web.
+class DefaultHttpClientFactory implements HttpClientFactory, Disposable {
+  /// Creates a new [DefaultHttpClientFactory].
+  ///
+  /// [cleanupInterval] controls how often rotated handlers are checked
+  /// for disposal once requests have drained.
   DefaultHttpClientFactory(
     this._services,
     this._messageHandlerFactory,
-    this._optionsMonitor,
-  );
+    this._optionsMonitor, {
+    Duration cleanupInterval = const Duration(seconds: 10),
+  }) : _cleanupInterval = cleanupInterval;
 
   final ServiceProvider _services;
   final HttpMessageHandlerFactory _messageHandlerFactory;
   final OptionsMonitor<HttpClientFactoryOptions> _optionsMonitor;
+  final Duration _cleanupInterval;
 
-  final Map<String, _HandlerEntry> _activeHandlers = <String, _HandlerEntry>{};
+  final Map<String, ActiveHandlerTrackingEntry> _activeHandlers =
+      <String, ActiveHandlerTrackingEntry>{};
+  final List<ExpiredHandlerTrackingEntry> _expiredHandlers =
+      <ExpiredHandlerTrackingEntry>[];
+  Timer? _cleanupTimer;
+  bool _disposed = false;
 
   @override
   http.BaseClient createClient([String? name = Options.defaultName]) {
+    if (_disposed) {
+      throw ObjectDisposedException(objectName: 'DefaultHttpClientFactory');
+    }
+
     var clientName = name ?? Options.defaultName;
     var options = _optionsMonitor.get(clientName);
     var handler = _getHandler(clientName, options);
@@ -45,6 +65,27 @@ class DefaultHttpClientFactory implements HttpClientFactory {
     return client;
   }
 
+  /// The number of rotated handlers awaiting disposal.
+  int get expiredHandlerCount => _expiredHandlers.length;
+
+  @override
+  void dispose() {
+    if (_disposed) {
+      return;
+    }
+    _disposed = true;
+    _cleanupTimer?.cancel();
+    _cleanupTimer = null;
+    for (final entry in _expiredHandlers) {
+      entry.disposeInner();
+    }
+    _expiredHandlers.clear();
+    for (final entry in _activeHandlers.values) {
+      entry.handler.disposeInner();
+    }
+    _activeHandlers.clear();
+  }
+
   HttpMessageHandler _getHandler(
     String name,
     HttpClientFactoryOptions options,
@@ -52,32 +93,51 @@ class DefaultHttpClientFactory implements HttpClientFactory {
     var now = DateTime.now();
     var entry = _activeHandlers[name];
 
-    if (entry != null && !_isExpired(entry, now)) {
+    if (entry != null && !entry.isExpired(now)) {
       return entry.handler;
     }
 
-    var newHandler = _messageHandlerFactory.createHandler(name);
+    final newHandler = LifetimeTrackingHttpMessageHandler(
+      _messageHandlerFactory.createHandler(name),
+    );
     var lifetime = options.handlerLifetime;
     DateTime? expiration;
     if (lifetime > Duration.zero) {
       expiration = now.add(lifetime);
     }
 
-    _activeHandlers[name] = _HandlerEntry(newHandler, expiration);
+    _activeHandlers[name] = ActiveHandlerTrackingEntry(
+      name: name,
+      handler: newHandler,
+      expiration: expiration,
+    );
 
     if (entry != null && !options.suppressHandlerDispose) {
-      entry.handler.dispose();
+      _expiredHandlers.add(ExpiredHandlerTrackingEntry(entry));
+      _cleanupExpiredHandlers();
     }
 
     return newHandler;
   }
 
-  bool _isExpired(_HandlerEntry entry, DateTime now) {
-    var expiration = entry.expiration;
-    if (expiration == null) {
+  void _cleanupExpiredHandlers() {
+    _expiredHandlers.removeWhere((entry) {
+      if (entry.canDispose) {
+        entry.disposeInner();
+        return true;
+      }
       return false;
+    });
+
+    if (_expiredHandlers.isEmpty) {
+      _cleanupTimer?.cancel();
+      _cleanupTimer = null;
+    } else {
+      _cleanupTimer ??= Timer.periodic(
+        _cleanupInterval,
+        (_) => _cleanupExpiredHandlers(),
+      );
     }
-    return expiration.isBefore(now);
   }
 }
 

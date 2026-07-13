@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import '../dependency_injection/service_collection.dart';
 import '../dependency_injection/service_collection_descriptor_extensions.dart';
 import '../dependency_injection/service_descriptor.dart';
+import '../dependency_injection/service_lifetime.dart';
 import '../dependency_injection/service_provider.dart';
 import '../dependency_injection/service_provider_service_extensions.dart';
 import '../options/options_service_collection_extensions.dart';
@@ -126,6 +127,59 @@ class HttpClientBuilder {
       HttpClientFactoryOptions.new,
       (options) => options.handlerLifetime = lifetime,
       name: name,
+    );
+    return this;
+  }
+
+  /// Adds a delegate that mutates the list of additional handlers
+  /// after all other handler configuration has run.
+  ///
+  /// Use this to inspect or reorder the pipeline assembled by earlier
+  /// [addHttpMessageHandler] calls.
+  HttpClientBuilder configureAdditionalHttpMessageHandlers(
+    void Function(
+      List<DelegatingHandler> handlers,
+      ServiceProvider services,
+    ) configure,
+  ) =>
+      configureHttpMessageHandlerBuilder(
+        (builder, sp) => configure(builder.additionalHandlers, sp),
+      );
+
+  /// Registers this named client as a keyed [http.BaseClient] service
+  /// with the client [name] as the service key.
+  ///
+  /// Resolve it with
+  /// `provider.getRequiredKeyedService<BaseClient>(name)`. Each
+  /// resolution creates a new client from the factory, honoring
+  /// [lifetime] for caching semantics.
+  HttpClientBuilder addAsKeyed({
+    ServiceLifetime lifetime = ServiceLifetime.scoped,
+  }) {
+    final descriptor = switch (lifetime) {
+      ServiceLifetime.transient => ServiceDescriptor.keyedTransient,
+      ServiceLifetime.scoped => ServiceDescriptor.keyedScoped,
+      ServiceLifetime.singleton => ServiceDescriptor.keyedSingleton,
+    };
+    removeAsKeyed();
+    services.add(
+      descriptor<http.BaseClient>(
+        name,
+        (sp, key) => sp
+            .getRequiredService<HttpClientFactory>()
+            .createClient(key as String? ?? name),
+      ),
+    );
+    return this;
+  }
+
+  /// Removes the keyed [http.BaseClient] registration for this client
+  /// [name], if present.
+  HttpClientBuilder removeAsKeyed() {
+    services.removeWhere(
+      (descriptor) =>
+          descriptor.serviceType == http.BaseClient &&
+          descriptor.serviceKey == name,
     );
     return this;
   }

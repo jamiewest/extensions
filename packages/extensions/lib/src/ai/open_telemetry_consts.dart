@@ -16,6 +16,13 @@ abstract final class OpenTelemetryConsts {
   static const String embeddingsSpanName = 'gen_ai.embeddings';
   static const String imageGenerationSpanName = 'gen_ai.image_generation';
   static const String textToSpeechSpanName = 'gen_ai.text_to_speech';
+  static const String speechToTextSpanName = 'gen_ai.speech_to_text';
+  static const String realtimeSpanName = 'gen_ai.realtime';
+  static const String filesUploadSpanName = 'files.upload';
+  static const String filesDownloadSpanName = 'files.download';
+  static const String filesGetSpanName = 'files.get_info';
+  static const String filesListSpanName = 'files.list';
+  static const String filesDeleteSpanName = 'files.delete';
 
   // Attribute keys
   static const String systemKey = 'gen_ai.system';
@@ -31,6 +38,22 @@ abstract final class OpenTelemetryConsts {
   static const String finishReasonKey = 'gen_ai.response.finish_reasons';
   static const String errorTypeKey = 'error.type';
   static const String serverAddressKey = 'server.address';
+  static const String inputMessagesKey = 'gen_ai.input.messages';
+  static const String outputMessagesKey = 'gen_ai.output.messages';
+  static const String sessionKindKey = 'gen_ai.realtime.session_kind';
+  static const String voiceKey = 'gen_ai.realtime.voice';
+  static const String outputModalitiesKey = 'gen_ai.realtime.output_modalities';
+  static const String filesOperationNameKey = 'files.operation.name';
+  static const String filesIdKey = 'files.id';
+  static const String filesMediaTypeKey = 'files.media_type';
+  static const String fileNameKey = 'file.name';
+
+  /// Environment variable upstream reads to default `enableSensitiveData`.
+  ///
+  /// The Dart port does not read the environment (web support); hosts
+  /// wire this value in explicitly during bootstrap.
+  static const String genAICaptureMessageContentEnvVar =
+      'OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT';
 
   /// Histogram bucket boundaries for operation duration (seconds).
   static const List<double> operationDurationBuckets = [

@@ -1,3 +1,5 @@
+import 'package:http/http.dart' as http;
+
 import 'delegating_handler.dart';
 import 'http_message_handler.dart';
 
@@ -6,10 +8,36 @@ import 'http_message_handler.dart';
 ///
 /// This handler wraps another handler and overrides the dispose method to
 /// prevent it from being disposed until the factory determines it's safe to do
-/// so (after the configured lifetime expires and there are no active requests).
+/// so (after the configured lifetime expires and there are no active
+/// requests).
 class LifetimeTrackingHttpMessageHandler extends DelegatingHandler {
   /// Creates a new [LifetimeTrackingHttpMessageHandler].
   LifetimeTrackingHttpMessageHandler(HttpMessageHandler super.innerHandler);
+
+  int _activeRequests = 0;
+
+  /// The number of requests currently in flight through this handler.
+  ///
+  /// A request is counted from `send` until its [http.StreamedResponse]
+  /// future completes; consumption of the response body stream is not
+  /// tracked.
+  int get activeRequests => _activeRequests;
+
+  /// Whether any requests are currently in flight.
+  bool get hasActiveRequests => _activeRequests > 0;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    _activeRequests++;
+    final Future<http.StreamedResponse> result;
+    try {
+      result = super.send(request);
+    } catch (_) {
+      _activeRequests--;
+      rethrow;
+    }
+    return result.whenComplete(() => _activeRequests--);
+  }
 
   @override
   void dispose() {

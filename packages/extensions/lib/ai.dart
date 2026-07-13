@@ -166,6 +166,8 @@ export 'src/ai/files/hosted_file_client_builder.dart';
 export 'src/ai/files/hosted_file_client_builder_hosted_file_client_extensions.dart';
 export 'src/ai/files/logging_hosted_file_client.dart';
 export 'src/ai/files/logging_hosted_file_client_builder_extensions.dart';
+export 'src/ai/files/open_telemetry_hosted_file_client.dart';
+export 'src/ai/files/open_telemetry_hosted_file_client_builder_extensions.dart';
 // OpenTelemetry
 export 'src/ai/open_telemetry_consts.dart';
 // Text to speech
@@ -190,6 +192,8 @@ export 'src/ai/speech_to_text/configure_options_speech_to_text_client_builder_ex
 export 'src/ai/speech_to_text/delegating_speech_to_text_client.dart';
 export 'src/ai/speech_to_text/logging_speech_to_text_client.dart';
 export 'src/ai/speech_to_text/logging_speech_to_text_client_builder_extensions.dart';
+export 'src/ai/speech_to_text/open_telemetry_speech_to_text_client.dart';
+export 'src/ai/speech_to_text/open_telemetry_speech_to_text_client_builder_extensions.dart';
 export 'src/ai/speech_to_text/speech_to_text_client.dart';
 export 'src/ai/speech_to_text/speech_to_text_client_builder.dart';
 export 'src/ai/speech_to_text/speech_to_text_client_builder_service_collection_extensions.dart';
@@ -211,6 +215,9 @@ export 'src/ai/realtime/input_audio_transcription_realtime_server_message.dart';
 export 'src/ai/realtime/logging_realtime_client.dart';
 export 'src/ai/realtime/logging_realtime_client_builder_extensions.dart';
 export 'src/ai/realtime/logging_realtime_client_session.dart';
+export 'src/ai/realtime/open_telemetry_realtime_client.dart';
+export 'src/ai/realtime/open_telemetry_realtime_client_builder_extensions.dart';
+export 'src/ai/realtime/open_telemetry_realtime_client_session.dart';
 export 'src/ai/realtime/output_text_audio_realtime_server_message.dart';
 export 'src/ai/realtime/realtime_audio_format.dart';
 export 'src/ai/realtime/realtime_client.dart';
