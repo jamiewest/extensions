@@ -22,7 +22,7 @@ recent `/drift` run covering that subsystem.
 | file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-07-12 |
 | file_system_globbing | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/` | `file_system_globbing/` | fully ported incl. `Internal/` (2026-07-04) | 2026-07-12 |
 | diagnostics | dotnet/runtime | `src/libraries/Microsoft.Extensions.Diagnostics/src/` | `diagnostics/` | metrics ported; `Tracing/` ruled N/A 2026-07-13 (would require an Activity mini-port) | 2026-07-12 |
-| ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | `AIContent.annotations` + OTel helpers/decorators (STT, hosted files, realtime) ported 2026-07-13, spans-only; remaining glue in priorities | 2026-07-13 |
+| ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | `AIContent.annotations` + OTel helpers/decorators (STT, hosted files, realtime) ported 2026-07-13, spans-only; `FunctionInvokingChatClient` loop limits reconciled with upstream 2026-07-31; remaining glue in priorities | 2026-07-31 |
 | ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline) | 2026-07-13 |
 | vector_data | dotnet/extensions | `src/Libraries/Microsoft.Extensions.VectorData.Abstractions/` | `vector_data/` | ported incl. `provider_services/` core; `ProviderServices/Filter/` trio open | 2026-07-12 |
 
@@ -77,6 +77,15 @@ DI-layer gap — see tables):
      `FunctionInvocationHelpers`, `FunctionInvocationLogger`,
      `FunctionInvocationProcessor` (shared between chat and realtime —
      porting it likely simplifies `FunctionInvokingChatClient`).
+     Partially addressed 2026-07-31: the loop limits in
+     `FunctionInvokingChatClient` now match upstream — the iteration limit
+     withholds `AIFunctionDeclaration` tools for the final request
+     (`PrepareOptionsForLastIteration`) instead of returning unanswered
+     calls, and exceeding the consecutive-error limit rethrows the tool's
+     own error (or an `AggregateException` for several), matching
+     `UpdateConsecutiveErrorCountOrThrow`. Upstream's `>` comparison is
+     now used. Still unported from that area: approval-request replacement,
+     conversation-id history fixups, and the shared processor itself.
    - Abstraction-side `*Extensions` helpers: `EmbeddingGeneratorExtensions`,
      `ImageGeneratorExtensions`, `SpeechToTextClientExtensions`,
      `SpeechToTextResponseUpdateExtensions`, `TextToSpeechClientExtensions`,

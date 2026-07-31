@@ -1,3 +1,43 @@
+## 0.6.0
+
+* **BREAKING — AI function invocation now matches upstream loop limits:**
+  * Reaching `maximumIterationsPerRequest` no longer returns a response with
+    unanswered tool calls. Following upstream, the final request omits
+    function declarations from `ChatOptions.tools` (non-function tools and,
+    when any remain, `toolMode` are preserved) so the model produces a real
+    answer. If it requests a call anyway, that response is returned without
+    invoking anything. Note that this tool-free request is a real round trip,
+    so a request that reaches the limit now makes one more provider call than
+    before.
+  * Exceeding `maximumConsecutiveErrorsPerRequest` now throws instead of
+    silently returning a partial response. A single failure is rethrown
+    as-is so callers can catch the tool's own error type; multiple failures
+    are combined into an `AggregateException`, which is now also exported
+    from `package:extensions/ai.dart`.
+  * The limit comparison was `>=` and is now `>`, matching upstream: a limit
+    of *n* tolerates *n* consecutive failing iterations. A limit of `0`
+    therefore surfaces the first tool failure immediately.
+
+* **AI — provider annotations:**
+  * `AIContent` gained an `annotations` field carrying provider-returned
+    citations (`AIAnnotation` / `CitationAnnotation`).
+* **AI — OpenTelemetry coverage completed:**
+  * Added `OpenTelemetrySpeechToTextClient`,
+    `OpenTelemetryHostedFileClient`, and `OpenTelemetryRealtimeClient`
+    (plus its session decorator), each with a matching builder extension.
+  * Instrumentation is spans-only, emitted through `dart:developer`'s
+    `Timeline`. Because the port avoids `dart:io`, the upstream
+    `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` environment
+    variable has no counterpart — hosts set
+    `TelemetryHelpers.enableSensitiveDataDefault` at bootstrap instead.
+* **HTTP — handler lifetime management:**
+  * `HttpMessageHandler` instances are now disposed only after in-flight
+    requests complete, tracked by active/expired handler entries and a
+    timer-driven cleanup cycle. The implementation is web-safe and uses no
+    finalizers.
+  * `HttpClientBuilder` gained `addAsKeyed`, `removeAsKeyed`, and
+    `configureAdditionalHttpMessageHandlers`.
+
 ## 0.5.0
 
 * **VectorData — interfaces renamed to Dart conventions:**

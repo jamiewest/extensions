@@ -1,3 +1,15 @@
+## 0.5.0
+
+* Updated `extensions` dependency to `^0.6.0`.
+* Inherits the breaking AI function-invocation change from extensions 0.6.0:
+  the invocation loop now withholds function declarations on its final
+  iteration instead of returning unanswered tool calls, and throws once
+  `maximumConsecutiveErrorsPerRequest` is exceeded rather than returning a
+  partial response.
+* Also inherits `AIContent.annotations`, OpenTelemetry decorators for
+  speech-to-text, hosted files, and realtime, and HTTP handler lifetime
+  tracking with the new `HttpClientBuilder` keyed-client APIs.
+
 ## 0.4.6
 
 * Updated `extensions` dependency to `^0.5.0`.

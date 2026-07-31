@@ -2,12 +2,14 @@ import 'dart:async';
 
 import '../../logging/logger.dart';
 import '../../logging/logger_extensions.dart';
+import '../../system/exceptions/aggregate_exception.dart';
 import '../../system/threading/cancellation_token.dart';
 import '../ai_content.dart';
 import '../function_call_content.dart';
 import '../function_result_content.dart';
 import '../functions/ai_function.dart';
 import '../functions/ai_function_arguments.dart';
+import '../functions/ai_function_declaration.dart';
 import '../tools/ai_tool.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
@@ -124,9 +126,12 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
     var consecutiveErrors = 0;
 
     while (true) {
+      final lastIteration = iterations >= maximumIterationsPerRequest;
+      if (lastIteration) _logMaximumIterationsReached();
+
       final response = await super.getResponse(
         messages: messageList,
-        options: options,
+        options: lastIteration ? _optionsForLastIteration(options) : options,
         cancellationToken: cancellationToken,
       );
 
@@ -140,8 +145,10 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
 
       if (functionCalls.isEmpty) return response;
 
+      // Past the limit nothing more is invoked, so hand back whatever the
+      // model produced rather than looping on calls that will never run.
+      if (lastIteration) return response;
       iterations++;
-      if (iterations > maximumIterationsPerRequest) return response;
 
       // Add the assistant message with function calls
       messageList.add(lastMessage);
@@ -158,8 +165,8 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
           results.any((r) => r.status == FunctionInvocationStatus.exception);
       if (hasErrors) {
         consecutiveErrors++;
-        if (consecutiveErrors >= maximumConsecutiveErrorsPerRequest) {
-          return response;
+        if (consecutiveErrors > maximumConsecutiveErrorsPerRequest) {
+          _throwToolFailures(results);
         }
       } else {
         consecutiveErrors = 0;
@@ -211,9 +218,12 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
         final updates = <ChatResponseUpdate>[];
         final functionCalls = <FunctionCallContent>[];
 
+        final lastIteration = iterations >= maximumIterationsPerRequest;
+        if (lastIteration) _logMaximumIterationsReached();
+
         await for (final update in super.getStreamingResponse(
           messages: messageList,
-          options: options,
+          options: lastIteration ? _optionsForLastIteration(options) : options,
           cancellationToken: cancellationToken,
         )) {
           updates.add(update);
@@ -228,8 +238,10 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
 
         if (functionCalls.isEmpty) return;
 
+        // Past the limit nothing more is invoked, so end the stream rather
+        // than looping on calls that will never run.
+        if (lastIteration) return;
         iterations++;
-        if (iterations > maximumIterationsPerRequest) return;
 
         // Build assistant message from updates
         final assistantContents = <AIContent>[];
@@ -254,7 +266,9 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
             results.any((r) => r.status == FunctionInvocationStatus.exception);
         if (hasErrors) {
           consecutiveErrors++;
-          if (consecutiveErrors >= maximumConsecutiveErrorsPerRequest) return;
+          if (consecutiveErrors > maximumConsecutiveErrorsPerRequest) {
+            _throwToolFailures(results);
+          }
         } else {
           consecutiveErrors = 0;
         }
@@ -279,6 +293,63 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
     }
 
     return stream();
+  }
+
+  void _logMaximumIterationsReached() => logger?.logWarning(
+        'Reached the maximum of $maximumIterationsPerRequest function '
+        'invocation iterations. Function tools will not be supplied for the '
+        'final request.',
+      );
+
+  /// Removes function declarations from [options] for the final iteration.
+  ///
+  /// Once the iteration limit is reached no further calls will be invoked, so
+  /// the functions are withheld to prompt a final answer instead of another
+  /// call request that would go unanswered. Non-function tools are left in
+  /// place; [ChatOptions.toolMode] is cleared only if nothing remains, since
+  /// a mode such as "required" cannot be satisfied without tools.
+  ChatOptions? _optionsForLastIteration(ChatOptions? options) {
+    final tools = options?.tools;
+    if (options == null || tools == null || tools.isEmpty) return options;
+
+    final remaining = tools.where((t) => t is! AIFunctionDeclaration).toList();
+    if (remaining.length == tools.length) return options;
+
+    final hasRemaining = remaining.isNotEmpty;
+    return options.clone()
+      ..tools = hasRemaining ? remaining : null
+      ..toolMode = hasRemaining ? options.toolMode : null;
+  }
+
+  /// Reports the tool failures that exhausted
+  /// [maximumConsecutiveErrorsPerRequest].
+  ///
+  /// A single failure is rethrown as-is so callers can catch the tool's own
+  /// error type. Multiple failures are combined into an [AggregateException];
+  /// because that type carries only [Exception] values, anything else a tool
+  /// threw is described in the message rather than dropped.
+  Never _throwToolFailures(List<FunctionInvocationResult> results) {
+    logger?.logError(
+      'Function invocation stopped after more than '
+      '$maximumConsecutiveErrorsPerRequest consecutive iterations of failing '
+      'tool calls.',
+    );
+
+    final errors = results
+        .where((r) => r.status == FunctionInvocationStatus.exception)
+        .map((r) => r.exception)
+        .nonNulls
+        .toList();
+
+    if (errors.length == 1) throw errors.single;
+
+    final others = errors.where((e) => e is! Exception).toList();
+    throw AggregateException(
+      message: others.isEmpty
+          ? 'One or more function invocations failed.'
+          : 'One or more function invocations failed: ${others.join(', ')}.',
+      innerExceptions: errors.whereType<Exception>(),
+    );
   }
 
   List<AITool> _getAllTools(ChatOptions? options) {

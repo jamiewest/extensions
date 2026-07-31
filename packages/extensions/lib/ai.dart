@@ -48,6 +48,7 @@ export 'src/ai/additional_properties_dictionary.dart';
 export 'src/ai/ai_annotation.dart';
 export 'src/ai/ai_content.dart';
 export 'src/ai/ai_content_extensions.dart';
+export 'src/system/exceptions/aggregate_exception.dart' show AggregateException;
 export 'src/ai/code_interpreter_tool_call_content.dart';
 export 'src/ai/code_interpreter_tool_result_content.dart';
 export 'src/ai/data_content.dart';

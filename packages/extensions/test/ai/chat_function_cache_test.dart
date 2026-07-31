@@ -71,6 +71,73 @@ class _DummyTool extends AITool {
   _DummyTool(String name) : super(name: name);
 }
 
+class _ThrowingFunction extends AIFunction {
+  _ThrowingFunction(String name, this.error) : super(name: name);
+
+  final Object error;
+
+  @override
+  Future<Object?> invokeCore(
+    AIFunctionArguments arguments, {
+    CancellationToken? cancellationToken,
+  }) async =>
+      throw error;
+}
+
+/// A client whose every turn requests one more call to each of
+/// [functionNames], so the invocation loop can only end on its own limits.
+class _EndlessToolCallChatClient implements ChatClient {
+  _EndlessToolCallChatClient(this.functionNames);
+
+  final List<String> functionNames;
+
+  /// The tools advertised on each request, in order — used to verify that
+  /// function declarations are withheld on the final iteration.
+  final List<List<AITool>?> toolsPerCall = [];
+
+  int _callId = 0;
+
+  List<AIContent> _nextCalls(ChatOptions? options) {
+    toolsPerCall.add(options?.tools);
+    return [
+      for (final name in functionNames)
+        FunctionCallContent(callId: 'call-${++_callId}', name: name),
+    ];
+  }
+
+  @override
+  Future<ChatResponse> getResponse({
+    required Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  }) async =>
+      ChatResponse.fromMessage(
+        ChatMessage(role: ChatRole.assistant, contents: _nextCalls(options)),
+      );
+
+  @override
+  Stream<ChatResponseUpdate> getStreamingResponse({
+    required Iterable<ChatMessage> messages,
+    ChatOptions? options,
+    CancellationToken? cancellationToken,
+  }) async* {
+    yield ChatResponseUpdate(
+      role: ChatRole.assistant,
+      contents: [TextContent('working on it')],
+    );
+    yield ChatResponseUpdate(
+      role: ChatRole.assistant,
+      contents: _nextCalls(options),
+    );
+  }
+
+  @override
+  T? getService<T>({Object? key}) => null;
+
+  @override
+  void dispose() {}
+}
+
 void main() {
   group('CachingChatClient', () {
     test('returns cached response on subsequent call', () async {
@@ -170,6 +237,90 @@ void main() {
 
       expect(response.messages.last.contents, [callContent]);
       expect(inner.calls, hasLength(1));
+    });
+
+    test('withholds functions on the final iteration', () async {
+      final function = _TestFunction('tool');
+      final inner = _EndlessToolCallChatClient(['tool']);
+      final client = FunctionInvokingChatClient(inner)
+        ..maximumIterationsPerRequest = 2;
+
+      final response = await client.getResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+        options: ChatOptions(
+          tools: [function, _DummyTool('other')],
+          toolMode: ChatToolMode.requireAny,
+        ),
+      );
+
+      // Two rounds of invocation, then one last request that carries no
+      // function declarations so the model has to answer.
+      expect(inner.toolsPerCall, hasLength(3));
+      expect(inner.toolsPerCall[0], contains(function));
+      expect(inner.toolsPerCall[1], contains(function));
+      expect(inner.toolsPerCall.last, isNot(contains(function)));
+
+      // Non-function tools survive, and the response is still returned.
+      expect(inner.toolsPerCall.last, [isA<_DummyTool>()]);
+      expect(
+          response.messages.last.contents.single, isA<FunctionCallContent>());
+    });
+
+    test('ends the stream at the iteration limit', () async {
+      final inner = _EndlessToolCallChatClient(['tool']);
+      final client = FunctionInvokingChatClient(inner)
+        ..additionalTools = [_TestFunction('tool')]
+        ..maximumIterationsPerRequest = 2;
+
+      final text = await client
+          .getStreamingResponse(
+            messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+          )
+          .map((u) => u.text)
+          .where((t) => t.isNotEmpty)
+          .toList();
+
+      expect(text, ['working on it', 'working on it', 'working on it']);
+    });
+
+    test('rethrows a single tool failure past the error limit', () async {
+      final error = StateError('tool failed');
+      final inner = _EndlessToolCallChatClient(['tool']);
+      final client = FunctionInvokingChatClient(inner)
+        ..additionalTools = [_ThrowingFunction('tool', error)]
+        ..maximumConsecutiveErrorsPerRequest = 1;
+
+      await expectLater(
+        client.getResponse(
+          messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+        ),
+        throwsA(same(error)),
+      );
+      // One failing round is tolerated; the second exceeds the limit.
+      expect(inner.toolsPerCall, hasLength(2));
+    });
+
+    test('aggregates multiple tool failures past the error limit', () async {
+      final inner = _EndlessToolCallChatClient(['first', 'second']);
+      final client = FunctionInvokingChatClient(inner)
+        ..additionalTools = [
+          _ThrowingFunction('first', const FormatException('bad first')),
+          _ThrowingFunction('second', const FormatException('bad second')),
+        ]
+        ..maximumConsecutiveErrorsPerRequest = 0;
+
+      await expectLater(
+        client.getResponse(
+          messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+        ),
+        throwsA(
+          isA<AggregateException>().having(
+            (e) => e.innerExceptions.map((x) => x.toString()).toList(),
+            'innerExceptions',
+            [contains('bad first'), contains('bad second')],
+          ),
+        ),
+      );
     });
   });
 }
