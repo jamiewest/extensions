@@ -1,5 +1,6 @@
 import 'package:extensions/annotations.dart';
 
+import '../ai_content.dart';
 import 'chat_message.dart';
 import 'chat_response.dart';
 import 'chat_response_update.dart';
@@ -35,6 +36,59 @@ extension ChatResponseUpdatesStreamExtensions on Stream<ChatResponseUpdate> {
       accumulator.add(update);
     }
     return accumulator.response;
+  }
+}
+
+/// Provides extension methods for appending response messages to a
+/// message list, such as a conversation history.
+extension ChatMessageListExtensions on List<ChatMessage> {
+  /// Adds all of the messages from [response] into this list.
+  void addMessagesFromResponse(ChatResponse response) =>
+      addAll(response.messages);
+
+  /// Converts [updates] into [ChatMessage] instances and adds them to
+  /// this list.
+  ///
+  /// Message boundaries are determined the same way as
+  /// [ChatResponseUpdatesExtensions.toChatResponse], including coalescing
+  /// contiguous content where applicable.
+  void addMessagesFromUpdates(Iterable<ChatResponseUpdate> updates) {
+    if (updates.isEmpty) {
+      return;
+    }
+    addMessagesFromResponse(updates.toChatResponse());
+  }
+
+  /// Converts a single [update] into a [ChatMessage] and adds it to
+  /// this list.
+  ///
+  /// If the update has no content, or all of its content is excluded by
+  /// [filter], no message is added.
+  void addMessagesFromUpdate(
+    ChatResponseUpdate update, {
+    bool Function(AIContent content)? filter,
+  }) {
+    final contents = filter == null
+        ? update.contents
+        : update.contents.where(filter).toList();
+    if (contents.isNotEmpty) {
+      add(ChatMessage(
+        role: update.role ?? ChatRole.assistant,
+        contents: contents,
+        authorName: update.authorName,
+        createdAt: update.createdAt,
+        rawRepresentation: update.rawRepresentation,
+        additionalProperties: update.additionalProperties,
+      ));
+    }
+  }
+
+  /// Drains [updates], converts them into [ChatMessage] instances, and
+  /// adds them to this list.
+  Future<void> addMessagesFromStream(
+    Stream<ChatResponseUpdate> updates,
+  ) async {
+    addMessagesFromResponse(await updates.toChatResponse());
   }
 }
 

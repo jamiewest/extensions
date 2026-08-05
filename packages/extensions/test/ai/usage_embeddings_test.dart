@@ -24,6 +24,37 @@ void main() {
       expect(usage.cachedInputTokenCount, 5);
       expect(usage.additionalCounts, {'cache': 3, 'new': 5});
     });
+
+    test('add merges audio and text modality counts', () {
+      final usage = UsageDetails(
+        inputAudioTokenCount: 10,
+        inputTextTokenCount: 20,
+        outputTextTokenCount: 5,
+      );
+      final other = UsageDetails(
+        inputAudioTokenCount: 1,
+        outputAudioTokenCount: 2,
+        outputTextTokenCount: 3,
+      );
+
+      usage.add(other);
+
+      expect(usage.inputAudioTokenCount, 11);
+      expect(usage.inputTextTokenCount, 20);
+      expect(usage.outputAudioTokenCount, 2);
+      expect(usage.outputTextTokenCount, 8);
+    });
+
+    test('modality counts stay null when absent on both sides', () {
+      final usage = UsageDetails(inputTokenCount: 1);
+
+      usage.add(UsageDetails(outputTokenCount: 2));
+
+      expect(usage.inputAudioTokenCount, isNull);
+      expect(usage.inputTextTokenCount, isNull);
+      expect(usage.outputAudioTokenCount, isNull);
+      expect(usage.outputTextTokenCount, isNull);
+    });
   });
 
   group('Embedding', () {

@@ -8,10 +8,9 @@ import '../../system/threading/cancellation_token.dart';
 import '../ai_content.dart';
 import '../chat_completion/function_invoking_chat_client.dart'
     show FunctionInvocationResult, FunctionInvocationStatus;
+import '../common/function_invocation_processor.dart';
 import '../function_call_content.dart';
 import '../function_result_content.dart';
-import '../functions/ai_function.dart';
-import '../functions/ai_function_arguments.dart';
 import '../tools/ai_tool.dart';
 import 'create_conversation_item_realtime_client_message.dart';
 import 'create_response_realtime_client_message.dart';
@@ -149,76 +148,24 @@ class FunctionInvokingRealtimeClientSession implements RealtimeClientSession {
   Future<List<FunctionInvocationResult>> _invokeFunctions(
     List<FunctionCallContent> calls,
     CancellationToken? cancellationToken,
-  ) async {
+  ) {
     final tools = _getAllTools();
 
-    if (_client.allowConcurrentInvocation) {
-      return Future.wait(
-        calls.map((call) => _invokeFunction(call, tools, cancellationToken)),
-      );
-    }
-
-    final results = <FunctionInvocationResult>[];
-    for (final call in calls) {
-      results.add(await _invokeFunction(call, tools, cancellationToken));
-    }
-    return results;
-  }
-
-  Future<FunctionInvocationResult> _invokeFunction(
-    FunctionCallContent call,
-    List<AITool> tools,
-    CancellationToken? cancellationToken,
-  ) async {
-    AIFunction? tool;
-    for (final candidate in tools.whereType<AIFunction>()) {
-      if (candidate.name == call.name) {
-        tool = candidate;
-        break;
-      }
-    }
-
-    if (tool == null) {
-      final errorMessage = 'Function "${call.name}" not found.';
-      _logger?.logError(errorMessage);
-
-      return FunctionInvocationResult(
-        status: FunctionInvocationStatus.notFound,
-        callContent: call,
-        result: errorMessage,
-        terminate: _client.terminateOnUnknownCalls,
-      );
-    }
-
-    try {
-      final arguments = AIFunctionArguments(call.arguments);
-      final result = await tool.invoke(
-        arguments,
-        cancellationToken: cancellationToken,
-      );
-
-      return FunctionInvocationResult(
-        status: FunctionInvocationStatus.ranToCompletion,
-        callContent: call,
-        result: result,
-      );
-    } catch (e) {
-      _logger?.logError(
-        'Function "${call.name}" threw an exception.',
-        error: e,
-      );
-
-      final errorResult = _client.includeDetailedErrors
-          ? e.toString()
-          : 'An error occurred invoking the function.';
-
-      return FunctionInvocationResult(
-        status: FunctionInvocationStatus.exception,
-        callContent: call,
-        result: errorResult,
-        exception: e,
-      );
-    }
+    return FunctionInvocationProcessor(logger: _logger).processFunctionCalls(
+      calls,
+      findTool: (name) {
+        for (final tool in tools) {
+          if (tool.name == name) {
+            return tool;
+          }
+        }
+        return null;
+      },
+      allowConcurrentInvocation: _client.allowConcurrentInvocation,
+      includeDetailedErrors: _client.includeDetailedErrors,
+      terminateOnUnknownCalls: _client.terminateOnUnknownCalls,
+      cancellationToken: cancellationToken,
+    );
   }
 
   List<RealtimeClientMessage> _createResultMessages(

@@ -5,10 +5,9 @@ import '../../logging/logger_extensions.dart';
 import '../../system/exceptions/aggregate_exception.dart';
 import '../../system/threading/cancellation_token.dart';
 import '../ai_content.dart';
+import '../common/function_invocation_processor.dart';
 import '../function_call_content.dart';
 import '../function_result_content.dart';
-import '../functions/ai_function.dart';
-import '../functions/ai_function_arguments.dart';
 import '../functions/ai_function_declaration.dart';
 import '../tools/ai_tool.dart';
 import 'chat_message.dart';
@@ -73,6 +72,9 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
 
   /// An optional logger for diagnostic output.
   final Logger? logger;
+
+  late final FunctionInvocationProcessor _processor =
+      FunctionInvocationProcessor(logger: logger);
 
   /// Whether to include detailed error information in function results
   /// sent to the model.
@@ -363,77 +365,20 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
     List<FunctionCallContent> calls,
     List<AITool> tools,
     CancellationToken? cancellationToken,
-  ) async {
-    if (allowConcurrentInvocation) {
-      return Future.wait(
-          calls.map((call) => _invokeFunction(call, tools, cancellationToken)));
-    }
-
-    final results = <FunctionInvocationResult>[];
-    for (final call in calls) {
-      results.add(await _invokeFunction(call, tools, cancellationToken));
-    }
-    return results;
-  }
-
-  Future<FunctionInvocationResult> _invokeFunction(
-    FunctionCallContent call,
-    List<AITool> tools,
-    CancellationToken? cancellationToken,
-  ) async {
-    final tool = tools
-        .whereType<AIFunction>()
-        .where((t) => t.name == call.name)
-        .firstOrNull;
-
-    if (tool == null) {
-      final errorMessage = 'Function "${call.name}" not found.';
-      logger?.logError(errorMessage);
-
-      if (terminateOnUnknownCalls) {
-        return FunctionInvocationResult(
-          status: FunctionInvocationStatus.notFound,
-          callContent: call,
-          result: errorMessage,
-          terminate: true,
-        );
-      }
-
-      return FunctionInvocationResult(
-        status: FunctionInvocationStatus.notFound,
-        callContent: call,
-        result: errorMessage,
-      );
-    }
-
-    try {
-      final arguments = AIFunctionArguments(call.arguments);
-      final result = await tool.invoke(
-        arguments,
+  ) =>
+      _processor.processFunctionCalls(
+        calls,
+        findTool: (name) {
+          for (final tool in tools) {
+            if (tool.name == name) {
+              return tool;
+            }
+          }
+          return null;
+        },
+        allowConcurrentInvocation: allowConcurrentInvocation,
+        includeDetailedErrors: includeDetailedErrors,
+        terminateOnUnknownCalls: terminateOnUnknownCalls,
         cancellationToken: cancellationToken,
       );
-
-      return FunctionInvocationResult(
-        status: FunctionInvocationStatus.ranToCompletion,
-        callContent: call,
-        result: result,
-      );
-    } catch (e) {
-      logger?.logError(
-        'Function "${call.name}" threw an exception.',
-        error: e,
-      );
-
-      final errorResult = includeDetailedErrors
-          ? e.toString()
-          : 'An error occurred invoking the function.';
-
-      return FunctionInvocationResult(
-        status: FunctionInvocationStatus.exception,
-        callContent: call,
-        result: errorResult,
-        exception: e,
-      );
-    }
-  }
 }

@@ -55,6 +55,19 @@ void main() {
 
       expect(identical(function.lastArguments, args), isTrue);
     });
+
+    test('asDeclarationOnly describes the function but is not invocable', () {
+      final function = _RecordingFunction();
+
+      final declaration = function.asDeclarationOnly();
+
+      expect(declaration, isA<AIFunctionDeclaration>());
+      expect(declaration, isNot(isA<AIFunction>()));
+      expect(declaration.name, function.name);
+      expect(declaration.description, function.description);
+      expect(declaration.parametersSchema, function.parametersSchema);
+      expect(declaration.returnSchema, function.returnSchema);
+    });
   });
 
   group('AIFunctionFactory', () {

@@ -1,6 +1,7 @@
 import '../../system/threading/cancellation_token.dart';
 import 'ai_function_arguments.dart';
 import 'ai_function_declaration.dart';
+import 'delegating_ai_function_declaration.dart';
 
 /// Represents a function that can be described to and invoked by an AI model.
 abstract class AIFunction extends AIFunctionDeclaration {
@@ -31,4 +32,14 @@ abstract class AIFunction extends AIFunctionDeclaration {
     AIFunctionArguments arguments, {
     CancellationToken? cancellationToken,
   });
+
+  /// Creates an [AIFunctionDeclaration] view of this function that can't be
+  /// invoked.
+  ///
+  /// [AIFunction] layers invocability on top of [AIFunctionDeclaration].
+  /// The returned object describes the function but is not an [AIFunction],
+  /// so components that type-test for invocability will treat it as
+  /// declaration-only.
+  AIFunctionDeclaration asDeclarationOnly() =>
+      DelegatingAIFunctionDeclaration(this);
 }

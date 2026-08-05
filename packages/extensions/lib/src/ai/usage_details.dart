@@ -9,6 +9,10 @@ class UsageDetails {
     this.totalTokenCount,
     this.cachedInputTokenCount,
     this.reasoningTokenCount,
+    this.inputAudioTokenCount,
+    this.inputTextTokenCount,
+    this.outputAudioTokenCount,
+    this.outputTextTokenCount,
     this.additionalCounts,
     this.additionalProperties,
   });
@@ -28,6 +32,26 @@ class UsageDetails {
   /// The number of tokens used for reasoning.
   int? reasoningTokenCount;
 
+  /// The number of audio input tokens used.
+  ///
+  /// Audio input tokens are counted as part of [inputTokenCount].
+  int? inputAudioTokenCount;
+
+  /// The number of text input tokens used.
+  ///
+  /// Text input tokens are counted as part of [inputTokenCount].
+  int? inputTextTokenCount;
+
+  /// The number of audio output tokens used.
+  ///
+  /// Audio output tokens are counted as part of [outputTokenCount].
+  int? outputAudioTokenCount;
+
+  /// The number of text output tokens used.
+  ///
+  /// Text output tokens are counted as part of [outputTokenCount].
+  int? outputTextTokenCount;
+
   /// Additional usage counts not covered by the standard properties.
   Map<String, int>? additionalCounts;
 
@@ -43,6 +67,14 @@ class UsageDetails {
         _addNullable(cachedInputTokenCount, other.cachedInputTokenCount);
     reasoningTokenCount =
         _addNullable(reasoningTokenCount, other.reasoningTokenCount);
+    inputAudioTokenCount =
+        _addNullable(inputAudioTokenCount, other.inputAudioTokenCount);
+    inputTextTokenCount =
+        _addNullable(inputTextTokenCount, other.inputTextTokenCount);
+    outputAudioTokenCount =
+        _addNullable(outputAudioTokenCount, other.outputAudioTokenCount);
+    outputTextTokenCount =
+        _addNullable(outputTextTokenCount, other.outputTextTokenCount);
 
     if (other.additionalCounts != null) {
       additionalCounts ??= {};

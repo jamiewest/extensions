@@ -119,6 +119,13 @@ export 'src/ai/chat_completion/structured_chat_response.dart';
 export 'src/ai/chat_completion/summarizing_chat_reducer.dart';
 // Chat reduction
 export 'src/ai/chat_reduction/chat_reducer.dart';
+// Chat routing (upstream [Experimental])
+export 'src/ai/chat_routing/failover_chat_client.dart';
+export 'src/ai/chat_routing/failover_chat_client_attempt.dart';
+export 'src/ai/chat_routing/ordered_failover_chat_client.dart';
+export 'src/ai/chat_routing/routing_chat_client.dart';
+export 'src/ai/chat_routing/routing_context.dart';
+export 'src/ai/chat_routing/semantic_routing_chat_client.dart';
 // Embeddings
 export 'src/ai/embeddings/caching_embedding_generator.dart';
 export 'src/ai/embeddings/configure_options_embedding_generator.dart';

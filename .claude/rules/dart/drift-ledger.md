@@ -22,8 +22,8 @@ recent `/drift` run covering that subsystem.
 | file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-07-12 |
 | file_system_globbing | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/` | `file_system_globbing/` | fully ported incl. `Internal/` (2026-07-04) | 2026-07-12 |
 | diagnostics | dotnet/runtime | `src/libraries/Microsoft.Extensions.Diagnostics/src/` | `diagnostics/` | metrics ported; `Tracing/` ruled N/A 2026-07-13 (would require an Activity mini-port) | 2026-07-12 |
-| ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | `AIContent.annotations` + OTel helpers/decorators (STT, hosted files, realtime) ported 2026-07-13, spans-only; `FunctionInvokingChatClient` loop limits reconciled with upstream 2026-07-31; remaining glue in priorities | 2026-07-31 |
-| ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline) | 2026-07-13 |
+| ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | ported (220/254 upstream files; rest N/A or open); `ChatRouting/` family (6 types, upstream `[Experimental]`), the `UsageDetails`/`AIFunction`/`ChatResponseExtensions` member gaps, and the `Common/` invocation processor+logger all closed 2026-08-04; OTel spans-only | 2026-08-04 |
+| ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline); no new gaps 2026-08-04 | 2026-08-04 |
 | vector_data | dotnet/extensions | `src/Libraries/Microsoft.Extensions.VectorData.Abstractions/` | `vector_data/` | ported incl. `provider_services/` core; `ProviderServices/Filter/` trio open | 2026-07-12 |
 
 `lib/src/system/` is local Dart utility code with no upstream counterpart —
@@ -56,6 +56,7 @@ reason whenever a port decision rules something out.
 | `Tracing/` subfolder (7 types) | diagnostics | thin wrappers over `ActivitySource`/`ActivityListener` — porting requires a `System.Diagnostics.Activity` mini-port (6–10 types of framework debt); no in-repo consumer, and AI telemetry uses `dart:developer` Timeline instead. Ruled out 2026-07-13; revisit only if a concrete consumer appears |
 | `ISocketsHttpHandlerBuilder`, `DefaultSocketsHttpHandlerBuilder`, `SocketsHttpHandlerBuilderExtensions` | http | configure the dart:io-shaped `SocketsHttpHandler`; `package:http` abstracts transport behind `Client`, and porting these would break web/VM parity. Ruled out 2026-07-13 |
 | `OtelContext` | ai | STJ source-generated `JsonSerializerContext` — same rationale as the JsonConverter-layer N/A; plain `dart:convert` maps instead |
+| `FunctionInvocationHelpers` | ai | `Activity.Current` inspection (never port `Activity`); the elapsed-time helper collapses to `dart:core` `Stopwatch` at call sites. The sibling `FunctionInvocationLogger`/`FunctionInvocationProcessor` ARE ported (unexported, `lib/src/ai/common/`) |
 | `OtelMetricHelpers` | ai | metrics deferred by decision 2026-07-13: OTel decorators are spans-only (`dart:developer` Timeline); revisit if histogram wiring to the diagnostics metrics mini-port is wanted |
 | `ITypedHttpClientFactory`, `DefaultTypedHttpClientFactory` | http | collapsed into `HttpClientBuilder.addTypedClient` / `addHttpClientTyped` explicit factories (upstream exists to serve `ActivatorUtilities` reflection) |
 | `HttpClientFactoryExtensions`, `HttpMessageHandlerFactoryExtensions` | http | C# default-name overloads — collapsed into optional `name` parameters on `createClient`/`createHandler` |
@@ -68,24 +69,34 @@ reason whenever a port decision rules something out.
 
 ## Open priorities
 
-Most impactful first (2026-07-12 audit; 2026-07-13 port pass closed
-`AIContent.annotations`, the AI OTel family, realtime P5, and the http
-DI-layer gap — see tables):
+Most impactful first (ai re-audited 2026-08-04; other subsystems last
+audited 2026-07-12/13 — see table):
 
 1. **ai** —
-   - New upstream `Common/` function-invocation refactor:
-     `FunctionInvocationHelpers`, `FunctionInvocationLogger`,
-     `FunctionInvocationProcessor` (shared between chat and realtime —
-     porting it likely simplifies `FunctionInvokingChatClient`).
-     Partially addressed 2026-07-31: the loop limits in
-     `FunctionInvokingChatClient` now match upstream — the iteration limit
-     withholds `AIFunctionDeclaration` tools for the final request
-     (`PrepareOptionsForLastIteration`) instead of returning unanswered
-     calls, and exceeding the consecutive-error limit rethrows the tool's
-     own error (or an `AggregateException` for several), matching
-     `UpdateConsecutiveErrorCountOrThrow`. Upstream's `>` comparison is
-     now used. Still unported from that area: approval-request replacement,
-     conversation-id history fixups, and the shared processor itself.
+   - CLOSED 2026-08-04: `ChatRouting/` family ported to
+     `lib/src/ai/chat_routing/` (decision: port now, dartdoc notes the
+     upstream `[Experimental]` status; nested `ScoreAggregation` enum
+     flattened to `SemanticRoutingScoreAggregation`; attempts carry an
+     explicit `stackTrace` since Dart has no `ExceptionDispatchInfo`).
+     Member gaps closed the same day: `UsageDetails` audio/text counts,
+     `AIFunction.asDeclarationOnly`, and the `addMessages` family — Dart
+     names `addMessagesFromResponse`/`FromUpdates`/`FromUpdate`/
+     `FromStream` on `List<ChatMessage>` per the FromX overload
+     convention.
+   - `Common/` function-invocation refactor: `FunctionInvocationLogger`
+     and `FunctionInvocationProcessor` ported 2026-08-04 (unexported,
+     `lib/src/ai/common/`) and wired into both
+     `FunctionInvokingChatClient` and
+     `FunctionInvokingRealtimeClientSession`; `execute_tool` spans are
+     emitted via `dart:developer` Timeline. (Loop limits were aligned
+     earlier, 2026-07-31.) Still unported from that area:
+     approval-request replacement, conversation-id history fixups, and
+     `FunctionInvocationContext` wiring (tools cannot set
+     `terminate`/observe context yet — the context type exists but is
+     not flowed).
+   - Dart-only note: `ai/tool_reduction/` (`ToolReducingChatClient`) has
+     no counterpart in current upstream main — keep, but re-check on the
+     next audit whether upstream landed an equivalent.
    - Abstraction-side `*Extensions` helpers: `EmbeddingGeneratorExtensions`,
      `ImageGeneratorExtensions`, `SpeechToTextClientExtensions`,
      `SpeechToTextResponseUpdateExtensions`, `TextToSpeechClientExtensions`,

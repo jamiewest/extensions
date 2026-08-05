@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:extensions/ai.dart';
 import 'package:extensions/system.dart' show CancellationToken;
 import 'package:test/test.dart';
@@ -82,6 +84,26 @@ class _ThrowingFunction extends AIFunction {
     CancellationToken? cancellationToken,
   }) async =>
       throw error;
+}
+
+/// Completes [started] on invocation, then waits for [release] before
+/// returning — used to prove two functions run concurrently.
+class _GatedFunction extends AIFunction {
+  _GatedFunction(String name, {required this.started, required this.release})
+      : super(name: name);
+
+  final Completer<void> started;
+  final Future<void> release;
+
+  @override
+  Future<Object?> invokeCore(
+    AIFunctionArguments arguments, {
+    CancellationToken? cancellationToken,
+  }) async {
+    started.complete();
+    await release;
+    return '$name done';
+  }
 }
 
 /// A client whose every turn requests one more call to each of
@@ -298,6 +320,130 @@ void main() {
       );
       // One failing round is tolerated; the second exceeds the limit.
       expect(inner.toolsPerCall, hasLength(2));
+    });
+
+    test('invokes multiple calls concurrently when allowed', () async {
+      final firstStarted = Completer<void>();
+      final secondStarted = Completer<void>();
+
+      final responses = [
+        ChatResponse.fromMessage(
+          ChatMessage(role: ChatRole.assistant, contents: [
+            FunctionCallContent(callId: 'c1', name: 'first'),
+            FunctionCallContent(callId: 'c2', name: 'second'),
+          ]),
+        ),
+        ChatResponse.fromMessage(
+          ChatMessage.fromText(ChatRole.assistant, 'final'),
+        ),
+      ];
+      final inner = _CountingChatClient(responses: responses);
+      final client = FunctionInvokingChatClient(inner)
+        ..allowConcurrentInvocation = true
+        ..additionalTools = [
+          // Each function only completes once the other has started, so
+          // this deadlocks (and times out) unless invocation overlaps.
+          _GatedFunction(
+            'first',
+            started: firstStarted,
+            release: secondStarted.future,
+          ),
+          _GatedFunction(
+            'second',
+            started: secondStarted,
+            release: firstStarted.future,
+          ),
+        ];
+
+      final response = await client.getResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+      );
+
+      expect(response.text, 'final');
+      final toolMessage = inner.calls[1][2];
+      final results =
+          toolMessage.contents.whereType<FunctionResultContent>().toList();
+      expect(results.map((r) => r.result), ['first done', 'second done']);
+    });
+
+    test('includes error details in results when configured', () async {
+      final responses = [
+        ChatResponse.fromMessage(
+          ChatMessage(role: ChatRole.assistant, contents: [
+            FunctionCallContent(callId: 'c1', name: 'tool'),
+          ]),
+        ),
+        ChatResponse.fromMessage(
+          ChatMessage.fromText(ChatRole.assistant, 'final'),
+        ),
+      ];
+      final inner = _CountingChatClient(responses: responses);
+      final client = FunctionInvokingChatClient(inner)
+        ..includeDetailedErrors = true
+        ..additionalTools = [
+          _ThrowingFunction('tool', StateError('tool failed')),
+        ];
+
+      await client.getResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+      );
+
+      final toolMessage = inner.calls[1][2];
+      final result =
+          toolMessage.contents.whereType<FunctionResultContent>().single;
+      expect('${result.result}', contains('tool failed'));
+    });
+
+    test('reports declaration-only tools as not found', () async {
+      final responses = [
+        ChatResponse.fromMessage(
+          ChatMessage(role: ChatRole.assistant, contents: [
+            FunctionCallContent(callId: 'c1', name: 'tool'),
+          ]),
+        ),
+        ChatResponse.fromMessage(
+          ChatMessage.fromText(ChatRole.assistant, 'final'),
+        ),
+      ];
+      final inner = _CountingChatClient(responses: responses);
+      final invocable = _TestFunction('tool');
+      final client = FunctionInvokingChatClient(inner)
+        ..additionalTools = [invocable.asDeclarationOnly()];
+
+      final response = await client.getResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+      );
+
+      expect(response.text, 'final');
+      expect(invocable.lastArguments, isNull);
+      final toolMessage = inner.calls[1][2];
+      final result =
+          toolMessage.contents.whereType<FunctionResultContent>().single;
+      expect('${result.result}', contains('not found'));
+    });
+
+    test('serial processing stops after a terminating result', () async {
+      final invoked = _TestFunction('known');
+      final responses = [
+        ChatResponse.fromMessage(
+          ChatMessage(role: ChatRole.assistant, contents: [
+            FunctionCallContent(callId: 'c1', name: 'missing'),
+            FunctionCallContent(callId: 'c2', name: 'known'),
+          ]),
+        ),
+      ];
+      final inner = _CountingChatClient(responses: responses);
+      final client = FunctionInvokingChatClient(inner)
+        ..terminateOnUnknownCalls = true
+        ..additionalTools = [invoked];
+
+      await client.getResponse(
+        messages: [ChatMessage.fromText(ChatRole.user, 'start')],
+      );
+
+      // The unknown call terminates the loop before the known call runs.
+      expect(invoked.lastArguments, isNull);
+      expect(inner.calls, hasLength(1));
     });
 
     test('aggregates multiple tool failures past the error limit', () async {

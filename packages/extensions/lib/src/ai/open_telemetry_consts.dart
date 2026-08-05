@@ -18,6 +18,7 @@ abstract final class OpenTelemetryConsts {
   static const String textToSpeechSpanName = 'gen_ai.text_to_speech';
   static const String speechToTextSpanName = 'gen_ai.speech_to_text';
   static const String realtimeSpanName = 'gen_ai.realtime';
+  static const String executeToolSpanName = 'execute_tool';
   static const String filesUploadSpanName = 'files.upload';
   static const String filesDownloadSpanName = 'files.download';
   static const String filesGetSpanName = 'files.get_info';
@@ -47,6 +48,16 @@ abstract final class OpenTelemetryConsts {
   static const String filesIdKey = 'files.id';
   static const String filesMediaTypeKey = 'files.media_type';
   static const String fileNameKey = 'file.name';
+  static const String operationNameKey = 'gen_ai.operation.name';
+  static const String toolTypeKey = 'gen_ai.tool.type';
+  static const String toolNameKey = 'gen_ai.tool.name';
+  static const String toolDescriptionKey = 'gen_ai.tool.description';
+  static const String toolCallIdKey = 'gen_ai.tool.call.id';
+  static const String toolCallArgumentsKey = 'gen_ai.tool.call.arguments';
+  static const String toolCallResultKey = 'gen_ai.tool.call.result';
+
+  /// The `gen_ai.tool.type` value for function tools.
+  static const String toolTypeFunction = 'function';
 
   /// Environment variable upstream reads to default `enableSensitiveData`.
   ///
