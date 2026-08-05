@@ -1,3 +1,14 @@
+## 0.5.1
+
+* Updated `extensions` dependency to `^0.7.0`.
+* Inherits the new AI chat-routing clients (`RoutingChatClient`,
+  `FailoverChatClient`, `OrderedFailoverChatClient`,
+  `SemanticRoutingChatClient` — upstream marks the family experimental),
+  the `UsageDetails` audio/text token counts,
+  `AIFunction.asDeclarationOnly`, the `addMessagesFrom*` helpers on
+  `List<ChatMessage>`, and `execute_tool` telemetry spans emitted during
+  function invocation.
+
 ## 0.5.0
 
 * Updated `extensions` dependency to `^0.6.0`.

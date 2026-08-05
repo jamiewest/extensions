@@ -1,3 +1,44 @@
+## 0.7.0
+
+* **AI — chat routing (new; upstream marks this family `[Experimental]`):**
+  * Added `RoutingChatClient`, a template base that selects and invokes
+    another chat client per request, with a
+    `RoutingChatClient.fromSelector` factory, plus `RoutingContext`.
+  * Added `FailoverChatClient` and `FailoverChatClientAttempt`: after a
+    failed invocation another client can be selected, but only while the
+    failure is uncanceled, happened before any streaming output was
+    exposed, and `maximumAttemptsPerRequest` permits it. Attempts carry an
+    explicit `stackTrace` so policies can rethrow without losing the
+    original stack.
+  * Added `OrderedFailoverChatClient` (tries clients in order, rethrows
+    the final failure when all fail) and `SemanticRoutingChatClient`
+    (routes by cosine similarity between the last user message and
+    example-utterance profiles, with `SemanticRoutingScoreAggregation`
+    and a score-threshold fallback to a default client).
+* **AI — new members on existing types:**
+  * `UsageDetails` gained `inputAudioTokenCount`, `inputTextTokenCount`,
+    `outputAudioTokenCount`, and `outputTextTokenCount`, all merged by
+    `add()`.
+  * `AIFunction.asDeclarationOnly()` returns a declaration-only view of a
+    function that describes it but cannot be invoked.
+  * `List<ChatMessage>` gained `addMessagesFromResponse`,
+    `addMessagesFromUpdates`, `addMessagesFromUpdate` (with an optional
+    content filter), and `addMessagesFromStream` for appending response
+    messages to a conversation history.
+* **AI — shared function-invocation engine:**
+  * `FunctionInvokingChatClient` and
+    `FunctionInvokingRealtimeClientSession` now share one internal
+    invocation processor (the upstream `Common/` refactor). Function
+    executions emit `execute_tool` spans through `dart:developer`'s
+    `Timeline`, and invocation log messages follow upstream wording and
+    levels (unknown functions now log at warning; invocations log at
+    debug, with arguments and results at trace).
+  * Behavioral refinements from upstream: declaration-only tools are
+    reported back to the model as not found instead of silently matching
+    nothing, serial invocation stops after a result that requests
+    termination, and cancellation now propagates instead of being
+    captured as a function failure.
+
 ## 0.6.0
 
 * **BREAKING — AI function invocation now matches upstream loop limits:**
