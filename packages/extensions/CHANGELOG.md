@@ -1,3 +1,19 @@
+## Unreleased
+
+* **Requires Dart 3.13.** The SDK constraint moves from `^3.6.0` to
+  `^3.13.0`. This raises the floor for consumers: anything on an older SDK
+  stays on 0.7.1. The bump makes Dart primary constructors available, which
+  map 1:1 onto the C# primary constructors used throughout upstream
+  `dotnet/extensions`.
+* No API or behavior changes. The source needed no migration — the codebase
+  never used `final`/`var` on normal function parameters, the one idiom that
+  became a compile-time error at language version 3.13.
+* Reformatted under the tall-style formatter, which is gated on language
+  version 3.7 and so switched on with the bump.
+* `lines_longer_than_80_chars` is now actually enforced. It had been written
+  as `- lines_longer_than_80_chars: true`, which the analyzer silently
+  ignores, so the repo's own 80-character rule had never applied.
+
 ## 0.7.1
 
 * **Documentation examples are now compiled code.** Public API dartdoc

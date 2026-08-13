@@ -144,12 +144,15 @@ below. The new findings are scope and hygiene, not missed ports.
    treat a barrel snippet that cannot be backed by compiling code as a bug
    report about the docs.
 
-3. **Toolchain hygiene (new 2026-08-13, cheap)** —
-   - `packages/extensions/analysis_options.yaml` writes the linter rule as
-     `- lines_longer_than_80_chars: true`. That YAML is a list entry holding a
-     map, and the analyzer silently ignores it — the repo's own 80-char rule
-     has not been enforced. Correcting it to `- lines_longer_than_80_chars`
-     surfaces 12 real violations. `extensions_flutter` was not checked.
+3. **Toolchain hygiene (new 2026-08-13)** —
+   - ~~`analysis_options.yaml` 80-char rule silently ignored~~ — **closed
+     2026-08-13.** The rule was written as
+     `- lines_longer_than_80_chars: true`, a list entry holding a map, which
+     the analyzer ignores. Corrected to a bare entry in `extensions` (17
+     violations, not the 12 estimated) and added to `extensions_flutter`,
+     which had no such rule at all (5 more). All 22 were comments, doc text,
+     or string literals the formatter cannot break; three needed small
+     restructures. Both packages analyze clean.
    - `IMetricListenerConfigurationFactory`
      (`diagnostics/configuration/`) is an `I`-prefixed name outside the
      documented globbing exception — rename to

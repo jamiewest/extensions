@@ -1,3 +1,14 @@
+## Unreleased
+
+* **Requires Dart 3.13 and Flutter 3.47.** The SDK constraint moves from
+  `^3.10.1` to `^3.13.0`, and an explicit `flutter: ">=3.47.0"` constraint
+  is added for the release that ships Dart 3.13. Anything on an older
+  toolchain stays on 0.5.2.
+* No API or behavior changes; the source needed no migration.
+* Reformatted under the tall-style formatter, and
+  `lines_longer_than_80_chars` is now enabled — this package had no such
+  rule despite being held to the same 80-character convention.
+
 ## 0.5.2
 
 * `addFlutter` documentation now embeds the package's own example via
