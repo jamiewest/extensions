@@ -1,3 +1,12 @@
+## 0.5.2
+
+* `addFlutter` documentation now embeds the package's own example via
+  dartdoc's `{@example}` directive rather than a hand-written snippet, so it
+  stays in step with code that compiles. `example/example.dart` gained
+  `add_flutter` and `root_widget` regions.
+* No API or behavior changes. The `extensions` dependency constraint is
+  unchanged (`^0.7.0`), which already admits extensions 0.7.1.
+
 ## 0.5.1
 
 * Updated `extensions` dependency to `^0.7.0`.

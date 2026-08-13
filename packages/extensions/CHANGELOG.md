@@ -1,3 +1,26 @@
+## 0.7.1
+
+* **Documentation examples are now compiled code.** Public API dartdoc
+  references runnable example regions with dartdoc's `{@example}` directive
+  instead of restating snippets inline, so a sample cannot drift from code
+  that builds. 36 regions across 18 example files are referenced from 38
+  places in the library docs; `example/README.md` indexes them.
+* **New examples:** `example_ai.dart` (chat client pipeline, custom client,
+  function calling, streaming), `example_vector_data.dart` (collection
+  definition, filter trees, filtered retrieval), and
+  `example_primitives.dart` (cancellation and composite change tokens,
+  `ChangeToken.onChange`). Those three subsystems previously had none.
+* **Corrected library documentation** that described APIs which do not
+  exist: `hosting.dart` documented `BackgroundService.executeAsync` (the
+  method is `execute`), and the dependency injection, logging, options,
+  caching, HTTP, primitives, diagnostics, file providers, globbing, AI, and
+  vector data barrels each had at least one hand-written snippet replaced by
+  a reference to code that compiles. Some unconverted snippets remain in
+  those barrels and are still unverified.
+* Three examples now import `package:extensions/hosting_io.dart` rather than
+  reaching into `package:extensions/src/`.
+* No API or behavior changes.
+
 ## 0.7.0
 
 * **AI — chat routing (new; upstream marks this family `[Experimental]`):**
