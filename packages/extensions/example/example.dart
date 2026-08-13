@@ -1,12 +1,13 @@
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
+import 'package:extensions/hosting_io.dart';
 import 'package:extensions/logging.dart';
-import 'package:extensions/src/hosting/hosting_host_builder_extensions_io.dart';
 import 'package:extensions/system.dart';
 
 /// Demonstrates hosted-service lifecycle callbacks in a default host.
 ///
 /// Run this file to observe ordered start/stop and lifetime event logs.
+// #region default_host
 Future<void> main(List<String> args) async => Host.createDefaultBuilder()
     .configureServices(
       (_, services) => services.addHostedService<ExampleHostedService>(
@@ -21,7 +22,9 @@ Future<void> main(List<String> args) async => Host.createDefaultBuilder()
     .useConsoleLifetime(null)
     .build()
     .run();
+// #endregion
 
+// #region lifetime_callbacks
 class ExampleHostedService extends HostedService {
   final Logger _logger;
 
@@ -60,3 +63,4 @@ class ExampleHostedService extends HostedService {
     _logger.logInformation('5. `applicationStopped` callback ran.');
   }
 }
+// #endregion

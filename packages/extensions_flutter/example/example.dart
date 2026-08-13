@@ -1,6 +1,7 @@
 import 'package:extensions_flutter/extensions_flutter.dart';
 import 'package:flutter/material.dart';
 
+// #region add_flutter
 final _builder = Host.createApplicationBuilder()
   ..environment.applicationName = 'extensions_flutter_example'
   ..services.addFlutter(
@@ -10,7 +11,9 @@ final _builder = Host.createApplicationBuilder()
 final host = _builder.build();
 
 Future<void> main() async => await host.run();
+// #endregion
 
+// #region root_widget
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.services});
 
@@ -30,3 +33,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+// #endregion

@@ -14,13 +14,16 @@ void main() {
     (builder) => builder.addConsole(),
   );
 
+  // #region typed_logger
   factory
       .createTypedLogger<UserService>()
       .logInformation('Typed logger for UserService created');
+  // #endregion
 
   print('\n--- Example 2: High-Performance LoggerMessage ---');
 
   // Cache delegates once and reuse them to avoid repeated allocations.
+  // #region logger_message_define
   final logUserLogin = LoggerMessage.define2<String, int>(
     LogLevel.information,
     const EventId(1, 'UserLogin'),
@@ -36,6 +39,7 @@ void main() {
   final logger = factory.createLogger('PerformanceDemo');
   logUserLogin(logger, 'john.doe', 192168001001, null);
   logProcessingTime(logger, 42, null);
+  // #endregion
 
   print('\n--- Example 3: Skip Enabled Check ---');
 

@@ -44,14 +44,12 @@ extension FlutterServiceCollectionExtensions on ServiceCollection {
   /// The [configure] callback provides a [FlutterBuilder] to set up the root
   /// widget and any widget wrappers.
   ///
-  /// Example:
-  /// ```dart
-  /// services.addFlutter((flutter) {
-  ///   flutter
-  ///     ..wrapWith((sp, child) => Provider(child: child))
-  ///     ..runApp((sp) => MyApp());
-  /// });
-  /// ```
+  /// {@example /example/example.dart#add_flutter}
+  ///
+  /// The root widget receives the [ServiceProvider], so services resolve
+  /// anywhere in the tree:
+  ///
+  /// {@example /example/example.dart#root_widget}
   ServiceCollection addFlutter(ConfigureAction? configure) {
     addSingleton<HostApplicationLifetime>(
       (services) => FlutterApplicationLifetime(

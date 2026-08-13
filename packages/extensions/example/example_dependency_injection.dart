@@ -6,6 +6,7 @@ import 'package:extensions/dependency_injection.dart';
 void main() {
   print('=== Dependency Injection Example ===');
 
+  // #region register_and_resolve
   final serviceCollection = ServiceCollection()
     ..addSingleton<String>((services) => '1')
     ..addSingleton<String>((services) => '2')
@@ -16,6 +17,7 @@ void main() {
 
   print('--- Resolve int Service ---');
   final resolvedValue = serviceProvider.getService<int>();
+  // #endregion
 
   print('Resolved value: $resolvedValue');
 }

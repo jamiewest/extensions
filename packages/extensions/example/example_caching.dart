@@ -8,27 +8,32 @@ Future<void> main() async {
 
   // Example 1: Basic memory cache usage
   print('\n--- Example 1: Basic Memory Cache ---');
+  // #region memory_cache_basics
   final cache = MemoryCacheImpl(MemoryCacheOptions())
 
     // Simple set/get
     ..set('name', 'John Doe');
   final name = cache.get<String>('name');
+  // #endregion
   print('Name: $name');
 
   // Example 2: Cache with expiration
   print('\n--- Example 2: Cache with Expiration ---');
+  // #region cache_expiration
   cache.set(
     'temp_value',
     'This will expire',
     MemoryCacheEntryOptions()
       ..absoluteExpirationRelativeToNow = const Duration(seconds: 2),
   );
+  // #endregion
   print('Value before expiration: ${cache.get<String>('temp_value')}');
   await Future<void>.delayed(const Duration(seconds: 3));
   print('Value after expiration: ${cache.get<String>('temp_value')}');
 
   // Example 3: Get or create pattern
   print('\n--- Example 3: Get Or Create Pattern ---');
+  // #region cache_get_or_create
   var callCount = 0;
   final result1 = cache.getOrCreate<String>('expensive', (entry) {
     callCount++;
@@ -36,6 +41,7 @@ Future<void> main() async {
     return 'Expensive computation #$callCount';
   });
   print('First call: $result1');
+  // #endregion
 
   final result2 = cache.getOrCreate<String>('expensive', (entry) {
     callCount++;

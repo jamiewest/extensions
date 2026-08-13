@@ -5,39 +5,24 @@
 /// records with vector embeddings. Use [VectorStore] to manage collections
 /// and [VectorStoreCollection] for CRUD and similarity search.
 ///
-/// Example:
-/// ```dart
-/// import 'package:extensions/vector_data.dart';
+/// ## Collection Schema
 ///
-/// // Define schema explicitly.
-/// final definition = VectorStoreCollectionDefinition(
-///   properties: [
-///     VectorStoreKeyProperty('id'),
-///     VectorStoreDataProperty('content')..isFullTextIndexed = true,
-///     VectorStoreVectorProperty('embedding', dimensions: 1536),
-///   ],
-/// );
+/// The Dart port has no reflection-based schema discovery, so record shapes
+/// are always described explicitly:
 ///
-/// // Obtain a typed collection from any VectorStore implementation.
-/// final collection = store.getCollection<String, Hotel>(
-///   'hotels',
-///   definition: definition,
-/// );
+/// {@example /example/example_vector_data.dart#collection_definition}
 ///
-/// await collection.ensureCollectionExistsAsync();
+/// ## Filters
 ///
-/// // Search for similar records.
-/// final results = await collection
-///   .searchAsync(
-///     queryEmbedding,
-///     top: 5,
-///     options: VectorSearchOptions(
-///       filter: VectorStoreFilter.equalTo('category', 'suite'),
-///       scoreThreshold: 0.75,
-///     ),
-///   )
-///   .toList();
-/// ```
+/// C# passes `Expression<Func<TRecord, bool>>`; Dart uses a sealed filter
+/// hierarchy that providers pattern-match on:
+///
+/// {@example /example/example_vector_data.dart#vector_store_filter}
+///
+/// Pair a filter with paging and ordering for filtered retrieval:
+///
+/// {@example /example/example_vector_data.dart#filtered_retrieval_options}
+///
 library;
 
 // Core abstractions

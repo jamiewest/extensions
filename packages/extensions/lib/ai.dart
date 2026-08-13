@@ -5,42 +5,31 @@
 /// provider-specific clients and then layer cross-cutting concerns
 /// like logging, caching, or message reduction via builders.
 ///
-/// Example: build a simple chat pipeline and send a message.
-/// ```dart
-/// import 'package:extensions/ai.dart';
+/// ## Chat Pipelines
 ///
-/// class EchoChatClient implements ChatClient {
-///   @override
-///   Future<ChatResponse> getResponse({
-///     required Iterable<ChatMessage> messages,
-///     ChatOptions? options,
-///     CancellationToken? cancellationToken,
-///   }) async {
-///     final last = messages.last.text;
-///     return ChatResponse.fromMessage(
-///       ChatMessage.fromText(ChatRole.assistant, 'Echo: $last'),
-///     );
-///   }
+/// Wrap a provider client in middleware — logging, function invocation,
+/// caching, reduction — and call it like any other client:
 ///
-///   @override
-///   Stream<ChatResponseUpdate> getStreamingResponse({
-///     required Iterable<ChatMessage> messages,
-///     ChatOptions? options,
-///     CancellationToken? cancellationToken,
-///   }) async* {}
+/// {@example /example/example_ai.dart#chat_client_pipeline}
 ///
-///   @override
-///   void dispose() {}
-/// }
+/// The inner client is whatever speaks to your provider. A local one is
+/// enough to exercise the pipeline:
 ///
-/// Future<void> main() async {
-///   final client = ChatClientBuilder(EchoChatClient()).build();
-///   final response = await client.getResponse(
-///     messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
-///   );
-///   print(response.text);
-/// }
-/// ```
+/// {@example /example/example_ai.dart#custom_chat_client}
+///
+/// ## Function Calling
+///
+/// Expose a Dart callback as a tool. There is no reflection in the Dart
+/// port, so the name, description, and JSON schema are explicit:
+///
+/// {@example /example/example_ai.dart#ai_function}
+///
+/// ## Streaming
+///
+/// Consume a response incrementally:
+///
+/// {@example /example/example_ai.dart#chat_streaming}
+///
 library;
 
 // Core content types

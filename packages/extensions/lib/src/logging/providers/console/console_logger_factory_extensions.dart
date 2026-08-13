@@ -44,15 +44,7 @@ extension ConsoleLoggerFactoryExtensions on LoggingBuilder {
   ///
   /// The [configure] callback allows customization of the formatter options.
   ///
-  /// Example:
-  /// ```dart
-  /// builder.addSimpleConsoleWithOptions((options) {
-  ///   options.singleLine = true;
-  ///   options.timestampFormat = 'yyyy-MM-dd HH:mm:ss';
-  ///   options.includeScopes = true;
-  ///   options.colorBehavior = LoggerColorBehavior.enabled;
-  /// });
-  /// ```
+  /// {@example /example/example_console_formatters.dart#simple_console_options}
   LoggingBuilder addSimpleConsoleWithOptions(
     void Function(SimpleConsoleFormatterOptions) configure,
   ) {

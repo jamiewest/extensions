@@ -66,5 +66,7 @@ class TypedLoggerImpl<T> implements TypedLogger<T> {
 extension TypedLoggerFactoryExtensions on LoggerFactory {
   /// Creates a new [TypedLogger] instance using the full name of the given
   /// type [T] as the category name.
+  ///
+  /// {@example /example/example_advanced_logging.dart#typed_logger}
   TypedLogger<T> createTypedLogger<T>() => TypedLoggerImpl<T>(this);
 }

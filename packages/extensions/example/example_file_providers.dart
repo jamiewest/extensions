@@ -60,6 +60,7 @@ Future<void> basicPhysicalFileProviderExample() async {
     final testFile = io.File(p.join(rootPath, 'example.txt'));
     await testFile.writeAsString('Hello, FileProvider!');
 
+    // #region physical_file_provider
     // Create a PhysicalFileProvider pointing to the root directory
     final provider = PhysicalFileProvider(rootPath);
 
@@ -67,6 +68,7 @@ Future<void> basicPhysicalFileProviderExample() async {
 
     // Get information about a file
     final fileInfo = provider.getFileInfo('example.txt');
+    // #endregion
 
     print('File Information:');
     print('  Exists: ${fileInfo.exists}');

@@ -19,6 +19,7 @@ Future<void> main() async {
   print('=== HTTP Client Logging Example ===');
 
   // Create service collection
+  // #region http_client_factory_setup
   final services = ServiceCollection()
 
     // Add logging services
@@ -33,8 +34,10 @@ Future<void> main() async {
 
     // Add HTTP client logging filter
     ..addHttpClientLogging();
+  // #endregion
 
   // Configure a named HTTP client for GitHub API
+  // #region named_client_redaction
   services.addHttpClient('GitHub').configureHttpClient((client, sp) {
     // Note: BaseClient doesn't have baseAddress, this is conceptual
     print('Configuring GitHub client');
@@ -42,6 +45,7 @@ Future<void> main() async {
     'Authorization',
     'X-GitHub-Token'
   ]).setHandlerLifetime(const Duration(minutes: 5));
+  // #endregion
 
   // Configure a named HTTP client for weather API
   services.addHttpClient('WeatherApi').configureHttpClient((client, sp) {
@@ -56,7 +60,9 @@ Future<void> main() async {
   final provider = services.buildServiceProvider();
 
   // Get HTTP client factory
+  // #region resolve_http_client
   final factory = provider.getRequiredService<HttpClientFactory>();
+  // #endregion
 
   print('\n--- Example 1: GitHub API Request ---');
   await _makeGitHubRequest(factory);

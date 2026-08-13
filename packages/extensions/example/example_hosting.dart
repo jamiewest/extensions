@@ -6,12 +6,14 @@ import 'package:extensions/hosting.dart';
 void main() {
   print('=== Hosting Example ===');
 
+  // #region build_and_start_host
   final hostBuilder = Host.createApplicationBuilder();
   // ..logging.addDebug()
   // ..logging.setMinimumLevel(LogLevel.trace);
 
   print('--- Start Host ---');
   final host = hostBuilder.build()..start();
+  // #endregion
 
   // Delay stop so you can observe host lifetime behavior.
   Future.delayed(const Duration(seconds: 5), () {

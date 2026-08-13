@@ -35,6 +35,7 @@ void main() {
     ..logCritical('Critical message with bright red color');
 
   print('\n--- Example 3: Simple Console with Custom Options ---');
+  // #region simple_console_options
   LoggerFactory.create(
     (builder) => builder
       ..addSimpleConsoleWithOptions((options) {
@@ -50,6 +51,7 @@ void main() {
     ..logInformation('Single line format with timestamp')
     ..logWarning('Warnings are easier to spot with colors')
     ..logError('Errors stand out with bright red');
+  // #endregion
 
   print('\n--- Example 4: JSON Console Formatter ---');
   LoggerFactory.create(

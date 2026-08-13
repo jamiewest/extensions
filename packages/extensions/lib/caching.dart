@@ -14,25 +14,17 @@
 ///
 /// ## Memory Caching
 ///
-/// Use [MemoryCache] for fast, in-memory caching of objects:
+/// Use [MemoryCache] for in-process caching. Store and read values:
 ///
-/// ```dart
-/// final cache = MemoryCacheImpl(MemoryCacheOptions());
+/// {@example /example/example_caching.dart#memory_cache_basics}
 ///
-/// // Simple set/get
-/// cache.set('key', 'value');
-/// final value = cache.get<String>('key');
+/// Entries can expire on a schedule:
 ///
-/// // With expiration
-/// cache.set('key', 'value', MemoryCacheEntryOptions()
-///   ..absoluteExpirationRelativeToNow = Duration(minutes: 5));
+/// {@example /example/example_caching.dart#cache_expiration}
 ///
-/// // Get or create pattern
-/// final data = await cache.getOrCreateAsync<String>('key', (entry) async {
-///   entry.slidingExpiration = Duration(minutes: 15);
-///   return await fetchDataFromApi();
-/// });
-/// ```
+/// `getOrCreate` computes a value only on a miss:
+///
+/// {@example /example/example_caching.dart#cache_get_or_create}
 ///
 /// ## Distributed Caching
 ///

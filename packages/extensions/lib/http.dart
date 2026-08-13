@@ -7,31 +7,20 @@
 ///
 /// ## HTTP Client Factory
 ///
-/// Create and configure HTTP clients through dependency injection:
+/// Register the factory and its logging filter on a service collection:
 ///
-/// ```dart
-/// final services = ServiceCollection()
-///   ..addHttpClient()
-///   ..addHttpClientLogging();
+/// {@example /example/example_http_client_logging.dart#http_client_factory_setup}
 ///
-/// final factory = provider.getRequiredService<HttpClientFactory>();
-/// final client = factory.createClient();
-/// ```
+/// Resolve the factory to create clients:
+///
+/// {@example /example/example_http_client_logging.dart#resolve_http_client}
 ///
 /// ## Named Clients
 ///
-/// Register named clients with specific configurations:
+/// Each name carries its own handler pipeline, header redaction, and
+/// handler lifetime:
 ///
-/// ```dart
-/// services.addHttpClient('GitHub')
-///   .configureHttpClient((client, sp) {
-///     // Configure client
-///   })
-///   .redactLoggedHeaderNames(['Authorization'])
-///   .setHandlerLifetime(Duration(minutes: 5));
-///
-/// final githubClient = factory.createClient('GitHub');
-/// ```
+/// {@example /example/example_http_client_logging.dart#named_client_redaction}
 ///
 /// ## Request Logging
 ///

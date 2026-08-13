@@ -6,37 +6,20 @@
 ///
 /// ## Change Tokens
 ///
-/// Track and react to changes in data sources:
+/// A change token signals that something it watches has changed:
 ///
-/// ```dart
-/// // Create a change token source
-/// final cts = CancellationTokenSource();
-/// final changeToken = CancellationChangeToken(cts.token);
+/// {@example /example/example_primitives.dart#cancellation_change_token}
 ///
-/// // Register a callback
-/// changeToken.registerChangeCallback(() {
-///   print('Data changed!');
-/// });
+/// Treat several tokens as one with [CompositeChangeToken]:
 ///
-/// // Signal change
-/// cts.cancel();
-/// ```
+/// {@example /example/example_primitives.dart#composite_change_token}
 ///
 /// ## Change Token Patterns
 ///
-/// Use utility methods for common patterns:
+/// `ChangeToken.onChange` re-registers after every change, so one
+/// registration survives repeated reloads:
 ///
-/// ```dart
-/// // React to changes with state
-/// ChangeToken.onChangeTyped<MyData>(
-///   () => dataSource.getChangeToken(),
-///   (data) => print('New data: $data'),
-/// );
-///
-/// // Composite change tokens
-/// final token = CompositeChangeToken([token1, token2, token3]);
-/// // Fires when any constituent token changes
-/// ```
+/// {@example /example/example_primitives.dart#change_token_on_change}
 ///
 /// ## Validation
 ///

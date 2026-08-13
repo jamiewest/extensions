@@ -64,6 +64,7 @@ void basicProviderConfiguration() {
 
   final builtConfig = config.build();
 
+  // #region logging_from_configuration
   // Set up logging with configuration
   final services = ServiceCollection()
     ..addLogging((logging) {
@@ -72,6 +73,7 @@ void basicProviderConfiguration() {
         ..addSimpleConsole()
         ..addDebug();
     });
+  // #endregion
 
   final provider = services.buildServiceProvider();
   final loggerFactory = provider.getRequiredService<LoggerFactory>();

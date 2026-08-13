@@ -71,6 +71,10 @@ class LoggerFactory implements Disposable {
 
   /// Creates new instance of [LoggerFactory] configured using provided
   /// [configure] delegate.
+  ///
+  /// {@example /example/example_logging.dart#create_logger_factory}
+  ///
+  /// The returned factory owns its providers — call [dispose] when done.
   static LoggerFactory create(ConfigureLoggingBuilder configure) {
     var serviceCollection = ServiceCollection()..addLogging(configure);
     var serviceProvider = serviceCollection.buildServiceProvider();

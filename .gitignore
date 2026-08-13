@@ -27,3 +27,4 @@ documentation.md
 
 .claude/*
 !.claude/rules/
+!.claude/commands/

@@ -30,6 +30,7 @@ Future<void> main() async {
 
 /// Example 1: Creating and using a basic meter
 void basicMeterExample() {
+  // #region create_meter
   final meterOptions = MeterOptions('MyApplication')
     ..version = '1.0.0'
     ..tags = {
@@ -38,6 +39,7 @@ void basicMeterExample() {
     };
 
   final meter = Meter.from(meterOptions);
+  // #endregion
 
   print('Meter created:');
   print('  Name: ${meter.name}');

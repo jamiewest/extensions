@@ -1,7 +1,7 @@
 import 'package:extensions/dependency_injection.dart';
 import 'package:extensions/hosting.dart';
 import 'package:extensions/options.dart';
-import 'package:extensions/src/hosting/hosting_host_builder_extensions_io.dart';
+import 'package:extensions/hosting_io.dart';
 import 'package:extensions/system.dart';
 
 /// Demonstrates named options registrations resolved via `OptionsSnapshot<T>`.
@@ -10,6 +10,7 @@ import 'package:extensions/system.dart';
 Future<void> main(List<String> args) async => Host.createDefaultBuilder()
     .configureServices(
       (context, services) {
+        // #region configure_named_options
         services
           ..configure<MyOptions>(
             MyOptions.new,
@@ -21,6 +22,7 @@ Future<void> main(List<String> args) async => Host.createDefaultBuilder()
             (options) => options.option = 'Secondary options value',
             name: _secondaryOptionsName,
           )
+          // #endregion
           ..addHostedService<MyService>(
             (services) => MyService(
               services.getRequiredService<OptionsSnapshot<MyOptions>>(),
@@ -50,11 +52,13 @@ class MyService extends HostedService {
   Future<void> start(CancellationToken cancellationToken) {
     print('=== Options Example ===');
     print('--- Resolve Named Options ---');
+    // #region resolve_named_options
     print('$_primaryOptionsName: ${options.get(_primaryOptionsName)?.option}');
     print(
       '$_secondaryOptionsName: '
       '${options.get(_secondaryOptionsName)?.option}',
     );
+    // #endregion
     return Future.value();
   }
 

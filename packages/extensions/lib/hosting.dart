@@ -9,62 +9,30 @@
 ///
 /// Create and run a hosted application:
 ///
-/// ```dart
-/// final host = createDefaultBuilder(args)
-///   ..configureServices((context, services) {
-///     services.addSingleton<MyService>();
-///   })
-///   .build();
-///
-/// await host.run();
-/// ```
+/// {@example /example/example.dart#default_host}
 ///
 /// ## Background Services
 ///
-/// Run long-lived background tasks:
+/// Run long-lived background tasks by overriding [BackgroundService.execute]:
 ///
-/// ```dart
-/// class MyBackgroundService extends BackgroundService {
-///   @override
-///   Future<void> executeAsync(CancellationToken stoppingToken) async {
-///     while (!stoppingToken.isCancellationRequested) {
-///       // Do background work
-///       await Future.delayed(Duration(seconds: 10));
-///     }
-///   }
-/// }
+/// {@example /example/example_background_service.dart#background_service}
 ///
-/// services.addHostedService<MyBackgroundService>();
-/// ```
+/// Register it like any other hosted service:
+///
+/// {@example /example/example_background_service.dart#register_background_service}
 ///
 /// ## Application Lifetime
 ///
 /// React to application lifecycle events:
 ///
-/// ```dart
-/// final lifetime = host.services
-///   .getRequiredService<HostApplicationLifetime>();
-///
-/// lifetime.applicationStarted.register(() {
-///   print('Application started');
-/// });
-///
-/// lifetime.applicationStopping.register(() {
-///   print('Application is shutting down');
-/// });
-/// ```
+/// {@example /example/example.dart#lifetime_callbacks}
 ///
 /// ## Host Configuration
 ///
-/// Configure the application environment and settings:
+/// Build and start a host directly when the console lifetime is not needed:
 ///
-/// ```dart
-/// final host = createApplicationBuilder()
-///   ..environment.environmentName = 'Production'
-///   ..configuration.addJsonFile('appsettings.json')
-///   ..services.addLogging()
-///   .build();
-/// ```
+/// {@example /example/example_hosting.dart#build_and_start_host}
+///
 library;
 
 import 'src/hosting/host_application_builder.dart';

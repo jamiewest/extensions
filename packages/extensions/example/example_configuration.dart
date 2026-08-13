@@ -6,6 +6,7 @@ import 'package:extensions/configuration.dart';
 void main() {
   print('=== Configuration Example ===');
 
+  // #region in_memory_configuration
   final configurationBuilder = ConfigurationBuilder()
     // In-memory data is a simple way to compose config for tests or demos.
     ..addInMemoryCollection(
@@ -15,6 +16,7 @@ void main() {
     );
 
   final configuration = configurationBuilder.build();
+  // #endregion
 
   print('--- Read Value ---');
   print(

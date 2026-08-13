@@ -7,31 +7,24 @@
 ///
 /// ## Basic Usage
 ///
-/// Configure logging with dependency injection:
+/// Create a factory, add providers, and filter by level:
 ///
-/// ```dart
-/// final services = ServiceCollection()
-///   ..addLogging((builder) {
-///     builder
-///       ..setMinimumLevel(LogLevel.debug)
-///       ..addSimpleConsole()
-///       ..addDebug();
-///   });
+/// {@example /example/example_logging.dart#create_logger_factory}
 ///
-/// final provider = services.buildServiceProvider();
-/// final logger = provider.getRequiredService<ILogger>();
-/// ```
+/// Or configure logging through dependency injection, driven by
+/// configuration:
+///
+/// {@example /example/example_logging_configuration.dart#logging_from_configuration}
 ///
 /// ## Logging Messages
 ///
 /// Log messages at different severity levels:
 ///
-/// ```dart
-/// logger.logInformation('Application started');
-/// logger.logWarning('Low disk space');
-/// logger.logError('Failed to connect', error: exception);
-/// logger.logDebug('Cache hit for key: {Key}', ['user123']);
-/// ```
+/// {@example /example/example_logging.dart#log_at_levels}
+///
+/// For hot paths, cache a message delegate with `LoggerMessage`:
+///
+/// {@example /example/example_advanced_logging.dart#logger_message_define}
 ///
 /// ## Console Formatters
 ///

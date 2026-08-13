@@ -6,19 +6,13 @@
 ///
 /// ## Basic Glob Matching
 ///
-/// Match files using glob patterns:
+/// Build a matcher and execute it against a directory:
 ///
-/// ```dart
-/// final matcher = Matcher()
-///   ..addInclude('**/*.dart')
-///   ..addExclude('**/*_test.dart');
+/// {@example /example/example_file_system_globbing.dart#matcher_basic}
 ///
-/// final result = matcher.execute(DirectoryInfoWrapper(directory));
+/// Includes and excludes compose:
 ///
-/// for (final file in result.files) {
-///   print(file.path);
-/// }
-/// ```
+/// {@example /example/example_file_system_globbing.dart#matcher_include_exclude}
 ///
 /// ## Pattern Syntax
 ///

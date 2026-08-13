@@ -6,20 +6,9 @@
 ///
 /// ## Metrics Collection
 ///
-/// Create and use meters for collecting application metrics:
+/// Create a meter and describe it with options:
 ///
-/// ```dart
-/// final meterFactory = provider.getRequiredService<MeterFactory>();
-/// final meter = meterFactory.create('MyApp.Metrics');
-///
-/// // Create a counter
-/// final requestCounter = meter.createCounter<int>('requests');
-/// requestCounter.add(1);
-///
-/// // Create a histogram
-/// final latencyHistogram = meter.createHistogram<double>('latency');
-/// latencyHistogram.record(42.5);
-/// ```
+/// {@example /example/example_diagnostics.dart#create_meter}
 ///
 /// ## Metrics Listeners
 ///

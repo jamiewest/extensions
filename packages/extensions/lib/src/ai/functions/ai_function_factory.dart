@@ -17,6 +17,12 @@ class AIFunctionFactory {
   /// [parametersSchema] is the JSON schema describing the parameters.
   /// [returnSchema] is the JSON schema describing the return value.
   /// [isStrict] indicates whether strict schema adherence is required.
+  ///
+  /// {@example /example/example_ai.dart#ai_function}
+  ///
+  /// Invoke it directly to test the callback without a model in the loop:
+  ///
+  /// {@example /example/example_ai.dart#ai_function_invoke}
   static AIFunction create({
     required String name,
     required Future<Object?> Function(

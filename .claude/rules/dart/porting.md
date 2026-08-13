@@ -51,6 +51,67 @@ libraries (port referenced upstream commit `2e537166`).
 | Closed set of magic strings | value-object class with `const` instances | `ChatRole`; realtime `RealtimeServerMessageType`, `RealtimeSessionKind` |
 | `[JsonConverter]` / `[JsonConstructor]` layers | dropped — pass through via `rawRepresentation` | ai realtime data model |
 | Generic type parameter used only for reflection | `Type?` field | `VectorStoreVectorProperty<TInput>` → `Type? embeddingType` |
+| Primary constructor (`class Foo(ILogger logger)`) | conventional Dart constructor today; Dart primary constructor only after the SDK bump — see below | ai / http types ported from primary-ctor C# |
+
+## Primary constructors
+
+Both languages have them, so the shapes line up almost 1:1 — but the Dart
+side is gated on an SDK bump that has not happened in this workspace.
+
+- C# has had primary constructors since C# 12 (records) / C# 12 for classes,
+  and upstream `dotnet/extensions` uses them heavily in the AI libraries:
+  `internal sealed class FunctionInvocationLogger(ILogger logger) { … }`.
+  The header parameters are the constructor signature; a parameter is only a
+  field if the body captures it.
+- Dart gained primary constructors in **3.13** (stable, 2026-08):
+  `class Point(final int x, final int y);` — `final`/`var` on a parameter
+  induces a field, a bare parameter does not. Named (`class Point.custom(…)`),
+  `const` (`class const Point(…)`), `super.` parameters, and enum forms are
+  all supported; a `;` replaces an empty body.
+- **This workspace cannot use them yet.** `packages/extensions` declares
+  `environment: sdk: ^3.6.0` and `extensions_flutter` `^3.10.1`; primary
+  constructor syntax requires language version 3.13, so using it would break
+  every consumer on the declared minimum. Port C# primary constructors to
+  conventional Dart constructors until someone deliberately raises both
+  constraints to `^3.13.0`.
+- **A C# primary constructor is not drift.** When auditing, compare the
+  header parameter list against the Dart constructor signature; a
+  conventional Dart constructor carrying the same parameters is a correct
+  port, and no audit should report it as a gap or propose a rewrite.
+- Migration note for whoever does the SDK bump: at language version 3.13,
+  `final`/`var` on a *normal function's* formal parameters becomes a
+  compile-time error. That idiom appears in this codebase, so the bump is a
+  real migration, not a one-line pubspec edit. Dart ships IDE refactorings
+  and six new lints (`use_declaring_parameters`,
+  `unnecessary_primary_constructor_body`, `empty_container_bodies`,
+  `initialize_in_field_declaration`, `unnecessary_const_in_enum_constructor`,
+  `unnecessary_type_name_in_constructor`) to automate most of it.
+
+## Examples and doc references
+
+Public API dartdoc references runnable example code instead of restating it
+inline. The mechanism is dartdoc's `{@example}` directive (dartdoc 9.0.6+;
+verified working on SDK 3.12.2):
+
+```dart
+/// {@example /example/example_logging.dart#simple_console}
+```
+
+- The path is package-root-relative (leading `/`); a path without the leading
+  slash resolves against the *containing file's* directory, i.e. `lib/…`, and
+  dartdoc warns `example file not found`.
+- Regions are marked in the example file with `// #region <name>` /
+  `// #endregion`; the markers are stripped from the rendered block. A line
+  ending in `// #hide` is dropped entirely — use it for imports and scaffolding
+  that would distract from the snippet.
+- Do **not** use dart.dev's `<?code-excerpt?>` / `#docregion` markers. That is
+  a separate site-build mechanism (the root `documentation.md` is a copy of
+  the Effective Dart site source, which is why those appear there).
+- Region names are snake_case and stable — they are part of the public docs
+  contract. Renaming one silently breaks every dartdoc that references it, so
+  grep before renaming.
+- `example/README.md` is the index of the example set; add a row when adding
+  an example.
 
 ## Naming
 

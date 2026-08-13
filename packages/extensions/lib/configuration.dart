@@ -20,21 +20,9 @@
 ///
 /// ## Basic Usage
 ///
-/// Build a configuration from multiple sources:
+/// Build a configuration from one or more sources and read values:
 ///
-/// ```dart
-/// final config = ConfigurationBuilder()
-///   ..addInMemoryCollection({
-///     'Logging:LogLevel:Default': 'Information',
-///     'AllowedHosts': '*',
-///   })
-///   ..addCommandLine(args)
-///   .build();
-///
-/// // Read values
-/// final logLevel = config['Logging:LogLevel:Default'];
-/// final hosts = config['AllowedHosts'];
-/// ```
+/// {@example /example/example_configuration.dart#in_memory_configuration}
 ///
 /// ## Configuration Sections
 ///

@@ -29,8 +29,10 @@ void _basicGlobbingExample() {
   print('\n--- Example 1: Basic Glob Pattern Matching ---');
 
   // Create a matcher with simple patterns
+  // #region matcher_basic
   final matcher = Matcher()
     ..addInclude('*.dart'); // Match all Dart files in current directory
+  // #endregion
 
   // Execute against the example directory
   final exampleDir =
@@ -83,6 +85,7 @@ void _excludePatternsExample() {
   print('--- Example 3: Include/Exclude Patterns ---');
 
   // Create a matcher that includes Dart files but excludes generated ones
+  // #region matcher_include_exclude
   final matcher = Matcher()
     // Include all Dart files
     ..addInclude('**/*.dart')
@@ -96,6 +99,7 @@ void _excludePatternsExample() {
 
   final projectDir = Directory.current.path;
   final fullPaths = matcher.getResultsInFullPath(projectDir);
+  // #endregion
 
   print(
     'Found ${fullPaths.length} Dart files with exclude patterns applied:',

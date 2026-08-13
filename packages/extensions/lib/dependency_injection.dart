@@ -15,17 +15,9 @@
 ///
 /// ## Basic Usage
 ///
-/// Register and resolve services:
+/// Register services and resolve them from the provider:
 ///
-/// ```dart
-/// final services = ServiceCollection()
-///   ..addSingleton<ILogger, ConsoleLogger>()
-///   ..addScoped<IDatabase, SqlDatabase>()
-///   ..addTransient<IEmailService, SmtpEmailService>();
-///
-/// final provider = services.buildServiceProvider();
-/// final logger = provider.getRequiredService<ILogger>();
-/// ```
+/// {@example /example/example_dependency_injection.dart#register_and_resolve}
 ///
 /// ## Keyed Services
 ///

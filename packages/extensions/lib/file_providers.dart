@@ -8,16 +8,9 @@
 ///
 /// ## Physical File Provider
 ///
-/// Access files from the physical file system:
+/// Serve files from a directory on disk:
 ///
-/// ```dart
-/// final provider = PhysicalFileProvider('/path/to/files');
-///
-/// final fileInfo = provider.getFileInfo('config.json');
-/// if (fileInfo.exists) {
-///   final contents = await fileInfo.readAsString();
-/// }
-/// ```
+/// {@example /example/example_file_providers.dart#physical_file_provider}
 ///
 /// ## Watch for Changes
 ///

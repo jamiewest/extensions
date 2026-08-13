@@ -32,16 +32,13 @@
 ///
 /// ## Named Options
 ///
-/// Register multiple option instances with different names:
+/// Register multiple option instances under different names:
 ///
-/// ```dart
-/// services
-///   ..configure<DbOptions>('Primary', (opts) => opts.conn = 'conn1')
-///   ..configure<DbOptions>('Secondary', (opts) => opts.conn = 'conn2');
+/// {@example /example/example_options.dart#configure_named_options}
 ///
-/// final options = provider.getRequiredService<OptionsSnapshot<DbOptions>>();
-/// final primaryDb = options.get('Primary');
-/// ```
+/// Resolve them through an `OptionsSnapshot`:
+///
+/// {@example /example/example_options.dart#resolve_named_options}
 ///
 /// ## Options Monitoring
 ///
