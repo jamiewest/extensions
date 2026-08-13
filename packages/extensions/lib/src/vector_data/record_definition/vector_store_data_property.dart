@@ -9,8 +9,7 @@ import 'vector_store_property.dart';
   name: 'VectorStoreDataProperty.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
 )
 final class VectorStoreDataProperty extends VectorStoreProperty {
   /// Creates a [VectorStoreDataProperty] for [propertyName].

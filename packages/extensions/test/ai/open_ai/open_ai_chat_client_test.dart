@@ -15,12 +15,11 @@ void main() {
     VerbatimHttpClient fakeHttp, {
     String modelId = 'gpt-4o-mini',
     Uri? endpoint,
-  }) =>
-      OpenAIChatClient(
-        modelId,
-        'test-key',
-        options: OpenAIClientOptions(endpoint: endpoint, httpClient: fakeHttp),
-      );
+  }) => OpenAIChatClient(
+    modelId,
+    'test-key',
+    options: OpenAIClientOptions(endpoint: endpoint, httpClient: fakeHttp),
+  );
 
   String completionJson({
     String id = 'chatcmpl-1',
@@ -31,24 +30,23 @@ void main() {
     int completionTokens = 5,
     int totalTokens = 15,
     String role = 'assistant',
-  }) =>
-      jsonEncode({
-        'id': id,
-        'object': 'chat.completion',
-        'model': model,
-        'choices': [
-          {
-            'index': 0,
-            'message': {'role': role, 'content': content},
-            'finish_reason': finishReason,
-          },
-        ],
-        'usage': {
-          'prompt_tokens': promptTokens,
-          'completion_tokens': completionTokens,
-          'total_tokens': totalTokens,
-        },
-      });
+  }) => jsonEncode({
+    'id': id,
+    'object': 'chat.completion',
+    'model': model,
+    'choices': [
+      {
+        'index': 0,
+        'message': {'role': role, 'content': content},
+        'finish_reason': finishReason,
+      },
+    ],
+    'usage': {
+      'prompt_tokens': promptTokens,
+      'completion_tokens': completionTokens,
+      'total_tokens': totalTokens,
+    },
+  });
 
   // ---------------------------------------------------------------------------
   // Metadata
@@ -155,8 +153,9 @@ void main() {
     });
 
     test('maps finish_reason length', () async {
-      final fakeHttp =
-          VerbatimHttpClient(completionJson(finishReason: 'length'));
+      final fakeHttp = VerbatimHttpClient(
+        completionJson(finishReason: 'length'),
+      );
       final client = makeClient(fakeHttp);
 
       final response = await client.getResponse(
@@ -168,11 +167,7 @@ void main() {
 
     test('populates usage details', () async {
       final fakeHttp = VerbatimHttpClient(
-        completionJson(
-          promptTokens: 10,
-          completionTokens: 20,
-          totalTokens: 30,
-        ),
+        completionJson(promptTokens: 10, completionTokens: 20, totalTokens: 30),
       );
       final client = makeClient(fakeHttp);
 
@@ -186,8 +181,10 @@ void main() {
     });
 
     test('throws on 4xx response', () async {
-      final fakeHttp =
-          ErrorHttpClient(statusCode: 401, body: '{"error":"Unauthorized"}');
+      final fakeHttp = ErrorHttpClient(
+        statusCode: 401,
+        body: '{"error":"Unauthorized"}',
+      );
       final client = OpenAIChatClient(
         'gpt-4o',
         'bad-key',
@@ -322,10 +319,7 @@ void main() {
           jsonDecode(fakeHttp.capturedRequestBody!) as Map<String, dynamic>;
       final messages = body['messages'] as List<dynamic>;
       expect(messages.first['role'], equals('system'));
-      expect(
-        messages.first['content'],
-        equals('You are a helpful assistant.'),
-      );
+      expect(messages.first['content'], equals('You are a helpful assistant.'));
     });
   });
 
@@ -336,9 +330,9 @@ void main() {
   group('message roles', () {
     test('user role is preserved', () async {
       final fakeHttp = VerbatimHttpClient(completionJson());
-      await makeClient(fakeHttp).getResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
-      );
+      await makeClient(
+        fakeHttp,
+      ).getResponse(messages: [ChatMessage.fromText(ChatRole.user, 'Hello')]);
       final body =
           jsonDecode(fakeHttp.capturedRequestBody!) as Map<String, dynamic>;
       final messages = body['messages'] as List<dynamic>;
@@ -376,9 +370,9 @@ void main() {
 
     test('assistant role in response is parsed correctly', () async {
       final fakeHttp = VerbatimHttpClient(completionJson(role: 'assistant'));
-      final response = await makeClient(fakeHttp).getResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
-      );
+      final response = await makeClient(
+        fakeHttp,
+      ).getResponse(messages: [ChatMessage.fromText(ChatRole.user, 'Hello')]);
       expect(response.messages.first.role, equals(ChatRole.assistant));
     });
   });
@@ -434,32 +428,32 @@ void main() {
     test('yields text from SSE chunks', () async {
       final sseLines = [
         'data: ${jsonEncode({
-              'id': 'chatcmpl-1',
-              'model': 'gpt-4o-mini',
-              'choices': [
-                {
-                  'delta': {'role': 'assistant', 'content': 'Hello'},
-                  'finish_reason': null,
-                },
-              ],
-            })}',
+          'id': 'chatcmpl-1',
+          'model': 'gpt-4o-mini',
+          'choices': [
+            {
+              'delta': {'role': 'assistant', 'content': 'Hello'},
+              'finish_reason': null,
+            },
+          ],
+        })}',
         'data: ${jsonEncode({
-              'id': 'chatcmpl-1',
-              'model': 'gpt-4o-mini',
-              'choices': [
-                {
-                  'delta': {'content': ' world'},
-                  'finish_reason': null,
-                },
-              ],
-            })}',
+          'id': 'chatcmpl-1',
+          'model': 'gpt-4o-mini',
+          'choices': [
+            {
+              'delta': {'content': ' world'},
+              'finish_reason': null,
+            },
+          ],
+        })}',
         'data: ${jsonEncode({
-              'id': 'chatcmpl-1',
-              'model': 'gpt-4o-mini',
-              'choices': [
-                {'delta': {}, 'finish_reason': 'stop'},
-              ],
-            })}',
+          'id': 'chatcmpl-1',
+          'model': 'gpt-4o-mini',
+          'choices': [
+            {'delta': {}, 'finish_reason': 'stop'},
+          ],
+        })}',
         'data: [DONE]',
       ];
 
@@ -470,9 +464,11 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      final updates = await client.getStreamingResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
-      ).toList();
+      final updates = await client
+          .getStreamingResponse(
+            messages: [ChatMessage.fromText(ChatRole.user, 'Hello')],
+          )
+          .toList();
 
       expect(updates.map((u) => u.text).join(), equals('Hello world'));
     });
@@ -485,9 +481,11 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      await client.getStreamingResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'x')],
-      ).drain<void>();
+      await client
+          .getStreamingResponse(
+            messages: [ChatMessage.fromText(ChatRole.user, 'x')],
+          )
+          .drain<void>();
 
       final req = fakeHttp.lastRequest as http.Request;
       final body = jsonDecode(req.body) as Map<String, dynamic>;
@@ -497,22 +495,22 @@ void main() {
     test('finish_reason surfaced on final update', () async {
       final sseLines = [
         'data: ${jsonEncode({
-              'id': 'chatcmpl-1',
-              'model': 'gpt-4o-mini',
-              'choices': [
-                {
-                  'delta': {'content': 'Hi'},
-                  'finish_reason': null
-                },
-              ],
-            })}',
+          'id': 'chatcmpl-1',
+          'model': 'gpt-4o-mini',
+          'choices': [
+            {
+              'delta': {'content': 'Hi'},
+              'finish_reason': null,
+            },
+          ],
+        })}',
         'data: ${jsonEncode({
-              'id': 'chatcmpl-1',
-              'model': 'gpt-4o-mini',
-              'choices': [
-                {'delta': {}, 'finish_reason': 'stop'},
-              ],
-            })}',
+          'id': 'chatcmpl-1',
+          'model': 'gpt-4o-mini',
+          'choices': [
+            {'delta': {}, 'finish_reason': 'stop'},
+          ],
+        })}',
         'data: [DONE]',
       ];
 
@@ -523,9 +521,11 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      final updates = await client.getStreamingResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'x')],
-      ).toList();
+      final updates = await client
+          .getStreamingResponse(
+            messages: [ChatMessage.fromText(ChatRole.user, 'x')],
+          )
+          .toList();
 
       final withReason = updates.where((u) => u.finishReason != null).toList();
       expect(withReason, isNotEmpty);
@@ -579,10 +579,7 @@ void main() {
 
       final response = await client.getResponse(
         messages: [
-          ChatMessage.fromText(
-            ChatRole.user,
-            'Say "hello" and nothing else.',
-          ),
+          ChatMessage.fromText(ChatRole.user, 'Say "hello" and nothing else.'),
         ],
       );
       expect(response.text.toLowerCase(), contains('hello'));

@@ -8,6 +8,6 @@ extension ConfigureOptionsChatClientBuilderExtensions on ChatClientBuilder {
   /// Adds a callback that configures the [ChatOptions] passed to each
   /// request.
   ChatClientBuilder useConfigureOptions(
-          ChatOptions Function(ChatOptions options) configure) =>
-      use((inner) => ConfigureOptionsChatClient(inner, configure: configure));
+    ChatOptions Function(ChatOptions options) configure,
+  ) => use((inner) => ConfigureOptionsChatClient(inner, configure: configure));
 }

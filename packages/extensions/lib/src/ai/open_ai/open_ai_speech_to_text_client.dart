@@ -29,9 +29,9 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
     String modelId,
     String apiKey, {
     OpenAIClientOptions? options,
-  })  : _modelId = modelId,
-        _apiKey = apiKey,
-        _options = options ?? OpenAIClientOptions() {
+  }) : _modelId = modelId,
+       _apiKey = apiKey,
+       _options = options ?? OpenAIClientOptions() {
     metadata = SpeechToTextClientMetadata(
       providerName: 'openai',
       providerUri: _options.endpoint,
@@ -57,30 +57,30 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
   }) async {
     final bytes = await _collectBytes(stream);
     final isTranslation = _isTranslationRequest(options);
-    final endpoint =
-        isTranslation ? 'audio/translations' : 'audio/transcriptions';
+    final endpoint = isTranslation
+        ? 'audio/translations'
+        : 'audio/transcriptions';
 
     final client = _options.httpClient ?? http.Client();
     final owned = _options.httpClient == null;
 
     try {
-      final request = http.MultipartRequest(
-        'POST',
-        Uri.parse('${_options.endpoint}/$endpoint'),
-      )
-        ..headers['Authorization'] = 'Bearer $_apiKey'
-        ..fields['model'] = options?.modelId ?? _modelId
-        ..fields['response_format'] = 'verbose_json';
+      final request =
+          http.MultipartRequest(
+              'POST',
+              Uri.parse('${_options.endpoint}/$endpoint'),
+            )
+            ..headers['Authorization'] = 'Bearer $_apiKey'
+            ..fields['model'] = options?.modelId ?? _modelId
+            ..fields['response_format'] = 'verbose_json';
 
       if (options?.speechLanguage != null && !isTranslation) {
         request.fields['language'] = options!.speechLanguage!;
       }
 
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: 'audio.mp3',
-      ));
+      request.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: 'audio.mp3'),
+      );
 
       final streamed = await client.send(request);
       final body = await streamed.stream.bytesToString();

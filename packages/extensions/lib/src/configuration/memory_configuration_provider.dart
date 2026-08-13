@@ -10,7 +10,7 @@ class MemoryConfigurationProvider extends ConfigurationProvider
 
   /// Initialize a new instance from the source.
   MemoryConfigurationProvider(MemoryConfigurationSource source)
-      : _source = source {
+    : _source = source {
     if (_source.initialData != null) {
       for (var pair in _source.initialData!) {
         data[pair.key] = pair.value;

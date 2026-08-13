@@ -23,9 +23,7 @@ class JsonFileConfigurationProvider extends FileConfigurationProvider {
 
     try {
       final fileData = file.readAsStringSync();
-      data = LinkedHashMap.from(
-        JsonConfigurationParser.parse(fileData),
-      );
+      data = LinkedHashMap.from(JsonConfigurationParser.parse(fileData));
     } catch (e) {
       // If there's an error parsing the JSON, treat it as empty
       data = LinkedHashMap<String, String?>();

@@ -15,9 +15,9 @@ class MemoryCacheEntryOptions {
     int? size,
     this._expirationTokens,
     this._postEvictionCallbacks,
-  })  : _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
-        _slidingExpiration = slidingExpiration,
-        _size = size {
+  }) : _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
+       _slidingExpiration = slidingExpiration,
+       _size = size {
     if (absoluteExpirationRelativeToNow != null &&
         absoluteExpirationRelativeToNow <= Duration.zero) {
       throw ArgumentError.value(

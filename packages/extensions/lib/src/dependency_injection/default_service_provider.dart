@@ -29,22 +29,30 @@ class DefaultServiceProvider
   DefaultServiceProvider(
     Iterable<ServiceDescriptor> serviceDescriptors,
     ServiceProviderOptions options,
-  )   : _engine = RuntimeServiceProviderEngine(),
-        _serviceAccessors = <ServiceIdentifier, ServiceAccessor>{} {
+  ) : _engine = RuntimeServiceProviderEngine(),
+      _serviceAccessors = <ServiceIdentifier, ServiceAccessor>{} {
     // note that Root needs to be set before calling GetEngine(), because
     // the engine may need to access Root
     _root = ServiceProviderEngineScope(this, isRootScope: true);
     var callSiteFactory = CallSiteFactory(serviceDescriptors);
 
     callSiteFactory
-      ..add(ServiceIdentifier.fromServiceType(ServiceProvider),
-          ServiceProviderCallSite())
-      ..add(ServiceIdentifier.fromServiceType(ServiceScopeFactory),
-          ConstantCallSite(ServiceScopeFactory, _root))
-      ..add(ServiceIdentifier.fromServiceType(ServiceProviderIsService),
-          ConstantCallSite(ServiceProviderIsService, callSiteFactory))
-      ..add(ServiceIdentifier.fromServiceType(ServiceProviderIsKeyedService),
-          ConstantCallSite(ServiceProviderIsKeyedService, callSiteFactory));
+      ..add(
+        ServiceIdentifier.fromServiceType(ServiceProvider),
+        ServiceProviderCallSite(),
+      )
+      ..add(
+        ServiceIdentifier.fromServiceType(ServiceScopeFactory),
+        ConstantCallSite(ServiceScopeFactory, _root),
+      )
+      ..add(
+        ServiceIdentifier.fromServiceType(ServiceProviderIsService),
+        ConstantCallSite(ServiceProviderIsService, callSiteFactory),
+      )
+      ..add(
+        ServiceIdentifier.fromServiceType(ServiceProviderIsKeyedService),
+        ConstantCallSite(ServiceProviderIsKeyedService, callSiteFactory),
+      );
 
     _callSiteFactory = callSiteFactory;
 
@@ -77,20 +85,26 @@ class DefaultServiceProvider
       _getService(ServiceIdentifier.fromServiceType(type), _root);
 
   @override
-  Object? getKeyedServiceFromType(Type serviceType, Object? serviceKey,
-          [ServiceProviderEngineScope? scope]) =>
-      _getService(
-          ServiceIdentifier(
-            serviceKey: serviceKey,
-            serviceType: serviceType,
-          ),
-          scope ?? _root);
+  Object? getKeyedServiceFromType(
+    Type serviceType,
+    Object? serviceKey, [
+    ServiceProviderEngineScope? scope,
+  ]) => _getService(
+    ServiceIdentifier(serviceKey: serviceKey, serviceType: serviceType),
+    scope ?? _root,
+  );
 
   @override
-  Object getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey,
-      [ServiceProviderEngineScope? scope]) {
-    var service =
-        getKeyedServiceFromType(serviceType, serviceKey, scope ?? _root);
+  Object getRequiredKeyedServiceFromType(
+    Type serviceType,
+    Object? serviceKey, [
+    ServiceProviderEngineScope? scope,
+  ]) {
+    var service = getKeyedServiceFromType(
+      serviceType,
+      serviceKey,
+      scope ?? _root,
+    );
     if (service == null) {
       throw InvalidOperationException(
         message: 'No service for type \'$serviceType\' has been registered.',
@@ -136,8 +150,9 @@ class DefaultServiceProvider
     }
 
     if (!_serviceAccessors.containsKey(serviceIdentifier)) {
-      _serviceAccessors[serviceIdentifier] =
-          _createServiceAccessor(serviceIdentifier);
+      _serviceAccessors[serviceIdentifier] = _createServiceAccessor(
+        serviceIdentifier,
+      );
     }
 
     var serviceAccessor = _serviceAccessors[serviceIdentifier];
@@ -147,8 +162,9 @@ class DefaultServiceProvider
     //   () => _createServiceAccessor(serviceIdentifier),
     // );
     _onResolve(serviceAccessor!.callSite, serviceProviderEngineScope);
-    var result =
-        serviceAccessor.realizedService?.call(serviceProviderEngineScope);
+    var result = serviceAccessor.realizedService?.call(
+      serviceProviderEngineScope,
+    );
     assert(result != null || !_callSiteFactory._isService(serviceIdentifier));
     return result;
   }
@@ -161,7 +177,8 @@ class DefaultServiceProvider
       }
     } on Exception catch (e) {
       throw InvalidOperationException(
-        message: 'Error while validating the service descriptor'
+        message:
+            'Error while validating the service descriptor'
             ' \'$descriptor\': $e',
       );
     }

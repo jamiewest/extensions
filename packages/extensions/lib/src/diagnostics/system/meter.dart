@@ -17,21 +17,16 @@ class Meter implements Disposable {
 
   static bool _initializeIsSupported() => true;
 
-  Meter({
-    required this._name,
-    this._version,
-    this._tags,
-    this._scope,
-  }) {
+  Meter({required this._name, this._version, this._tags, this._scope}) {
     _allMeters.add(this);
   }
 
   factory Meter.from(MeterOptions options) => Meter(
-        name: options.name,
-        version: options.version,
-        tags: options.tags,
-        scope: options.scope,
-      );
+    name: options.name,
+    version: options.version,
+    tags: options.tags,
+    scope: options.scope,
+  );
 
   /// Returns the Meter name.
   String get name => _name;

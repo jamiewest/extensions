@@ -14,7 +14,7 @@ import '../evaluation_context.dart';
 class GroundednessEvaluatorContext extends EvaluationContext {
   /// Creates a [GroundednessEvaluatorContext] from [groundingContext].
   GroundednessEvaluatorContext(this.groundingContext)
-      : super(groundingContextName, contents: [TextContent(groundingContext)]);
+    : super(groundingContextName, contents: [TextContent(groundingContext)]);
 
   /// Unique context name used when recording contexts on metrics.
   static const String groundingContextName = 'Grounding context(Groundedness)';

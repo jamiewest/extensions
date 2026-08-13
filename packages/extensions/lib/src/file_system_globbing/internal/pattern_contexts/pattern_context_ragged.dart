@@ -60,15 +60,15 @@ class RaggedFrameData {
 
   /// Returns a shallow copy sharing the stem item list.
   RaggedFrameData copy() => RaggedFrameData(
-        isNotApplicable: isNotApplicable,
-        segmentGroupIndex: segmentGroupIndex,
-        segmentGroup: segmentGroup,
-        backtrackAvailable: backtrackAvailable,
-        segmentIndex: segmentIndex,
-        inStem: inStem,
-        stemItems: _stemItems,
-        addedStemItem: addedStemItem,
-      );
+    isNotApplicable: isNotApplicable,
+    segmentGroupIndex: segmentGroupIndex,
+    segmentGroup: segmentGroup,
+    backtrackAvailable: backtrackAvailable,
+    segmentIndex: segmentIndex,
+    inStem: inStem,
+    stemItems: _stemItems,
+    addedStemItem: addedStemItem,
+  );
 }
 
 /// Matches a pattern containing recursive wildcards (`**`) as a directory

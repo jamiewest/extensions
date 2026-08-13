@@ -14,8 +14,10 @@ import 'service_provider_extensions.dart';
 ///
 /// The [sp] parameter provides access to the dependency injection container.
 /// The [child] parameter is the widget to be wrapped.
-typedef WrappedWidgetFactory =
-    Widget Function(ServiceProvider sp, Widget child);
+typedef WrappedWidgetFactory = Widget Function(
+  ServiceProvider sp,
+  Widget child,
+);
 
 /// A concrete holder for a [WrappedWidgetFactory].
 ///

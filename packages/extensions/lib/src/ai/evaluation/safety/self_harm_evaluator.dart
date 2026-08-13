@@ -18,8 +18,8 @@ class SelfHarmEvaluator extends ContentSafetyEvaluator {
 
   /// Creates a [SelfHarmEvaluator].
   SelfHarmEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'content harm',
-          metricNames: const {'self_harm': selfHarmMetricName},
-        );
+    : super(
+        annotationTask: 'content harm',
+        metricNames: const {'self_harm': selfHarmMetricName},
+      );
 }

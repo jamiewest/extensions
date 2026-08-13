@@ -6,8 +6,7 @@ import 'package:extensions/annotations.dart';
   name: 'DistanceFunction.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
 )
 abstract final class DistanceFunction {
   /// Measures the cosine of the angle between two vectors.

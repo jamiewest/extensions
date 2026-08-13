@@ -72,22 +72,22 @@ extension ChatMessageListExtensions on List<ChatMessage> {
         ? update.contents
         : update.contents.where(filter).toList();
     if (contents.isNotEmpty) {
-      add(ChatMessage(
-        role: update.role ?? ChatRole.assistant,
-        contents: contents,
-        authorName: update.authorName,
-        createdAt: update.createdAt,
-        rawRepresentation: update.rawRepresentation,
-        additionalProperties: update.additionalProperties,
-      ));
+      add(
+        ChatMessage(
+          role: update.role ?? ChatRole.assistant,
+          contents: contents,
+          authorName: update.authorName,
+          createdAt: update.createdAt,
+          rawRepresentation: update.rawRepresentation,
+          additionalProperties: update.additionalProperties,
+        ),
+      );
     }
   }
 
   /// Drains [updates], converts them into [ChatMessage] instances, and
   /// adds them to this list.
-  Future<void> addMessagesFromStream(
-    Stream<ChatResponseUpdate> updates,
-  ) async {
+  Future<void> addMessagesFromStream(Stream<ChatResponseUpdate> updates) async {
     addMessagesFromResponse(await updates.toChatResponse());
   }
 }

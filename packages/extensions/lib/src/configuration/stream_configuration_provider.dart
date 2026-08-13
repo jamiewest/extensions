@@ -12,8 +12,8 @@ abstract class StreamConfigurationProvider extends ConfigurationProvider {
 
   /// Constructor.
   StreamConfigurationProvider(StreamConfigurationSource source)
-      : _source = source,
-        _loaded = false;
+    : _source = source,
+      _loaded = false;
 
   /// Load the configuration data from the stream.
   void loadStream(Stream<dynamic> stream);

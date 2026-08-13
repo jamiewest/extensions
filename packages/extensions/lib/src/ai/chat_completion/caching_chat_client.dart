@@ -27,10 +27,7 @@ abstract class CachingChatClient extends DelegatingChatClient {
   /// Gets a cache key for the given messages and options.
   ///
   /// Override to customize cache key generation.
-  String getCacheKey(
-    Iterable<ChatMessage> messages,
-    ChatOptions? options,
-  ) {
+  String getCacheKey(Iterable<ChatMessage> messages, ChatOptions? options) {
     final buffer = StringBuffer();
     for (final message in messages) {
       buffer.write(message.role.value);

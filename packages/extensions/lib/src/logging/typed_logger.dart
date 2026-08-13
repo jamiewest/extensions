@@ -20,7 +20,7 @@ class TypedLoggerImpl<T> implements TypedLogger<T> {
   ///
   /// The logger category will be the full name of type [T].
   TypedLoggerImpl(LoggerFactory factory)
-      : _logger = factory.createLogger(_getCategoryName<T>());
+    : _logger = factory.createLogger(_getCategoryName<T>());
 
   final Logger _logger;
 

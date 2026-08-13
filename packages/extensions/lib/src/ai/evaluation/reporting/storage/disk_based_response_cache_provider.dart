@@ -24,7 +24,7 @@ class DiskBasedResponseCacheProvider
     String storageRootPath, {
     this._timeToLive = const Duration(days: 14),
     this._clock,
-  })  : _storageRootPath = Directory(storageRootPath).absolute.path;
+  }) : _storageRootPath = Directory(storageRootPath).absolute.path;
 
   final String _storageRootPath;
   final Duration _timeToLive;
@@ -57,8 +57,9 @@ class DiskBasedResponseCacheProvider
   }
 
   @override
-  Future<void> deleteExpiredCacheEntries(
-      {CancellationToken? cancellationToken}) async {
+  Future<void> deleteExpiredCacheEntries({
+    CancellationToken? cancellationToken,
+  }) async {
     final cacheRoot = Directory(_cacheRootPath);
     if (!cacheRoot.existsSync()) return;
 

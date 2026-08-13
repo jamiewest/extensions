@@ -10,7 +10,7 @@ class OpenAIClientOptions {
   ///
   /// [endpoint] defaults to `https://api.openai.com/v1` when omitted.
   OpenAIClientOptions({Uri? endpoint, this.httpClient})
-      : endpoint = endpoint ?? _defaultEndpoint;
+    : endpoint = endpoint ?? _defaultEndpoint;
 
   static final Uri _defaultEndpoint = Uri.parse('https://api.openai.com/v1');
 

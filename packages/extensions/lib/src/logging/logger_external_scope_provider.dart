@@ -34,10 +34,10 @@ class _Scope implements Disposable {
   bool _isDisposed;
 
   _Scope(LoggerExternalScopeProvider provider, Object? state, _Scope? parent)
-      : _provider = provider,
-        _state = state,
-        _parent = parent,
-        _isDisposed = false;
+    : _provider = provider,
+      _state = state,
+      _parent = parent,
+      _isDisposed = false;
 
   _Scope? get parent => _parent;
 

@@ -40,8 +40,8 @@ class PhysicalFilesWatcher implements Disposable {
     String root,
     bool useEventBasedWatcher, {
     this._pollingInterval = const Duration(seconds: 4),
-  })  : _root = root,
-        _usePolling = !useEventBasedWatcher {
+  }) : _root = root,
+       _usePolling = !useEventBasedWatcher {
     if (useEventBasedWatcher) {
       _eventWatcher = createEventWatcher(root);
     }

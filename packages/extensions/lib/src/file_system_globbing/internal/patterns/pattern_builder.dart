@@ -102,8 +102,12 @@ class PatternBuilder {
 
         for (var scanSegment = segmentStart; scanSegment < endSegment;) {
           final beginLiteral = scanSegment;
-          final endLiteral =
-              _nextIndex(pattern, const ['*'], scanSegment, endSegment);
+          final endLiteral = _nextIndex(
+            pattern,
+            const ['*'],
+            scanSegment,
+            endSegment,
+          );
 
           if (beginLiteral == segmentStart) {
             if (endLiteral == endSegment) {
@@ -124,8 +128,12 @@ class PatternBuilder {
           scanSegment = endLiteral + 1;
         }
 
-        segment ??=
-            WildcardPathSegment(beginsWith, contains, endsWith, comparisonType);
+        segment ??= WildcardPathSegment(
+          beginsWith,
+          contains,
+          endsWith,
+          comparisonType,
+        );
       }
 
       if (segment is! ParentPathSegment) {

@@ -6,7 +6,8 @@ import 'text_to_speech_client.dart';
 
 /// A factory that creates a [TextToSpeechClient] from a [ServiceProvider].
 typedef InnerTextToSpeechClientFactory = TextToSpeechClient Function(
-    ServiceProvider services);
+  ServiceProvider services,
+);
 
 /// Builds a pipeline of text-to-speech client middleware.
 ///
@@ -25,13 +26,15 @@ typedef InnerTextToSpeechClientFactory = TextToSpeechClient Function(
 class TextToSpeechClientBuilder {
   late final InnerTextToSpeechClientFactory _innerFactory;
   final List<
-      TextToSpeechClient Function(
-        TextToSpeechClient inner,
-        ServiceProvider services,
-      )> _factories = [];
+    TextToSpeechClient Function(
+      TextToSpeechClient inner,
+      ServiceProvider services,
+    )
+  >
+  _factories = [];
 
   TextToSpeechClientBuilder._(InnerTextToSpeechClientFactory innerFactory)
-      : _innerFactory = innerFactory;
+    : _innerFactory = innerFactory;
 
   /// Creates a new [TextToSpeechClientBuilder] wrapping [innerClient].
   TextToSpeechClientBuilder(TextToSpeechClient innerClient) {
@@ -40,21 +43,23 @@ class TextToSpeechClientBuilder {
 
   /// Creates a new [TextToSpeechClientBuilder] from a factory function.
   factory TextToSpeechClientBuilder.fromFactory(
-          InnerTextToSpeechClientFactory innerFactory) =>
-      TextToSpeechClientBuilder._(innerFactory);
+    InnerTextToSpeechClientFactory innerFactory,
+  ) => TextToSpeechClientBuilder._(innerFactory);
 
   /// Adds a middleware factory to the pipeline.
   TextToSpeechClientBuilder use(
-          TextToSpeechClient Function(TextToSpeechClient) factory) =>
-      useWithServices((inner, _) => factory(inner));
+    TextToSpeechClient Function(TextToSpeechClient) factory,
+  ) => useWithServices((inner, _) => factory(inner));
 
   /// Adds a middleware factory that also receives the active
   /// [ServiceProvider].
   TextToSpeechClientBuilder useWithServices(
-      TextToSpeechClient Function(
-        TextToSpeechClient inner,
-        ServiceProvider services,
-      ) factory) {
+    TextToSpeechClient Function(
+      TextToSpeechClient inner,
+      ServiceProvider services,
+    )
+    factory,
+  ) {
     _factories.add(factory);
     return this;
   }

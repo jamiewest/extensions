@@ -11,11 +11,7 @@ import 'log_entry.dart';
 /// A logger that writes formatted messages to the console output.
 class FormattedConsoleLogger implements Logger {
   /// Creates a new instance of [FormattedConsoleLogger].
-  FormattedConsoleLogger(
-    this.name,
-    this._formatter,
-    this._scopeProvider,
-  );
+  FormattedConsoleLogger(this.name, this._formatter, this._scopeProvider);
 
   /// The name of the logger.
   final String name;

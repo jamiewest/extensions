@@ -32,7 +32,7 @@ class OpenTelemetryRealtimeClientSession implements RealtimeClientSession {
     this.system,
     bool? enableSensitiveData,
   }) : enableSensitiveData =
-            enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
+           enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
 
   /// The inner session to delegate to.
   final RealtimeClientSession innerSession;
@@ -61,15 +61,13 @@ class OpenTelemetryRealtimeClientSession implements RealtimeClientSession {
       arguments: {
         ..._buildArguments(),
         if (enableSensitiveData && message.rawRepresentation != null)
-          OpenTelemetryConsts.inputMessagesKey:
-              TelemetryHelpers.asJson(message.rawRepresentation),
+          OpenTelemetryConsts.inputMessagesKey: TelemetryHelpers.asJson(
+            message.rawRepresentation,
+          ),
       },
     );
     try {
-      await innerSession.send(
-        message,
-        cancellationToken: cancellationToken,
-      );
+      await innerSession.send(message, cancellationToken: cancellationToken);
       developer.Timeline.finishSync();
     } catch (e) {
       developer.Timeline.finishSync();
@@ -112,8 +110,9 @@ class OpenTelemetryRealtimeClientSession implements RealtimeClientSession {
       if (sessionOptions?.voice != null)
         OpenTelemetryConsts.voiceKey: sessionOptions?.voice,
       if (sessionOptions?.outputModalities != null)
-        OpenTelemetryConsts.outputModalitiesKey:
-            sessionOptions?.outputModalities?.join(','),
+        OpenTelemetryConsts.outputModalitiesKey: sessionOptions
+            ?.outputModalities
+            ?.join(','),
     };
   }
 }

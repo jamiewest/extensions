@@ -8,28 +8,26 @@ import 'package:extensions/system.dart';
 ///
 /// Run this file to print two separately named `MyOptions` instances.
 Future<void> main(List<String> args) async => Host.createDefaultBuilder()
-    .configureServices(
-      (context, services) {
-        // #region configure_named_options
-        services
-          ..configure<MyOptions>(
-            MyOptions.new,
-            (options) => options.option = 'Primary options value',
-            name: _primaryOptionsName,
-          )
-          ..configure<MyOptions>(
-            MyOptions.new,
-            (options) => options.option = 'Secondary options value',
-            name: _secondaryOptionsName,
-          )
-          // #endregion
-          ..addHostedService<MyService>(
-            (services) => MyService(
-              services.getRequiredService<OptionsSnapshot<MyOptions>>(),
-            ),
-          );
-      },
-    )
+    .configureServices((context, services) {
+      // #region configure_named_options
+      services
+        ..configure<MyOptions>(
+          MyOptions.new,
+          (options) => options.option = 'Primary options value',
+          name: _primaryOptionsName,
+        )
+        ..configure<MyOptions>(
+          MyOptions.new,
+          (options) => options.option = 'Secondary options value',
+          name: _secondaryOptionsName,
+        )
+        // #endregion
+        ..addHostedService<MyService>(
+          (services) => MyService(
+            services.getRequiredService<OptionsSnapshot<MyOptions>>(),
+          ),
+        );
+    })
     .useConsoleLifetime()
     .build()
     .run();
@@ -42,9 +40,7 @@ class MyOptions {
 }
 
 class MyService extends HostedService {
-  MyService(
-    this.options,
-  );
+  MyService(this.options);
 
   final OptionsSnapshot<MyOptions> options;
 

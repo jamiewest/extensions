@@ -37,19 +37,19 @@ class StructuredChatResponse<T> extends ChatResponse {
     ChatResponse response, {
     required this._fromJson,
     bool wrappedInObject = false,
-  })  : _isWrappedInObject = wrappedInObject,
-        super(
-          messages: response.messages,
-          responseId: response.responseId,
-          conversationId: response.conversationId,
-          modelId: response.modelId,
-          createdAt: response.createdAt,
-          finishReason: response.finishReason,
-          usage: response.usage,
-          continuationToken: response.continuationToken,
-          rawRepresentation: response.rawRepresentation,
-          additionalProperties: response.additionalProperties,
-        );
+  }) : _isWrappedInObject = wrappedInObject,
+       super(
+         messages: response.messages,
+         responseId: response.responseId,
+         conversationId: response.conversationId,
+         modelId: response.modelId,
+         createdAt: response.createdAt,
+         finishReason: response.finishReason,
+         usage: response.usage,
+         continuationToken: response.continuationToken,
+         rawRepresentation: response.rawRepresentation,
+         additionalProperties: response.additionalProperties,
+       );
 
   /// The result value of the chat response as an instance of [T].
   ///
@@ -87,7 +87,8 @@ class StructuredChatResponse<T> extends ChatResponse {
         decoded = decoded['data'];
       } else {
         throw InvalidOperationException(
-          message: 'The response did not contain the expected '
+          message:
+              'The response did not contain the expected '
               "'data' property.",
         );
       }

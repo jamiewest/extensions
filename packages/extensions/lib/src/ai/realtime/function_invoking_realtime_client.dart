@@ -29,10 +29,7 @@ import 'realtime_session_options.dart';
 )
 class FunctionInvokingRealtimeClient extends DelegatingRealtimeClient {
   /// Creates a new [FunctionInvokingRealtimeClient].
-  FunctionInvokingRealtimeClient(
-    super.innerClient, {
-    this.logger,
-  });
+  FunctionInvokingRealtimeClient(super.innerClient, {this.logger});
 
   /// An optional logger for diagnostic output about function invocation.
   final Logger? logger;

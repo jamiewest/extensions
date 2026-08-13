@@ -163,8 +163,7 @@ void main() {
       token.dispose();
     });
 
-    test(
-        'hasChanged returns true if file was modified '
+    test('hasChanged returns true if file was modified '
         'but retained an older timestamp', () async {
       final testFile = io.File(p.join(tempDir.path, 'timestamp.txt'));
       testFile.writeAsStringSync('initial');

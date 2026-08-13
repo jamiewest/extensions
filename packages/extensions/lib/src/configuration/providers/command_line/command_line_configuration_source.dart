@@ -8,10 +8,7 @@ import 'command_line_configuration_provider.dart';
 /// Represents command line arguments as an [ConfigurationSource].
 class CommandLineConfigurationSource implements ConfigurationSource {
   /// Initializes the [CommandLineConfigurationSource].
-  CommandLineConfigurationSource({
-    this.args,
-    this.switchMappings,
-  });
+  CommandLineConfigurationSource({this.args, this.switchMappings});
 
   /// Gets or sets the switch mappings.
   LinkedHashMap<String, String>? switchMappings;

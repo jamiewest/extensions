@@ -49,8 +49,8 @@ DefaultHttpClientFactory _buildFactory(
       (options) => options.handlerLifetime = handlerLifetime,
     );
   final sp = services.buildServiceProvider();
-  final monitor =
-      sp.getRequiredService<OptionsMonitor<HttpClientFactoryOptions>>();
+  final monitor = sp
+      .getRequiredService<OptionsMonitor<HttpClientFactoryOptions>>();
   return DefaultHttpClientFactory(
     sp,
     handlerFactory,

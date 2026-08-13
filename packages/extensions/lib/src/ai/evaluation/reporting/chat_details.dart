@@ -12,7 +12,7 @@ import 'chat_turn_details.dart';
 class ChatDetails {
   /// Creates [ChatDetails] with an optional initial list of [turnDetails].
   ChatDetails({List<ChatTurnDetails>? turnDetails})
-      : turnDetails = turnDetails ?? [];
+    : turnDetails = turnDetails ?? [];
 
   /// Turn-by-turn details recorded during the scenario run.
   List<ChatTurnDetails> turnDetails;

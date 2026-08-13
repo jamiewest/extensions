@@ -11,10 +11,7 @@ class ConfigureOptionsChatClient extends DelegatingChatClient {
   /// Creates a new [ConfigureOptionsChatClient].
   ///
   /// [configure] is called before each request to modify the options.
-  ConfigureOptionsChatClient(
-    super.innerClient, {
-    required this.configure,
-  });
+  ConfigureOptionsChatClient(super.innerClient, {required this.configure});
 
   /// The callback that configures [ChatOptions] before each request.
   final ChatOptions Function(ChatOptions options) configure;
@@ -24,22 +21,20 @@ class ConfigureOptionsChatClient extends DelegatingChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.getResponse(
-        messages: messages,
-        options: configure(options ?? ChatOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.getResponse(
+    messages: messages,
+    options: configure(options ?? ChatOptions()),
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.getStreamingResponse(
-        messages: messages,
-        options: configure(options ?? ChatOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.getStreamingResponse(
+    messages: messages,
+    options: configure(options ?? ChatOptions()),
+    cancellationToken: cancellationToken,
+  );
 }

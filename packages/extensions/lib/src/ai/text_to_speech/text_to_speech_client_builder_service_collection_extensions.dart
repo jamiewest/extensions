@@ -23,8 +23,8 @@ extension TextToSpeechClientBuilderServiceCollectionExtensions
           (sp) => builder.build(sp),
         ),
       ServiceLifetime.scoped => ServiceDescriptor.scoped<TextToSpeechClient>(
-          (sp) => builder.build(sp),
-        ),
+        (sp) => builder.build(sp),
+      ),
       ServiceLifetime.transient =>
         ServiceDescriptor.transient<TextToSpeechClient>(
           (sp) => builder.build(sp),

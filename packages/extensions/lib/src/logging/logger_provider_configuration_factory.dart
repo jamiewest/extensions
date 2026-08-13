@@ -34,8 +34,8 @@ class LoggerProviderConfigurationFactoryImpl
   LoggerProviderConfigurationFactoryImpl(
     Iterable<IConfiguration> configurations,
   ) : _configurations = configurations
-            .map(_LoggingConfiguration.new)
-            .toList(growable: false);
+          .map(_LoggingConfiguration.new)
+          .toList(growable: false);
 
   @override
   IConfiguration getConfiguration(Type providerType) {
@@ -76,10 +76,7 @@ class LoggerProviderConfigurationFactoryImpl
   bool _hasChildren(IConfiguration section) => section.getChildren().isNotEmpty;
 
   /// Adds all key-value pairs from a configuration section to the builder.
-  void _addConfiguration(
-    ConfigurationBuilder builder,
-    IConfiguration section,
-  ) {
+  void _addConfiguration(ConfigurationBuilder builder, IConfiguration section) {
     // Add all child key-value pairs from the section
     _addConfigurationValues(builder, section, prefix: '');
   }
@@ -99,9 +96,7 @@ class LoggerProviderConfigurationFactoryImpl
       // If this child has a value, add it
       if (value != null) {
         // Create an in-memory source for this key-value pair
-        builder.add(
-          _InMemoryConfigurationSource({key: value}),
-        );
+        builder.add(_InMemoryConfigurationSource({key: value}));
       }
 
       // Recursively process children

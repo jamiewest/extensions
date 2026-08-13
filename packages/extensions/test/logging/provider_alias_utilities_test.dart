@@ -43,14 +43,16 @@ void main() {
 
     group('getFullName', () {
       test('returns full type name for console logger provider', () {
-        final fullName =
-            ProviderAliasUtilities.getFullName(ConsoleLoggerProvider);
+        final fullName = ProviderAliasUtilities.getFullName(
+          ConsoleLoggerProvider,
+        );
         expect(fullName, equals('ConsoleLoggerProvider'));
       });
 
       test('returns full type name for debug logger provider', () {
-        final fullName =
-            ProviderAliasUtilities.getFullName(DebugLoggerProvider);
+        final fullName = ProviderAliasUtilities.getFullName(
+          DebugLoggerProvider,
+        );
         expect(fullName, equals('DebugLoggerProvider'));
       });
 

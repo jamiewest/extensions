@@ -20,10 +20,7 @@ import 'delegating_chat_client.dart';
 /// This is an experimental feature.
 class ImageGeneratingChatClient extends DelegatingChatClient {
   /// Creates a new [ImageGeneratingChatClient].
-  ImageGeneratingChatClient(
-    super.innerClient, {
-    required this.imageGenerator,
-  });
+  ImageGeneratingChatClient(super.innerClient, {required this.imageGenerator});
 
   /// The image generator used to handle image generation requests.
   final ImageGenerator imageGenerator;
@@ -70,10 +67,7 @@ class ImageGeneratingChatClient extends DelegatingChatClient {
     // Add the generated images as a new assistant message.
     final updatedMessages = [
       ...response.messages,
-      ChatMessage(
-        role: ChatRole.assistant,
-        contents: resultContents,
-      ),
+      ChatMessage(role: ChatRole.assistant, contents: resultContents),
     ];
 
     return ChatResponse(

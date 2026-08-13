@@ -35,8 +35,9 @@ void _basicGlobbingExample() {
   // #endregion
 
   // Execute against the example directory
-  final exampleDir =
-      const LocalFileSystem().directory('packages/extensions/example');
+  final exampleDir = const LocalFileSystem().directory(
+    'packages/extensions/example',
+  );
 
   if (exampleDir.existsSync()) {
     final result = matcher.execute(DirectoryInfoWrapper(exampleDir));
@@ -101,9 +102,7 @@ void _excludePatternsExample() {
   final fullPaths = matcher.getResultsInFullPath(projectDir);
   // #endregion
 
-  print(
-    'Found ${fullPaths.length} Dart files with exclude patterns applied:',
-  );
+  print('Found ${fullPaths.length} Dart files with exclude patterns applied:');
 
   // Filter and show only lib files for clearer demonstration
   final libFiles = fullPaths.where((path) => path.contains('/lib/')).take(10);
@@ -161,10 +160,7 @@ void _inMemoryMatchingExample() {
   );
 
   // Create root directory with all subdirectories
-  final rootDir = InMemoryDirectoryInfo(
-    '/',
-    files: [srcDir, libDir, testDir],
-  );
+  final rootDir = InMemoryDirectoryInfo('/', files: [srcDir, libDir, testDir]);
 
   print('Created in-memory file system structure:');
   print('  /${rootDir.name}');
@@ -177,9 +173,7 @@ void _inMemoryMatchingExample() {
     }
   }
 
-  print(
-    '\nNote: These structures are useful for testing file provider',
-  );
+  print('\nNote: These structures are useful for testing file provider');
   print('logic without accessing the actual file system.');
 
   print('');

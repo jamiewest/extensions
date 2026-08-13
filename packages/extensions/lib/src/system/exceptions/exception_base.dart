@@ -11,7 +11,7 @@ class ExceptionBase implements Exception {
     this._innerException,
     this._stackTrace,
     this._typeName = 'ExceptionBase',
-  })  : _message = message ?? '';
+  }) : _message = message ?? '';
 
   /// The message that describes the current exception.
   String? get message =>

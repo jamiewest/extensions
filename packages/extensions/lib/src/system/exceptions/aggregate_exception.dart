@@ -9,11 +9,9 @@ class AggregateException implements Exception {
 
   /// Initializes a new instance of the [AggregateException] class with
   /// a specified error message and a reference to the inner exceptions.
-  AggregateException({
-    String? message,
-    Iterable<Exception>? innerExceptions,
-  })  : _message = message ?? 'One or more errors occurred.',
-        _innerExceptions = innerExceptions?.toList() ?? [];
+  AggregateException({String? message, Iterable<Exception>? innerExceptions})
+    : _message = message ?? 'One or more errors occurred.',
+      _innerExceptions = innerExceptions?.toList() ?? [];
 
   /// Creates an [AggregateException] from a collection of exceptions.
   factory AggregateException.from(Iterable<Exception> exceptions) =>
@@ -63,10 +61,7 @@ class AggregateException implements Exception {
     if (_innerExceptions.isNotEmpty) {
       buffer
         ..write(' (')
-        ..writeAll(
-          _innerExceptions.map((e) => e.toString()),
-          ', ',
-        )
+        ..writeAll(_innerExceptions.map((e) => e.toString()), ', ')
         ..write(')');
     }
 

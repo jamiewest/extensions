@@ -25,11 +25,9 @@ class ConfigurationSection implements IConfigurationSection {
   String? _key;
 
   /// Initializes a new instance.
-  ConfigurationSection(
-    ConfigurationRoot root,
-    String path,
-  )   : _root = root,
-        _path = path;
+  ConfigurationSection(ConfigurationRoot root, String path)
+    : _root = root,
+      _path = path;
 
   /// Gets the full path to this section from the [ConfigurationRoot].
   @override

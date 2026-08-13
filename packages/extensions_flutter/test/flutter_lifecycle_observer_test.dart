@@ -12,10 +12,7 @@ void main() {
     lifetime.applicationHidden.add(() => events.add('hidden'));
 
     await tester.pumpWidget(
-      FlutterLifecycleObserver(
-        lifetime: lifetime,
-        child: const Placeholder(),
-      ),
+      FlutterLifecycleObserver(lifetime: lifetime, child: const Placeholder()),
     );
 
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);

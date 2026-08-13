@@ -1,5 +1,6 @@
 import 'package:extensions/configuration.dart';
 import 'package:test/test.dart';
+
 import 'common/configuration_provider_extensions.dart';
 
 void main() {
@@ -96,10 +97,9 @@ void main() {
         ..add(memConfigSrc1)
         ..add(memConfigSrc2);
 
-      var config =
-          (ConfigurationBuilder().addConfiguration(configurationBuilder.build())
-                ..add(memConfigSrc3))
-              .build();
+      var config = (ConfigurationBuilder().addConfiguration(
+        configurationBuilder.build(),
+      )..add(memConfigSrc3)).build();
 
       var dict = {for (var item in config.asIterable()) item.key: item.value};
 
@@ -121,14 +121,14 @@ void main() {
         'Mem1': 'Value1',
         'Mem1:': 'NoKeyValue1',
         'Mem1:KeyInMem1': 'ValueInMem1',
-        'Mem1:KeyInMem1:Deep1': 'ValueDeep1'
+        'Mem1:KeyInMem1:Deep1': 'ValueDeep1',
       }.entries;
 
       var dic2 = <String, String>{
         'Mem2': 'Value2',
         'Mem2:': 'NoKeyValue2',
         'Mem2:KeyInMem2': 'ValueInMem2',
-        'Mem2:KeyInMem2:Deep2': 'ValueDeep2'
+        'Mem2:KeyInMem2:Deep2': 'ValueDeep2',
       }.entries;
 
       var dic3 = <String, String>{
@@ -137,7 +137,7 @@ void main() {
         'Mem3:KeyInMem3': 'ValueInMem3',
         'Mem3:KeyInMem4': 'ValueInMem4',
         'Mem3:KeyInMem3:Deep3': 'ValueDeep3',
-        'Mem3:KeyInMem3:Deep4': 'ValueDeep4'
+        'Mem3:KeyInMem3:Deep4': 'ValueDeep4',
       }.entries;
 
       var memConfigSrc1 = MemoryConfigurationSource()..initialData = dic1;
@@ -155,7 +155,7 @@ void main() {
       var dict = {
         for (var item
             in config.getSection('Mem1').asIterable(makePathsRelative: true))
-          item.key: item.value
+          item.key: item.value,
       };
       expect(dict.length, equals(3));
       expect(dict[''], equals('NoKeyValue1'));
@@ -165,7 +165,7 @@ void main() {
       var dict2 = {
         for (var item
             in config.getSection('Mem2').asIterable(makePathsRelative: true))
-          item.key: item.value
+          item.key: item.value,
       };
       expect(dict2.length, equals(3));
       expect(dict2[''], equals('NoKeyValue2'));
@@ -175,7 +175,7 @@ void main() {
       var dict3 = {
         for (var item
             in config.getSection('Mem3').asIterable(makePathsRelative: true))
-          item.key: item.value
+          item.key: item.value,
       };
       expect(dict2.length, equals(3));
       expect(dict3[''], equals('NoKeyValue3'));
@@ -187,13 +187,9 @@ void main() {
 
     test('NewConfigurationProviderOverridesOldOneWhenKeyIsDuplicated', () {
       // Arrange
-      var dic1 = <String, String>{
-        'Key1:Key2': 'ValueInMem1',
-      };
+      var dic1 = <String, String>{'Key1:Key2': 'ValueInMem1'};
 
-      var dic2 = <String, String>{
-        'Key1:Key2': 'ValueInMem2',
-      };
+      var dic2 = <String, String>{'Key1:Key2': 'ValueInMem2'};
 
       var memConfigSrc1 = MemoryConfigurationSource()
         ..initialData = dic1.entries;
@@ -226,10 +222,7 @@ void main() {
 
     test('SettingValueUpdatesAllConfigurationProviders', () {
       // Arrange
-      var dict = {
-        'Key1': 'Value1',
-        'Key2': 'Value2',
-      }.entries;
+      var dict = {'Key1': 'Value1', 'Key2': 'Value2'}.entries;
 
       var memConfigSrc1 = TestMemorySourceProvider(dict);
       var memConfigSrc2 = TestMemorySourceProvider(dict);
@@ -265,7 +258,7 @@ void main() {
 class TestMemorySourceProvider extends MemoryConfigurationProvider
     implements ConfigurationSource {
   TestMemorySourceProvider(Iterable<MapEntry<String, String>> initialData)
-      : super(MemoryConfigurationSource()..initialData = initialData);
+    : super(MemoryConfigurationSource()..initialData = initialData);
 
   @override
   ConfigurationProvider build(ConfigurationBuilder builder) => this;

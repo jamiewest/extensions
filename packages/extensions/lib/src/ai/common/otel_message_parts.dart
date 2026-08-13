@@ -35,11 +35,11 @@ class OtelMessage {
 
   /// Converts this message to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        if (role != null) 'role': role,
-        if (name != null) 'name': name,
-        if (finishReason != null) 'finish_reason': finishReason,
-        'parts': parts,
-      };
+    if (role != null) 'role': role,
+    if (name != null) 'name': name,
+    if (finishReason != null) 'finish_reason': finishReason,
+    'parts': parts,
+  };
 }
 
 /// A generic part carrying text or extensibility content.
@@ -73,11 +73,11 @@ class OtelBlobPart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'blob',
-        'content': content,
-        'mime_type': mimeType,
-        'modality': modality,
-      };
+    'type': 'blob',
+    'content': content,
+    'mime_type': mimeType,
+    'modality': modality,
+  };
 }
 
 /// A URI-referenced content part.
@@ -96,11 +96,11 @@ class OtelUriPart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'uri',
-        'uri': uri,
-        'mime_type': mimeType,
-        'modality': modality,
-      };
+    'type': 'uri',
+    'uri': uri,
+    'mime_type': mimeType,
+    'modality': modality,
+  };
 }
 
 /// A hosted-file content part.
@@ -119,11 +119,11 @@ class OtelFilePart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'file',
-        'file_id': fileId,
-        'mime_type': mimeType,
-        'modality': modality,
-      };
+    'type': 'file',
+    'file_id': fileId,
+    'mime_type': mimeType,
+    'modality': modality,
+  };
 }
 
 /// A tool-call request part.
@@ -142,11 +142,11 @@ class OtelToolCallRequestPart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'tool_call',
-        'id': id,
-        'name': name,
-        'arguments': arguments,
-      };
+    'type': 'tool_call',
+    'id': id,
+    'name': name,
+    'arguments': arguments,
+  };
 }
 
 /// A tool-call response part.
@@ -162,10 +162,10 @@ class OtelToolCallResponsePart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'tool_call_response',
-        'id': id,
-        'response': response,
-      };
+    'type': 'tool_call_response',
+    'id': id,
+    'response': response,
+  };
 }
 
 /// A server-side tool-call part.
@@ -184,11 +184,11 @@ class OtelServerToolCallPart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'server_tool_call',
-        'id': id,
-        'name': name,
-        'server_tool_call': serverToolCall,
-      };
+    'type': 'server_tool_call',
+    'id': id,
+    'name': name,
+    'server_tool_call': serverToolCall,
+  };
 }
 
 /// A server-side tool-call response part.
@@ -204,10 +204,10 @@ class OtelServerToolCallResponsePart {
 
   /// Converts this part to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'server_tool_call_response',
-        'id': id,
-        'server_tool_call_response': serverToolCallResponse,
-      };
+    'type': 'server_tool_call_response',
+    'id': id,
+    'server_tool_call_response': serverToolCallResponse,
+  };
 }
 
 /// A code-interpreter server tool call payload.
@@ -231,8 +231,10 @@ class OtelCodeInterpreterToolCallResponse {
   final Object? output;
 
   /// Converts this payload to a JSON-encodable map.
-  Map<String, Object?> toJson() =>
-      {'type': 'code_interpreter', 'output': output};
+  Map<String, Object?> toJson() => {
+    'type': 'code_interpreter',
+    'output': output,
+  };
 }
 
 /// An image-generation server tool call payload.
@@ -253,8 +255,10 @@ class OtelImageGenerationToolCallResponse {
   final Object? output;
 
   /// Converts this payload to a JSON-encodable map.
-  Map<String, Object?> toJson() =>
-      {'type': 'image_generation', 'output': output};
+  Map<String, Object?> toJson() => {
+    'type': 'image_generation',
+    'output': output,
+  };
 }
 
 /// An MCP server tool call payload.
@@ -270,10 +274,10 @@ class OtelMcpToolCall {
 
   /// Converts this payload to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'mcp',
-        'server_name': serverName,
-        'arguments': arguments,
-      };
+    'type': 'mcp',
+    'server_name': serverName,
+    'arguments': arguments,
+  };
 }
 
 /// An MCP server tool call response payload.
@@ -301,10 +305,10 @@ class OtelMcpApprovalRequest {
 
   /// Converts this payload to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': 'mcp',
-        'server_name': serverName,
-        'arguments': arguments,
-      };
+    'type': 'mcp',
+    'server_name': serverName,
+    'arguments': arguments,
+  };
 }
 
 /// An MCP approval-response payload.
@@ -322,8 +326,12 @@ class OtelMcpApprovalResponse {
 /// A tool definition descriptor.
 class OtelFunction {
   /// Creates a new [OtelFunction].
-  OtelFunction(
-      {this.type = 'function', this.name, this.description, this.parameters});
+  OtelFunction({
+    this.type = 'function',
+    this.name,
+    this.description,
+    this.parameters,
+  });
 
   /// The tool type.
   final String type;
@@ -358,9 +366,9 @@ class OtelFunction {
 
   /// Converts this descriptor to a JSON-encodable map.
   Map<String, Object?> toJson() => {
-        'type': type,
-        'name': name,
-        'description': description,
-        'parameters': parameters,
-      };
+    'type': type,
+    'name': name,
+    'description': description,
+    'parameters': parameters,
+  };
 }

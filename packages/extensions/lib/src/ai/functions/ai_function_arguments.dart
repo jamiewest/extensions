@@ -4,9 +4,9 @@ import 'dart:collection';
 class AIFunctionArguments extends MapBase<String, Object?> {
   /// Creates a new [AIFunctionArguments].
   AIFunctionArguments([Map<String, Object?>? arguments])
-      : _map = arguments != null
-            ? Map<String, Object?>.of(arguments)
-            : <String, Object?>{};
+    : _map = arguments != null
+          ? Map<String, Object?>.of(arguments)
+          : <String, Object?>{};
 
   final Map<String, Object?> _map;
 

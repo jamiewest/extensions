@@ -15,16 +15,17 @@ extension EmbeddingGeneratorBuilderServiceCollectionExtensions
     InnerEmbeddingGeneratorFactory innerGeneratorFactory, [
     ServiceLifetime lifetime = ServiceLifetime.singleton,
   ]) {
-    final builder =
-        EmbeddingGeneratorBuilder.fromFactory(innerGeneratorFactory);
+    final builder = EmbeddingGeneratorBuilder.fromFactory(
+      innerGeneratorFactory,
+    );
     add(switch (lifetime) {
       ServiceLifetime.singleton =>
         ServiceDescriptor.singleton<EmbeddingGenerator>(
           (sp) => builder.build(sp),
         ),
       ServiceLifetime.scoped => ServiceDescriptor.scoped<EmbeddingGenerator>(
-          (sp) => builder.build(sp),
-        ),
+        (sp) => builder.build(sp),
+      ),
       ServiceLifetime.transient =>
         ServiceDescriptor.transient<EmbeddingGenerator>(
           (sp) => builder.build(sp),

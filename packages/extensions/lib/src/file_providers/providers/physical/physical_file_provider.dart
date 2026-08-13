@@ -54,15 +54,15 @@ class PhysicalFileProvider implements FileProvider, Disposable {
     FileSystem fileSystem,
     String root,
     PhysicalFileProviderOptions options,
-  )   : _fileSystem = fileSystem,
-        _root = root,
-        options = options,
-        _watcher = PhysicalFilesWatcher(
-          fileSystem,
-          root,
-          !options.usePollingFileWatcher,
-          pollingInterval: options.pollingInterval,
-        );
+  ) : _fileSystem = fileSystem,
+      _root = root,
+      options = options,
+      _watcher = PhysicalFilesWatcher(
+        fileSystem,
+        root,
+        !options.usePollingFileWatcher,
+        pollingInterval: options.pollingInterval,
+      );
 
   /// The filesystem backing this provider.
   FileSystem get fileSystem => _fileSystem;

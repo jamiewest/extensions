@@ -9,7 +9,7 @@ import 'http_message_handler_builder.dart';
 /// Default implementation for building an [HttpMessageHandler] pipeline.
 class DefaultHttpMessageHandlerBuilder implements HttpMessageHandlerBuilder {
   DefaultHttpMessageHandlerBuilder(ServiceProvider services)
-      : _services = services;
+    : _services = services;
 
   final ServiceProvider _services;
 
@@ -57,7 +57,7 @@ class DefaultHttpMessageHandlerBuilder implements HttpMessageHandlerBuilder {
 /// Default terminal handler that forwards requests to the dart `http` client.
 class DefaultHttpClientHandler implements HttpMessageHandler {
   DefaultHttpClientHandler([http.Client? client])
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final http.Client _client;
 

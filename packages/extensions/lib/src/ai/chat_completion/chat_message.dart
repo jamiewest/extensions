@@ -27,11 +27,11 @@ class ChatMessage {
 
   /// Creates a [ChatMessage] with [TextContent] from a string.
   ChatMessage.fromText(this.role, String text, {this.authorName})
-      : contents = [TextContent(text)],
-        createdAt = null,
-        messageId = null,
-        rawRepresentation = null,
-        additionalProperties = null;
+    : contents = [TextContent(text)],
+      createdAt = null,
+      messageId = null,
+      rawRepresentation = null,
+      additionalProperties = null;
 
   /// The role of the message author.
   final ChatRole role;
@@ -60,15 +60,16 @@ class ChatMessage {
 
   /// Creates a deep copy of this message.
   ChatMessage clone() => ChatMessage(
-        role: role,
-        contents: List<AIContent>.of(contents),
-        authorName: authorName,
-        createdAt: createdAt,
-        messageId: messageId,
-        rawRepresentation: rawRepresentation,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-      );
+    role: role,
+    contents: List<AIContent>.of(contents),
+    authorName: authorName,
+    createdAt: createdAt,
+    messageId: messageId,
+    rawRepresentation: rawRepresentation,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+  );
 
   @override
   String toString() => text;

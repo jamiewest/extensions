@@ -43,11 +43,11 @@ class Host implements Disposable, AsyncDisposable {
     Logger logger,
     HostLifetime hostLifetime,
     Options<HostOptions> options,
-  )   : _services = services,
-        _applicationLifetime = applicationLifetime as ApplicationLifetime,
-        _logger = logger,
-        _hostLifetime = hostLifetime,
-        _options = options.value!;
+  ) : _services = services,
+      _applicationLifetime = applicationLifetime as ApplicationLifetime,
+      _logger = logger,
+      _hostLifetime = hostLifetime,
+      _options = options.value!;
 
   // The programs configured services.
   ServiceProvider get services => _services;
@@ -60,19 +60,15 @@ class Host implements Disposable, AsyncDisposable {
   /// - HostedService.start
   /// - HostedLifecycleService.started
   /// - HostApplicationLifetime.applicationStarted
-  Future<void> start([
-    CancellationToken? cancellationToken,
-  ]) async {
+  Future<void> start([CancellationToken? cancellationToken]) async {
     _logger.starting();
 
     cancellationToken ??= CancellationToken.none;
 
-    final cts = CancellationTokenSource.createLinkedTokenSource(
-      [
-        cancellationToken,
-        _applicationLifetime.applicationStopping,
-      ],
-    );
+    final cts = CancellationTokenSource.createLinkedTokenSource([
+      cancellationToken,
+      _applicationLifetime.applicationStopping,
+    ]);
 
     // Apply startup timeout if configured
     if (_options.startupTimeout != null) {
@@ -236,13 +232,13 @@ class Host implements Disposable, AsyncDisposable {
           'Hosted services are resolved when host is started.',
         );
         // Ensure hosted services are stopped in LIFO order
-        var reversedServices =
-            List<HostedService>.from(_hostedServices ?? <HostedService>[])
-                .reversed;
+        var reversedServices = List<HostedService>.from(
+          _hostedServices ?? <HostedService>[],
+        ).reversed;
         Iterable<HostedLifecycleService>? reversedLifetimeServices =
             List<HostedLifecycleService>.from(
-                    _hostedLifecycleServices ?? <HostedLifecycleService>[])
-                .reversed;
+              _hostedLifecycleServices ?? <HostedLifecycleService>[],
+            ).reversed;
         var concurrent = _options.servicesStopConcurrently;
 
         // Call stopping.
@@ -407,8 +403,7 @@ class Host implements Disposable, AsyncDisposable {
   /// with pre-configured defaults.
   static HostApplicationBuilder createApplicationBuilder({
     HostApplicationBuilderSettings? settings,
-  }) =>
-      DefaultHostApplicationBuilder(settings: settings);
+  }) => DefaultHostApplicationBuilder(settings: settings);
 
   /// Initializes a new instance of the [HostApplicationBuilder] class with
   /// no pre-configured defaults.

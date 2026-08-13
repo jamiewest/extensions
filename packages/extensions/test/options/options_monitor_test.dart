@@ -36,8 +36,8 @@ class OptionsMonitorTest {
             )
             .buildServiceProvider();
 
-        var monitor =
-            services.getRequiredService<OptionsMonitor<FakeOptions>>();
+        var monitor = services
+            .getRequiredService<OptionsMonitor<FakeOptions>>();
         expect(monitor.currentValue, equals(FakeOptionsFactory.options));
         expect(monitor.get('1'), equals(FakeOptionsFactory.options));
         expect(monitor.get('bsdfsdf'), equals(FakeOptionsFactory.options));
@@ -76,17 +76,16 @@ class OptionsMonitorTest {
 
       test('all registered onChange listeners are notified', () {
         var token = FakeChangeToken();
-        var monitor = OptionsMonitor<FakeOptions>(
-          FakeOptionsFactory(),
-          [_FakeChangeTokenSource(token)],
-          OptionsCache<FakeOptions>(FakeOptions.new),
-        );
+        var monitor = OptionsMonitor<FakeOptions>(FakeOptionsFactory(), [
+          _FakeChangeTokenSource(token),
+        ], OptionsCache<FakeOptions>(FakeOptions.new));
 
         var firstCount = 0;
         var secondCount = 0;
         monitor.onChange((FakeOptions options, [String? name]) => firstCount++);
-        monitor
-            .onChange((FakeOptions options, [String? name]) => secondCount++);
+        monitor.onChange(
+          (FakeOptions options, [String? name]) => secondCount++,
+        );
 
         token.invokeChangeCallback();
 
@@ -96,16 +95,15 @@ class OptionsMonitorTest {
 
       test('disposing one listener leaves the others active', () {
         var token = FakeChangeToken();
-        var monitor = OptionsMonitor<FakeOptions>(
-          FakeOptionsFactory(),
-          [_FakeChangeTokenSource(token)],
-          OptionsCache<FakeOptions>(FakeOptions.new),
-        );
+        var monitor = OptionsMonitor<FakeOptions>(FakeOptionsFactory(), [
+          _FakeChangeTokenSource(token),
+        ], OptionsCache<FakeOptions>(FakeOptions.new));
 
         var firstCount = 0;
         var secondCount = 0;
-        var firstRegistration = monitor
-            .onChange((FakeOptions options, [String? n]) => firstCount++);
+        var firstRegistration = monitor.onChange(
+          (FakeOptions options, [String? n]) => firstCount++,
+        );
         monitor.onChange((FakeOptions options, [String? n]) => secondCount++);
 
         firstRegistration?.dispose();
@@ -126,10 +124,8 @@ class _CountIncrement implements ConfigureNamedOptions<FakeOptions> {
   _CountIncrement(this._test);
 
   @override
-  void configure(FakeOptions options) => configureNamed(
-        Options.defaultName,
-        options,
-      );
+  void configure(FakeOptions options) =>
+      configureNamed(Options.defaultName, options);
 
   @override
   void configureNamed(String name, FakeOptions options) {

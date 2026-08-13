@@ -32,13 +32,10 @@ extension HttpClientFactoryServiceCollectionExtensions on ServiceCollection {
 
   /// Registers a typed client bound to the named client.
   HttpClientBuilder addHttpClientTyped<TClient extends http.BaseClient>(
-    TClient Function(
-      http.BaseClient client,
-      ServiceProvider services,
-    ) factory, {
+    TClient Function(http.BaseClient client, ServiceProvider services)
+    factory, {
     String name = Options.defaultName,
-  }) =>
-      addHttpClient(name)..addTypedClient<TClient>(factory);
+  }) => addHttpClient(name)..addTypedClient<TClient>(factory);
 
   void _addHttpClientCore() {
     tryAdd(

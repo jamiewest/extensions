@@ -4,7 +4,7 @@ import '../../file_info.dart';
 /// Directory contents that aggregate multiple providers.
 class CompositeDirectoryContents extends DirectoryContents {
   CompositeDirectoryContents(List<DirectoryContents> contents)
-      : _contents = contents;
+    : _contents = contents;
 
   final List<DirectoryContents> _contents;
 
@@ -18,9 +18,9 @@ class CompositeDirectoryContents extends DirectoryContents {
 
 class _CompositeIterator implements Iterator<FileInfo> {
   _CompositeIterator(this._collections)
-      : _currentEnumerator = _collections.isNotEmpty
-            ? _collections.first.iterator
-            : <FileInfo>[].iterator;
+    : _currentEnumerator = _collections.isNotEmpty
+          ? _collections.first.iterator
+          : <FileInfo>[].iterator;
 
   final List<DirectoryContents> _collections;
   int _index = 0;

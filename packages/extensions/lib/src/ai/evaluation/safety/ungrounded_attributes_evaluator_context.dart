@@ -14,7 +14,7 @@ import '../evaluation_context.dart';
 class UngroundedAttributesEvaluatorContext extends EvaluationContext {
   /// Creates an [UngroundedAttributesEvaluatorContext] from [groundingContext].
   UngroundedAttributesEvaluatorContext(this.groundingContext)
-      : super(groundingContextName, contents: [TextContent(groundingContext)]);
+    : super(groundingContextName, contents: [TextContent(groundingContext)]);
 
   /// Unique context name used when recording contexts on metrics.
   static const String groundingContextName =

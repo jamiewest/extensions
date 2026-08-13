@@ -1,6 +1,1 @@
-enum CallSiteKind {
-  factory,
-  constant,
-  iterable,
-  serviceProvider,
-}
+enum CallSiteKind { factory, constant, iterable, serviceProvider }

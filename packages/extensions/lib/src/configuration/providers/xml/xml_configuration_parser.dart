@@ -84,8 +84,10 @@ class XmlConfigurationParser {
         continue;
       }
 
-      final attrKey =
-          ConfigurationPath.combine([currentPrefix, attr.name.local]);
+      final attrKey = ConfigurationPath.combine([
+        currentPrefix,
+        attr.name.local,
+      ]);
 
       if (data.containsKey(attrKey)) {
         throw FormatException('Duplicate key: $attrKey');
@@ -147,10 +149,14 @@ class XmlConfigurationParser {
         // Multiple children with same name - add indices AFTER element name
         for (var i = 0; i < children.length; i++) {
           // Build prefix with element name first, then index
-          final childElementPrefix =
-              ConfigurationPath.combine([currentPrefix, childName]);
-          final indexedPrefix =
-              ConfigurationPath.combine([childElementPrefix, i.toString()]);
+          final childElementPrefix = ConfigurationPath.combine([
+            currentPrefix,
+            childName,
+          ]);
+          final indexedPrefix = ConfigurationPath.combine([
+            childElementPrefix,
+            i.toString(),
+          ]);
 
           // Process the element's content and children with the indexed prefix
           _processElementContent(children[i], indexedPrefix, data);
@@ -204,8 +210,10 @@ class XmlConfigurationParser {
         continue;
       }
 
-      final attrKey =
-          ConfigurationPath.combine([currentPrefix, attr.name.local]);
+      final attrKey = ConfigurationPath.combine([
+        currentPrefix,
+        attr.name.local,
+      ]);
 
       if (data.containsKey(attrKey)) {
         throw FormatException('Duplicate key: $attrKey');
@@ -267,10 +275,14 @@ class XmlConfigurationParser {
         // Multiple children with same name - add indices AFTER element name
         for (var i = 0; i < children.length; i++) {
           // Build prefix with element name first, then index
-          final childElementPrefix =
-              ConfigurationPath.combine([currentPrefix, childName]);
-          final indexedPrefix =
-              ConfigurationPath.combine([childElementPrefix, i.toString()]);
+          final childElementPrefix = ConfigurationPath.combine([
+            currentPrefix,
+            childName,
+          ]);
+          final indexedPrefix = ConfigurationPath.combine([
+            childElementPrefix,
+            i.toString(),
+          ]);
 
           // Process the element's content and children with the indexed prefix
           _processElementContent(children[i], indexedPrefix, data);

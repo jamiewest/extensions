@@ -18,7 +18,8 @@ import 'vector_property_model.dart';
   name: 'EmbeddingGenerationDispatcher.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path:
+      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 abstract class EmbeddingGenerationDispatcher {
@@ -32,40 +33,41 @@ abstract class EmbeddingGenerationDispatcher {
       VectorPropertyModel property,
       Iterable<Object?> values,
       CancellationToken? cancellationToken,
-    ) generateBatch,
+    )
+    generateBatch,
     required Future<Embedding> Function(
       VectorPropertyModel property,
       Object? value,
       CancellationToken? cancellationToken,
-    ) generateSingle,
-  }) =>
-      _CallbackDispatcher(
-        embeddingType: embeddingType,
-        generateBatch: generateBatch,
-        generateSingle: generateSingle,
-      );
+    )
+    generateSingle,
+  }) => _CallbackDispatcher(
+    embeddingType: embeddingType,
+    generateBatch: generateBatch,
+    generateSingle: generateSingle,
+  );
 
   /// Creates the default dispatcher, which uses the property's configured
   /// [EmbeddingGenerator] to produce [Embedding] values.
   static EmbeddingGenerationDispatcher createDefault() => create(
-        Embedding,
-        generateBatch: (property, values, token) async {
-          final gen = property.embeddingGenerator!;
-          final result = await gen.generateEmbeddings(
-            values: values.whereType<String>(),
-            cancellationToken: token,
-          );
-          return result.toList();
-        },
-        generateSingle: (property, value, token) async {
-          final gen = property.embeddingGenerator!;
-          final result = await gen.generateEmbeddings(
-            values: [value as String],
-            cancellationToken: token,
-          );
-          return result[0];
-        },
+    Embedding,
+    generateBatch: (property, values, token) async {
+      final gen = property.embeddingGenerator!;
+      final result = await gen.generateEmbeddings(
+        values: values.whereType<String>(),
+        cancellationToken: token,
       );
+      return result.toList();
+    },
+    generateSingle: (property, value, token) async {
+      final gen = property.embeddingGenerator!;
+      final result = await gen.generateEmbeddings(
+        values: [value as String],
+        cancellationToken: token,
+      );
+      return result[0];
+    },
+  );
 
   /// The [Embedding] type this dispatcher produces.
   Type get embeddingType;
@@ -120,13 +122,15 @@ final class _CallbackDispatcher extends EmbeddingGenerationDispatcher {
     VectorPropertyModel,
     Iterable<Object?>,
     CancellationToken?,
-  ) _generateBatch;
+  )
+  _generateBatch;
 
   final Future<Embedding> Function(
     VectorPropertyModel,
     Object?,
     CancellationToken?,
-  ) _generateSingle;
+  )
+  _generateSingle;
 
   @override
   Type? resolveEmbeddingType(
@@ -145,22 +149,19 @@ final class _CallbackDispatcher extends EmbeddingGenerationDispatcher {
   bool canGenerateEmbedding(
     VectorPropertyModel vectorProperty,
     EmbeddingGenerator embeddingGenerator,
-  ) =>
-      true;
+  ) => true;
 
   @override
   Future<List<Embedding>> generateEmbeddingsAsync(
     VectorPropertyModel vectorProperty,
     Iterable<Object?> values,
     CancellationToken? cancellationToken,
-  ) =>
-      _generateBatch(vectorProperty, values, cancellationToken);
+  ) => _generateBatch(vectorProperty, values, cancellationToken);
 
   @override
   Future<Embedding> generateEmbeddingAsync(
     VectorPropertyModel vectorProperty,
     Object? value,
     CancellationToken? cancellationToken,
-  ) =>
-      _generateSingle(vectorProperty, value, cancellationToken);
+  ) => _generateSingle(vectorProperty, value, cancellationToken);
 }

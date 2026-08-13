@@ -17,8 +17,11 @@ import 'generated_embeddings.dart';
 )
 class OpenTelemetryEmbeddingGenerator extends DelegatingEmbeddingGenerator {
   /// Creates a new [OpenTelemetryEmbeddingGenerator].
-  OpenTelemetryEmbeddingGenerator(super.innerGenerator,
-      {this.modelId, this.system});
+  OpenTelemetryEmbeddingGenerator(
+    super.innerGenerator, {
+    this.modelId,
+    this.system,
+  });
 
   /// The model ID to record on spans.
   final String? modelId;

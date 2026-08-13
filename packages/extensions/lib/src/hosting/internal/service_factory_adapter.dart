@@ -5,10 +5,10 @@ import '../host_builder_context.dart';
 
 typedef ContextResolver = HostBuilderContext? Function();
 
-typedef FactoryResolver<TContainerBuilder>
-    = ServiceProviderFactory<TContainerBuilder> Function(
-  HostBuilderContext hostContext,
-);
+typedef FactoryResolver<TContainerBuilder> =
+    ServiceProviderFactory<TContainerBuilder> Function(
+      HostBuilderContext hostContext,
+    );
 
 abstract class ServiceFactoryAdapter {
   Object createBuilder(ServiceCollection services);
@@ -35,23 +35,21 @@ class DefaultServiceFactoryAdapter<TContainerBuilder>
   factory DefaultServiceFactoryAdapter.builder(
     ContextResolver contextResolver,
     FactoryResolver<TContainerBuilder> factoryResolver,
-  ) =>
-      DefaultServiceFactoryAdapter._(
-        contextResolver: contextResolver,
-        factoryResolver: factoryResolver,
-      );
+  ) => DefaultServiceFactoryAdapter._(
+    contextResolver: contextResolver,
+    factoryResolver: factoryResolver,
+  );
 
   @override
   Object createBuilder(ServiceCollection services) {
     if (_serviceProviderFactory == null) {
       assert(_factoryResolver != null && _contextResolver != null);
-      _serviceProviderFactory =
-          _factoryResolver!(_contextResolver!() as HostBuilderContext);
+      _serviceProviderFactory = _factoryResolver!(
+        _contextResolver!() as HostBuilderContext,
+      );
 
       if (_serviceProviderFactory == null) {
-        throw Exception(
-          'The resolver returned a null ServiceProviderFactory',
-        );
+        throw Exception('The resolver returned a null ServiceProviderFactory');
       }
     }
 

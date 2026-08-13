@@ -22,10 +22,7 @@ import 'realtime_session_options.dart';
 )
 class LoggingRealtimeClient extends DelegatingRealtimeClient {
   /// Creates a new [LoggingRealtimeClient].
-  LoggingRealtimeClient(
-    super.innerClient, {
-    required this._logger,
-  });
+  LoggingRealtimeClient(super.innerClient, {required this._logger});
 
   final Logger _logger;
 

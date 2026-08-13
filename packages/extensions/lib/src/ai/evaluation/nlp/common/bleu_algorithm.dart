@@ -96,8 +96,10 @@ class BLEUAlgorithm {
 
     final hypLen = hypothesis.length;
     final bp = brevityPenalty(closestRefLength(references, hypLen), hypLen);
-    final smooth =
-        (smoothingFunction ?? SmoothingFunction.method0)(precisions, hypLen);
+    final smooth = (smoothingFunction ?? SmoothingFunction.method0)(
+      precisions,
+      hypLen,
+    );
 
     var score = 0.0;
     for (var i = 0; i < w.length; i++) {

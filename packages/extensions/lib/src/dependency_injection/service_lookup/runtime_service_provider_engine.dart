@@ -7,8 +7,5 @@ class RuntimeServiceProviderEngine extends ServiceProviderEngine {
       RuntimeServiceProviderEngine();
   @override
   CreateServiceAccessorInner realizeService(ServiceCallSite callSite) =>
-      (scope) => CallSiteRuntimeResolver.instance.resolve(
-            callSite,
-            scope,
-          );
+      (scope) => CallSiteRuntimeResolver.instance.resolve(callSite, scope);
 }

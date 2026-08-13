@@ -5,9 +5,9 @@ class DistributedCacheEntryOptions {
     this._absoluteExpiration,
     Duration? absoluteExpirationRelativeToNow,
     Duration? slidingExpiration,
-  })  : _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
-        _slidingExpiration = slidingExpiration,
-        _isFrozen = false {
+  }) : _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
+       _slidingExpiration = slidingExpiration,
+       _isFrozen = false {
     if (absoluteExpirationRelativeToNow != null &&
         (absoluteExpirationRelativeToNow.isNegative ||
             absoluteExpirationRelativeToNow == Duration.zero)) {

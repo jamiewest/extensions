@@ -18,19 +18,18 @@ extension LoggingSpeechToTextClientBuilderExtensions
   SpeechToTextClientBuilder useLogging({
     LoggerFactory? loggerFactory,
     void Function(LoggingSpeechToTextClient client)? configure,
-  }) =>
-      useWithServices((inner, services) {
-        loggerFactory ??= services.getRequiredService<LoggerFactory>();
+  }) => useWithServices((inner, services) {
+    loggerFactory ??= services.getRequiredService<LoggerFactory>();
 
-        if (loggerFactory == NullLoggerFactory.instance) {
-          return inner;
-        }
+    if (loggerFactory == NullLoggerFactory.instance) {
+      return inner;
+    }
 
-        final client = LoggingSpeechToTextClient(
-          inner,
-          logger: loggerFactory!.createLogger('LoggingSpeechToTextClient'),
-        );
-        configure?.call(client);
-        return client;
-      });
+    final client = LoggingSpeechToTextClient(
+      inner,
+      logger: loggerFactory!.createLogger('LoggingSpeechToTextClient'),
+    );
+    configure?.call(client);
+    return client;
+  });
 }

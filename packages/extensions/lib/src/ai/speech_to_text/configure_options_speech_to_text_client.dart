@@ -21,22 +21,20 @@ class ConfigureOptionsSpeechToTextClient extends DelegatingSpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.getText(
-        stream: stream,
-        options: configure(options ?? SpeechToTextOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.getText(
+    stream: stream,
+    options: configure(options ?? SpeechToTextOptions()),
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<SpeechToTextResponse> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.getStreamingText(
-        stream: stream,
-        options: configure(options ?? SpeechToTextOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.getStreamingText(
+    stream: stream,
+    options: configure(options ?? SpeechToTextOptions()),
+    cancellationToken: cancellationToken,
+  );
 }

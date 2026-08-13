@@ -14,13 +14,13 @@ import '../evaluation_context.dart';
 class BLEUEvaluatorContext extends EvaluationContext {
   /// Creates a [BLEUEvaluatorContext] with the given [references].
   BLEUEvaluatorContext({Iterable<String>? references})
-      : references = List.unmodifiable(references ?? const []),
-        super(
-          referencesContextName,
-          contents: [
-            for (final r in references ?? const <String>[]) TextContent(r),
-          ],
-        );
+    : references = List.unmodifiable(references ?? const []),
+      super(
+        referencesContextName,
+        contents: [
+          for (final r in references ?? const <String>[]) TextContent(r),
+        ],
+      );
 
   /// Unique context name used when recording contexts on metrics.
   static const String referencesContextName = 'references(BLEU)';

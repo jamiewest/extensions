@@ -30,63 +30,32 @@ abstract class CallSiteVisitor<TArgument, TResult> {
         return visitConstant(callSite as ConstantCallSite, argument);
       case CallSiteKind.serviceProvider:
         return visitServiceProvider(
-            callSite as ServiceProviderCallSite, argument);
+          callSite as ServiceProviderCallSite,
+          argument,
+        );
     }
   }
 
-  TResult visitNoCache(
-    ServiceCallSite callSite,
-    TArgument argument,
-  ) =>
-      visitCallSiteMain(
-        callSite,
-        argument,
-      );
+  TResult visitNoCache(ServiceCallSite callSite, TArgument argument) =>
+      visitCallSiteMain(callSite, argument);
 
-  TResult visitDisposeCache(
-    ServiceCallSite callSite,
-    TArgument argument,
-  ) =>
-      visitCallSiteMain(
-        callSite,
-        argument,
-      );
+  TResult visitDisposeCache(ServiceCallSite callSite, TArgument argument) =>
+      visitCallSiteMain(callSite, argument);
 
-  TResult visitRootCache(
-    ServiceCallSite callSite,
-    TArgument argument,
-  ) =>
-      visitCallSiteMain(
-        callSite,
-        argument,
-      );
+  TResult visitRootCache(ServiceCallSite callSite, TArgument argument) =>
+      visitCallSiteMain(callSite, argument);
 
-  TResult visitScopeCache(
-    ServiceCallSite callSite,
-    TArgument argument,
-  ) =>
-      visitCallSiteMain(
-        callSite,
-        argument,
-      );
+  TResult visitScopeCache(ServiceCallSite callSite, TArgument argument) =>
+      visitCallSiteMain(callSite, argument);
 
-  TResult visitConstant(
-    ConstantCallSite constantCallSite,
-    TArgument argument,
-  );
+  TResult visitConstant(ConstantCallSite constantCallSite, TArgument argument);
 
   TResult visitServiceProvider(
     ServiceProviderCallSite serviceProviderCallSite,
     TArgument argument,
   );
 
-  TResult visitIterable(
-    IterableCallSite iterableCallSite,
-    TArgument argument,
-  );
+  TResult visitIterable(IterableCallSite iterableCallSite, TArgument argument);
 
-  TResult visitFactory(
-    FactoryCallSite factoryCallSite,
-    TArgument argument,
-  );
+  TResult visitFactory(FactoryCallSite factoryCallSite, TArgument argument);
 }

@@ -14,10 +14,7 @@ import 'speech_to_text_client.dart';
 /// This is an experimental feature.
 class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
   /// Creates a new [LoggingSpeechToTextClient].
-  LoggingSpeechToTextClient(
-    super.innerClient, {
-    required this._logger,
-  });
+  LoggingSpeechToTextClient(super.innerClient, {required this._logger});
 
   final Logger _logger;
 
@@ -132,15 +129,15 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
   }
 
   static Map<String, Object?> _optionsToMap(SpeechToTextOptions options) => {
-        if (options.modelId != null) 'modelId': options.modelId,
-        if (options.speechLanguage != null)
-          'speechLanguage': options.speechLanguage,
-        if (options.textLanguage != null) 'textLanguage': options.textLanguage,
-      };
+    if (options.modelId != null) 'modelId': options.modelId,
+    if (options.speechLanguage != null)
+      'speechLanguage': options.speechLanguage,
+    if (options.textLanguage != null) 'textLanguage': options.textLanguage,
+  };
 
   static Map<String, Object?> _responseToMap(SpeechToTextResponse response) => {
-        if (response.responseId != null) 'responseId': response.responseId,
-        if (response.modelId != null) 'modelId': response.modelId,
-        'text': response.text,
-      };
+    if (response.responseId != null) 'responseId': response.responseId,
+    if (response.modelId != null) 'modelId': response.modelId,
+    'text': response.text,
+  };
 }

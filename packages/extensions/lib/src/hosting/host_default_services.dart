@@ -18,18 +18,16 @@ void addDefaultServices(
   HostBuilderContext hostingContext,
   ServiceCollection services,
 ) {
-  services.addLogging(
-    (logging) {
-      logging
-        ..services.configure<LoggerFilterOptions>(
-          LoggerFilterOptions.new,
-          (options) => LoggingConfiguration(
-            hostingContext.configuration!,
-          ).configure(options),
-        )
-        ..addDebug();
-    },
-  );
+  services.addLogging((logging) {
+    logging
+      ..services.configure<LoggerFilterOptions>(
+        LoggerFilterOptions.new,
+        (options) =>
+            LoggingConfiguration(hostingContext.configuration!)
+                .configure(options),
+      )
+      ..addDebug();
+  });
 }
 
 /// Builds the default [ServiceProviderOptions] applied by the host builders.

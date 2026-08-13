@@ -62,10 +62,9 @@ void main() {
   group('OptionsFactory validation', () {
     test('a named validator only fails its own named instance', () {
       var services = ServiceCollection();
-      services.addOptions<FakeOptions>(FakeOptions.new, name: '1').validate(
-            (options) => false,
-            'failed for 1',
-          );
+      services
+          .addOptions<FakeOptions>(FakeOptions.new, name: '1')
+          .validate((options) => false, 'failed for 1');
 
       var sp = services.buildServiceProvider();
       var factory = sp.getRequiredService<OptionsFactory<FakeOptions>>();

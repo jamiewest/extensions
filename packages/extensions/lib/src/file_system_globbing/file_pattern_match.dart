@@ -4,9 +4,7 @@ class FilePatternMatch {
   final String? _stem;
 
   /// Initializes new instance of [FilePatternMatch]
-  FilePatternMatch(String path, [String? stem])
-      : _path = path,
-        _stem = stem;
+  FilePatternMatch(String path, [String? stem]) : _path = path, _stem = stem;
 
   /// The path to the file matched, relative to the beginning of the
   /// matching search pattern.

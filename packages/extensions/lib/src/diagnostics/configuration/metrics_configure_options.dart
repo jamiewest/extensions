@@ -27,17 +27,13 @@ class MetricsConfigureOptions implements ConfigureOptions<MetricsOptions> {
       if (listenerName == enabledMetricsKey ||
           listenerName == enabledGlobalMetricsKey ||
           listenerName == enabledLocalMetricsKey) {
-        _loadRules(
-          section,
-          null,
-          _getScopeFromKey(listenerName),
-          options,
-        );
+        _loadRules(section, null, _getScopeFromKey(listenerName), options);
       } else {
         // Process listener-specific configuration
         final metricsSection = section.getSection(enabledMetricsKey);
-        final globalMetricsSection =
-            section.getSection(enabledGlobalMetricsKey);
+        final globalMetricsSection = section.getSection(
+          enabledGlobalMetricsKey,
+        );
         final localMetricsSection = section.getSection(enabledLocalMetricsKey);
 
         if (_sectionExists(metricsSection)) {
@@ -93,8 +89,8 @@ class MetricsConfigureOptions implements ConfigureOptions<MetricsOptions> {
     for (final meterConfig in meterSection.getChildren()) {
       final meterName =
           meterConfig.key.toLowerCase() == defaultKey.toLowerCase()
-              ? null
-              : meterConfig.key;
+          ? null
+          : meterConfig.key;
 
       // Check if meter config is a simple boolean
       final meterValue = meterConfig.value;
@@ -118,8 +114,8 @@ class MetricsConfigureOptions implements ConfigureOptions<MetricsOptions> {
       for (final instrumentConfig in meterConfig.getChildren()) {
         final instrumentName =
             instrumentConfig.key.toLowerCase() == defaultKey.toLowerCase()
-                ? null
-                : instrumentConfig.key;
+            ? null
+            : instrumentConfig.key;
 
         final instrumentValue = instrumentConfig.value;
         if (instrumentValue != null) {

@@ -26,10 +26,7 @@ void main() {
         role: ChatRole.user,
         contents: [
           TextContent('Hello'),
-          DataContent(
-            Uint8List.fromList([1, 2, 3]),
-            mediaType: 'image/png',
-          ),
+          DataContent(Uint8List.fromList([1, 2, 3]), mediaType: 'image/png'),
           TextContent(' world'),
         ],
       );

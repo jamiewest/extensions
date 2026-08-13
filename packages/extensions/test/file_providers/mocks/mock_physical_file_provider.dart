@@ -9,8 +9,8 @@ class MockPhysicalFileProvider implements FileProvider {
   final MockPhysicalFilesWatcher _mockWatcher;
 
   MockPhysicalFileProvider(String root)
-      : _provider = PhysicalFileProvider(root),
-        _mockWatcher = MockPhysicalFilesWatcher(root);
+    : _provider = PhysicalFileProvider(root),
+      _mockWatcher = MockPhysicalFilesWatcher(root);
 
   PhysicalFileProvider get provider => _provider;
   MockPhysicalFilesWatcher get mockWatcher => _mockWatcher;

@@ -9,8 +9,8 @@ class _RecordingChatClient implements ChatClient {
     this.events,
     ChatResponse? response,
     Stream<ChatResponseUpdate>? stream,
-  })  : response = response ?? ChatResponse(),
-        stream = stream ?? const Stream<ChatResponseUpdate>.empty();
+  }) : response = response ?? ChatResponse(),
+       stream = stream ?? const Stream<ChatResponseUpdate>.empty();
 
   final List<String>? events;
   final ChatResponse response;

@@ -35,12 +35,11 @@ extension JsonConfigurationExtensions on ConfigurationBuilder {
     String path, {
     bool optional = false,
     bool reloadOnChange = false,
-  }) =>
-      _addJsonFile(
-        path: path,
-        optional: optional,
-        reloadOnChange: reloadOnChange,
-      );
+  }) => _addJsonFile(
+    path: path,
+    optional: optional,
+    reloadOnChange: reloadOnChange,
+  );
 
   ConfigurationBuilder _addJsonFile({
     required String path,

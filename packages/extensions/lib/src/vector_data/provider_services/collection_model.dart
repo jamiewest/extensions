@@ -17,7 +17,8 @@ import 'vector_property_model.dart';
   name: 'CollectionModel.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path:
+      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 final class CollectionModel {
@@ -32,8 +33,9 @@ final class CollectionModel {
     required this.dataProperties,
     required this.vectorProperties,
     required this.propertyMap,
-  })  : embeddingGenerationRequired =
-            vectorProperties.any((p) => p.embeddingType != null);
+  }) : embeddingGenerationRequired = vectorProperties.any(
+         (p) => p.embeddingType != null,
+       );
 
   /// The key properties of the record.
   final List<KeyPropertyModel> keyProperties;
@@ -84,12 +86,12 @@ final class CollectionModel {
     return _singleVectorProperty ??= switch (vectorProperties) {
       [final p] => p,
       [] => throw StateError(
-          'The record type does not have any vector properties.',
-        ),
+        'The record type does not have any vector properties.',
+      ),
       _ => throw StateError(
-          'The record type has multiple vector properties; specify one via '
-          'VectorSearchOptions.vectorPropertyName.',
-        ),
+        'The record type has multiple vector properties; specify one via '
+        'VectorSearchOptions.vectorPropertyName.',
+      ),
     };
   }
 
@@ -113,21 +115,19 @@ final class CollectionModel {
 
     if (_singleFullTextSearchProperty == null) {
       final candidates = dataProperties
-          .where(
-            (p) => p.type == String && p.isFullTextIndexed,
-          )
+          .where((p) => p.type == String && p.isFullTextIndexed)
           .toList();
 
       _singleFullTextSearchProperty = switch (candidates) {
         [final p] => p,
         [] => throw StateError(
-            'The record type does not have any full-text-indexed text '
-            'properties.',
-          ),
+          'The record type does not have any full-text-indexed text '
+          'properties.',
+        ),
         _ => throw StateError(
-            'The record type has multiple full-text-indexed text properties; '
-            'specify one by name.',
-          ),
+          'The record type has multiple full-text-indexed text properties; '
+          'specify one by name.',
+        ),
       };
     }
 
@@ -145,9 +145,7 @@ final class CollectionModel {
       throw StateError("Property '$name' could not be found.");
     }
     if (prop is! T) {
-      throw StateError(
-        "Property '$name' is not of the expected type $T.",
-      );
+      throw StateError("Property '$name' is not of the expected type $T.");
     }
     return prop;
   }

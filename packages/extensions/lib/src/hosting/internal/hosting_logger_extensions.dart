@@ -5,51 +5,31 @@ import '../../logging/logger_extensions.dart';
 import 'logger_event_ids.dart';
 
 extension HostingLoggerExtensions on Logger {
-  void applicationError(
-    EventId eventId,
-    String message,
-    Object error,
-  ) {
-    logCritical(
-      message,
-      eventId: eventId,
-      error: error,
-    );
+  void applicationError(EventId eventId, String message, Object error) {
+    logCritical(message, eventId: eventId, error: error);
   }
 
   void starting() {
     if (isEnabled(LogLevel.debug)) {
-      logDebug(
-        'Hosting starting',
-        eventId: LoggerEventIds.starting,
-      );
+      logDebug('Hosting starting', eventId: LoggerEventIds.starting);
     }
   }
 
   void started() {
     if (isEnabled(LogLevel.debug)) {
-      logDebug(
-        'Hosting started',
-        eventId: LoggerEventIds.started,
-      );
+      logDebug('Hosting started', eventId: LoggerEventIds.started);
     }
   }
 
   void stopping() {
     if (isEnabled(LogLevel.debug)) {
-      logDebug(
-        'Hosting stopping',
-        eventId: LoggerEventIds.stopping,
-      );
+      logDebug('Hosting stopping', eventId: LoggerEventIds.stopping);
     }
   }
 
   void stopped() {
     if (isEnabled(LogLevel.debug)) {
-      logDebug(
-        'Hosting stopped',
-        eventId: LoggerEventIds.stopped,
-      );
+      logDebug('Hosting stopped', eventId: LoggerEventIds.stopped);
     }
   }
 

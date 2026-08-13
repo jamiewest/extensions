@@ -8,14 +8,14 @@ import 'package:test/test.dart';
 void main() {
   group('logging on web', () {
     test('debug and simple console logging resolve and log', () {
-      final provider = (ServiceCollection()
-            ..addLogging((logging) {
-              logging
-                ..setMinimumLevel(LogLevel.debug)
-                ..addSimpleConsole()
-                ..addDebug();
-            }))
-          .buildServiceProvider();
+      final provider =
+          (ServiceCollection()..addLogging((logging) {
+                logging
+                  ..setMinimumLevel(LogLevel.debug)
+                  ..addSimpleConsole()
+                  ..addDebug();
+              }))
+              .buildServiceProvider();
 
       final factory = provider.getRequiredService<LoggerFactory>();
       final logger = factory.createLogger('WebSmokeTest');

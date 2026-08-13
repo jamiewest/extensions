@@ -5,8 +5,14 @@ import 'open_telemetry_embedding_generator.dart';
 extension OpenTelemetryEmbeddingGeneratorBuilderExtensions
     on EmbeddingGeneratorBuilder {
   /// Adds an [OpenTelemetryEmbeddingGenerator] to the pipeline.
-  EmbeddingGeneratorBuilder useOpenTelemetry(
-          {String? modelId, String? system}) =>
-      use((inner) => OpenTelemetryEmbeddingGenerator(inner,
-          modelId: modelId, system: system));
+  EmbeddingGeneratorBuilder useOpenTelemetry({
+    String? modelId,
+    String? system,
+  }) => use(
+    (inner) => OpenTelemetryEmbeddingGenerator(
+      inner,
+      modelId: modelId,
+      system: system,
+    ),
+  );
 }

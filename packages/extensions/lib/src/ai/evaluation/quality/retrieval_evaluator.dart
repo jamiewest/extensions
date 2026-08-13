@@ -37,8 +37,9 @@ class RetrievalEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx =
-        additionalContext.whereType<RetrievalEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        .whereType<RetrievalEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) return null;
 
     final userRequest = messages.lastUserMessage?.text ?? '';
@@ -47,7 +48,8 @@ class RetrievalEvaluator extends QualityEvaluatorBase {
         .entries
         .map((e) => '[${e.key + 1}] ${e.value}')
         .join('\n');
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Retrieval** measures how relevant and well-ranked the retrieved context chunks are for the given QUERY.
 

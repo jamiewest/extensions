@@ -40,7 +40,8 @@ class RelevanceEvaluator extends QualityEvaluatorBase {
   ) {
     final userRequest = messages.lastUserMessage?.text ?? '';
     final response = modelResponse.text;
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Relevance** refers to how effectively the response addresses the main aspects of the query. A relevant response directly addresses the question, covers all necessary points, and avoids unnecessary tangents.
 

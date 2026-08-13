@@ -39,13 +39,13 @@ class WildcardPathSegment implements IPathSegment {
     this.contains,
     this.endsWith,
     StringComparison comparisonType,
-  )   : _comparisonType = comparisonType,
-        _normalizedBeginsWith = stringComparisonKey(beginsWith, comparisonType),
-        _normalizedContains = [
-          for (final fragment in contains)
-            stringComparisonKey(fragment, comparisonType),
-        ],
-        _normalizedEndsWith = stringComparisonKey(endsWith, comparisonType);
+  ) : _comparisonType = comparisonType,
+      _normalizedBeginsWith = stringComparisonKey(beginsWith, comparisonType),
+      _normalizedContains = [
+        for (final fragment in contains)
+          stringComparisonKey(fragment, comparisonType),
+      ],
+      _normalizedEndsWith = stringComparisonKey(endsWith, comparisonType);
 
   @override
   bool get canProduceStem => true;

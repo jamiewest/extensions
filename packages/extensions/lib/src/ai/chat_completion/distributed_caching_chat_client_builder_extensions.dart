@@ -21,16 +21,15 @@ extension DistributedCachingChatClientBuilderExtensions on ChatClientBuilder {
     required ChatResponse Function(Uint8List data) deserializeResponse,
     DistributedCacheEntryOptions? cacheOptions,
     void Function(DistributedCachingChatClient client)? configure,
-  }) =>
-      useWithServices((inner, services) {
-        final client = DistributedCachingChatClient(
-          inner,
-          storage: storage ?? services.getRequiredService<DistributedCache>(),
-          serializeResponse: serializeResponse,
-          deserializeResponse: deserializeResponse,
-          cacheOptions: cacheOptions,
-        );
-        configure?.call(client);
-        return client;
-      });
+  }) => useWithServices((inner, services) {
+    final client = DistributedCachingChatClient(
+      inner,
+      storage: storage ?? services.getRequiredService<DistributedCache>(),
+      serializeResponse: serializeResponse,
+      deserializeResponse: deserializeResponse,
+      cacheOptions: cacheOptions,
+    );
+    configure?.call(client);
+    return client;
+  });
 }

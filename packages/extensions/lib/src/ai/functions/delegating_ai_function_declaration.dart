@@ -16,12 +16,12 @@ import 'ai_function_declaration.dart';
 class DelegatingAIFunctionDeclaration extends AIFunctionDeclaration {
   /// Creates a new [DelegatingAIFunctionDeclaration] wrapping [inner].
   DelegatingAIFunctionDeclaration(this.inner)
-      : super(
-          name: inner.name,
-          description: inner.description,
-          parametersSchema: inner.parametersSchema,
-          returnSchema: inner.returnSchema,
-        );
+    : super(
+        name: inner.name,
+        description: inner.description,
+        parametersSchema: inner.parametersSchema,
+        returnSchema: inner.returnSchema,
+      );
 
   /// The inner declaration being wrapped.
   final AIFunctionDeclaration inner;

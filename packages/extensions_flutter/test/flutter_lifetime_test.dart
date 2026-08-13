@@ -31,13 +31,7 @@ class _TestLogger implements Logger {
     Object? error,
     required LogFormatter<TState> formatter,
   }) {
-    entries.add(
-      _TestLogEntry(
-        logLevel,
-        formatter(state, error),
-        category,
-      ),
-    );
+    entries.add(_TestLogEntry(logLevel, formatter(state, error), category));
   }
 }
 
@@ -197,8 +191,7 @@ void main() {
     group('lifecycle logging', () {
       test('logs when application is stopping', () {
         final lifetime = createLifetime();
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -207,8 +200,9 @@ void main() {
         applicationLifetime.stopApplication();
 
         expect(
-          logger.entries
-              .any((e) => e.message.contains('Application is shutting down')),
+          logger.entries.any(
+            (e) => e.message.contains('Application is shutting down'),
+          ),
           isTrue,
         );
 
@@ -217,8 +211,7 @@ void main() {
 
       test('logs trace when paused', () {
         final lifetime = createLifetime();
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -240,8 +233,7 @@ void main() {
 
       test('logs trace when resumed', () {
         final lifetime = createLifetime();
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -263,8 +255,7 @@ void main() {
 
       test('logs trace when inactive', () {
         final lifetime = createLifetime();
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -286,8 +277,7 @@ void main() {
 
       test('logs trace when hidden', () {
         final lifetime = createLifetime();
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -309,8 +299,7 @@ void main() {
 
       test('logs trace when detached', () {
         final lifetime = createLifetime();
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -334,8 +323,7 @@ void main() {
     group('suppressStatusMessages', () {
       test('suppresses stopping log when enabled', () {
         final lifetime = createLifetime(suppressStatusMessages: true);
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures
@@ -344,8 +332,9 @@ void main() {
         applicationLifetime.stopApplication();
 
         expect(
-          logger.entries
-              .any((e) => e.message.contains('Application is shutting down')),
+          logger.entries.any(
+            (e) => e.message.contains('Application is shutting down'),
+          ),
           isFalse,
         );
 
@@ -354,8 +343,7 @@ void main() {
 
       test('suppresses lifecycle logs when enabled', () {
         final lifetime = createLifetime(suppressStatusMessages: true);
-        final logger =
-            loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
+        final logger = loggerFactory.loggers['Hosting.Lifetime'] as _TestLogger;
 
         final cts = CancellationTokenSource();
         // ignore: unawaited_futures

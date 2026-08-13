@@ -26,11 +26,11 @@ class ConsoleLifetime implements HostLifetime {
     HostApplicationLifetime applicationLifetime,
     Options<HostOptions> hostOptions,
     LoggerFactory loggerFactory,
-  )   : _options = options.value!,
-        _environment = environment,
-        _applicationLifetime = applicationLifetime,
-        _hostOptions = hostOptions.value!,
-        _logger = loggerFactory.createLogger('Hosting.Lifetime');
+  ) : _options = options.value!,
+      _environment = environment,
+      _applicationLifetime = applicationLifetime,
+      _hostOptions = hostOptions.value!,
+      _logger = loggerFactory.createLogger('Hosting.Lifetime');
 
   ConsoleLifetimeOptions get options => _options;
 

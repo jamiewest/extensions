@@ -11,7 +11,7 @@ class LoggingConfiguration implements ConfigureOptions<LoggerFilterOptions> {
   /// Creates a new [LoggingConfiguration] that reads from the given
   /// [Configuration].
   LoggingConfiguration(Configuration configuration)
-      : _configuration = configuration;
+    : _configuration = configuration;
 
   @override
   void configure(LoggerFilterOptions options) {
@@ -20,10 +20,7 @@ class LoggingConfiguration implements ConfigureOptions<LoggerFilterOptions> {
 
   void _loadRules(LoggerFilterOptions options, Configuration configuration) {
     // Load global minimum level from "Logging:LogLevel:Default"
-    var defaultLevel = _getLogLevel(
-      configuration,
-      'Logging:LogLevel:Default',
-    );
+    var defaultLevel = _getLogLevel(configuration, 'Logging:LogLevel:Default');
     if (defaultLevel != null) {
       options.minLevel = defaultLevel;
     }
@@ -59,12 +56,7 @@ class LoggingConfiguration implements ConfigureOptions<LoggerFilterOptions> {
           var categoryName = category == 'Default' ? null : category;
 
           options.rules.add(
-            LoggerFilterRule(
-              providerName,
-              categoryName,
-              level,
-              null,
-            ),
+            LoggerFilterRule(providerName, categoryName, level, null),
           );
         }
       }
@@ -84,14 +76,7 @@ class LoggingConfiguration implements ConfigureOptions<LoggerFilterOptions> {
 
       var level = _parseLogLevel(categorySection.value);
       if (level != null) {
-        options.rules.add(
-          LoggerFilterRule(
-            null,
-            category,
-            level,
-            null,
-          ),
-        );
+        options.rules.add(LoggerFilterRule(null, category, level, null));
       }
     }
   }

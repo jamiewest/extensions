@@ -22,9 +22,9 @@ class ContentHarmEvaluator extends ContentSafetyEvaluator {
     required super.configuration,
     Map<String, String>? metricNames,
   }) : super(
-          annotationTask: 'content harm',
-          metricNames: metricNames ?? _defaultMetricNames,
-        );
+         annotationTask: 'content harm',
+         metricNames: metricNames ?? _defaultMetricNames,
+       );
 
   static const _defaultMetricNames = {
     'hate_unfairness': HateAndUnfairnessEvaluator.hateAndUnfairnessMetricName,

@@ -13,10 +13,7 @@ import 'generated_embeddings.dart';
 /// A delegating embedding generator that logs operations to a [Logger].
 class LoggingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
   /// Creates a new [LoggingEmbeddingGenerator].
-  LoggingEmbeddingGenerator(
-    super.innerGenerator, {
-    required this._logger,
-  });
+  LoggingEmbeddingGenerator(super.innerGenerator, {required this._logger});
 
   final Logger _logger;
 
@@ -82,9 +79,8 @@ class LoggingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
 
   static Map<String, Object?> _optionsToMap(
     EmbeddingGenerationOptions options,
-  ) =>
-      {
-        if (options.modelId != null) 'modelId': options.modelId,
-        if (options.dimensions != null) 'dimensions': options.dimensions,
-      };
+  ) => {
+    if (options.modelId != null) 'modelId': options.modelId,
+    if (options.dimensions != null) 'dimensions': options.dimensions,
+  };
 }

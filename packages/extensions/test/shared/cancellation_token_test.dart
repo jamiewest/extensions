@@ -68,8 +68,9 @@ void main() {
     test('CreateLinkedTokenSource_OneToken', () {
       CancellationTokenSource original;
       original = CancellationTokenSource();
-      var linked =
-          CancellationTokenSource.createLinkedTokenSource([original.token]);
+      var linked = CancellationTokenSource.createLinkedTokenSource([
+        original.token,
+      ]);
       expect(linked.token.isCancellationRequested, equals(false));
       linked.cancel();
       expect(linked.token.isCancellationRequested, equals(true));
@@ -89,7 +90,8 @@ void main() {
       expect(
         combined.isCancellationRequested,
         equals(false),
-        reason: 'CreateLinkedToken_Simple_MultiToken:'
+        reason:
+            'CreateLinkedToken_Simple_MultiToken:'
             ' The combined token should start unsignalled',
       );
 
@@ -97,7 +99,8 @@ void main() {
       expect(
         combined.isCancellationRequested,
         equals(true),
-        reason: 'CreateLinkedToken_Simple_MultiToken:'
+        reason:
+            'CreateLinkedToken_Simple_MultiToken:'
             ' The combined token should now be signalled',
       );
     });
@@ -106,13 +109,15 @@ void main() {
       // Creating a combined token, when a source token is already signaled.
       var signal = CancellationTokenSource()..cancel(); // Early signal.
 
-      var combined =
-          CancellationTokenSource.createLinkedTokenSource([signal.token]);
+      var combined = CancellationTokenSource.createLinkedTokenSource([
+        signal.token,
+      ]);
 
       expect(
         combined.isCancellationRequested,
         equals(true),
-        reason: 'CreateLinkedToken_SourceTokenAlreadySignalled:'
+        reason:
+            'CreateLinkedToken_SourceTokenAlreadySignalled:'
             ' The combined token should immediately be in the signalled state.',
       );
     });
@@ -132,13 +137,13 @@ void main() {
       expect(
         combined.isCancellationRequested,
         equals(true),
-        reason: 'CreateLinkedToken_SourceTokenAlreadySignalled:'
+        reason:
+            'CreateLinkedToken_SourceTokenAlreadySignalled:'
             ' The combined token should immediately be in the signalled state.',
       );
     });
 
-    test('CreateLinkedToken_MultistepComposition_SourceTokenAlreadySignalled',
-        () {
+    test('CreateLinkedToken_MultistepComposition_SourceTokenAlreadySignalled', () {
       // Two-step composition
       var signal1 = CancellationTokenSource()..cancel();
 
@@ -157,7 +162,8 @@ void main() {
       expect(
         combined2.isCancellationRequested,
         equals(true),
-        reason: 'CreateLinkedToken_MultistepComposition_SourceTokenAlready'
+        reason:
+            'CreateLinkedToken_MultistepComposition_SourceTokenAlready'
             'Signalled:  The 2-step combined token should immediately be in the'
             ' signalled state.',
       );

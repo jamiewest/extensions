@@ -16,18 +16,18 @@ import '../evaluation_context.dart';
 class ToolCallAccuracyEvaluatorContext extends EvaluationContext {
   /// Creates a [ToolCallAccuracyEvaluatorContext] with [toolDefinitions].
   ToolCallAccuracyEvaluatorContext({List<AITool>? toolDefinitions})
-      : toolDefinitions = List.unmodifiable(toolDefinitions ?? const []),
-        super(
-          toolDefinitionsContextName,
-          contents: [
-            for (final t in toolDefinitions ?? const <AITool>[])
-              if (t is AIFunctionDeclaration)
-                TextContent(
-                  '${t.name}: ${t.description ?? ""}'
-                  '${t.parametersSchema != null ? " | params: ${t.parametersSchema}" : ""}',
-                ),
-          ],
-        );
+    : toolDefinitions = List.unmodifiable(toolDefinitions ?? const []),
+      super(
+        toolDefinitionsContextName,
+        contents: [
+          for (final t in toolDefinitions ?? const <AITool>[])
+            if (t is AIFunctionDeclaration)
+              TextContent(
+                '${t.name}: ${t.description ?? ""}'
+                '${t.parametersSchema != null ? " | params: ${t.parametersSchema}" : ""}',
+              ),
+        ],
+      );
 
   /// Unique context name used when recording contexts on metrics.
   static const String toolDefinitionsContextName =

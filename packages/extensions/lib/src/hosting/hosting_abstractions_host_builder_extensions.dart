@@ -6,9 +6,7 @@ import 'host_builder.dart';
 /// abstractions package.
 extension HostingAbstractionsHostBuilderExtensions on HostBuilder {
   /// Builds and starts the host.
-  Future<Host> start({
-    CancellationToken? cancellationToken,
-  }) async {
+  Future<Host> start({CancellationToken? cancellationToken}) async {
     var host = build();
     await host.start(cancellationToken);
     return host;

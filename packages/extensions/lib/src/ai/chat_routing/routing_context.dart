@@ -26,7 +26,7 @@ import '../chat_completion/chat_options.dart';
 class RoutingContext {
   /// Creates a new [RoutingContext].
   RoutingContext(this.messages, ChatOptions? chatOptions)
-      : chatOptions = chatOptions?.clone();
+    : chatOptions = chatOptions?.clone();
 
   /// The messages supplied to client selection and the selected client.
   ///

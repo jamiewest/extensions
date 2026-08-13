@@ -9,13 +9,13 @@ import 'ai_function_arguments.dart';
 class DelegatingAIFunction extends AIFunction {
   /// Creates a new [DelegatingAIFunction] wrapping [innerFunction].
   DelegatingAIFunction(this.innerFunction)
-      : super(
-          name: innerFunction.name,
-          description: innerFunction.description,
-          parametersSchema: innerFunction.parametersSchema,
-          returnSchema: innerFunction.returnSchema,
-          isStrict: innerFunction.isStrict,
-        );
+    : super(
+        name: innerFunction.name,
+        description: innerFunction.description,
+        parametersSchema: innerFunction.parametersSchema,
+        returnSchema: innerFunction.returnSchema,
+        isStrict: innerFunction.isStrict,
+      );
 
   /// The inner function to delegate to.
   final AIFunction innerFunction;
@@ -24,6 +24,5 @@ class DelegatingAIFunction extends AIFunction {
   Future<Object?> invokeCore(
     AIFunctionArguments arguments, {
     CancellationToken? cancellationToken,
-  }) =>
-      innerFunction.invoke(arguments, cancellationToken: cancellationToken);
+  }) => innerFunction.invoke(arguments, cancellationToken: cancellationToken);
 }

@@ -29,7 +29,7 @@ class OpenTelemetryHostedFileClient extends DelegatingHostedFileClient {
     this.system,
     bool? enableSensitiveData,
   }) : enableSensitiveData =
-            enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
+           enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
 
   /// The provider name (e.g. `"openai"`).
   final String? system;
@@ -174,7 +174,7 @@ class OpenTelemetryHostedFileClient extends DelegatingHostedFileClient {
   }
 
   Map<String, Object?> _commonArguments(String operation) => {
-        OpenTelemetryConsts.filesOperationNameKey: operation,
-        if (system != null) OpenTelemetryConsts.systemKey: system,
-      };
+    OpenTelemetryConsts.filesOperationNameKey: operation,
+    if (system != null) OpenTelemetryConsts.systemKey: system,
+  };
 }

@@ -37,9 +37,9 @@ class ScenarioRun {
     this._evaluationMetricInterpreter,
     this._chatDetails,
     Iterable<String>? tags,
-  })  : _compositeEvaluator = CompositeEvaluator(evaluators.toList()),
-        _resultStore = resultStore,
-        _tags = tags?.toList();
+  }) : _compositeEvaluator = CompositeEvaluator(evaluators.toList()),
+       _resultStore = resultStore,
+       _tags = tags?.toList();
 
   /// The name of the scenario.
   final String scenarioName;
@@ -56,7 +56,7 @@ class ScenarioRun {
   final CompositeEvaluator _compositeEvaluator;
   final EvaluationResultStore _resultStore;
   final EvaluationMetricInterpretation? Function(EvaluationMetric)?
-      _evaluationMetricInterpreter;
+  _evaluationMetricInterpreter;
   final ChatDetails? _chatDetails;
   final List<String>? _tags;
   ScenarioRunResult? _result;
@@ -97,8 +97,9 @@ class ScenarioRun {
     }
 
     final details = _chatDetails;
-    final chatDetails =
-        (details != null && details.turnDetails.isNotEmpty) ? details : null;
+    final chatDetails = (details != null && details.turnDetails.isNotEmpty)
+        ? details
+        : null;
 
     _result = ScenarioRunResult(
       scenarioName: scenarioName,

@@ -13,8 +13,7 @@ class JsonConfigurationParser {
 
   static Future<Map<String, String?>> parseStream(
     Stream<dynamic> input,
-  ) async =>
-      JsonConfigurationParser()._parseStream(input);
+  ) async => JsonConfigurationParser()._parseStream(input);
 
   Map<String, String?> _parse(String input) {
     final rootElement = jsonDecode(input);
@@ -83,10 +82,10 @@ class JsonConfigurationParser {
   }
 
   void _enterContext(String context) => _paths.add(
-        _paths.isNotEmpty
-            ? _paths.last + ConfigurationPath.keyDelimiter + context
-            : context,
-      );
+    _paths.isNotEmpty
+        ? _paths.last + ConfigurationPath.keyDelimiter + context
+        : context,
+  );
 
   void _exitContext() => _paths.removeLast();
 }

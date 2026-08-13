@@ -90,8 +90,10 @@ extension CommandLineConfigurationExtensions on ConfigurationBuilder {
   ///   print('Key6: \'${config["Key6"]}\'');
   /// }
   /// ```
-  ConfigurationBuilder addCommandLine(Iterable<String> args,
-      [LinkedHashMap<String, String>? switchMappings]) {
+  ConfigurationBuilder addCommandLine(
+    Iterable<String> args, [
+    LinkedHashMap<String, String>? switchMappings,
+  ]) {
     add(
       CommandLineConfigurationSource(
         args: args,

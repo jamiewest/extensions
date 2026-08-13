@@ -16,10 +16,7 @@ import 'realtime_session_options.dart';
 /// This is an experimental feature.
 class LoggingRealtimeClientSession implements RealtimeClientSession {
   /// Creates a new [LoggingRealtimeClientSession] wrapping [innerSession].
-  LoggingRealtimeClientSession(
-    this._innerSession, {
-    required this._logger,
-  });
+  LoggingRealtimeClientSession(this._innerSession, {required this._logger});
 
   final RealtimeClientSession _innerSession;
   final Logger _logger;

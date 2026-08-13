@@ -209,18 +209,9 @@ void main() {
         final factory = LoggerFactory([provider1, provider2, provider3]);
         factory.createLogger('TestCategory').logInformation('Test message');
 
-        expect(
-          provider1.loggers['TestCategory']!.loggedMessages,
-          hasLength(1),
-        );
-        expect(
-          provider2.loggers['TestCategory']!.loggedMessages,
-          hasLength(1),
-        );
-        expect(
-          provider3.loggers['TestCategory']!.loggedMessages,
-          hasLength(1),
-        );
+        expect(provider1.loggers['TestCategory']!.loggedMessages, hasLength(1));
+        expect(provider2.loggers['TestCategory']!.loggedMessages, hasLength(1));
+        expect(provider3.loggers['TestCategory']!.loggedMessages, hasLength(1));
       });
 
       test('Log_OnlyCallsEnabledProviders', () {
@@ -231,10 +222,7 @@ void main() {
 
         // Only provider2 should log (provider1 requires Error or higher)
         expect(provider1.loggers['TestCategory']!.loggedMessages, isEmpty);
-        expect(
-          provider2.loggers['TestCategory']!.loggedMessages,
-          hasLength(1),
-        );
+        expect(provider2.loggers['TestCategory']!.loggedMessages, hasLength(1));
       });
     });
 

@@ -47,7 +47,8 @@ class IntentResolutionEvaluator extends QualityEvaluatorBase {
         ? '\nAVAILABLE TOOLS:\n${ctx.contents.map((c) => c.toString()).join("\n")}'
         : '';
 
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Intent Resolution** measures how accurately the AI identified the user's intent and produced a response that fulfills it.$toolsSection
 

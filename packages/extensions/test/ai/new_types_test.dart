@@ -29,10 +29,7 @@ void main() {
     });
 
     test('hasTopLevelMediaType checks correctly', () {
-      final content = HostedFileContent(
-        fileId: 'f1',
-        mediaType: 'image/png',
-      );
+      final content = HostedFileContent(fileId: 'f1', mediaType: 'image/png');
       expect(content.hasTopLevelMediaType('image'), isTrue);
       expect(content.hasTopLevelMediaType('text'), isFalse);
     });
@@ -65,9 +62,7 @@ void main() {
 
   group('EmbeddingGeneratorMetadata', () {
     test('stores dimensions', () {
-      final meta = EmbeddingGeneratorMetadata(
-        defaultModelDimensions: 1536,
-      );
+      final meta = EmbeddingGeneratorMetadata(defaultModelDimensions: 1536);
       expect(meta.defaultModelDimensions, 1536);
     });
   });
@@ -81,10 +76,7 @@ void main() {
     });
 
     test('constants have expected values', () {
-      expect(
-        SpeechToTextResponseUpdateKind.textUpdated.value,
-        'text_updated',
-      );
+      expect(SpeechToTextResponseUpdateKind.textUpdated.value, 'text_updated');
       expect(
         SpeechToTextResponseUpdateKind.sessionClose.value,
         'session_close',
@@ -119,9 +111,7 @@ void main() {
 
     test('returns all if under target', () async {
       final reducer = MessageCountingChatReducer(5);
-      final messages = [
-        ChatMessage.fromText(ChatRole.user, 'only'),
-      ];
+      final messages = [ChatMessage.fromText(ChatRole.user, 'only')];
       final result = await reducer.reduce(messages);
       expect(result.length, 1);
     });
@@ -293,16 +283,14 @@ class _NullChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      ChatResponse();
+  }) async => ChatResponse();
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream.empty();
+  }) => const Stream.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -318,6 +306,5 @@ class _TestFunction extends AIFunction {
   Future<Object?> invokeCore(
     AIFunctionArguments arguments, {
     CancellationToken? cancellationToken,
-  }) async =>
-      'invoked';
+  }) async => 'invoked';
 }

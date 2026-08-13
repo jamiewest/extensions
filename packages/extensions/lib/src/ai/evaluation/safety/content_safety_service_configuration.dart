@@ -26,9 +26,9 @@ class ContentSafetyServiceConfiguration {
     required Uri this.endpoint,
     required this.apiKey,
     this.timeoutInSeconds = 120,
-  })  : subscriptionId = null,
-        resourceGroupName = null,
-        projectName = null;
+  }) : subscriptionId = null,
+       resourceGroupName = null,
+       projectName = null;
 
   /// Azure subscription ID (Hub-based projects only).
   final String? subscriptionId;

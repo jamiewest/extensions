@@ -10,7 +10,8 @@ import 'property_model.dart';
   name: 'DataPropertyModel.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path:
+      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 class DataPropertyModel extends PropertyModel {

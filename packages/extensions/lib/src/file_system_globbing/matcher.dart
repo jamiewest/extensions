@@ -40,21 +40,17 @@ class Matcher {
   Matcher({
     this.comparisonType = StringComparison.ordinalIgnoreCase,
     bool preserveFilterOrder = false,
-  })  : _builder = PatternBuilder(comparisonType),
-        _preserveFilterOrder = preserveFilterOrder,
-        _includeOrExcludePatterns = preserveFilterOrder ? [] : null,
-        _includePatterns = preserveFilterOrder ? null : [],
-        _excludePatterns = preserveFilterOrder ? null : [];
+  }) : _builder = PatternBuilder(comparisonType),
+       _preserveFilterOrder = preserveFilterOrder,
+       _includeOrExcludePatterns = preserveFilterOrder ? [] : null,
+       _includePatterns = preserveFilterOrder ? null : [],
+       _excludePatterns = preserveFilterOrder ? null : [];
 
   /// The include pattern strings added so far.
-  List<String> get includePatterns => List.unmodifiable(
-        _includePatternStrings,
-      );
+  List<String> get includePatterns => List.unmodifiable(_includePatternStrings);
 
   /// The exclude pattern strings added so far.
-  List<String> get excludePatterns => List.unmodifiable(
-        _excludePatternStrings,
-      );
+  List<String> get excludePatterns => List.unmodifiable(_excludePatternStrings);
 
   /// Adds a pattern for files the matcher should discover.
   ///
@@ -102,15 +98,15 @@ class Matcher {
   /// Always returns a [PatternMatchingResult], even when no files matched.
   PatternMatchingResult execute(DirectoryInfoBase directoryInfo) =>
       _preserveFilterOrder
-          ? MatcherContext.preserveOrder(
-              _includeOrExcludePatterns!,
-              directoryInfo,
-              comparisonType,
-            ).execute()
-          : MatcherContext(
-              _includePatterns!,
-              _excludePatterns!,
-              directoryInfo,
-              comparisonType,
-            ).execute();
+      ? MatcherContext.preserveOrder(
+          _includeOrExcludePatterns!,
+          directoryInfo,
+          comparisonType,
+        ).execute()
+      : MatcherContext(
+          _includePatterns!,
+          _excludePatterns!,
+          directoryInfo,
+          comparisonType,
+        ).execute();
 }

@@ -25,11 +25,11 @@ class MessageLogger {
     String providerTypeFullName,
     LogLevel? minLevel,
     MessageLoggerFilter? filter,
-  )   : _logger = logger,
-        _category = category,
-        _providerTypeFullName = providerTypeFullName,
-        _minLevel = minLevel,
-        _filter = filter;
+  ) : _logger = logger,
+      _category = category,
+      _providerTypeFullName = providerTypeFullName,
+      _minLevel = minLevel,
+      _filter = filter;
 
   Logger get logger => _logger;
 
@@ -58,11 +58,9 @@ class ScopeLogger {
   final Logger? _logger;
   final ExternalScopeProvider? _externalScopeProvider;
 
-  ScopeLogger(
-    Logger? logger,
-    ExternalScopeProvider? externalScopeProvider,
-  )   : _logger = logger,
-        _externalScopeProvider = externalScopeProvider;
+  ScopeLogger(Logger? logger, ExternalScopeProvider? externalScopeProvider)
+    : _logger = logger,
+      _externalScopeProvider = externalScopeProvider;
 
   Logger? get logger => _logger;
 
@@ -82,12 +80,10 @@ class LoggerInformation {
   final String _category;
   final bool _externalScope;
 
-  LoggerInformation(
-    LoggerProvider provider,
-    String category,
-  )   : _logger = provider.createLogger(category),
-        _category = category,
-        _externalScope = provider is SupportExternalScope {
+  LoggerInformation(LoggerProvider provider, String category)
+    : _logger = provider.createLogger(category),
+      _category = category,
+      _externalScope = provider is SupportExternalScope {
     _providerType = provider.runtimeType;
   }
 

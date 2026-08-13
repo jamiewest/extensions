@@ -65,8 +65,10 @@ void main() {
           ..set('key', 'value');
 
         String? result;
-        final found =
-            cache.tryGetValue<String>('key', (value) => result = value);
+        final found = cache.tryGetValue<String>(
+          'key',
+          (value) => result = value,
+        );
 
         expect(found, isTrue);
         expect(result, equals('value'));
@@ -77,8 +79,10 @@ void main() {
         final cache = MemoryCacheImpl(MemoryCacheOptions());
 
         String? result;
-        final found =
-            cache.tryGetValue<String>('key', (value) => result = value);
+        final found = cache.tryGetValue<String>(
+          'key',
+          (value) => result = value,
+        );
 
         expect(found, isFalse);
         expect(result, isNull);
@@ -147,8 +151,9 @@ void main() {
         final cache = MemoryCacheImpl(MemoryCacheOptions());
         var callCount = 0;
 
-        final result =
-            await cache.getOrCreateAsync<String>('key', (entry) async {
+        final result = await cache.getOrCreateAsync<String>('key', (
+          entry,
+        ) async {
           callCount++;
           await Future<void>.delayed(const Duration(milliseconds: 10));
           return 'created';
@@ -168,8 +173,9 @@ void main() {
           return 'created';
         });
 
-        final result =
-            await cache.getOrCreateAsync<String>('key', (entry) async {
+        final result = await cache.getOrCreateAsync<String>('key', (
+          entry,
+        ) async {
           callCount++;
           return 'created again';
         });
@@ -187,8 +193,9 @@ void main() {
             'key',
             'value',
             MemoryCacheEntryOptions()
-              ..absoluteExpirationRelativeToNow =
-                  const Duration(milliseconds: 100),
+              ..absoluteExpirationRelativeToNow = const Duration(
+                milliseconds: 100,
+              ),
           );
         expect(cache.get<String>('key'), equals('value'));
 
@@ -204,8 +211,9 @@ void main() {
             'key',
             'value',
             MemoryCacheEntryOptions()
-              ..absoluteExpiration =
-                  DateTime.now().add(const Duration(milliseconds: 100)),
+              ..absoluteExpiration = DateTime.now().add(
+                const Duration(milliseconds: 100),
+              ),
           );
         expect(cache.get<String>('key'), equals('value'));
 
@@ -260,26 +268,24 @@ void main() {
 
     group('Priority and Compaction', () {
       test('Low priority items are removed first during compaction', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            compactionPercentage: 0.5,
-          ),
-        )
-          ..set(
-            'low',
-            'value',
-            MemoryCacheEntryOptions()
-              ..priority = CacheItemPriority.low
-              ..size = 50,
-          )
-          ..set(
-            'high',
-            'value',
-            MemoryCacheEntryOptions()
-              ..priority = CacheItemPriority.high
-              ..size = 60,
-          );
+        final cache =
+            MemoryCacheImpl(
+                MemoryCacheOptions(sizeLimit: 100, compactionPercentage: 0.5),
+              )
+              ..set(
+                'low',
+                'value',
+                MemoryCacheEntryOptions()
+                  ..priority = CacheItemPriority.low
+                  ..size = 50,
+              )
+              ..set(
+                'high',
+                'value',
+                MemoryCacheEntryOptions()
+                  ..priority = CacheItemPriority.high
+                  ..size = 60,
+              );
         // Size is now 110, exceeding limit of 100
         // Compaction should remove 50% = 1 item (the low priority one)
 
@@ -289,11 +295,7 @@ void main() {
       });
 
       test('NeverRemove priority items are never evicted', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-          ),
-        )
+        final cache = MemoryCacheImpl(MemoryCacheOptions(sizeLimit: 100))
           ..set(
             'never',
             'value',
@@ -398,8 +400,9 @@ void main() {
           'key',
           'value',
           MemoryCacheEntryOptions()
-            ..absoluteExpirationRelativeToNow =
-                const Duration(milliseconds: 100)
+            ..absoluteExpirationRelativeToNow = const Duration(
+              milliseconds: 100,
+            )
             ..postEvictionCallbacks.add(
               PostEvictionCallbackRegistration(
                 evictionCallback: (key, value, reason, state) {
@@ -431,9 +434,7 @@ void main() {
       });
 
       test('Statistics track hits and misses', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(trackStatistics: true),
-        )
+        final cache = MemoryCacheImpl(MemoryCacheOptions(trackStatistics: true))
           ..set('key', 'value')
           ..get<String>('key') // Hit
           ..get<String>('key') // Hit
@@ -448,9 +449,7 @@ void main() {
       });
 
       test('Statistics track entry count', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(trackStatistics: true),
-        )
+        final cache = MemoryCacheImpl(MemoryCacheOptions(trackStatistics: true))
           ..set('key1', 'value1')
           ..set('key2', 'value2')
           ..set('key3', 'value3');
@@ -461,14 +460,12 @@ void main() {
       });
 
       test('Statistics track size when enabled', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            trackStatistics: true,
-            sizeLimit: 1000,
-          ),
-        )
-          ..set('key1', 'value1', MemoryCacheEntryOptions()..size = 10)
-          ..set('key2', 'value2', MemoryCacheEntryOptions()..size = 20);
+        final cache =
+            MemoryCacheImpl(
+                MemoryCacheOptions(trackStatistics: true, sizeLimit: 1000),
+              )
+              ..set('key1', 'value1', MemoryCacheEntryOptions()..size = 10)
+              ..set('key2', 'value2', MemoryCacheEntryOptions()..size = 20);
         final stats = cache.getCurrentStatistics();
 
         expect(stats!.currentEstimatedSize, equals(30));
@@ -478,17 +475,19 @@ void main() {
 
     group('Expiration Scanning', () {
       test('Background scanning removes expired entries', () async {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            expirationScanFrequency: const Duration(milliseconds: 100),
-          ),
-        )..set(
-            'key',
-            'value',
-            MemoryCacheEntryOptions()
-              ..absoluteExpirationRelativeToNow =
-                  const Duration(milliseconds: 50),
-          );
+        final cache =
+            MemoryCacheImpl(
+              MemoryCacheOptions(
+                expirationScanFrequency: const Duration(milliseconds: 100),
+              ),
+            )..set(
+              'key',
+              'value',
+              MemoryCacheEntryOptions()
+                ..absoluteExpirationRelativeToNow = const Duration(
+                  milliseconds: 50,
+                ),
+            );
         // Wait for expiration and scan
         await Future<void>.delayed(const Duration(milliseconds: 200));
 
@@ -498,9 +497,7 @@ void main() {
 
       test('Scanning can be disabled', () {
         final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            expirationScanFrequency: Duration.zero,
-          ),
+          MemoryCacheOptions(expirationScanFrequency: Duration.zero),
         )..set('key', 'value');
         expect(cache.get<String>('key'), equals('value'));
         cache.dispose();

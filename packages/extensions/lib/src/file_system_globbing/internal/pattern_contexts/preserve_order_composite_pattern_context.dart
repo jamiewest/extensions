@@ -11,12 +11,12 @@ import 'composite_pattern_context.dart';
 /// This API supports infrastructure and is not intended to be used directly.
 class PreserveOrderCompositePatternContext extends CompositePatternContext {
   final List<IncludeOrExcludeValue<IPatternContext>>
-      _includeOrExcludePatternContexts;
+  _includeOrExcludePatternContexts;
 
   /// Creates a composite over [includeOrExcludePatternContexts].
   PreserveOrderCompositePatternContext(
     List<IncludeOrExcludeValue<IPatternContext>>
-        includeOrExcludePatternContexts,
+    includeOrExcludePatternContexts,
   ) : _includeOrExcludePatternContexts = includeOrExcludePatternContexts;
 
   @override
@@ -32,7 +32,7 @@ class PreserveOrderCompositePatternContext extends CompositePatternContext {
   PatternTestResult matchPatternContexts<TFileInfoBase>(
     TFileInfoBase fileInfo,
     PatternTestResult Function(IPatternContext context, TFileInfoBase file)
-        test,
+    test,
   ) {
     var result = PatternTestResult.failed;
 

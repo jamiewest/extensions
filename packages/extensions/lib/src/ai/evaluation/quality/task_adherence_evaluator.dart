@@ -41,14 +41,16 @@ class TaskAdherenceEvaluator extends QualityEvaluatorBase {
     final ctx = additionalContext
         .whereType<TaskAdherenceEvaluatorContext>()
         .firstOrNull;
-    final conversationHistory =
-        messages.map((m) => '[${m.role.value}]: ${m.text}').join('\n');
+    final conversationHistory = messages
+        .map((m) => '[${m.role.value}]: ${m.text}')
+        .join('\n');
     final response = modelResponse.text;
     final toolsSection = ctx != null && ctx.toolDefinitions.isNotEmpty
         ? '\nAVAILABLE TOOLS:\n${ctx.contents.map((c) => c.toString()).join("\n")}'
         : '';
 
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Task Adherence** measures how accurately the AI followed instructions in the conversation history and used available tools correctly.$toolsSection
 

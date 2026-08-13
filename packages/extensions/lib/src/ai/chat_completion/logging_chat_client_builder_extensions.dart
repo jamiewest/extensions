@@ -17,8 +17,10 @@ extension LoggingChatClientBuilderExtensions on ChatClientBuilder {
         return innerClient;
       }
 
-      var chatClient = LoggingChatClient(innerClient,
-          logger: loggerFactory!.createLogger('LoggingChatClient'));
+      var chatClient = LoggingChatClient(
+        innerClient,
+        logger: loggerFactory!.createLogger('LoggingChatClient'),
+      );
       configure?.call(chatClient);
       return chatClient;
     });

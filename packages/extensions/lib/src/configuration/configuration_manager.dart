@@ -187,7 +187,7 @@ class ConfigurationBuilderProperties with MapMixin<String, Object> {
   final ConfigurationManager _config;
 
   ConfigurationBuilderProperties(ConfigurationManager config)
-      : _config = config;
+    : _config = config;
 
   @override
   Object? operator [](Object? key) => _properties[key];

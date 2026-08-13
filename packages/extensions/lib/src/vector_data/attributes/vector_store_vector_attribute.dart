@@ -23,8 +23,7 @@ import 'package:extensions/annotations.dart';
   name: 'VectorStoreVectorAttribute.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/Attributes/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/Attributes/',
 )
 final class VectorStoreVectorAttribute {
   /// Creates a [VectorStoreVectorAttribute].

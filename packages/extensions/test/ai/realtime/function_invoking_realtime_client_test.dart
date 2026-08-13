@@ -35,8 +35,7 @@ class _FakeSession implements RealtimeClientSession {
   Future<void> send(
     RealtimeClientMessage message, {
     CancellationToken? cancellationToken,
-  }) async =>
-      sent.add(message);
+  }) async => sent.add(message);
 
   @override
   Stream<RealtimeServerMessage> getStreamingResponse({
@@ -63,8 +62,7 @@ class _FakeClient implements RealtimeClient {
   Future<RealtimeClientSession> createSession({
     RealtimeSessionOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      _session;
+  }) async => _session;
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -75,10 +73,9 @@ class _FakeClient implements RealtimeClient {
 
 ResponseOutputItemRealtimeServerMessage _functionCallMessage(
   List<FunctionCallContent> calls,
-) =>
-    ResponseOutputItemRealtimeServerMessage(
-      RealtimeServerMessageType.responseOutputItemDone,
-    )..item = RealtimeConversationItem(calls.cast<AIContent>());
+) => ResponseOutputItemRealtimeServerMessage(
+  RealtimeServerMessageType.responseOutputItemDone,
+)..item = RealtimeConversationItem(calls.cast<AIContent>());
 
 void main() {
   group('FunctionInvokingRealtimeClientSession', () {
@@ -105,7 +102,9 @@ void main() {
       // A conversation-item (with the result) and a response request are sent.
       expect(session.sent, hasLength(2));
       expect(
-          session.sent[0], isA<CreateConversationItemRealtimeClientMessage>());
+        session.sent[0],
+        isA<CreateConversationItemRealtimeClientMessage>(),
+      );
       expect(session.sent[1], isA<CreateResponseRealtimeClientMessage>());
 
       final item =
@@ -116,8 +115,9 @@ void main() {
     });
 
     test('passes through messages that contain no function calls', () async {
-      final plain =
-          RealtimeServerMessage(RealtimeServerMessageType.outputTextDelta);
+      final plain = RealtimeServerMessage(
+        RealtimeServerMessageType.outputTextDelta,
+      );
       final session = _FakeSession([plain]);
       final client = FunctionInvokingRealtimeClient(_FakeClient(session));
 

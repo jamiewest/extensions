@@ -18,10 +18,8 @@ class GroundednessProEvaluator extends ContentSafetyEvaluator {
 
   /// Creates a [GroundednessProEvaluator].
   GroundednessProEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'groundedness',
-          metricNames: const {
-            'groundedness': groundednessMetricName,
-          },
-        );
+    : super(
+        annotationTask: 'groundedness',
+        metricNames: const {'groundedness': groundednessMetricName},
+      );
 }

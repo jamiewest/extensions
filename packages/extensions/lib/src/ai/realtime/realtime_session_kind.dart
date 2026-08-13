@@ -18,15 +18,17 @@ class RealtimeSessionKind {
   final String value;
 
   /// A conversation session.
-  static const RealtimeSessionKind conversation =
-      RealtimeSessionKind('conversation');
+  static const RealtimeSessionKind conversation = RealtimeSessionKind(
+    'conversation',
+  );
 
   /// A transcription-only session.
   ///
   /// When set, most session properties do not apply; only the input audio
   /// format and transcription options are used.
-  static const RealtimeSessionKind transcription =
-      RealtimeSessionKind('transcription');
+  static const RealtimeSessionKind transcription = RealtimeSessionKind(
+    'transcription',
+  );
 
   @override
   bool operator ==(Object other) =>

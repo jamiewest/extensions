@@ -14,7 +14,7 @@ class ChainedConfigurationProvider
 
   /// Initialize a new instance from the source configuration.
   ChainedConfigurationProvider(ChainedConfigurationSource source)
-      : _shouldDisposeConfig = false {
+    : _shouldDisposeConfig = false {
     if (source.configuration == null) {
       throw ArgumentException(
         message: 'Null is not a valid value for \'source.configuration\'.',

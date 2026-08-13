@@ -45,12 +45,12 @@ class LinearFrameData {
 
   /// Returns a shallow copy sharing the stem item list.
   LinearFrameData copy() => LinearFrameData(
-        isNotApplicable: isNotApplicable,
-        segmentIndex: segmentIndex,
-        inStem: inStem,
-        stemItems: _stemItems,
-        addedStemItem: addedStemItem,
-      );
+    isNotApplicable: isNotApplicable,
+    segmentIndex: segmentIndex,
+    inStem: inStem,
+    stemItems: _stemItems,
+    addedStemItem: addedStemItem,
+  );
 }
 
 /// Matches a pattern without recursive wildcards segment by segment as a

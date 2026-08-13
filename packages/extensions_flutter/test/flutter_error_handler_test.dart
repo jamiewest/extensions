@@ -31,13 +31,7 @@ class _TestLogger implements Logger {
     Object? error,
     required LogFormatter<TState> formatter,
   }) {
-    entries.add(
-      _TestLogEntry(
-        logLevel,
-        formatter(state, error),
-        error,
-      ),
-    );
+    entries.add(_TestLogEntry(logLevel, formatter(state, error), error));
   }
 }
 
@@ -99,14 +93,12 @@ void main() {
 
     expect(handled, isFalse);
     expect(logger.entries.length, 4);
-    expect(
-      logger.entries.first.message,
-      contains('Unhandled platform error'),
-    );
+    expect(logger.entries.first.message, contains('Unhandled platform error'));
     expect(
       logger.entries.any(
-        (entry) =>
-            entry.message.contains('Previous PlatformDispatcher.onError threw.'),
+        (entry) => entry.message.contains(
+          'Previous PlatformDispatcher.onError threw.',
+        ),
       ),
       isTrue,
     );

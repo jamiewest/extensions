@@ -9,10 +9,11 @@ extension OpenTelemetryHostedFileClientBuilderExtensions
   HostedFileClientBuilder useOpenTelemetry({
     String? system,
     bool? enableSensitiveData,
-  }) =>
-      use((inner) => OpenTelemetryHostedFileClient(
-            inner,
-            system: system,
-            enableSensitiveData: enableSensitiveData,
-          ));
+  }) => use(
+    (inner) => OpenTelemetryHostedFileClient(
+      inner,
+      system: system,
+      enableSensitiveData: enableSensitiveData,
+    ),
+  );
 }

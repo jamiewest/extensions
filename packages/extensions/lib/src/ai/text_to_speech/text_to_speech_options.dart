@@ -60,15 +60,16 @@ class TextToSpeechOptions {
   /// [rawRepresentationFactory] is not deep-cloned — the same reference is
   /// shared.
   TextToSpeechOptions clone() => TextToSpeechOptions(
-        modelId: modelId,
-        voiceId: voiceId,
-        language: language,
-        audioFormat: audioFormat,
-        speed: speed,
-        pitch: pitch,
-        volume: volume,
-        rawRepresentationFactory: rawRepresentationFactory,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-      );
+    modelId: modelId,
+    voiceId: voiceId,
+    language: language,
+    audioFormat: audioFormat,
+    speed: speed,
+    pitch: pitch,
+    volume: volume,
+    rawRepresentationFactory: rawRepresentationFactory,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+  );
 }

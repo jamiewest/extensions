@@ -39,9 +39,7 @@ abstract class VectorStoreCollection<TKey, TRecord>
   String get name;
 
   /// Returns true if the collection exists in the vector store.
-  Future<bool> collectionExistsAsync({
-    CancellationToken? cancellationToken,
-  });
+  Future<bool> collectionExistsAsync({CancellationToken? cancellationToken});
 
   /// Creates the collection in the vector store if it does not already exist.
   Future<void> ensureCollectionExistsAsync({
@@ -96,10 +94,7 @@ abstract class VectorStoreCollection<TKey, TRecord>
   /// Deletes the record with the given [key].
   ///
   /// Does nothing if no record with that key exists.
-  Future<void> deleteAsync(
-    TKey key, {
-    CancellationToken? cancellationToken,
-  });
+  Future<void> deleteAsync(TKey key, {CancellationToken? cancellationToken});
 
   /// Deletes all records whose keys are in [keys].
   ///

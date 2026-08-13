@@ -43,8 +43,8 @@ DefaultHttpClientFactory _buildFactory(
   }
 
   final sp = services.buildServiceProvider();
-  final monitor =
-      sp.getRequiredService<OptionsMonitor<HttpClientFactoryOptions>>();
+  final monitor = sp
+      .getRequiredService<OptionsMonitor<HttpClientFactoryOptions>>();
   return DefaultHttpClientFactory(sp, handlerFactory, monitor);
 }
 

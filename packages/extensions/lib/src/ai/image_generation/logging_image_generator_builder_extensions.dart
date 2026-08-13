@@ -17,19 +17,18 @@ extension LoggingImageGeneratorBuilderExtensions on ImageGeneratorBuilder {
   ImageGeneratorBuilder useLogging({
     LoggerFactory? loggerFactory,
     void Function(LoggingImageGenerator generator)? configure,
-  }) =>
-      useWithServices((inner, services) {
-        loggerFactory ??= services.getRequiredService<LoggerFactory>();
+  }) => useWithServices((inner, services) {
+    loggerFactory ??= services.getRequiredService<LoggerFactory>();
 
-        if (loggerFactory == NullLoggerFactory.instance) {
-          return inner;
-        }
+    if (loggerFactory == NullLoggerFactory.instance) {
+      return inner;
+    }
 
-        final generator = LoggingImageGenerator(
-          inner,
-          logger: loggerFactory!.createLogger('LoggingImageGenerator'),
-        );
-        configure?.call(generator);
-        return generator;
-      });
+    final generator = LoggingImageGenerator(
+      inner,
+      logger: loggerFactory!.createLogger('LoggingImageGenerator'),
+    );
+    configure?.call(generator);
+    return generator;
+  });
 }

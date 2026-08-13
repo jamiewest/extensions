@@ -15,12 +15,12 @@ import 'memory_cache_impl.dart';
 class MemoryDistributedCache implements DistributedCache, Disposable {
   /// Creates a new instance of [MemoryDistributedCache].
   MemoryDistributedCache([MemoryCacheOptions? options])
-      : _cache = MemoryCacheImpl(
-          options ??
-              MemoryCacheOptions(
-                expirationScanFrequency: const Duration(minutes: 1),
-              ),
-        );
+    : _cache = MemoryCacheImpl(
+        options ??
+            MemoryCacheOptions(
+              expirationScanFrequency: const Duration(minutes: 1),
+            ),
+      );
 
   final MemoryCacheImpl _cache;
 

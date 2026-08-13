@@ -9,8 +9,8 @@ class CancellationChangeToken implements ChangeToken {
   bool _activeChangeCallbacks;
 
   CancellationChangeToken(CancellationToken cancellationToken)
-      : _cancellationToken = cancellationToken,
-        _activeChangeCallbacks = true;
+    : _cancellationToken = cancellationToken,
+      _activeChangeCallbacks = true;
 
   CancellationToken get token => _cancellationToken;
 

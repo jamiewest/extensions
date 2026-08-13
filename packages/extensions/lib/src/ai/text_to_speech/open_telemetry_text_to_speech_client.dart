@@ -18,8 +18,11 @@ import 'text_to_speech_response_update.dart';
 )
 class OpenTelemetryTextToSpeechClient extends DelegatingTextToSpeechClient {
   /// Creates a new [OpenTelemetryTextToSpeechClient].
-  OpenTelemetryTextToSpeechClient(super.innerClient,
-      {this.modelId, this.system});
+  OpenTelemetryTextToSpeechClient(
+    super.innerClient, {
+    this.modelId,
+    this.system,
+  });
 
   /// The model ID to record on spans.
   final String? modelId;
@@ -75,8 +78,8 @@ class OpenTelemetryTextToSpeechClient extends DelegatingTextToSpeechClient {
   }
 
   Map<String, Object?> _buildArguments(TextToSpeechOptions? options) => {
-        if (system != null) OpenTelemetryConsts.systemKey: system,
-        OpenTelemetryConsts.requestModelKey:
-            options?.modelId ?? modelId ?? 'unknown',
-      };
+    if (system != null) OpenTelemetryConsts.systemKey: system,
+    OpenTelemetryConsts.requestModelKey:
+        options?.modelId ?? modelId ?? 'unknown',
+  };
 }

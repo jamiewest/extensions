@@ -80,9 +80,7 @@ void main() {
           options: OpenAIClientOptions(httpClient: fakeHttp),
         );
 
-        final result = await client.getText(
-          stream: Stream.value([0x01]),
-        );
+        final result = await client.getText(stream: Stream.value([0x01]));
 
         expect(result.endTime, equals(const Duration(milliseconds: 2500)));
       });
@@ -186,10 +184,7 @@ void main() {
       });
 
       test('voice defaults to alloy', () async {
-        final fakeHttp = VerbatimHttpClient(
-          'audio',
-          contentType: 'audio/mpeg',
-        );
+        final fakeHttp = VerbatimHttpClient('audio', contentType: 'audio/mpeg');
         final client = OpenAITextToSpeechClient(
           'tts-1',
           'key',
@@ -204,10 +199,7 @@ void main() {
       });
 
       test('custom voice is sent', () async {
-        final fakeHttp = VerbatimHttpClient(
-          'audio',
-          contentType: 'audio/mpeg',
-        );
+        final fakeHttp = VerbatimHttpClient('audio', contentType: 'audio/mpeg');
         final client = OpenAITextToSpeechClient(
           'tts-1',
           'key',
@@ -225,10 +217,7 @@ void main() {
       });
 
       test('speed is sent when specified', () async {
-        final fakeHttp = VerbatimHttpClient(
-          'audio',
-          contentType: 'audio/mpeg',
-        );
+        final fakeHttp = VerbatimHttpClient('audio', contentType: 'audio/mpeg');
         final client = OpenAITextToSpeechClient(
           'tts-1',
           'key',
@@ -253,10 +242,7 @@ void main() {
           options: OpenAIClientOptions(httpClient: fakeHttp),
         );
 
-        await expectLater(
-          client.getAudio('Hello'),
-          throwsStateError,
-        );
+        await expectLater(client.getAudio('Hello'), throwsStateError);
       });
     });
 

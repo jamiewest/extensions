@@ -29,7 +29,7 @@ class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
     this.system,
     bool? enableSensitiveData,
   }) : enableSensitiveData =
-            enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
+           enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
 
   /// The model ID to record on spans (overrides per-request model).
   final String? modelId;
@@ -94,8 +94,8 @@ class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
   }
 
   Map<String, Object?> _buildArguments(SpeechToTextOptions? options) => {
-        if (system != null) OpenTelemetryConsts.systemKey: system,
-        OpenTelemetryConsts.requestModelKey:
-            options?.modelId ?? modelId ?? 'unknown',
-      };
+    if (system != null) OpenTelemetryConsts.systemKey: system,
+    OpenTelemetryConsts.requestModelKey:
+        options?.modelId ?? modelId ?? 'unknown',
+  };
 }

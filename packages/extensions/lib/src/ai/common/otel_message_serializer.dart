@@ -200,8 +200,8 @@ abstract final class OtelMessageSerializer {
           ),
         );
       case ToolApprovalRequestContent(
-          toolCall: final McpServerToolCallContent mcpToolCall
-        ):
+        toolCall: final McpServerToolCallContent mcpToolCall,
+      ):
         return OtelServerToolCallPart(
           id: content.requestId,
           name: mcpToolCall.toolName,

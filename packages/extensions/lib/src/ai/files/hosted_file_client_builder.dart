@@ -6,7 +6,8 @@ import 'hosted_file_client.dart';
 
 /// A factory that creates a [HostedFileClient] from a [ServiceProvider].
 typedef InnerHostedFileClientFactory = HostedFileClient Function(
-    ServiceProvider services);
+  ServiceProvider services,
+);
 
 /// Builds a pipeline of [HostedFileClient] middleware.
 ///
@@ -20,13 +21,12 @@ typedef InnerHostedFileClientFactory = HostedFileClient Function(
 class HostedFileClientBuilder {
   late final InnerHostedFileClientFactory _innerFactory;
   final List<
-      HostedFileClient Function(
-        HostedFileClient inner,
-        ServiceProvider services,
-      )> _factories = [];
+    HostedFileClient Function(HostedFileClient inner, ServiceProvider services)
+  >
+  _factories = [];
 
   HostedFileClientBuilder._(InnerHostedFileClientFactory innerFactory)
-      : _innerFactory = innerFactory;
+    : _innerFactory = innerFactory;
 
   /// Creates a new [HostedFileClientBuilder] wrapping [innerClient].
   HostedFileClientBuilder(HostedFileClient innerClient) {
@@ -35,21 +35,20 @@ class HostedFileClientBuilder {
 
   /// Creates a new [HostedFileClientBuilder] from a factory function.
   factory HostedFileClientBuilder.fromFactory(
-          InnerHostedFileClientFactory innerFactory) =>
-      HostedFileClientBuilder._(innerFactory);
+    InnerHostedFileClientFactory innerFactory,
+  ) => HostedFileClientBuilder._(innerFactory);
 
   /// Adds a middleware factory to the pipeline.
   HostedFileClientBuilder use(
-          HostedFileClient Function(HostedFileClient) factory) =>
-      useWithServices((inner, _) => factory(inner));
+    HostedFileClient Function(HostedFileClient) factory,
+  ) => useWithServices((inner, _) => factory(inner));
 
   /// Adds a middleware factory that also receives the active
   /// [ServiceProvider].
   HostedFileClientBuilder useWithServices(
-      HostedFileClient Function(
-        HostedFileClient inner,
-        ServiceProvider services,
-      ) factory) {
+    HostedFileClient Function(HostedFileClient inner, ServiceProvider services)
+    factory,
+  ) {
     _factories.add(factory);
     return this;
   }

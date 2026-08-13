@@ -26,13 +26,12 @@ import 'vector_store_vector_property.dart';
   name: 'VectorStoreCollectionDefinition.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
 )
 final class VectorStoreCollectionDefinition {
   /// Creates a [VectorStoreCollectionDefinition] with the given [properties].
   VectorStoreCollectionDefinition({List<VectorStoreProperty>? properties})
-      : properties = properties ?? [];
+    : properties = properties ?? [];
 
   /// The list of property definitions for this collection.
   ///

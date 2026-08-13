@@ -4,31 +4,32 @@ import 'package:test/test.dart';
 
 abstract class ConfigurationProviderTestBase {
   void loadFromSingleProvider() {
-    var configRoot =
-        buildConfigRoot([loadThroughProvider(TestSection.testConfig)]);
+    var configRoot = buildConfigRoot([
+      loadThroughProvider(TestSection.testConfig),
+    ]);
 
     assertConfig(configRoot);
   }
 
   void hasDebugView() {
-//     var configRoot =
-//         buildConfigRoot([loadThroughProvider(TestSection.testConfig)]);
-//     var providerTag = configRoot.providers.first.toString();
-//     var expected = '''
-// Key1=Value1 ({providerTag})
-// Section1:
-//   Key2=Value12 ({providerTag})
-//   Section2:
-//     Key3=Value123 ({providerTag})
-//     Key3a:
-//       0=ArrayValue0 ({providerTag})
-//       1=ArrayValue1 ({providerTag})
-//       2=ArrayValue2 ({providerTag})
-// Section3:
-//   Section4:
-//     Key4=Value344 ({providerTag})
+    //     var configRoot =
+    //         buildConfigRoot([loadThroughProvider(TestSection.testConfig)]);
+    //     var providerTag = configRoot.providers.first.toString();
+    //     var expected = '''
+    // Key1=Value1 ({providerTag})
+    // Section1:
+    //   Key2=Value12 ({providerTag})
+    //   Section2:
+    //     Key3=Value123 ({providerTag})
+    //     Key3a:
+    //       0=ArrayValue0 ({providerTag})
+    //       1=ArrayValue1 ({providerTag})
+    //       2=ArrayValue2 ({providerTag})
+    // Section3:
+    //   Section4:
+    //     Key4=Value344 ({providerTag})
 
-//     ''';
+    //     ''';
   }
 
   void assertDebugView(ConfigurationRoot config, String expected) {
@@ -187,13 +188,14 @@ abstract class ConfigurationProviderTestBase {
   );
 
   static (ConfigurationProvider, VoidCallback) loadUsingMemoryProvider(
-      TestSection testConfig) {
+    TestSection testConfig,
+  ) {
     var values = <MapEntry<String, String?>>[];
     sectionToValues(testConfig, '', values);
 
     return (
       MemoryConfigurationProvider(MemoryConfigurationSource(values)),
-      () {}
+      () {},
     );
   }
 
@@ -214,13 +216,16 @@ abstract class ConfigurationProviderTestBase {
     String sectionName,
     List<MapEntry<String, String?>> values,
   ) {
-    for (var tuple in section.values!
-        .expand((e) => e.$2.expand(e.$1))
-        .map((e) => (e.$1, e.$2))) {
-      values.add(MapEntry<String, String?>(
-        '$sectionName${tuple.$1}',
-        tuple.$2 == null ? null : tuple.$2 as String,
-      ));
+    for (var tuple
+        in section.values!
+            .expand((e) => e.$2.expand(e.$1))
+            .map((e) => (e.$1, e.$2))) {
+      values.add(
+        MapEntry<String, String?>(
+          '$sectionName${tuple.$1}',
+          tuple.$2 == null ? null : tuple.$2 as String,
+        ),
+      );
     }
 
     for (var tuple in section.sections!) {
@@ -239,16 +244,12 @@ class TestSection {
   Iterable<(String, TestSection)>? sections;
 
   static TestSection get nullsTestConfig => TestSection()
-    ..values = [
-      ('Key1', TestKeyValue.value(null)),
-    ]
+    ..values = [('Key1', TestKeyValue.value(null))]
     ..sections = [
       (
         'Section1',
         TestSection()
-          ..values = [
-            ('Key2', TestKeyValue.value(null)),
-          ]
+          ..values = [('Key2', TestKeyValue.value(null))]
           ..sections = [
             (
               'Section2',
@@ -256,9 +257,9 @@ class TestSection {
                 ..values = [
                   ('Key3', TestKeyValue.value(null)),
                   ('Key3a', TestKeyValue.values(<String?>[null, null, null])),
-                ]
-            )
-          ]
+                ],
+            ),
+          ],
       ),
       (
         'Section3',
@@ -266,26 +267,19 @@ class TestSection {
           ..sections = [
             (
               'Section4',
-              TestSection()
-                ..values = [
-                  ('Key4', TestKeyValue.value(null)),
-                ]
-            )
-          ]
-      )
+              TestSection()..values = [('Key4', TestKeyValue.value(null))],
+            ),
+          ],
+      ),
     ];
 
   static TestSection get testConfig => TestSection()
-    ..values = [
-      ('Key1', TestKeyValue.value('Value1')),
-    ]
+    ..values = [('Key1', TestKeyValue.value('Value1'))]
     ..sections = [
       (
         'Section1',
         TestSection()
-          ..values = [
-            ('Key2', TestKeyValue.value('Value12')),
-          ]
+          ..values = [('Key2', TestKeyValue.value('Value12'))]
           ..sections = [
             (
               'Section2',
@@ -294,13 +288,16 @@ class TestSection {
                   ('Key3', TestKeyValue.value('Value123')),
                   (
                     'Key3a',
-                    TestKeyValue.values(
-                        ['ArrayValue0', 'ArrayValue1', 'ArrayValue2'])
+                    TestKeyValue.values([
+                      'ArrayValue0',
+                      'ArrayValue1',
+                      'ArrayValue2',
+                    ]),
                   ),
                 ]
                 ..sections = [],
-            )
-          ]
+            ),
+          ],
       ),
       (
         'Section3',
@@ -308,10 +305,11 @@ class TestSection {
           ..sections = [
             (
               'Section4',
-              TestSection()..values = [('Key4', TestKeyValue.value('Value344'))]
-            )
-          ]
-      )
+              TestSection()
+                ..values = [('Key4', TestKeyValue.value('Value344'))],
+            ),
+          ],
+      ),
     ];
 }
 

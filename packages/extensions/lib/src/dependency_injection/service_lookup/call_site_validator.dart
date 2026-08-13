@@ -32,7 +32,8 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
         );
       }
       throw InvalidOperationException(
-        message: 'Cannot resolve \'{0}\' from root provider because'
+        message:
+            'Cannot resolve \'{0}\' from root provider because'
             ' it requires {2} service \'{1}\'.',
       );
     }
@@ -72,7 +73,8 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
     }
     if (argument.singleton != null) {
       throw InvalidOperationException(
-        message: 'Cannot consume scoped service \'${callSite.serviceType}\''
+        message:
+            'Cannot consume scoped service \'${callSite.serviceType}\''
             ' from singleton \'${argument.singleton!.serviceType}\'',
       );
     }
@@ -85,22 +87,19 @@ class CallSiteValidator extends CallSiteVisitor<CallSiteValidatorState, Type?> {
   Type? visitConstant(
     ConstantCallSite constantCallSite,
     CallSiteValidatorState argument,
-  ) =>
-      null;
+  ) => null;
 
   @override
   Type? visitFactory(
     FactoryCallSite factoryCallSite,
     CallSiteValidatorState argument,
-  ) =>
-      null;
+  ) => null;
 
   @override
   Type? visitServiceProvider(
     ServiceProviderCallSite serviceProviderCallSite,
     CallSiteValidatorState argument,
-  ) =>
-      null;
+  ) => null;
 }
 
 class CallSiteValidatorState {

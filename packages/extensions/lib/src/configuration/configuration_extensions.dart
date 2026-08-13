@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+
 import 'configuration.dart';
 import 'configuration_section.dart';
 
@@ -18,8 +19,9 @@ extension ConfigurationExtensions on Configuration {
     bool makePathsRelative = false,
   }) sync* {
     var stack = QueueList<Configuration>()..addFirst(this);
-    var rootSection =
-        (this is ConfigurationSection) ? this as ConfigurationSection : null;
+    var rootSection = (this is ConfigurationSection)
+        ? this as ConfigurationSection
+        : null;
     var prefixLength = makePathsRelative && rootSection != null
         ? rootSection.path.length + 1
         : 0;

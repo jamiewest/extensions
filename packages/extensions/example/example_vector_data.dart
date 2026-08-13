@@ -79,12 +79,12 @@ void _retrievalOptionsExample() {
 
 /// Renders a filter tree the way a provider's translator would walk it.
 String _describe(VectorStoreFilter filter) => switch (filter) {
-      EqualToVectorStoreFilter(:final fieldName, :final value) =>
-        '$fieldName == $value',
-      AnyTagEqualToVectorStoreFilter(:final fieldName, :final value) =>
-        '$fieldName contains $value',
-      AndVectorStoreFilter(:final filters) =>
-        '(${filters.map(_describe).join(' AND ')})',
-      OrVectorStoreFilter(:final filters) =>
-        '(${filters.map(_describe).join(' OR ')})',
-    };
+  EqualToVectorStoreFilter(:final fieldName, :final value) =>
+    '$fieldName == $value',
+  AnyTagEqualToVectorStoreFilter(:final fieldName, :final value) =>
+    '$fieldName contains $value',
+  AndVectorStoreFilter(:final filters) =>
+    '(${filters.map(_describe).join(' AND ')})',
+  OrVectorStoreFilter(:final filters) =>
+    '(${filters.map(_describe).join(' OR ')})',
+};

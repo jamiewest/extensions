@@ -10,8 +10,8 @@ class MetricListenerConfigurationFactory
   final Iterable<MetricsConfiguration> _configurations;
 
   MetricListenerConfigurationFactory(
-      Iterable<MetricsConfiguration> configurations)
-      : _configurations = configurations;
+    Iterable<MetricsConfiguration> configurations,
+  ) : _configurations = configurations;
 
   /// Gets the configuration for the given listener.
   @override

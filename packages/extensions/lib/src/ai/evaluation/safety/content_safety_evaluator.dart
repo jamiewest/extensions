@@ -61,8 +61,9 @@ abstract class ContentSafetyEvaluator implements Evaluator {
     final metrics = {
       for (final name in evaluationMetricNames) name: NumericMetric(name),
     };
-    final result =
-        EvaluationResult(metrics: {for (final m in metrics.values) m.name: m});
+    final result = EvaluationResult(
+      metrics: {for (final m in metrics.values) m.name: m},
+    );
 
     try {
       final serviceResult = await _callService(
@@ -74,8 +75,8 @@ abstract class ContentSafetyEvaluator implements Evaluator {
         final publicName = _metricNames[entry.key];
         if (publicName != null && metrics.containsKey(publicName)) {
           metrics[publicName]!.value = entry.value;
-          metrics[publicName]!.interpretation =
-              metrics[publicName]!.interpretContentHarmScore();
+          metrics[publicName]!.interpretation = metrics[publicName]!
+              .interpretContentHarmScore();
         }
       }
     } catch (e) {
@@ -98,8 +99,9 @@ abstract class ContentSafetyEvaluator implements Evaluator {
     final payload = _buildPayload(messages, modelResponse, additionalContext);
 
     final client = HttpClient();
-    client.connectionTimeout =
-        Duration(seconds: configuration.timeoutInSeconds);
+    client.connectionTimeout = Duration(
+      seconds: configuration.timeoutInSeconds,
+    );
     try {
       final request = await client.postUrl(uri);
       request.headers
@@ -110,7 +112,8 @@ abstract class ContentSafetyEvaluator implements Evaluator {
       final body = await response.transform(utf8.decoder).join();
       if (response.statusCode != 200) {
         throw StateError(
-            'Azure AI Foundry service returned ${response.statusCode}: $body');
+          'Azure AI Foundry service returned ${response.statusCode}: $body',
+        );
       }
       final json = jsonDecode(body) as Map<String, dynamic>;
       return _parseResponse(json);
@@ -121,8 +124,9 @@ abstract class ContentSafetyEvaluator implements Evaluator {
 
   Uri _buildUri() {
     if (configuration.endpoint != null) {
-      return configuration.endpoint!
-          .replace(path: '${configuration.endpoint!.path}/evaluations/run');
+      return configuration.endpoint!.replace(
+        path: '${configuration.endpoint!.path}/evaluations/run',
+      );
     }
     return Uri.https(
       'management.azure.com',

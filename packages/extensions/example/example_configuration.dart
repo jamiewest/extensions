@@ -10,9 +10,7 @@ void main() {
   final configurationBuilder = ConfigurationBuilder()
     // In-memory data is a simple way to compose config for tests or demos.
     ..addInMemoryCollection(
-      <String, String>{
-        'Logging:LogLevel:Default': 'Warning',
-      }.entries,
+      <String, String>{'Logging:LogLevel:Default': 'Warning'}.entries,
     );
 
   final configuration = configurationBuilder.build();

@@ -11,9 +11,8 @@ extension ConfigureOptionsTextToSpeechClientBuilderExtensions
   /// Adds a callback that configures the [TextToSpeechOptions] passed to
   /// each request.
   TextToSpeechClientBuilder useConfigureOptions(
-          void Function(TextToSpeechOptions options) configure) =>
-      use(
-        (inner) =>
-            ConfigureOptionsTextToSpeechClient(inner, configure: configure),
-      );
+    void Function(TextToSpeechOptions options) configure,
+  ) => use(
+    (inner) => ConfigureOptionsTextToSpeechClient(inner, configure: configure),
+  );
 }

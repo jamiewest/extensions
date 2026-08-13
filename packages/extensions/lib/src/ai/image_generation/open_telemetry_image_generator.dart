@@ -16,8 +16,11 @@ import 'image_generator.dart';
 )
 class OpenTelemetryImageGenerator extends DelegatingImageGenerator {
   /// Creates a new [OpenTelemetryImageGenerator].
-  OpenTelemetryImageGenerator(super.innerGenerator,
-      {this.modelId, this.system});
+  OpenTelemetryImageGenerator(
+    super.innerGenerator, {
+    this.modelId,
+    this.system,
+  });
 
   /// The model ID to record on spans.
   final String? modelId;

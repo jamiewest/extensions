@@ -68,11 +68,7 @@ class MemoryCacheImpl implements MemoryCache {
       removeEntry(key, EvictionReason.replaced);
     }
 
-    final entry = CacheEntryInternal(
-      key,
-      removeEntry,
-      finalizeEntry,
-    );
+    final entry = CacheEntryInternal(key, removeEntry, finalizeEntry);
 
     // Add to cache immediately - finalization happens later via finalizeEntry
     _entries[key] = entry;
@@ -115,7 +111,6 @@ class MemoryCacheImpl implements MemoryCache {
       // Detach listeners
       entry
         ..detach()
-
         // Invoke callbacks
         ..invokeEvictionCallbacks(reason);
     }

@@ -21,16 +21,15 @@ extension DistributedCachingEmbeddingGeneratorBuilderExtensions
     Uint8List Function(Embedding embedding)? serializeEmbedding,
     Embedding Function(Uint8List data)? deserializeEmbedding,
     void Function(DistributedCachingEmbeddingGenerator generator)? configure,
-  }) =>
-      useWithServices((inner, services) {
-        final generator = DistributedCachingEmbeddingGenerator(
-          inner,
-          storage: storage ?? services.getRequiredService<DistributedCache>(),
-          cacheOptions: cacheOptions,
-          serializeEmbedding: serializeEmbedding,
-          deserializeEmbedding: deserializeEmbedding,
-        );
-        configure?.call(generator);
-        return generator;
-      });
+  }) => useWithServices((inner, services) {
+    final generator = DistributedCachingEmbeddingGenerator(
+      inner,
+      storage: storage ?? services.getRequiredService<DistributedCache>(),
+      cacheOptions: cacheOptions,
+      serializeEmbedding: serializeEmbedding,
+      deserializeEmbedding: deserializeEmbedding,
+    );
+    configure?.call(generator);
+    return generator;
+  });
 }

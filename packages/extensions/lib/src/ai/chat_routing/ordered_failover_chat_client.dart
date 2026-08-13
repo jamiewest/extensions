@@ -33,10 +33,8 @@ final class OrderedFailoverChatClient extends FailoverChatClient {
   /// instance is disposed.
   ///
   /// Throws [ArgumentError] when [clients] is empty.
-  OrderedFailoverChatClient(
-    List<ChatClient> clients, {
-    this._leaveOpen = false,
-  })  : _clients = List.unmodifiable(clients) {
+  OrderedFailoverChatClient(List<ChatClient> clients, {this._leaveOpen = false})
+    : _clients = List.unmodifiable(clients) {
     if (_clients.isEmpty) {
       throw ArgumentError.value(
         clients,
@@ -60,8 +58,7 @@ final class OrderedFailoverChatClient extends FailoverChatClient {
   Future<ChatClient> selectClient(
     RoutingContext context,
     CancellationToken? cancellationToken,
-  ) async =>
-      _clients[_requestStates[context] ?? 0];
+  ) async => _clients[_requestStates[context] ?? 0];
 
   @override
   Future<void> onRoutingUpdate(

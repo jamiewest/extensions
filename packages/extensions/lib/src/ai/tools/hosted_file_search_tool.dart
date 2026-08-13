@@ -6,10 +6,8 @@ import 'ai_tool.dart';
 /// This is an experimental feature.
 class HostedFileSearchTool extends AITool {
   /// Creates a new [HostedFileSearchTool].
-  HostedFileSearchTool({
-    this.inputs,
-    this.maximumResultCount,
-  }) : super(name: 'file_search', description: 'File search');
+  HostedFileSearchTool({this.inputs, this.maximumResultCount})
+    : super(name: 'file_search', description: 'File search');
 
   /// The input content items for the file search.
   final List<AIContent>? inputs;

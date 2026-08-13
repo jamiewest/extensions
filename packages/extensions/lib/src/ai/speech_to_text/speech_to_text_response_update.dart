@@ -63,17 +63,15 @@ class SpeechToTextResponseUpdate {
   }) : contents = contents ?? [];
 
   /// Creates an update from a text string.
-  SpeechToTextResponseUpdate.fromText(
-    this.kind,
-    String text,
-  )   : contents = [TextContent(text)],
-        startTime = null,
-        endTime = null,
-        responseId = null,
-        modelId = null,
-        rawRepresentation = null,
-        additionalProperties = null,
-        usage = null;
+  SpeechToTextResponseUpdate.fromText(this.kind, String text)
+    : contents = [TextContent(text)],
+      startTime = null,
+      endTime = null,
+      responseId = null,
+      modelId = null,
+      rawRepresentation = null,
+      additionalProperties = null,
+      usage = null;
 
   /// The kind of update.
   final SpeechToTextResponseUpdateKind kind;

@@ -50,7 +50,8 @@ extension MemoryCacheServiceCollectionExtensions on ServiceCollection {
     void Function(MemoryDistributedCacheOptions options)? configureOptions,
   }) {
     addOptions<MemoryDistributedCacheOptions>(
-        MemoryDistributedCacheOptions.new);
+      MemoryDistributedCacheOptions.new,
+    );
 
     tryAdd(
       ServiceDescriptor.singleton<DistributedCache>(

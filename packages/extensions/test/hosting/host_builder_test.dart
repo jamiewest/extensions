@@ -76,16 +76,14 @@ void main() {
     });
 
     test('ConfigBasedSettingsConfigBasedOverride', () {
-      var settings = <String, String>{
-        HostDefaults.environmentKey: 'EnvA',
-      };
+      var settings = <String, String>{HostDefaults.environmentKey: 'EnvA'};
 
       var config = ConfigurationBuilder()
           .addInMemoryCollection(settings.entries)
           .build();
 
       var overrideSettings = <String, String>{
-        HostDefaults.environmentKey: 'EnvB'
+        HostDefaults.environmentKey: 'EnvB',
       };
 
       var overrideConfig = ConfigurationBuilder()
@@ -108,9 +106,7 @@ void main() {
     });
 
     test('UseEnvironmentIsNotOverriden', () {
-      var vals = <String, String>{
-        'ENV': 'Dev',
-      };
+      var vals = <String, String>{'ENV': 'Dev'};
 
       var builder = ConfigurationBuilder().addInMemoryCollection(vals.entries);
       var config = builder.build();
@@ -131,16 +127,15 @@ void main() {
     });
 
     test('UseBasePathConfiguresBasePath', () {
-      var vals = <String, String>{
-        'ENV': 'Dev',
-      };
+      var vals = <String, String>{'ENV': 'Dev'};
 
       var builder = ConfigurationBuilder().addInMemoryCollection(vals.entries);
       var config = builder.build();
 
       var host = DefaultHostBuilder()
           .configureHostConfiguration(
-              (configBuilder) => configBuilder.addConfiguration(config))
+            (configBuilder) => configBuilder.addConfiguration(config),
+          )
           .useContentRoot('/')
           .build();
 
@@ -173,8 +168,9 @@ void main() {
     test('RelativeContentRootIsResolved', () {
       var host = DefaultHostBuilder().useContentRoot('testroot').build();
 
-      var basePath =
-          host.services.getRequiredService<HostEnvironment>().contentRootPath;
+      var basePath = host.services
+          .getRequiredService<HostEnvironment>()
+          .contentRootPath;
 
       expect(p.isAbsolute(basePath), isTrue);
       expect(basePath, endsWith('${p.separator}testroot'));
@@ -198,9 +194,13 @@ void main() {
       expect(host.services.getRequiredService<Configuration>(), isNotNull);
       expect(host.services.getRequiredService<HostBuilderContext>(), isNotNull);
       expect(
-          host.services.getRequiredService<ApplicationLifetime>(), isNotNull);
-      expect(host.services.getRequiredService<HostApplicationLifetime>(),
-          isNotNull);
+        host.services.getRequiredService<ApplicationLifetime>(),
+        isNotNull,
+      );
+      expect(
+        host.services.getRequiredService<HostApplicationLifetime>(),
+        isNotNull,
+      );
       expect(host.services.getRequiredService<LoggerFactory>(), isNotNull);
 
       // Getting an IEnumerable from getRequiredService is not supported,
@@ -221,16 +221,10 @@ void main() {
       var callCount = 0;
       DefaultHostBuilder()
           .configureLogging(
-            (hostContext, loggerFactory) => expect(
-              callCount++,
-              equals(0),
-            ),
+            (hostContext, loggerFactory) => expect(callCount++, equals(0)),
           )
           .configureLogging(
-            (hostContext, loggerFactory) => expect(
-              callCount++,
-              equals(1),
-            ),
+            (hostContext, loggerFactory) => expect(callCount++, equals(1)),
           )
           .build();
 
@@ -241,13 +235,12 @@ void main() {
       DefaultHostBuilder()
           .configureAppConfiguration(
             (context, configBuilder) => configBuilder.addInMemoryCollection(
-                <String, String>{'key1': 'value1'}.entries),
+              <String, String>{'key1': 'value1'}.entries,
+            ),
           )
           .configureServices(
-            (context, factory) => expect(
-              context.configuration!['key1'],
-              equals('value1'),
-            ),
+            (context, factory) =>
+                expect(context.configuration!['key1'], equals('value1')),
           )
           .build();
     });
@@ -258,9 +251,7 @@ void main() {
             services
               ..addTransient<_ServiceD>((s) => _ServiceD())
               ..addScoped<_ServiceC>(
-                (s) => _ServiceC(
-                  s.getRequiredService<_ServiceD>(),
-                ),
+                (s) => _ServiceC(s.getRequiredService<_ServiceD>()),
               );
           })
           .configureHostConfiguration(
@@ -277,24 +268,29 @@ void main() {
 
       var host = hostBuilder.build();
       expect(
-          () => host.services.getRequiredService<_ServiceC>(), throwsException);
+        () => host.services.getRequiredService<_ServiceC>(),
+        throwsException,
+      );
     });
 
     test('HostingContextContainsAppConfigurationDuringConfigureLogging', () {
       DefaultHostBuilder()
           .configureAppConfiguration(
-        (context, configBuilder) => configBuilder.addInMemoryCollection(
-          <String, String>{'key1': 'value1'}.entries,
-        ),
-      )
+            (context, configBuilder) => configBuilder.addInMemoryCollection(
+              <String, String>{'key1': 'value1'}.entries,
+            ),
+          )
           .configureLogging((context, factory) {
-        expect(context.configuration!['key1'], equals('value1'));
-      }).build();
+            expect(context.configuration!['key1'], equals('value1'));
+          })
+          .build();
     });
 
     test('BuilderPropertiesAreAvailableInBuilderAndContext', () {
-      var hostBuilder =
-          DefaultHostBuilder().configureServices((hostContext, services) {
+      var hostBuilder = DefaultHostBuilder().configureServices((
+        hostContext,
+        services,
+      ) {
         expect(hostContext.properties['key'], equals('value'));
       });
 

@@ -35,8 +35,9 @@ void main() {
 
     test('Zero duration throws ArgumentError', () {
       expect(
-        () => MemoryCacheEntryOptions()
-          ..absoluteExpirationRelativeToNow = Duration.zero,
+        () =>
+            MemoryCacheEntryOptions()
+              ..absoluteExpirationRelativeToNow = Duration.zero,
         throwsArgumentError,
       );
 
@@ -48,14 +49,16 @@ void main() {
 
     test('Negative duration throws ArgumentError', () {
       expect(
-        () => MemoryCacheEntryOptions()
-          ..absoluteExpirationRelativeToNow = const Duration(seconds: -1),
+        () =>
+            MemoryCacheEntryOptions()
+              ..absoluteExpirationRelativeToNow = const Duration(seconds: -1),
         throwsArgumentError,
       );
 
       expect(
-        () => MemoryCacheEntryOptions()
-          ..slidingExpiration = const Duration(seconds: -1),
+        () =>
+            MemoryCacheEntryOptions()
+              ..slidingExpiration = const Duration(seconds: -1),
         throwsArgumentError,
       );
 
@@ -75,10 +78,7 @@ void main() {
     });
 
     test('Negative size throws ArgumentError', () {
-      expect(
-        () => MemoryCacheEntryOptions()..size = -1,
-        throwsArgumentError,
-      );
+      expect(() => MemoryCacheEntryOptions()..size = -1, throwsArgumentError);
     });
 
     test('ExpirationTokens are lazy initialized', () {
@@ -182,8 +182,9 @@ void main() {
 
     test('Zero duration throws ArgumentError', () {
       expect(
-        () => DistributedCacheEntryOptions()
-          ..absoluteExpirationRelativeToNow = Duration.zero,
+        () =>
+            DistributedCacheEntryOptions()
+              ..absoluteExpirationRelativeToNow = Duration.zero,
         throwsArgumentError,
       );
 
@@ -342,7 +343,11 @@ void main() {
   group('PostEvictionCallbackRegistration', () {
     test('Constructor sets callback and state', () {
       void callback(
-          Object key, Object? value, EvictionReason reason, Object? state) {}
+        Object key,
+        Object? value,
+        EvictionReason reason,
+        Object? state,
+      ) {}
 
       final registration = PostEvictionCallbackRegistration(
         evictionCallback: callback,
@@ -355,7 +360,11 @@ void main() {
 
     test('State can be null', () {
       void callback(
-          Object key, Object? value, EvictionReason reason, Object? state) {}
+        Object key,
+        Object? value,
+        EvictionReason reason,
+        Object? state,
+      ) {}
 
       final registration = PostEvictionCallbackRegistration(
         evictionCallback: callback,

@@ -6,7 +6,7 @@ import 'embedding.dart';
 class GeneratedEmbeddings {
   /// Creates a new [GeneratedEmbeddings].
   GeneratedEmbeddings([List<Embedding>? embeddings])
-      : _embeddings = embeddings ?? [];
+    : _embeddings = embeddings ?? [];
 
   final List<Embedding> _embeddings;
 

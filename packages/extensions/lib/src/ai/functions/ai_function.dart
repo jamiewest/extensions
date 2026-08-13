@@ -21,11 +21,10 @@ abstract class AIFunction extends AIFunctionDeclaration {
   Future<Object?> invoke(
     AIFunctionArguments? arguments, {
     CancellationToken? cancellationToken,
-  }) =>
-      invokeCore(
-        arguments ?? AIFunctionArguments(),
-        cancellationToken: cancellationToken,
-      );
+  }) => invokeCore(
+    arguments ?? AIFunctionArguments(),
+    cancellationToken: cancellationToken,
+  );
 
   /// Core implementation of function invocation.
   Future<Object?> invokeCore(

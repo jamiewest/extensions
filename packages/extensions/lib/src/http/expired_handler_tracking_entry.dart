@@ -22,8 +22,8 @@ class ExpiredHandlerTrackingEntry {
   /// Creates a new [ExpiredHandlerTrackingEntry] from the active entry
   /// being rotated out.
   ExpiredHandlerTrackingEntry(ActiveHandlerTrackingEntry other)
-      : name = other.name,
-        _handler = other.handler;
+    : name = other.name,
+      _handler = other.handler;
 
   /// The logical client name the handler served.
   final String name;

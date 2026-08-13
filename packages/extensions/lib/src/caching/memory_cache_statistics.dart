@@ -35,7 +35,8 @@ class MemoryCacheStatistics {
   final int totalHits;
 
   @override
-  String toString() => 'MemoryCacheStatistics('
+  String toString() =>
+      'MemoryCacheStatistics('
       'currentEntryCount: $currentEntryCount, '
       'currentEstimatedSize: $currentEstimatedSize, '
       'totalMisses: $totalMisses, '

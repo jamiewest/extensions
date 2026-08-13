@@ -447,17 +447,11 @@ void main() {
 
   group('PhysicalFileProvider - Root Path', () {
     test('throws for non-absolute root path', () {
-      expect(
-        () => PhysicalFileProvider('relative/path'),
-        throwsArgumentError,
-      );
+      expect(() => PhysicalFileProvider('relative/path'), throwsArgumentError);
     });
 
     test('accepts absolute root path', () {
-      expect(
-        () => PhysicalFileProvider(tempDir.path),
-        returnsNormally,
-      );
+      expect(() => PhysicalFileProvider(tempDir.path), returnsNormally);
     });
 
     test('root property returns absolute path', () {

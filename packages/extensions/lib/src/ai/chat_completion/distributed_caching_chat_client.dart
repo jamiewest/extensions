@@ -23,8 +23,8 @@ class DistributedCachingChatClient extends CachingChatClient {
     required Uint8List Function(ChatResponse response) serializeResponse,
     required ChatResponse Function(Uint8List data) deserializeResponse,
     this._cacheOptions,
-  })  : _serialize = serializeResponse,
-        _deserialize = deserializeResponse;
+  }) : _serialize = serializeResponse,
+       _deserialize = deserializeResponse;
 
   @override
   Future<ChatResponse?> getCachedResponse(String key) async {

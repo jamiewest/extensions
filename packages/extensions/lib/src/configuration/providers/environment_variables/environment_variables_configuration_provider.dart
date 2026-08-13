@@ -9,7 +9,7 @@ class EnvironmentVariablesConfigurationProvider extends ConfigurationProvider
   final String _prefix;
 
   EnvironmentVariablesConfigurationProvider([String? prefix])
-      : _prefix = prefix ?? '';
+    : _prefix = prefix ?? '';
 
   @override
   void load() => loadInternal(Platform.environment);

@@ -114,7 +114,8 @@ class CommandLineConfigurationProvider extends ConfigurationProvider
   }
 
   LinkedHashMap<String, String> _getValidatedSwitchMappingsCopy(
-      LinkedHashMap<String, String> switchMappings) {
+    LinkedHashMap<String, String> switchMappings,
+  ) {
     var switchMappingsCopy = LinkedHashMap<String, String>(
       equals: (a, b) => a.toLowerCase() == b.toLowerCase(),
       hashCode: (k) => k.toLowerCase().hashCode,

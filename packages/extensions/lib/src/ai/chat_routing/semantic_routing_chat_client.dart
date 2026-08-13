@@ -72,9 +72,9 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
     SemanticRoutingScoreAggregation scoreAggregation =
         SemanticRoutingScoreAggregation.mean,
     this._leaveOpen = false,
-  })  : _topK = topK,
-        _scoreAggregation = scoreAggregation,
-        _scoreThreshold = scoreThreshold {
+  }) : _topK = topK,
+       _scoreAggregation = scoreAggregation,
+       _scoreThreshold = scoreThreshold {
     if (clientProfiles.isEmpty) {
       throw ArgumentError.value(
         clientProfiles,
@@ -115,8 +115,9 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
         );
       }
 
-      var clientIndex =
-          clients.indexWhere((candidate) => identical(candidate, client));
+      var clientIndex = clients.indexWhere(
+        (candidate) => identical(candidate, client),
+      );
       if (clientIndex < 0) {
         clientIndex = clients.length;
         clients.add(client);
@@ -204,18 +205,19 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
           : _clients[0];
     }
 
-    final matches = <({int profileIndex, double score})>[
-      for (var i = 0; i < index.length; i++)
-        (
-          profileIndex: i,
-          score: _cosineSimilarity(queryVector, index[i].vector),
-        ),
-    ]..sort((left, right) {
-        final scoreComparison = right.score.compareTo(left.score);
-        return scoreComparison != 0
-            ? scoreComparison
-            : left.profileIndex.compareTo(right.profileIndex);
-      });
+    final matches =
+        <({int profileIndex, double score})>[
+          for (var i = 0; i < index.length; i++)
+            (
+              profileIndex: i,
+              score: _cosineSimilarity(queryVector, index[i].vector),
+            ),
+        ]..sort((left, right) {
+          final scoreComparison = right.score.compareTo(left.score);
+          return scoreComparison != 0
+              ? scoreComparison
+              : left.profileIndex.compareTo(right.profileIndex);
+        });
 
     final matchCount = min(_topK, matches.length);
     final scoreSums = List<double>.filled(_clients.length, 0);
@@ -279,10 +281,12 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
     // Concurrent requests share one build. A failed build clears the
     // pending future so the next request retries, mirroring the upstream
     // semaphore-guarded double-checked build.
-    return _pendingIndex ??= _buildIndex(cancellationToken).then((index) {
-      _index = index;
-      return index;
-    }).whenComplete(() => _pendingIndex = null);
+    return _pendingIndex ??= _buildIndex(cancellationToken)
+        .then((index) {
+          _index = index;
+          return index;
+        })
+        .whenComplete(() => _pendingIndex = null);
   }
 
   Future<List<_EmbeddedProfile>> _buildIndex(
@@ -312,10 +316,12 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
         );
       }
 
-      index.add(_EmbeddedProfile(
-        _profiles[i].clientIndex,
-        List.unmodifiable(embeddings[i].vector),
-      ));
+      index.add(
+        _EmbeddedProfile(
+          _profiles[i].clientIndex,
+          List.unmodifiable(embeddings[i].vector),
+        ),
+      );
     }
 
     return List.unmodifiable(index);

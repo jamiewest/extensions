@@ -30,8 +30,10 @@ void main() {
       final clone = update.clone();
 
       expect(identical(clone.contents, update.contents), isFalse);
-      expect(identical(clone.additionalProperties, update.additionalProperties),
-          isFalse);
+      expect(
+        identical(clone.additionalProperties, update.additionalProperties),
+        isFalse,
+      );
 
       clone.contents.add(TextContent(' there'));
       expect(update.contents, hasLength(1));

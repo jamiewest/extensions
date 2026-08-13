@@ -14,5 +14,5 @@ enum StringComparison {
 /// direct `==` comparison or use in hash-based collections.
 String stringComparisonKey(String value, StringComparison comparisonType) =>
     comparisonType == StringComparison.ordinalIgnoreCase
-        ? value.toLowerCase()
-        : value;
+    ? value.toLowerCase()
+    : value;

@@ -24,22 +24,20 @@ abstract class ChangeToken {
     ChangeTokenProducer changeTokenProducer,
     ChangeTokenTypedConsumer<TState> changeTokenConsumer,
     TState? state,
-  ) =>
-      _ChangeTokenRegistration<TState>(
-        changeTokenProducer,
-        changeTokenConsumer,
-        state,
-      );
+  ) => _ChangeTokenRegistration<TState>(
+    changeTokenProducer,
+    changeTokenConsumer,
+    state,
+  );
 
   static Disposable onChange(
     ChangeTokenProducer changeTokenProducer,
     ChangeTokenConsumer changeTokenConsumer,
-  ) =>
-      _ChangeTokenRegistration<Function>(
-        changeTokenProducer,
-        (s) => changeTokenConsumer(),
-        changeTokenConsumer,
-      );
+  ) => _ChangeTokenRegistration<Function>(
+    changeTokenProducer,
+    (s) => changeTokenConsumer(),
+    changeTokenConsumer,
+  );
 }
 
 class _ChangeTokenRegistration<TState> implements Disposable {

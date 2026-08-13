@@ -200,8 +200,8 @@ void usingConfigurationFactory() {
   final provider = services.buildServiceProvider();
 
   // Retrieve the factory from DI
-  final factory =
-      provider.getRequiredService<LoggerProviderConfigurationFactory>();
+  final factory = provider
+      .getRequiredService<LoggerProviderConfigurationFactory>();
 
   // Get provider-specific configuration
   final consoleConfig = factory.getConfiguration(ConsoleLoggerProvider);

@@ -114,25 +114,27 @@ void main() {
         expect(callbackInvoked, isTrue);
       });
 
-      test('RegisterChangeCallback_InvokesOnlyOnce_WhenMultipleTokensChange',
-          () {
-        final cts1 = CancellationTokenSource();
-        final cts2 = CancellationTokenSource();
+      test(
+        'RegisterChangeCallback_InvokesOnlyOnce_WhenMultipleTokensChange',
+        () {
+          final cts1 = CancellationTokenSource();
+          final cts2 = CancellationTokenSource();
 
-        final token1 = CancellationChangeToken(cts1.token);
-        final token2 = CancellationChangeToken(cts2.token);
-        final composite = CompositeChangeToken([token1, token2]);
+          final token1 = CancellationChangeToken(cts1.token);
+          final token2 = CancellationChangeToken(cts2.token);
+          final composite = CompositeChangeToken([token1, token2]);
 
-        var callbackCount = 0;
-        composite.registerChangeCallback((_) {
-          callbackCount++;
-        }, null);
+          var callbackCount = 0;
+          composite.registerChangeCallback((_) {
+            callbackCount++;
+          }, null);
 
-        cts1.cancel();
-        cts2.cancel();
+          cts1.cancel();
+          cts2.cancel();
 
-        expect(callbackCount, equals(1));
-      });
+          expect(callbackCount, equals(1));
+        },
+      );
 
       test('RegisterChangeCallback_PassesState', () {
         final cts = CancellationTokenSource();
@@ -176,8 +178,7 @@ void main() {
         expect(callbackInvoked, isFalse);
       });
 
-      test(
-          'RegisterChangeCallback_DoesNotInvokeCallback_'
+      test('RegisterChangeCallback_DoesNotInvokeCallback_'
           'WhenTokenDoesNotChange', () {
         final token1 = TestChangeToken();
         final token2 = TestChangeToken();
@@ -195,8 +196,10 @@ void main() {
 
     group('Multiple Tokens', () {
       test('CompositeToken_WithManyTokens_InvokesCallbackOnce', () {
-        final tokenSources =
-            List.generate(10, (_) => CancellationTokenSource());
+        final tokenSources = List.generate(
+          10,
+          (_) => CancellationTokenSource(),
+        );
         final tokens = tokenSources
             .map((cts) => CancellationChangeToken(cts.token))
             .toList();

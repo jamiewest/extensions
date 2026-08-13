@@ -6,11 +6,13 @@ import 'realtime_client.dart';
 
 /// A factory that creates a [RealtimeClient] from a [ServiceProvider].
 typedef InnerRealtimeClientFactory = RealtimeClient Function(
-    ServiceProvider services);
+  ServiceProvider services,
+);
 
 /// A factory that creates middleware by wrapping an inner [RealtimeClient].
 typedef RealtimeClientFactory = RealtimeClient Function(
-    RealtimeClient innerClient);
+  RealtimeClient innerClient,
+);
 
 /// A factory that creates middleware by wrapping an inner [RealtimeClient] and
 /// receiving the active [ServiceProvider].
@@ -40,7 +42,7 @@ class RealtimeClientBuilder {
   List<RealtimeClientFactoryWithServices>? _clientFactories;
 
   RealtimeClientBuilder._(InnerRealtimeClientFactory innerClientFactory)
-      : _innerClientFactory = innerClientFactory;
+    : _innerClientFactory = innerClientFactory;
 
   /// Creates a new [RealtimeClientBuilder] wrapping [innerClient].
   RealtimeClientBuilder(RealtimeClient innerClient) {
@@ -50,8 +52,7 @@ class RealtimeClientBuilder {
   /// Creates a new [RealtimeClientBuilder] from a factory function.
   factory RealtimeClientBuilder.fromFactory(
     InnerRealtimeClientFactory innerClientFactory,
-  ) =>
-      RealtimeClientBuilder._(innerClientFactory);
+  ) => RealtimeClientBuilder._(innerClientFactory);
 
   /// Adds a middleware factory to the pipeline.
   RealtimeClientBuilder use(RealtimeClientFactory clientFactory) {
@@ -62,11 +63,13 @@ class RealtimeClientBuilder {
   /// Adds a middleware factory to the pipeline that receives the active
   /// [ServiceProvider].
   RealtimeClientBuilder useWithServices(
-      RealtimeClientFactoryWithServices clientFactory) {
+    RealtimeClientFactoryWithServices clientFactory,
+  ) {
     ArgumentError.checkNotNull(clientFactory, 'clientFactory');
 
-    (_clientFactories ??= <RealtimeClientFactoryWithServices>[])
-        .add(clientFactory);
+    (_clientFactories ??= <RealtimeClientFactoryWithServices>[]).add(
+      clientFactory,
+    );
     return this;
   }
 

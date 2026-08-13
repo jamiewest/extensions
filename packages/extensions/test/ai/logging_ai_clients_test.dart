@@ -17,8 +17,7 @@ class _ResponseChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      response;
+  }) async => response;
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
@@ -55,8 +54,7 @@ class _ThrowingChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -75,16 +73,14 @@ class _ThrowingStreamingChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      ChatResponse();
+  }) async => ChatResponse();
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      Stream<ChatResponseUpdate>.error(exception);
+  }) => Stream<ChatResponseUpdate>.error(exception);
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -99,10 +95,9 @@ class _EmbeddingGenerator implements EmbeddingGenerator {
     required Iterable<String> values,
     EmbeddingGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      GeneratedEmbeddings([
-        Embedding(vector: [0.1, 0.2])
-      ]);
+  }) async => GeneratedEmbeddings([
+    Embedding(vector: [0.1, 0.2]),
+  ]);
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -117,8 +112,7 @@ class _ImageGenerator implements ImageGenerator {
     required ImageGenerationRequest request,
     ImageGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      ImageGenerationResponse(contents: [TextContent('image')]);
+  }) async => ImageGenerationResponse(contents: [TextContent('image')]);
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -154,8 +148,7 @@ class _SpeechToTextClient implements SpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      SpeechToTextResponse.fromText('text');
+  }) async => SpeechToTextResponse.fromText('text');
 
   @override
   Stream<SpeechToTextResponse> getStreamingText({
@@ -213,8 +206,7 @@ class _ThrowingSpeechToTextClient implements SpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      Stream<SpeechToTextResponse>.error(exception);
+  }) => Stream<SpeechToTextResponse>.error(exception);
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -251,16 +243,19 @@ void main() {
       final inner = _ResponseChatClient(ChatResponse());
       final client = LoggingChatClient(inner, logger: logger);
 
-      await client.getStreamingResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
-      ).toList();
+      await client
+          .getStreamingResponse(
+            messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
+          )
+          .toList();
 
       final messages = logger.loggedMessages.map((e) => e.message).toList();
       expect(messages, contains('getStreamingChatResponse invoked.'));
       expect(messages, contains('getStreamingChatResponse completed.'));
       expect(
         messages.any(
-            (m) => m.contains('getStreamingChatResponse received update.')),
+          (m) => m.contains('getStreamingChatResponse received update.'),
+        ),
         isTrue,
       );
     });
@@ -272,9 +267,11 @@ void main() {
       final client = LoggingChatClient(inner, logger: logger);
 
       await expectLater(
-        client.getStreamingResponse(
-          messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
-        ).toList(),
+        client
+            .getStreamingResponse(
+              messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
+            )
+            .toList(),
         throwsA(exception),
       );
 
@@ -290,14 +287,17 @@ void main() {
       final client = LoggingChatClient(inner, logger: logger);
 
       await expectLater(
-        client.getStreamingResponse(
-          messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
-        ).toList(),
+        client
+            .getStreamingResponse(
+              messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
+            )
+            .toList(),
         throwsA(exception),
       );
 
-      final entry = logger.loggedMessages
-          .firstWhere((e) => e.message == 'getStreamingChatResponse failed.');
+      final entry = logger.loggedMessages.firstWhere(
+        (e) => e.message == 'getStreamingChatResponse failed.',
+      );
       expect(entry.error, exception);
     });
 
@@ -331,8 +331,9 @@ void main() {
         throwsA(exception),
       );
 
-      final entry = logger.loggedMessages
-          .firstWhere((e) => e.message == 'getChatResponse failed.');
+      final entry = logger.loggedMessages.firstWhere(
+        (e) => e.message == 'getChatResponse failed.',
+      );
       expect(entry.error, exception);
     });
   });
@@ -365,8 +366,9 @@ void main() {
         throwsA(exception),
       );
 
-      final entry = logger.loggedMessages
-          .firstWhere((e) => e.message == 'generateEmbeddings failed.');
+      final entry = logger.loggedMessages.firstWhere(
+        (e) => e.message == 'generateEmbeddings failed.',
+      );
       expect(entry.error, exception);
     });
 
@@ -415,8 +417,9 @@ void main() {
         throwsA(exception),
       );
 
-      final entry = logger.loggedMessages
-          .firstWhere((e) => e.message == 'generate failed.');
+      final entry = logger.loggedMessages.firstWhere(
+        (e) => e.message == 'generate failed.',
+      );
       expect(entry.error, exception);
     });
 
@@ -483,8 +486,9 @@ void main() {
         throwsA(exception),
       );
 
-      final entry = logger.loggedMessages
-          .firstWhere((e) => e.message == 'getText failed.');
+      final entry = logger.loggedMessages.firstWhere(
+        (e) => e.message == 'getText failed.',
+      );
       expect(entry.error, exception);
     });
 
@@ -519,8 +523,9 @@ void main() {
         throwsA(exception),
       );
 
-      final entry = logger.loggedMessages
-          .firstWhere((e) => e.message == 'getStreamingText failed.');
+      final entry = logger.loggedMessages.firstWhere(
+        (e) => e.message == 'getStreamingText failed.',
+      );
       expect(entry.error, exception);
     });
   });

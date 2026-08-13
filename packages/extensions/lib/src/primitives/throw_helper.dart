@@ -49,8 +49,7 @@ class ThrowHelper {
 
   static ArgumentNullException getArgumentNullException(
     ExceptionArgument argument,
-  ) =>
-      ArgumentNullException(paramName: _getArgumentName(argument));
+  ) => ArgumentNullException(paramName: _getArgumentName(argument));
 
   //static  getArgumentOutOfRangeException(ExceptionArgument argument) {}
 

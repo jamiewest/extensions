@@ -38,14 +38,15 @@ class ImageGenerationOptions {
 
   /// Creates a deep copy of this [ImageGenerationOptions].
   ImageGenerationOptions clone() => ImageGenerationOptions(
-        count: count,
-        imageWidth: imageWidth,
-        imageHeight: imageHeight,
-        mediaType: mediaType,
-        modelId: modelId,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-      );
+    count: count,
+    imageWidth: imageWidth,
+    imageHeight: imageHeight,
+    mediaType: mediaType,
+    modelId: modelId,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+  );
 }
 
 /// Represents an image generation request.

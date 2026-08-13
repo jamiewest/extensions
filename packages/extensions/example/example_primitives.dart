@@ -61,13 +61,10 @@ void _onChangeExample() {
   var generation = 0;
   var source = CancellationTokenSource();
 
-  final registration = ChangeToken.onChange(
-    () {
-      generation++;
-      return CancellationChangeToken(source.token);
-    },
-    () => print('configuration reloaded (generation $generation)'),
-  );
+  final registration = ChangeToken.onChange(() {
+    generation++;
+    return CancellationChangeToken(source.token);
+  }, () => print('configuration reloaded (generation $generation)'));
 
   final previous = source;
   source = CancellationTokenSource();

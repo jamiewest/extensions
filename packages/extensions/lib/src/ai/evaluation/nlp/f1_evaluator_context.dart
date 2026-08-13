@@ -14,7 +14,7 @@ import '../evaluation_context.dart';
 class F1EvaluatorContext extends EvaluationContext {
   /// Creates an [F1EvaluatorContext] from [groundTruth].
   F1EvaluatorContext(this.groundTruth)
-      : super(groundTruthContextName, contents: [TextContent(groundTruth)]);
+    : super(groundTruthContextName, contents: [TextContent(groundTruth)]);
 
   /// Unique context name used when recording contexts on metrics.
   static const String groundTruthContextName = 'Ground truth(F1)';

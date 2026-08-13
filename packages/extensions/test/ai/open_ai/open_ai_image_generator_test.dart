@@ -6,16 +6,12 @@ import 'package:test/test.dart';
 import 'helpers/verbatim_http_client.dart';
 
 void main() {
-  String imageJson({
-    String b64 = 'aGVsbG8=',
-    String? url,
-  }) =>
-      jsonEncode({
-        'created': 1234567890,
-        'data': [
-          if (url != null) {'url': url} else {'b64_json': b64},
-        ],
-      });
+  String imageJson({String b64 = 'aGVsbG8=', String? url}) => jsonEncode({
+    'created': 1234567890,
+    'data': [
+      if (url != null) {'url': url} else {'b64_json': b64},
+    ],
+  });
 
   // ---------------------------------------------------------------------------
   // Metadata
@@ -111,9 +107,7 @@ void main() {
         options: OpenAIClientOptions(httpClient: fakeHttp),
       );
 
-      await gen.generate(
-        request: ImageGenerationRequest(prompt: 'a sunset'),
-      );
+      await gen.generate(request: ImageGenerationRequest(prompt: 'a sunset'));
 
       final body =
           jsonDecode(fakeHttp.capturedRequestBody!) as Map<String, dynamic>;

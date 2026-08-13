@@ -4,7 +4,8 @@ import 'image_generator.dart';
 
 /// A factory that creates an [ImageGenerator] from a [ServiceProvider].
 typedef InnerImageGeneratorFactory = ImageGenerator Function(
-    ServiceProvider services);
+  ServiceProvider services,
+);
 
 /// Builds a pipeline of image generator middleware.
 ///
@@ -18,7 +19,7 @@ class ImageGeneratorBuilder {
   late final InnerImageGeneratorFactory _innerFactory;
 
   ImageGeneratorBuilder._(InnerImageGeneratorFactory innerFactory)
-      : _innerFactory = innerFactory;
+    : _innerFactory = innerFactory;
 
   /// Creates a new [ImageGeneratorBuilder] wrapping [innerGenerator].
   ImageGeneratorBuilder(ImageGenerator innerGenerator) {
@@ -27,14 +28,13 @@ class ImageGeneratorBuilder {
 
   /// Creates a new [ImageGeneratorBuilder] from a factory function.
   factory ImageGeneratorBuilder.fromFactory(
-          InnerImageGeneratorFactory innerFactory) =>
-      ImageGeneratorBuilder._(innerFactory);
+    InnerImageGeneratorFactory innerFactory,
+  ) => ImageGeneratorBuilder._(innerFactory);
 
   final List<
-      ImageGenerator Function(
-        ImageGenerator inner,
-        ServiceProvider services,
-      )> _factories = [];
+    ImageGenerator Function(ImageGenerator inner, ServiceProvider services)
+  >
+  _factories = [];
 
   /// Adds a middleware factory to the pipeline.
   ImageGeneratorBuilder use(ImageGenerator Function(ImageGenerator) factory) =>
@@ -43,10 +43,9 @@ class ImageGeneratorBuilder {
   /// Adds a middleware factory that also receives the active
   /// [ServiceProvider].
   ImageGeneratorBuilder useWithServices(
-      ImageGenerator Function(
-        ImageGenerator inner,
-        ServiceProvider services,
-      ) factory) {
+    ImageGenerator Function(ImageGenerator inner, ServiceProvider services)
+    factory,
+  ) {
     _factories.add(factory);
     return this;
   }

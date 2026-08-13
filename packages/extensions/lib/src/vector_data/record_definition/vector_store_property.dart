@@ -5,8 +5,7 @@ import 'package:extensions/annotations.dart';
   name: 'VectorStoreProperty.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
 )
 abstract class VectorStoreProperty {
   /// Creates a new [VectorStoreProperty] with the given [propertyName].

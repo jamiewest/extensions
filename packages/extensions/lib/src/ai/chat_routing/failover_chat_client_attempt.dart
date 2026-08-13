@@ -37,24 +37,21 @@ final class FailoverChatClientAttempt {
     this.timeToFirstUpdate,
     required this.responseCompleted,
     required this.outputCommitted,
-  })  : assert(
-          duration >= Duration.zero,
-          'Expected a non-negative duration.',
-        ),
-        assert(
-          timeToFirstUpdate == null ||
-              (timeToFirstUpdate >= Duration.zero &&
-                  timeToFirstUpdate <= duration),
-          'Expected time to first update to be within the active duration.',
-        ),
-        assert(
-          !responseCompleted || exception == null,
-          'A completed response should not have an exception.',
-        ),
-        assert(
-          outputCommitted == (timeToFirstUpdate != null),
-          'Output commitment and time to first update should agree.',
-        );
+  }) : assert(duration >= Duration.zero, 'Expected a non-negative duration.'),
+       assert(
+         timeToFirstUpdate == null ||
+             (timeToFirstUpdate >= Duration.zero &&
+                 timeToFirstUpdate <= duration),
+         'Expected time to first update to be within the active duration.',
+       ),
+       assert(
+         !responseCompleted || exception == null,
+         'A completed response should not have an exception.',
+       ),
+       assert(
+         outputCommitted == (timeToFirstUpdate != null),
+         'Output commitment and time to first update should agree.',
+       );
 
   /// The client that was invoked.
   final ChatClient client;

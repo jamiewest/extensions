@@ -50,10 +50,13 @@ class ArgumentException extends SystemException {
   }
 
   static void _throwNullOrWhitespaceException(
-      String? argument, String? paramName) {
+    String? argument,
+    String? paramName,
+  ) {
     ArgumentNullException.throwIfNull(argument, paramName);
     throw ArgumentException(
-      message: 'The value cannot be an empty string or '
+      message:
+          'The value cannot be an empty string or '
           'composed entirely of whitespace.',
       paramName: paramName,
     );

@@ -48,27 +48,38 @@ class BLEUEvaluator implements Evaluator {
 
     final responseText = modelResponse.text;
     if (responseText.isEmpty) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'The modelResponse supplied for evaluation was null or empty.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'The modelResponse supplied for evaluation was null or empty.',
+        ),
+      );
       return result;
     }
 
-    final ctx =
-        additionalContext?.whereType<BLEUEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        ?.whereType<BLEUEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'A BLEUEvaluatorContext was not found in additionalContext.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'A BLEUEvaluatorContext was not found in additionalContext.',
+        ),
+      );
       return result;
     }
     if (ctx.references.isEmpty) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'The supplied BLEUEvaluatorContext contained no references.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'The supplied BLEUEvaluatorContext contained no references.',
+        ),
+      );
       return result;
     }
 
     final start = DateTime.now();
-    final references =
-        ctx.references.map((r) => SimpleWordTokenizer.wordTokenize(r)).toList();
+    final references = ctx.references
+        .map((r) => SimpleWordTokenizer.wordTokenize(r))
+        .toList();
     final hypothesis = SimpleWordTokenizer.wordTokenize(responseText);
     final score = BLEUAlgorithm.sentenceBLEU(
       references,

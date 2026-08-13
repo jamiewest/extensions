@@ -30,9 +30,9 @@ final class OpenAIImageGenerator implements ImageGenerator {
     String modelId,
     String apiKey, {
     OpenAIClientOptions? options,
-  })  : _modelId = modelId,
-        _apiKey = apiKey,
-        _options = options ?? OpenAIClientOptions() {
+  }) : _modelId = modelId,
+       _apiKey = apiKey,
+       _options = options ?? OpenAIClientOptions() {
     metadata = ImageGeneratorMetadata(
       providerName: 'openai',
       providerUri: _options.endpoint,

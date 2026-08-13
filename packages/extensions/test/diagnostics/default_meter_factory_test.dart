@@ -50,10 +50,7 @@ void main() {
   group('MeterOptions', () {
     test('throws when name set to null', () {
       final options = MeterOptions('initial');
-      expect(
-        () => options.name = null,
-        throwsA(isA<ArgumentNullException>()),
-      );
+      expect(() => options.name = null, throwsA(isA<ArgumentNullException>()));
     });
   });
 }

@@ -8,10 +8,7 @@ class _Recipe {
 
   factory _Recipe.fromJson(Object? json) {
     final map = json as Map<String, dynamic>;
-    return _Recipe(
-      name: map['name'] as String,
-      minutes: map['minutes'] as int,
-    );
+    return _Recipe(name: map['name'] as String, minutes: map['minutes'] as int);
   }
 
   final String name;
@@ -52,8 +49,7 @@ class _ScriptedChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -141,10 +137,7 @@ void main() {
         fromJson: (json) => (json as List<dynamic>).cast<int>(),
       );
 
-      expect(
-        () => response.result,
-        throwsA(isA<InvalidOperationException>()),
-      );
+      expect(() => response.result, throwsA(isA<InvalidOperationException>()));
       expect(response.tryGetResult(), isNull);
     });
 

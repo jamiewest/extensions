@@ -7,7 +7,7 @@ abstract class DirectoryContents with IterableMixin<FileInfo> {
   final Iterable<FileInfo> _contents;
 
   DirectoryContents([Iterable<FileInfo>? contents])
-      : _contents = contents ?? <FileInfo>[];
+    : _contents = contents ?? <FileInfo>[];
 
   /// True if a directory was located at the given path.
   bool get exists;

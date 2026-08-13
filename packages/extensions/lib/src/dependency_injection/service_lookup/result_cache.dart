@@ -2,15 +2,14 @@ part of 'service_lookup.dart';
 
 class ResultCache {
   static ResultCache none(Type serviceType) {
-    var cacheKey =
-        ServiceCacheKey(ServiceIdentifier.fromServiceType(serviceType), 0);
+    var cacheKey = ServiceCacheKey(
+      ServiceIdentifier.fromServiceType(serviceType),
+      0,
+    );
     return ResultCache._(CallSiteResultCacheLocation.none, cacheKey);
   }
 
-  ResultCache._(
-    this.location,
-    this.key,
-  );
+  ResultCache._(this.location, this.key);
 
   factory ResultCache(
     ServiceLifetime lifetime,
@@ -28,10 +27,7 @@ class ResultCache {
         location = CallSiteResultCacheLocation.dispose;
     }
 
-    return ResultCache._(
-      location,
-      ServiceCacheKey(serviceIdentifier, slot),
-    );
+    return ResultCache._(location, ServiceCacheKey(serviceIdentifier, slot));
   }
 
   CallSiteResultCacheLocation location;

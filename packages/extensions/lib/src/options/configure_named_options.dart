@@ -13,24 +13,24 @@ typedef ConfigureNamedOptionsActionT2<TOptions, TDep1, TDep2> = void Function(
   TDep1 dep1,
   TDep2 dep2,
 );
-typedef ConfigureNamedOptionsActionT3<TOptions, TDep1, TDep2, TDep3> = void
-    Function(
-  TOptions options,
-  TDep1 dep1,
-  TDep2 dep2,
-  TDep3 dep3,
-);
-typedef ConfigureNamedOptionsActionT4<TOptions, TDep1, TDep2, TDep3, TDep4>
-    = void Function(
-  TOptions options,
-  TDep1 dep1,
-  TDep2 dep2,
-  TDep3 dep3,
-  TDep4 dep4,
-);
-typedef ConfigureNamedOptionsActionT5<TOptions, TDep1, TDep2, TDep3, TDep4,
-        TDep5>
-    = void Function(
+typedef ConfigureNamedOptionsActionT3<TOptions, TDep1, TDep2, TDep3> =
+    void Function(TOptions options, TDep1 dep1, TDep2 dep2, TDep3 dep3);
+typedef ConfigureNamedOptionsActionT4<TOptions, TDep1, TDep2, TDep3, TDep4> =
+    void Function(
+      TOptions options,
+      TDep1 dep1,
+      TDep2 dep2,
+      TDep3 dep3,
+      TDep4 dep4,
+    );
+typedef ConfigureNamedOptionsActionT5<
+  TOptions,
+  TDep1,
+  TDep2,
+  TDep3,
+  TDep4,
+  TDep5
+> = void Function(
   TOptions options,
   TDep1 dep1,
   TDep2 dep2,
@@ -48,10 +48,7 @@ abstract class ConfigureNamedOptions<TOptions>
 
 class ConfigureNamedOptions0<TOptions>
     implements ConfigureNamedOptions<TOptions> {
-  ConfigureNamedOptions0(
-    this.name,
-    this.action,
-  );
+  ConfigureNamedOptions0(this.name, this.action);
 
   /// The options name.
   final String? name;
@@ -68,19 +65,13 @@ class ConfigureNamedOptions0<TOptions>
   }
 
   @override
-  void configure(TOptions options) => configureNamed(
-        name ?? Options.defaultName,
-        options,
-      );
+  void configure(TOptions options) =>
+      configureNamed(name ?? Options.defaultName, options);
 }
 
 class ConfigureNamedOptions1<TOptions, TDep>
     implements ConfigureNamedOptions<TOptions> {
-  ConfigureNamedOptions1(
-    this.name,
-    this.action,
-    this.dependency,
-  );
+  ConfigureNamedOptions1(this.name, this.action, this.dependency);
 
   /// The options name.
   final String? name;
@@ -92,10 +83,8 @@ class ConfigureNamedOptions1<TOptions, TDep>
   final TDep dependency;
 
   @override
-  void configure(TOptions options, {String? name}) => configureNamed(
-        name ?? Options.defaultName,
-        options,
-      );
+  void configure(TOptions options, {String? name}) =>
+      configureNamed(name ?? Options.defaultName, options);
 
   @override
   void configureNamed(String name, TOptions options) {
@@ -126,10 +115,8 @@ class ConfigureNamedOptions2<TOptions, TDep1, TDep2>
   final TDep2 dependency2;
 
   @override
-  void configure(TOptions options, {String? name}) => configureNamed(
-        name ?? Options.defaultName,
-        options,
-      );
+  void configure(TOptions options, {String? name}) =>
+      configureNamed(name ?? Options.defaultName, options);
 
   @override
   void configureNamed(String name, TOptions options) {
@@ -165,20 +152,13 @@ class ConfigureNamedOptions3<TOptions, TDep1, TDep2, TDep3>
   final TDep3 dependency3;
 
   @override
-  void configure(TOptions options, {String? name}) => configureNamed(
-        name ?? Options.defaultName,
-        options,
-      );
+  void configure(TOptions options, {String? name}) =>
+      configureNamed(name ?? Options.defaultName, options);
 
   @override
   void configureNamed(String name, TOptions options) {
     if (this.name == null || name == this.name) {
-      action.call(
-        options,
-        dependency1,
-        dependency2,
-        dependency3,
-      );
+      action.call(options, dependency1, dependency2, dependency3);
     }
   }
 }
@@ -199,7 +179,7 @@ class ConfigureNamedOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>
 
   /// The configuration action.
   final ConfigureNamedOptionsActionT4<TOptions, TDep1, TDep2, TDep3, TDep4>
-      action;
+  action;
 
   /// The first dependency.
   final TDep1 dependency1;
@@ -214,21 +194,13 @@ class ConfigureNamedOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>
   final TDep4 dependency4;
 
   @override
-  void configure(TOptions options, {String? name}) => configureNamed(
-        name ?? Options.defaultName,
-        options,
-      );
+  void configure(TOptions options, {String? name}) =>
+      configureNamed(name ?? Options.defaultName, options);
 
   @override
   void configureNamed(String name, TOptions options) {
     if (this.name == null || name == this.name) {
-      action.call(
-        options,
-        dependency1,
-        dependency2,
-        dependency3,
-        dependency4,
-      );
+      action.call(options, dependency1, dependency2, dependency3, dependency4);
     }
   }
 }
@@ -249,8 +221,15 @@ class ConfigureNamedOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
   final String? name;
 
   /// The configuration action.
-  final ConfigureNamedOptionsActionT5<TOptions, TDep1, TDep2, TDep3, TDep4,
-      TDep5> action;
+  final ConfigureNamedOptionsActionT5<
+    TOptions,
+    TDep1,
+    TDep2,
+    TDep3,
+    TDep4,
+    TDep5
+  >
+  action;
 
   /// The first dependency.
   final TDep1 dependency1;
@@ -268,10 +247,8 @@ class ConfigureNamedOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
   final TDep5 dependency5;
 
   @override
-  void configure(TOptions options, {String? name}) => configureNamed(
-        name ?? Options.defaultName,
-        options,
-      );
+  void configure(TOptions options, {String? name}) =>
+      configureNamed(name ?? Options.defaultName, options);
 
   @override
   void configureNamed(String name, TOptions options) {

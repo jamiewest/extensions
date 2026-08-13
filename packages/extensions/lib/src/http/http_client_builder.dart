@@ -37,10 +37,9 @@ class HttpClientBuilder {
   /// Sets the primary handler for the client.
   HttpClientBuilder configurePrimaryHttpMessageHandler(
     HttpMessageHandler Function(ServiceProvider services) factory,
-  ) =>
-      configureHttpMessageHandlerBuilder(
-        (builder, sp) => builder.primaryHandler = factory(sp),
-      );
+  ) => configureHttpMessageHandlerBuilder(
+    (builder, sp) => builder.primaryHandler = factory(sp),
+  );
 
   /// Adds a delegate to mutate the handler pipeline.
   HttpClientBuilder configureHttpMessageHandlerBuilder(
@@ -57,25 +56,22 @@ class HttpClientBuilder {
   /// Adds a delegating handler to the pipeline.
   HttpClientBuilder addHttpMessageHandler(
     HttpMessageHandler Function(ServiceProvider services) handlerFactory,
-  ) =>
-      configureHttpMessageHandlerBuilder(
-        (builder, sp) => builder.additionalHandlers.add(
-          handlerFactory(sp) as DelegatingHandler,
-        ),
-      );
+  ) => configureHttpMessageHandlerBuilder(
+    (builder, sp) =>
+        builder.additionalHandlers.add(handlerFactory(sp) as DelegatingHandler),
+  );
 
   /// Registers a typed client that depends on this named client.
   HttpClientBuilder addTypedClient<TClient extends Object>(
     TClient Function(http.BaseClient client, ServiceProvider services) factory,
   ) {
     services.tryAdd(
-      ServiceDescriptor.transient<TClient>(
-        (sp) {
-          var client =
-              sp.getRequiredService<HttpClientFactory>().createClient(name);
-          return factory(client, sp);
-        },
-      ),
+      ServiceDescriptor.transient<TClient>((sp) {
+        var client = sp.getRequiredService<HttpClientFactory>().createClient(
+          name,
+        );
+        return factory(client, sp);
+      }),
     );
     return this;
   }
@@ -137,14 +133,11 @@ class HttpClientBuilder {
   /// Use this to inspect or reorder the pipeline assembled by earlier
   /// [addHttpMessageHandler] calls.
   HttpClientBuilder configureAdditionalHttpMessageHandlers(
-    void Function(
-      List<DelegatingHandler> handlers,
-      ServiceProvider services,
-    ) configure,
-  ) =>
-      configureHttpMessageHandlerBuilder(
-        (builder, sp) => configure(builder.additionalHandlers, sp),
-      );
+    void Function(List<DelegatingHandler> handlers, ServiceProvider services)
+    configure,
+  ) => configureHttpMessageHandlerBuilder(
+    (builder, sp) => configure(builder.additionalHandlers, sp),
+  );
 
   /// Registers this named client as a keyed [http.BaseClient] service
   /// with the client [name] as the service key.
@@ -165,9 +158,9 @@ class HttpClientBuilder {
     services.add(
       descriptor<http.BaseClient>(
         name,
-        (sp, key) => sp
-            .getRequiredService<HttpClientFactory>()
-            .createClient(key as String? ?? name),
+        (sp, key) => sp.getRequiredService<HttpClientFactory>().createClient(
+          key as String? ?? name,
+        ),
       ),
     );
     return this;

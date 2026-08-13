@@ -23,22 +23,19 @@ class _FakeStore extends VectorStore {
   @override
   Stream<String> listCollectionNamesAsync({
     CancellationToken? cancellationToken,
-  }) =>
-      Stream.fromIterable(['hotels', 'restaurants']);
+  }) => Stream.fromIterable(['hotels', 'restaurants']);
 
   @override
   Future<bool> collectionExistsAsync(
     String name, {
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value(name == 'hotels');
+  }) => Future.value(name == 'hotels');
 
   @override
   Future<void> ensureCollectionDeletedAsync(
     String name, {
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value();
+  }) => Future.value();
 }
 
 void main() {

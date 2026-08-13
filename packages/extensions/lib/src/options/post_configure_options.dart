@@ -17,24 +17,24 @@ typedef PostConfigureActionT3<TOptions, TDep1, TDep2, TDep3> = void Function(
   TDep3 dep3,
 );
 
-typedef PostConfigureActionT4<TOptions, TDep1, TDep2, TDep3, TDep4> = void
-    Function(
-  TOptions options,
-  TDep1 dep,
-  TDep2 dep2,
-  TDep3 dep3,
-  TDep4 dep4,
-);
+typedef PostConfigureActionT4<TOptions, TDep1, TDep2, TDep3, TDep4> =
+    void Function(
+      TOptions options,
+      TDep1 dep,
+      TDep2 dep2,
+      TDep3 dep3,
+      TDep4 dep4,
+    );
 
-typedef PostConfigureActionT5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
-    = void Function(
-  TOptions options,
-  TDep1 dep,
-  TDep2 dep2,
-  TDep3 dep3,
-  TDep4 dep4,
-  TDep5 dep5,
-);
+typedef PostConfigureActionT5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5> =
+    void Function(
+      TOptions options,
+      TDep1 dep,
+      TDep2 dep2,
+      TDep3 dep3,
+      TDep4 dep4,
+      TDep5 dep5,
+    );
 
 /// Represents something that configures the [TOptions] type.
 abstract class PostConfigureOptions<TOptions> {
@@ -45,10 +45,7 @@ abstract class PostConfigureOptions<TOptions> {
 class PostConfigureOptions0<TOptions>
     implements PostConfigureOptions<TOptions> {
   /// Creates a new instance of [PostConfigureOptions<TOptions>].
-  PostConfigureOptions0(
-    this.name,
-    this.action,
-  );
+  PostConfigureOptions0(this.name, this.action);
 
   /// The options name.
   final String? name;
@@ -67,11 +64,7 @@ class PostConfigureOptions0<TOptions>
 
 class PostConfigureOptions1<TOptions, TDep>
     extends PostConfigureOptions<TOptions> {
-  PostConfigureOptions1(
-    this.name,
-    this.dependency,
-    this.action,
-  );
+  PostConfigureOptions1(this.name, this.dependency, this.action);
 
   /// The options name.
   final String? name;
@@ -114,11 +107,7 @@ class PostConfigureOptions2<TOptions, TDep1, TDep2>
   @override
   void postConfigure(TOptions options, {String? name}) {
     if (this.name == null || name == this.name) {
-      action.call(
-        options,
-        dependency1,
-        dependency2,
-      );
+      action.call(options, dependency1, dependency2);
     }
   }
 }
@@ -151,12 +140,7 @@ class PostConfigureOptions3<TOptions, TDep1, TDep2, TDep3>
   @override
   void postConfigure(TOptions options, {String? name}) {
     if (this.name == null || name == this.name) {
-      action.call(
-        options,
-        dependency1,
-        dependency2,
-        dependency3,
-      );
+      action.call(options, dependency1, dependency2, dependency3);
     }
   }
 }
@@ -193,13 +177,7 @@ class PostConfigureOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>
   @override
   void postConfigure(TOptions options, {String? name}) {
     if (this.name == null || name == this.name) {
-      action.call(
-        options,
-        dependency1,
-        dependency2,
-        dependency3,
-        dependency4,
-      );
+      action.call(options, dependency1, dependency2, dependency3, dependency4);
     }
   }
 }
@@ -221,7 +199,7 @@ class PostConfigureOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
 
   /// The configuration action.
   final PostConfigureActionT5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
-      action;
+  action;
 
   /// The first dependency.
   final TDep1 dependency1;

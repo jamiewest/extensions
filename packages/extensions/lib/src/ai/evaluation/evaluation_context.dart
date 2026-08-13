@@ -21,11 +21,8 @@ abstract class EvaluationContext {
   ///
   /// If [text] is supplied and [contents] is null, the context will contain a
   /// single [TextContent] wrapping [text].
-  EvaluationContext(
-    this.name, {
-    List<AIContent>? contents,
-    String? text,
-  }) : contents = contents ?? (text != null ? [TextContent(text)] : []);
+  EvaluationContext(this.name, {List<AIContent>? contents, String? text})
+    : contents = contents ?? (text != null ? [TextContent(text)] : []);
 
   /// The name of this context, used as the key in metric context maps.
   String name;

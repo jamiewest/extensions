@@ -15,11 +15,7 @@ typedef FinalizeEntryCallback = void Function(CacheEntryInternal entry);
 
 /// Internal implementation of [CacheEntry].
 class CacheEntryInternal implements CacheEntry {
-  CacheEntryInternal(
-    this.key,
-    this.onRemoveEntry,
-    this.onFinalizeEntry,
-  );
+  CacheEntryInternal(this.key, this.onRemoveEntry, this.onFinalizeEntry);
 
   @override
   final Object key;

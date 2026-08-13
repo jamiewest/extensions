@@ -45,15 +45,13 @@ void main() {
       var count = 0;
       var state = Object();
       Object? callbackState;
-      ChangeToken.onChangeWithState<Object>(
-        () => token = TestChangeToken(),
-        (s) {
-          callbackState = s;
-          count++;
-          throw Exception();
-        },
-        state,
-      );
+      ChangeToken.onChangeWithState<Object>(() => token = TestChangeToken(), (
+        s,
+      ) {
+        callbackState = s;
+        count++;
+        throw Exception();
+      }, state);
       expect(() => token!.changed(), throwsException);
       expect(count, equals(1));
       expect(callbackState, isNotNull);

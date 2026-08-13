@@ -19,24 +19,22 @@ abstract class DelegatingSpeechToTextClient implements SpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getText(
-        stream: stream,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getText(
+    stream: stream,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<SpeechToTextResponse> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getStreamingText(
-        stream: stream,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getStreamingText(
+    stream: stream,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) => innerClient.getService<T>(key: key);

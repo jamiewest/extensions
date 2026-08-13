@@ -10,11 +10,12 @@ extension OpenTelemetryRealtimeClientBuilderExtensions
     String? modelId,
     String? system,
     bool? enableSensitiveData,
-  }) =>
-      use((inner) => OpenTelemetryRealtimeClient(
-            inner,
-            modelId: modelId,
-            system: system,
-            enableSensitiveData: enableSensitiveData,
-          ));
+  }) => use(
+    (inner) => OpenTelemetryRealtimeClient(
+      inner,
+      modelId: modelId,
+      system: system,
+      enableSensitiveData: enableSensitiveData,
+    ),
+  );
 }

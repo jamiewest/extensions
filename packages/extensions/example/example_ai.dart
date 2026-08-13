@@ -101,13 +101,9 @@ class EchoChatClient extends ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      ChatResponse.fromMessage(
-        ChatMessage.fromText(
-          ChatRole.assistant,
-          'echo: ${messages.last.text}',
-        ),
-      );
+  }) async => ChatResponse.fromMessage(
+    ChatMessage.fromText(ChatRole.assistant, 'echo: ${messages.last.text}'),
+  );
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({

@@ -19,12 +19,11 @@ abstract class DelegatingImageGenerator implements ImageGenerator {
     required ImageGenerationRequest request,
     ImageGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerGenerator.generate(
-        request: request,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerGenerator.generate(
+    request: request,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) => innerGenerator.getService<T>(key: key);

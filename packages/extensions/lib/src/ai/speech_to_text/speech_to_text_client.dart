@@ -37,13 +37,14 @@ class SpeechToTextOptions {
 
   /// Creates a deep copy of this [SpeechToTextOptions].
   SpeechToTextOptions clone() => SpeechToTextOptions(
-        modelId: modelId,
-        speechLanguage: speechLanguage,
-        speechSampleRate: speechSampleRate,
-        textLanguage: textLanguage,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-      );
+    modelId: modelId,
+    speechLanguage: speechLanguage,
+    speechSampleRate: speechSampleRate,
+    textLanguage: textLanguage,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+  );
 }
 
 /// Represents a speech-to-text response.
@@ -64,14 +65,14 @@ class SpeechToTextResponse {
 
   /// Creates a response from a text string.
   SpeechToTextResponse.fromText(String text)
-      : contents = [TextContent(text)],
-        startTime = null,
-        endTime = null,
-        responseId = null,
-        modelId = null,
-        rawRepresentation = null,
-        additionalProperties = null,
-        usage = null;
+    : contents = [TextContent(text)],
+      startTime = null,
+      endTime = null,
+      responseId = null,
+      modelId = null,
+      rawRepresentation = null,
+      additionalProperties = null,
+      usage = null;
 
   /// The content items.
   final List<AIContent> contents;

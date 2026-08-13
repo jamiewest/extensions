@@ -96,8 +96,9 @@ class RealtimeServerMessageType {
       RealtimeServerMessageType('ConversationItemDone');
 
   /// Indicates an error occurred while processing the request.
-  static const RealtimeServerMessageType error =
-      RealtimeServerMessageType('Error');
+  static const RealtimeServerMessageType error = RealtimeServerMessageType(
+    'Error',
+  );
 
   @override
   bool operator ==(Object other) =>

@@ -14,9 +14,7 @@ void main() {
       final data = VectorStoreDataProperty('name');
       final vec = VectorStoreVectorProperty('embedding', dimensions: 768);
 
-      final def = VectorStoreCollectionDefinition(
-        properties: [key, data, vec],
-      );
+      final def = VectorStoreCollectionDefinition(properties: [key, data, vec]);
 
       expect(def.properties, hasLength(3));
     });

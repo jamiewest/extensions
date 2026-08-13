@@ -4,10 +4,7 @@ import 'package:test/test.dart';
 void main() {
   group('DistanceFunction', () {
     test('constant values match .NET strings exactly', () {
-      expect(
-        DistanceFunction.cosineSimilarity,
-        equals('CosineSimilarity'),
-      );
+      expect(DistanceFunction.cosineSimilarity, equals('CosineSimilarity'));
       expect(DistanceFunction.cosineDistance, equals('CosineDistance'));
       expect(
         DistanceFunction.dotProductSimilarity,
@@ -17,10 +14,7 @@ void main() {
         DistanceFunction.negativeDotProductSimilarity,
         equals('NegativeDotProductSimilarity'),
       );
-      expect(
-        DistanceFunction.euclideanDistance,
-        equals('EuclideanDistance'),
-      );
+      expect(DistanceFunction.euclideanDistance, equals('EuclideanDistance'));
       expect(
         DistanceFunction.euclideanSquaredDistance,
         equals('EuclideanSquaredDistance'),

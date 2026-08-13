@@ -10,10 +10,10 @@ void main() {
 
   print('--- Example 1: Basic Console Logger (No Colors) ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addConsole()
-      ..addFilter(level: LogLevel.trace),
-  ).createLogger('BasicLogger')
+      (builder) => builder
+        ..addConsole()
+        ..addFilter(level: LogLevel.trace),
+    ).createLogger('BasicLogger')
     ..logTrace('Trace message')
     ..logDebug('Debug message')
     ..logInformation('Information message')
@@ -23,10 +23,10 @@ void main() {
 
   print('\n--- Example 2: Simple Console Formatter (With Colors) ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addSimpleConsole()
-      ..addFilter(level: LogLevel.trace),
-  ).createLogger('SimpleLogger')
+      (builder) => builder
+        ..addSimpleConsole()
+        ..addFilter(level: LogLevel.trace),
+    ).createLogger('SimpleLogger')
     ..logTrace('Trace message with gray color')
     ..logDebug('Debug message with bright gray color')
     ..logInformation('Information message with bright white color')
@@ -37,17 +37,17 @@ void main() {
   print('\n--- Example 3: Simple Console with Custom Options ---');
   // #region simple_console_options
   LoggerFactory.create(
-    (builder) => builder
-      ..addSimpleConsoleWithOptions((options) {
-        options
-          ..colorBehavior = LoggerColorBehavior.enabled
-          ..timestampFormat = 'timestamp'
-          // Single-line output is easier to scan in dense terminal logs.
-          ..singleLine = true
-          ..includeScopes = false;
-      })
-      ..addFilter(level: LogLevel.information),
-  ).createLogger('CustomSimple')
+      (builder) => builder
+        ..addSimpleConsoleWithOptions((options) {
+          options
+            ..colorBehavior = LoggerColorBehavior.enabled
+            ..timestampFormat = 'timestamp'
+            // Single-line output is easier to scan in dense terminal logs.
+            ..singleLine = true
+            ..includeScopes = false;
+        })
+        ..addFilter(level: LogLevel.information),
+    ).createLogger('CustomSimple')
     ..logInformation('Single line format with timestamp')
     ..logWarning('Warnings are easier to spot with colors')
     ..logError('Errors stand out with bright red');
@@ -55,10 +55,10 @@ void main() {
 
   print('\n--- Example 4: JSON Console Formatter ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addJsonConsole()
-      ..addFilter(level: LogLevel.debug),
-  ).createLogger('JsonLogger')
+      (builder) => builder
+        ..addJsonConsole()
+        ..addFilter(level: LogLevel.debug),
+    ).createLogger('JsonLogger')
     ..logDebug('Debug message in JSON format')
     ..logInformation('Information message in JSON format')
     ..logWarning('Warning message in JSON format')
@@ -66,26 +66,26 @@ void main() {
 
   print('\n--- Example 5: JSON Console with Indentation ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addJsonConsoleWithOptions((options) {
-        options
-          // Indentation is useful while developing or debugging locally.
-          ..useJsonIndentation = true
-          ..timestampFormat = 'timestamp'
-          ..includeScopes = true;
-      })
-      ..addFilter(level: LogLevel.information),
-  ).createLogger('PrettyJsonLogger')
+      (builder) => builder
+        ..addJsonConsoleWithOptions((options) {
+          options
+            // Indentation is useful while developing or debugging locally.
+            ..useJsonIndentation = true
+            ..timestampFormat = 'timestamp'
+            ..includeScopes = true;
+        })
+        ..addFilter(level: LogLevel.information),
+    ).createLogger('PrettyJsonLogger')
     ..logInformation('Pretty printed JSON log')
     ..logWarning('Warning with indented JSON')
     ..logError('Error with structured JSON output');
 
   print('\n--- Example 6: Systemd Console Formatter ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addSystemdConsole()
-      ..addFilter(level: LogLevel.trace),
-  ).createLogger('SystemdLogger')
+      (builder) => builder
+        ..addSystemdConsole()
+        ..addFilter(level: LogLevel.trace),
+    ).createLogger('SystemdLogger')
     ..logTrace('Trace with priority 7')
     ..logDebug('Debug with priority 6')
     ..logInformation('Information with priority 5')
@@ -95,24 +95,24 @@ void main() {
 
   print('\n--- Example 7: Systemd with Timestamps ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addSystemdConsoleWithOptions((options) {
-        options
-          ..timestampFormat = 'timestamp'
-          ..includeScopes = true;
-      })
-      ..addFilter(level: LogLevel.information),
-  ).createLogger('CustomSystemd')
+      (builder) => builder
+        ..addSystemdConsoleWithOptions((options) {
+          options
+            ..timestampFormat = 'timestamp'
+            ..includeScopes = true;
+        })
+        ..addFilter(level: LogLevel.information),
+    ).createLogger('CustomSystemd')
     ..logInformation('Systemd log with timestamp')
     ..logWarning('Warning for systemd journal')
     ..logError('Error for systemd journal');
 
   print('\n--- Example 8: Logging With Event IDs ---');
   LoggerFactory.create(
-    (builder) => builder
-      ..addSimpleConsole()
-      ..addFilter(level: LogLevel.information),
-  ).createLogger('EventLogger')
+      (builder) => builder
+        ..addSimpleConsole()
+        ..addFilter(level: LogLevel.information),
+    ).createLogger('EventLogger')
     ..log(
       logLevel: LogLevel.information,
       eventId: const EventId(1001, 'UserLogin'),

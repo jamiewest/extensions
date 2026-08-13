@@ -5,8 +5,7 @@ import 'package:extensions/annotations.dart';
   name: 'IndexKind.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
 )
 abstract final class IndexKind {
   /// Hierarchical Navigable Small World (HNSW) graph-based index.

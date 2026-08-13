@@ -17,11 +17,8 @@ class FormattedConsoleLoggerProvider
   ExternalScopeProvider? _scopeProvider;
 
   @override
-  Logger createLogger(String categoryName) => FormattedConsoleLogger(
-        categoryName,
-        _formatter,
-        _scopeProvider,
-      );
+  Logger createLogger(String categoryName) =>
+      FormattedConsoleLogger(categoryName, _formatter, _scopeProvider);
 
   @override
   Disposable setScopeProvider(ExternalScopeProvider scopeProvider) {

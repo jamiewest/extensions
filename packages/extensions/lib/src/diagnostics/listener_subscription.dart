@@ -13,9 +13,9 @@ base class ListenerSubscription extends LinkedListEntry<ListenerSubscription>
   ListenerSubscription(
     MetricsListener metricsListener,
     MeterFactory meterFactory,
-  )   : _metricsListener = metricsListener,
-        _meterFactory = meterFactory,
-        _meterListener = MeterListener();
+  ) : _metricsListener = metricsListener,
+      _meterFactory = meterFactory,
+      _meterListener = MeterListener();
 
   void initialize() {
     _meterListener
@@ -96,9 +96,16 @@ base class ListenerSubscription extends LinkedListEntry<ListenerSubscription>
     InstrumentRule? best;
     for (var rule in _rules) {
       if (_ruleMatches(
-              rule, instrument, _metricsListener.name, _meterFactory) &&
+            rule,
+            instrument,
+            _metricsListener.name,
+            _meterFactory,
+          ) &&
           _isMoreSpecific(
-              rule, best, instrument.meter.scope == _meterFactory)) {
+            rule,
+            best,
+            instrument.meter.scope == _meterFactory,
+          )) {
         best = rule;
       }
     }

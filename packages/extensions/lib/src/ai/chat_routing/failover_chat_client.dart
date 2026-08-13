@@ -135,9 +135,11 @@ abstract class FailoverChatClient extends RoutingChatClient {
         responseCompleted: exception == null,
         outputCommitted: false,
       );
-      final cancellationRequested = exception != null &&
+      final cancellationRequested =
+          exception != null &&
           (cancellationToken?.isCancellationRequested ?? false);
-      final isTerminal = exception == null ||
+      final isTerminal =
+          exception == null ||
           cancellationRequested ||
           (maximumAttempts != null && attemptCount >= maximumAttempts);
 
@@ -186,11 +188,13 @@ abstract class FailoverChatClient extends RoutingChatClient {
 
       final stopwatch = Stopwatch()..start();
       try {
-        iterator = StreamIterator(selectedClient.getStreamingResponse(
-          messages: context.messages,
-          options: attemptOptions,
-          cancellationToken: cancellationToken,
-        ));
+        iterator = StreamIterator(
+          selectedClient.getStreamingResponse(
+            messages: context.messages,
+            options: attemptOptions,
+            cancellationToken: cancellationToken,
+          ),
+        );
         hasCurrent = await iterator.moveNext();
       } catch (e, st) {
         stopwatch.stop();
@@ -279,9 +283,11 @@ abstract class FailoverChatClient extends RoutingChatClient {
           responseCompleted: responseCompleted && terminalException == null,
           outputCommitted: outputCommitted,
         );
-        final cancellationRequested = terminalException != null &&
+        final cancellationRequested =
+            terminalException != null &&
             (cancellationToken?.isCancellationRequested ?? false);
-        isTerminalAttempt = attempt.responseCompleted ||
+        isTerminalAttempt =
+            attempt.responseCompleted ||
             outputCommitted ||
             cancellationRequested ||
             reachedAttemptLimit;

@@ -14,14 +14,12 @@ class EvaluationResult {
   /// Creates an [EvaluationResult] with the given [metrics] map, or an empty
   /// map if [metrics] is null.
   EvaluationResult({Map<String, EvaluationMetric>? metrics})
-      : metrics = metrics ?? {};
+    : metrics = metrics ?? {};
 
   /// Creates an [EvaluationResult] from a flat list of metrics (keyed by
   /// [EvaluationMetric.name]).
   factory EvaluationResult.fromList(Iterable<EvaluationMetric> metrics) {
-    return EvaluationResult(
-      metrics: {for (final m in metrics) m.name: m},
-    );
+    return EvaluationResult(metrics: {for (final m in metrics) m.name: m});
   }
 
   /// Metrics keyed by [EvaluationMetric.name].
@@ -43,6 +41,7 @@ class EvaluationResult {
     final m = metrics[metricName];
     if (m is T) return m;
     throw StateError(
-        "Metric '$metricName' of type $T was not found in the result.");
+      "Metric '$metricName' of type $T was not found in the result.",
+    );
   }
 }

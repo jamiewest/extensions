@@ -10,11 +10,12 @@ extension OpenTelemetrySpeechToTextClientBuilderExtensions
     String? modelId,
     String? system,
     bool? enableSensitiveData,
-  }) =>
-      use((inner) => OpenTelemetrySpeechToTextClient(
-            inner,
-            modelId: modelId,
-            system: system,
-            enableSensitiveData: enableSensitiveData,
-          ));
+  }) => use(
+    (inner) => OpenTelemetrySpeechToTextClient(
+      inner,
+      modelId: modelId,
+      system: system,
+      enableSensitiveData: enableSensitiveData,
+    ),
+  );
 }

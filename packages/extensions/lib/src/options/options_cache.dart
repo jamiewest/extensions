@@ -7,7 +7,7 @@ class OptionsCache<TOptions> implements OptionsMonitorCache<TOptions> {
   final OptionsImplementationFactory<TOptions> _factory;
 
   OptionsCache(OptionsImplementationFactory<TOptions> factory)
-      : _factory = factory;
+    : _factory = factory;
 
   /// Clears all options instances from the cache.
   @override

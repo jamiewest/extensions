@@ -44,10 +44,7 @@ void main() {
       test('setter throws on negative skip', () {
         final options = HybridSearchOptions<String>();
 
-        expect(
-          () => options.skip = -5,
-          throwsA(isA<ArgumentError>()),
-        );
+        expect(() => options.skip = -5, throwsA(isA<ArgumentError>()));
       });
 
       test('setter accepts positive values', () {

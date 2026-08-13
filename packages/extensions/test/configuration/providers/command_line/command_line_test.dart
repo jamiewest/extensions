@@ -2,15 +2,13 @@ import 'dart:collection';
 
 import 'package:extensions/src/configuration/providers/command_line/command_line_configuration_provider.dart';
 import 'package:test/test.dart';
+
 import '../../common/configuration_provider_extensions.dart';
 
 void main() {
   group('CommandLineTest', () {
     test('IgnoresOnlyUnknownArgs', () {
-      var args = <String>[
-        'foo',
-        '/bar=baz',
-      ];
+      var args = <String>['foo', '/bar=baz'];
 
       var cmdLineConfig =
           CommandLineConfigurationProvider(args, null) // Fix this null
@@ -31,7 +29,7 @@ void main() {
         'Bogus2',
         '/Key5',
         'Value5',
-        'Bogus3'
+        'Bogus3',
       ];
 
       var cmdLineConfig =
@@ -54,7 +52,7 @@ void main() {
         '--Key4',
         'Value4',
         '/Key5',
-        'Value5'
+        'Value5',
       ];
 
       var cmdLineConfig =
@@ -77,7 +75,7 @@ void main() {
         'Value4',
         '/Key5',
         'Value5',
-        '/Key6=Value6'
+        '/Key6=Value6',
       ];
 
       var switchMappings = LinkedHashMap<String, String>(
@@ -182,10 +180,7 @@ void main() {
     });
 
     test('OverrideValueWhenKeyIsDuplicated', () {
-      var args = <String>[
-        '/Key1=Value1',
-        '--Key1=Value2',
-      ];
+      var args = <String>['/Key1=Value1', '--Key1=Value2'];
 
       var cmdLineConfig = CommandLineConfigurationProvider(args, null)..load();
       expect(cmdLineConfig.get('Key1'), equals('Value2'));
@@ -195,7 +190,7 @@ void main() {
       var args = <String>[
         '--Key1',
         'Value1',
-        '/Key2' /* The value for Key2 is missing here */
+        '/Key2' /* The value for Key2 is missing here */,
       ];
 
       var cmdLineConfig = CommandLineConfigurationProvider(args, null)..load();
@@ -210,10 +205,7 @@ void main() {
     });
 
     test('IgnoreWhenShortSwitchNotDefined', () {
-      var args = <String>[
-        '-Key1',
-        'Value1',
-      ];
+      var args = <String>['-Key1', 'Value1'];
 
       var switchMappings = LinkedHashMap<String, String>(
         equals: (a, b) => a.toLowerCase() == b.toLowerCase(),

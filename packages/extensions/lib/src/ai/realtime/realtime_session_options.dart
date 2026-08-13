@@ -81,20 +81,20 @@ class RealtimeSessionOptions {
 
   /// Creates a deep copy of this [RealtimeSessionOptions].
   RealtimeSessionOptions clone() => RealtimeSessionOptions(
-        sessionKind: sessionKind,
-        model: model,
-        inputAudioFormat: inputAudioFormat,
-        transcriptionOptions: transcriptionOptions,
-        outputAudioFormat: outputAudioFormat,
-        voice: voice,
-        instructions: instructions,
-        maxOutputTokens: maxOutputTokens,
-        outputModalities: outputModalities != null
-            ? List<String>.of(outputModalities!)
-            : null,
-        toolMode: toolMode,
-        tools: tools != null ? List<AITool>.of(tools!) : null,
-        voiceActivityDetection: voiceActivityDetection,
-        rawRepresentationFactory: rawRepresentationFactory,
-      );
+    sessionKind: sessionKind,
+    model: model,
+    inputAudioFormat: inputAudioFormat,
+    transcriptionOptions: transcriptionOptions,
+    outputAudioFormat: outputAudioFormat,
+    voice: voice,
+    instructions: instructions,
+    maxOutputTokens: maxOutputTokens,
+    outputModalities: outputModalities != null
+        ? List<String>.of(outputModalities!)
+        : null,
+    toolMode: toolMode,
+    tools: tools != null ? List<AITool>.of(tools!) : null,
+    voiceActivityDetection: voiceActivityDetection,
+    rawRepresentationFactory: rawRepresentationFactory,
+  );
 }

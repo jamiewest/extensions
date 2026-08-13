@@ -14,9 +14,11 @@ extension ImageGeneratingChatClientBuilderExtensions on ChatClientBuilder {
   /// When [imageGenerator] is omitted, it is resolved from the service
   /// provider at build time.
   ChatClientBuilder useImageGeneration({ImageGenerator? imageGenerator}) =>
-      useWithServices((inner, services) => ImageGeneratingChatClient(
-            inner,
-            imageGenerator:
-                imageGenerator ?? services.getRequiredService<ImageGenerator>(),
-          ));
+      useWithServices(
+        (inner, services) => ImageGeneratingChatClient(
+          inner,
+          imageGenerator:
+              imageGenerator ?? services.getRequiredService<ImageGenerator>(),
+        ),
+      );
 }

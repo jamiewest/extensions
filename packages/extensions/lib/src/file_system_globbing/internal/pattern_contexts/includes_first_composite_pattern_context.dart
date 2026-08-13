@@ -16,8 +16,8 @@ class IncludesFirstCompositePatternContext extends CompositePatternContext {
   IncludesFirstCompositePatternContext(
     List<IPatternContext> includePatternContexts,
     List<IPatternContext> excludePatternContexts,
-  )   : _includePatternContexts = includePatternContexts,
-        _excludePatternContexts = excludePatternContexts;
+  ) : _includePatternContexts = includePatternContexts,
+      _excludePatternContexts = excludePatternContexts;
 
   @override
   void declare(OnDeclareSegment onDeclare) {
@@ -30,7 +30,7 @@ class IncludesFirstCompositePatternContext extends CompositePatternContext {
   PatternTestResult matchPatternContexts<TFileInfoBase>(
     TFileInfoBase fileInfo,
     PatternTestResult Function(IPatternContext context, TFileInfoBase file)
-        test,
+    test,
   ) {
     var result = PatternTestResult.failed;
 

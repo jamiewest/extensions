@@ -4,7 +4,8 @@ import 'embedding_generator.dart';
 
 /// A factory that creates an [EmbeddingGenerator] from a [ServiceProvider].
 typedef InnerEmbeddingGeneratorFactory = EmbeddingGenerator Function(
-    ServiceProvider services);
+  ServiceProvider services,
+);
 
 /// Builds a pipeline of embedding generator middleware.
 ///
@@ -16,7 +17,7 @@ class EmbeddingGeneratorBuilder {
   late final InnerEmbeddingGeneratorFactory _innerFactory;
 
   EmbeddingGeneratorBuilder._(InnerEmbeddingGeneratorFactory innerFactory)
-      : _innerFactory = innerFactory;
+    : _innerFactory = innerFactory;
 
   /// Creates a new [EmbeddingGeneratorBuilder] wrapping [innerGenerator].
   EmbeddingGeneratorBuilder(EmbeddingGenerator innerGenerator) {
@@ -25,27 +26,31 @@ class EmbeddingGeneratorBuilder {
 
   /// Creates a new [EmbeddingGeneratorBuilder] from a factory function.
   factory EmbeddingGeneratorBuilder.fromFactory(
-          InnerEmbeddingGeneratorFactory innerFactory) =>
-      EmbeddingGeneratorBuilder._(innerFactory);
+    InnerEmbeddingGeneratorFactory innerFactory,
+  ) => EmbeddingGeneratorBuilder._(innerFactory);
 
   final List<
-      EmbeddingGenerator Function(
-        EmbeddingGenerator inner,
-        ServiceProvider services,
-      )> _factories = [];
+    EmbeddingGenerator Function(
+      EmbeddingGenerator inner,
+      ServiceProvider services,
+    )
+  >
+  _factories = [];
 
   /// Adds a middleware factory to the pipeline.
   EmbeddingGeneratorBuilder use(
-          EmbeddingGenerator Function(EmbeddingGenerator) factory) =>
-      useWithServices((inner, _) => factory(inner));
+    EmbeddingGenerator Function(EmbeddingGenerator) factory,
+  ) => useWithServices((inner, _) => factory(inner));
 
   /// Adds a middleware factory that also receives the active
   /// [ServiceProvider].
   EmbeddingGeneratorBuilder useWithServices(
-      EmbeddingGenerator Function(
-        EmbeddingGenerator inner,
-        ServiceProvider services,
-      ) factory) {
+    EmbeddingGenerator Function(
+      EmbeddingGenerator inner,
+      ServiceProvider services,
+    )
+    factory,
+  ) {
     _factories.add(factory);
     return this;
   }

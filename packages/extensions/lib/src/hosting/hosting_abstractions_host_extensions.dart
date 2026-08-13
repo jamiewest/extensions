@@ -13,9 +13,7 @@ extension HostingAbstractionsHostExtensions on Host {
 
   /// Runs an application and returns a [Future] that only completes when the
   /// token is triggered or shutdown is triggered.
-  Future<void> run([
-    CancellationToken? token,
-  ]) async {
+  Future<void> run([CancellationToken? token]) async {
     token ??= CancellationToken.none;
     try {
       await start(token);
@@ -27,11 +25,9 @@ extension HostingAbstractionsHostExtensions on Host {
 
   /// Returns a [Future] that completes when shutdown is triggered via the
   /// given token.
-  Future<void> waitForShutdown([
-    CancellationToken? token,
-  ]) async {
-    var applicationLifetime =
-        services.getRequiredService<HostApplicationLifetime>();
+  Future<void> waitForShutdown([CancellationToken? token]) async {
+    var applicationLifetime = services
+        .getRequiredService<HostApplicationLifetime>();
 
     token ??= CancellationToken.none;
 
@@ -41,12 +37,9 @@ extension HostingAbstractionsHostExtensions on Host {
     );
 
     var waitForStop = Completer<void>();
-    applicationLifetime.applicationStopping.register(
-      (state) {
-        (state as Completer).complete();
-      },
-      waitForStop,
-    );
+    applicationLifetime.applicationStopping.register((state) {
+      (state as Completer).complete();
+    }, waitForStop);
 
     await waitForStop.future;
 

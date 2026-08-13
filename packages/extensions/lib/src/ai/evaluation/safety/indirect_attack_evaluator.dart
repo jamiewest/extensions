@@ -18,10 +18,8 @@ class IndirectAttackEvaluator extends ContentSafetyEvaluator {
 
   /// Creates an [IndirectAttackEvaluator].
   IndirectAttackEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'indirect attack',
-          metricNames: const {
-            'indirect_attack': indirectAttackMetricName,
-          },
-        );
+    : super(
+        annotationTask: 'indirect attack',
+        metricNames: const {'indirect_attack': indirectAttackMetricName},
+      );
 }

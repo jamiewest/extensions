@@ -27,8 +27,8 @@ class DiskBasedResponseCache implements ResponseCache {
     String cacheDir, {
     this._timeToLive = const Duration(days: 14),
     DateTime Function()? clock,
-  })  : _cacheDir = cacheDir,
-        _clock = clock ?? (() => DateTime.now().toUtc());
+  }) : _cacheDir = cacheDir,
+       _clock = clock ?? (() => DateTime.now().toUtc());
 
   final String _cacheDir;
   final Duration _timeToLive;
@@ -57,7 +57,8 @@ class DiskBasedResponseCache implements ResponseCache {
     final (jsonFile, expiryFile) = _filesFor(key);
     final expiry = _clock().add(_timeToLive);
     await jsonFile.writeAsString(
-        const JsonEncoder.withIndent('  ').convert(_responseToJson(response)));
+      const JsonEncoder.withIndent('  ').convert(_responseToJson(response)),
+    );
     await expiryFile.writeAsString(expiry.toIso8601String());
   }
 
@@ -111,15 +112,15 @@ class DiskBasedResponseCache implements ResponseCache {
   }
 
   static Map<String, dynamic> _responseToJson(ChatResponse r) => {
-        'text': r.text,
-        if (r.modelId != null) 'modelId': r.modelId,
-        if (r.usage != null)
-          'usage': {
-            'inputTokenCount': r.usage!.inputTokenCount,
-            'outputTokenCount': r.usage!.outputTokenCount,
-            'totalTokenCount': r.usage!.totalTokenCount,
-          },
-      };
+    'text': r.text,
+    if (r.modelId != null) 'modelId': r.modelId,
+    if (r.usage != null)
+      'usage': {
+        'inputTokenCount': r.usage!.inputTokenCount,
+        'outputTokenCount': r.usage!.outputTokenCount,
+        'totalTokenCount': r.usage!.totalTokenCount,
+      },
+  };
 
   static ChatResponse _responseFromJson(Map<String, dynamic> j) {
     final response = ChatResponse.fromMessage(

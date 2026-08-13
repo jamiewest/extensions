@@ -18,10 +18,8 @@ class ProtectedMaterialEvaluator extends ContentSafetyEvaluator {
 
   /// Creates a [ProtectedMaterialEvaluator].
   ProtectedMaterialEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'protected material',
-          metricNames: const {
-            'protected_material': protectedMaterialMetricName,
-          },
-        );
+    : super(
+        annotationTask: 'protected material',
+        metricNames: const {'protected_material': protectedMaterialMetricName},
+      );
 }

@@ -26,8 +26,7 @@ class _TestChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -64,8 +63,7 @@ class _TestImageGenerator implements ImageGenerator {
     required ImageGenerationRequest request,
     ImageGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      ImageGenerationResponse();
+  }) async => ImageGenerationResponse();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -80,16 +78,14 @@ class _TestSpeechToTextClient implements SpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      SpeechToTextResponse();
+  }) async => SpeechToTextResponse();
 
   @override
   Stream<SpeechToTextResponse> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream.empty();
+  }) => const Stream.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -104,16 +100,14 @@ class _TestTextToSpeechClient implements TextToSpeechClient {
     String text, {
     TextToSpeechOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      TextToSpeechResponse();
+  }) async => TextToSpeechResponse();
 
   @override
   Stream<TextToSpeechResponseUpdate> getStreamingAudio(
     String text, {
     TextToSpeechOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream.empty();
+  }) => const Stream.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -130,39 +124,34 @@ class _TestHostedFileClient implements HostedFileClient {
     String? fileName,
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      HostedFileContent(fileId: 'id');
+  }) async => HostedFileContent(fileId: 'id');
 
   @override
   Stream<List<int>> download(
     String fileId, {
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream.empty();
+  }) => const Stream.empty();
 
   @override
   Future<HostedFileContent?> getFile(
     String fileId, {
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      null;
+  }) async => null;
 
   @override
   Stream<HostedFileContent> listFiles({
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream.empty();
+  }) => const Stream.empty();
 
   @override
   Future<bool> delete(
     String fileId, {
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      false;
+  }) async => false;
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -176,8 +165,7 @@ class _LastMessageReducer implements ChatReducer {
   Future<List<ChatMessage>> reduce(
     List<ChatMessage> messages, {
     CancellationToken? cancellationToken,
-  }) async =>
-      [messages.last];
+  }) async => [messages.last];
 }
 
 void main() {
@@ -324,13 +312,17 @@ void main() {
   group('chat pipeline extensions', () {
     test('useChatReducer reduces messages before forwarding', () async {
       final inner = _TestChatClient();
-      final client =
-          inner.asBuilder().useChatReducer(_LastMessageReducer()).build();
+      final client = inner
+          .asBuilder()
+          .useChatReducer(_LastMessageReducer())
+          .build();
 
-      await client.getResponse(messages: [
-        ChatMessage.fromText(ChatRole.user, 'first'),
-        ChatMessage.fromText(ChatRole.user, 'second'),
-      ]);
+      await client.getResponse(
+        messages: [
+          ChatMessage.fromText(ChatRole.user, 'first'),
+          ChatMessage.fromText(ChatRole.user, 'second'),
+        ],
+      );
 
       expect(inner.lastMessages, hasLength(1));
       expect(inner.lastMessages!.single.text, equals('second'));

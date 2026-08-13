@@ -46,27 +46,38 @@ class GLEUEvaluator implements Evaluator {
 
     final responseText = modelResponse.text;
     if (responseText.isEmpty) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'The modelResponse supplied for evaluation was null or empty.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'The modelResponse supplied for evaluation was null or empty.',
+        ),
+      );
       return result;
     }
 
-    final ctx =
-        additionalContext?.whereType<GLEUEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        ?.whereType<GLEUEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'A GLEUEvaluatorContext was not found in additionalContext.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'A GLEUEvaluatorContext was not found in additionalContext.',
+        ),
+      );
       return result;
     }
     if (ctx.references.isEmpty) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'The supplied GLEUEvaluatorContext contained no references.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'The supplied GLEUEvaluatorContext contained no references.',
+        ),
+      );
       return result;
     }
 
     final start = DateTime.now();
-    final references =
-        ctx.references.map((r) => SimpleWordTokenizer.wordTokenize(r)).toList();
+    final references = ctx.references
+        .map((r) => SimpleWordTokenizer.wordTokenize(r))
+        .toList();
     final hypothesis = SimpleWordTokenizer.wordTokenize(responseText);
     final score = GLEUAlgorithm.sentenceGLEU(references, hypothesis);
     final duration = DateTime.now().difference(start);

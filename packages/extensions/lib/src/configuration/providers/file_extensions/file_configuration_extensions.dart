@@ -67,10 +67,10 @@ extension FileConfigurationExtensions on ConfigurationBuilder {
   ///
   /// Returns the Action to be invoked on a file load exception, if set.
   void Function(FileLoadExceptionContext context)?
-      getFileLoadExceptionHandler() {
+  getFileLoadExceptionHandler() {
     if (properties.containsKey(_fileLoadExceptionHandlerKey)) {
-      return properties[_fileLoadExceptionHandlerKey] as void Function(
-          FileLoadExceptionContext context)?;
+      return properties[_fileLoadExceptionHandlerKey]
+          as void Function(FileLoadExceptionContext context)?;
     }
     return null;
   }

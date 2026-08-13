@@ -26,8 +26,7 @@ class _CountingChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -67,8 +66,8 @@ Uint8List _serializeResponse(ChatResponse response) =>
     Uint8List.fromList(utf8.encode(response.text));
 
 ChatResponse _deserializeResponse(Uint8List data) => ChatResponse.fromMessage(
-      ChatMessage.fromText(ChatRole.assistant, utf8.decode(data)),
-    );
+  ChatMessage.fromText(ChatRole.assistant, utf8.decode(data)),
+);
 
 void main() {
   group('DistributedCachingChatClient', () {
@@ -217,8 +216,7 @@ class _FixedEmbeddingGenerator implements EmbeddingGenerator {
     required Iterable<String> values,
     EmbeddingGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      GeneratedEmbeddings(values.map((_) => embedding).toList());
+  }) async => GeneratedEmbeddings(values.map((_) => embedding).toList());
 
   @override
   T? getService<T>({Object? key}) => null;

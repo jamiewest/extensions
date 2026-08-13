@@ -14,10 +14,7 @@ import 'image_generator.dart';
 /// This is an experimental feature.
 class LoggingImageGenerator extends DelegatingImageGenerator {
   /// Creates a new [LoggingImageGenerator].
-  LoggingImageGenerator(
-    super.innerGenerator, {
-    required this._logger,
-  });
+  LoggingImageGenerator(super.innerGenerator, {required this._logger});
 
   final Logger _logger;
 
@@ -82,9 +79,9 @@ class LoggingImageGenerator extends DelegatingImageGenerator {
   }
 
   static Map<String, Object?> _optionsToMap(ImageGenerationOptions options) => {
-        if (options.modelId != null) 'modelId': options.modelId,
-        if (options.count != null) 'count': options.count,
-        if (options.imageWidth != null) 'imageWidth': options.imageWidth,
-        if (options.imageHeight != null) 'imageHeight': options.imageHeight,
-      };
+    if (options.modelId != null) 'modelId': options.modelId,
+    if (options.count != null) 'count': options.count,
+    if (options.imageWidth != null) 'imageWidth': options.imageWidth,
+    if (options.imageHeight != null) 'imageHeight': options.imageHeight,
+  };
 }

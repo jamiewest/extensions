@@ -336,12 +336,7 @@ void main() {
     });
 
     test('handles complex patterns', () {
-      final patterns = [
-        '*.txt',
-        '**/*.json',
-        'config/*.xml',
-        'src/**/*.dart',
-      ];
+      final patterns = ['*.txt', '**/*.json', 'config/*.xml', 'src/**/*.dart'];
 
       for (final pattern in patterns) {
         final token = watcher.createFileChangeToken(pattern);

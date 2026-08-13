@@ -19,10 +19,10 @@ class UngroundedAttributesEvaluator extends ContentSafetyEvaluator {
 
   /// Creates an [UngroundedAttributesEvaluator].
   UngroundedAttributesEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'ungrounded attributes',
-          metricNames: const {
-            'ungrounded_attributes': ungroundedAttributesMetricName,
-          },
-        );
+    : super(
+        annotationTask: 'ungrounded attributes',
+        metricNames: const {
+          'ungrounded_attributes': ungroundedAttributesMetricName,
+        },
+      );
 }
