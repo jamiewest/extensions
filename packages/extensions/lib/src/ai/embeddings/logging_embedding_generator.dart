@@ -15,8 +15,8 @@ class LoggingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
   /// Creates a new [LoggingEmbeddingGenerator].
   LoggingEmbeddingGenerator(
     super.innerGenerator, {
-    required Logger logger,
-  }) : _logger = logger;
+    required this._logger,
+  });
 
   final Logger _logger;
 

@@ -35,10 +35,9 @@ class StructuredChatResponse<T> extends ChatResponse {
   /// single `data` property, which is required for non-object root schemas.
   StructuredChatResponse(
     ChatResponse response, {
-    required StructuredResultFromJson<T> fromJson,
+    required this._fromJson,
     bool wrappedInObject = false,
-  })  : _fromJson = fromJson,
-        _isWrappedInObject = wrappedInObject,
+  })  : _isWrappedInObject = wrappedInObject,
         super(
           messages: response.messages,
           responseId: response.responseId,

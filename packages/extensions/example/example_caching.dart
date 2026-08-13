@@ -151,7 +151,7 @@ Future<void> main() async {
     Object _,
     Object? value,
     EvictionReason reason,
-    Object? __,
+    Object? _,
   ) {
     if (value is AlphabetLetter) {
       print('${value.letter} was evicted for $reason.');

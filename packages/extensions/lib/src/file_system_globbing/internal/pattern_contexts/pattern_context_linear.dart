@@ -29,9 +29,9 @@ class LinearFrameData {
     this.isNotApplicable = false,
     this.segmentIndex = 0,
     this.inStem = false,
-    List<String>? stemItems,
+    this._stemItems,
     this.addedStemItem = false,
-  }) : _stemItems = stemItems;
+  });
 
   /// The directory names accumulated for the stem. The list is shared
   /// between copied frames, matching the C# struct's list reference copy.

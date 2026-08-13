@@ -51,7 +51,7 @@ class OpenTelemetryHostedFileClient extends DelegatingHostedFileClient {
       OpenTelemetryConsts.filesUploadSpanName,
       arguments: {
         ..._commonArguments('upload'),
-        if (mediaType != null) OpenTelemetryConsts.filesMediaTypeKey: mediaType,
+        OpenTelemetryConsts.filesMediaTypeKey: ?mediaType,
         if (enableSensitiveData && fileName != null)
           OpenTelemetryConsts.fileNameKey: fileName,
       },

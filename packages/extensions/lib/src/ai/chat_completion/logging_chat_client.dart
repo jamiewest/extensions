@@ -22,11 +22,11 @@ class LoggingChatClient extends DelegatingChatClient {
   /// Creates a new [LoggingChatClient].
   ///
   /// [innerClient] is the underlying client to delegate to.
-  /// [logger] is the logger used to record information.
+  /// [_logger] is the logger used to record information.
   LoggingChatClient(
     super.innerClient, {
-    required Logger logger,
-  }) : _logger = logger;
+    required this._logger,
+  });
 
   final Logger _logger;
 

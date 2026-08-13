@@ -16,8 +16,8 @@ class LoggingImageGenerator extends DelegatingImageGenerator {
   /// Creates a new [LoggingImageGenerator].
   LoggingImageGenerator(
     super.innerGenerator, {
-    required Logger logger,
-  }) : _logger = logger;
+    required this._logger,
+  });
 
   final Logger _logger;
 

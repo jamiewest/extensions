@@ -18,15 +18,13 @@ class DiskBasedResponseCacheProvider
     implements EvaluationResponseCacheProvider {
   /// Creates a [DiskBasedResponseCacheProvider] rooted at [storageRootPath].
   ///
-  /// [timeToLive] controls how long cached responses remain valid; defaults to
+  /// [_timeToLive] controls how long cached responses remain valid; defaults to
   /// 14 days.
   DiskBasedResponseCacheProvider(
     String storageRootPath, {
-    Duration timeToLive = const Duration(days: 14),
-    DateTime Function()? clock,
-  })  : _storageRootPath = Directory(storageRootPath).absolute.path,
-        _timeToLive = timeToLive,
-        _clock = clock;
+    this._timeToLive = const Duration(days: 14),
+    this._clock,
+  })  : _storageRootPath = Directory(storageRootPath).absolute.path;
 
   final String _storageRootPath;
   final Duration _timeToLive;

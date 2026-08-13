@@ -22,13 +22,12 @@ import '../response_cache.dart';
 class DiskBasedResponseCache implements ResponseCache {
   /// Creates a [DiskBasedResponseCache] under [cacheDir].
   ///
-  /// [timeToLive] specifies how long entries remain valid; defaults to 14 days.
+  /// [_timeToLive] specifies how long entries remain valid; defaults to 14 days.
   DiskBasedResponseCache(
     String cacheDir, {
-    Duration timeToLive = const Duration(days: 14),
+    this._timeToLive = const Duration(days: 14),
     DateTime Function()? clock,
   })  : _cacheDir = cacheDir,
-        _timeToLive = timeToLive,
         _clock = clock ?? (() => DateTime.now().toUtc());
 
   final String _cacheDir;

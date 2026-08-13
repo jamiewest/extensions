@@ -56,7 +56,7 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
   /// [defaultClient] is selected when no profile satisfies
   /// [scoreThreshold]. [topK] is the number of highest-scoring profile
   /// utterances, across all clients, whose scores are aggregated. When
-  /// [leaveOpen] is `true`, the configured clients and embedding generator
+  /// [_leaveOpen] is `true`, the configured clients and embedding generator
   /// are left open when this instance is disposed.
   ///
   /// Throws [ArgumentError] when [clientProfiles] is empty or contains an
@@ -64,17 +64,15 @@ final class SemanticRoutingChatClient extends RoutingChatClient {
   /// positive, or when [scoreThreshold] is outside the possible range for
   /// the configured aggregation.
   SemanticRoutingChatClient({
-    required EmbeddingGenerator embeddingGenerator,
+    required this._embeddingGenerator,
     required Map<ChatClient, List<String>> clientProfiles,
     required ChatClient defaultClient,
     double scoreThreshold = 0.3,
     int topK = 1,
     SemanticRoutingScoreAggregation scoreAggregation =
         SemanticRoutingScoreAggregation.mean,
-    bool leaveOpen = false,
-  })  : _embeddingGenerator = embeddingGenerator,
-        _leaveOpen = leaveOpen,
-        _topK = topK,
+    this._leaveOpen = false,
+  })  : _topK = topK,
         _scoreAggregation = scoreAggregation,
         _scoreThreshold = scoreThreshold {
     if (clientProfiles.isEmpty) {

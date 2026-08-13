@@ -24,8 +24,8 @@ class LoggingRealtimeClient extends DelegatingRealtimeClient {
   /// Creates a new [LoggingRealtimeClient].
   LoggingRealtimeClient(
     super.innerClient, {
-    required Logger logger,
-  }) : _logger = logger;
+    required this._logger,
+  });
 
   final Logger _logger;
 

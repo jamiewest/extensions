@@ -34,14 +34,11 @@ class ScenarioRun {
     Iterable<Evaluator> evaluators,
     EvaluationResultStore resultStore, {
     this.chatConfiguration,
-    EvaluationMetricInterpretation? Function(EvaluationMetric)?
-        evaluationMetricInterpreter,
-    ChatDetails? chatDetails,
+    this._evaluationMetricInterpreter,
+    this._chatDetails,
     Iterable<String>? tags,
   })  : _compositeEvaluator = CompositeEvaluator(evaluators.toList()),
         _resultStore = resultStore,
-        _evaluationMetricInterpreter = evaluationMetricInterpreter,
-        _chatDetails = chatDetails,
         _tags = tags?.toList();
 
   /// The name of the scenario.

@@ -8,13 +8,10 @@ class ExceptionBase implements Exception {
 
   const ExceptionBase({
     String? message,
-    Exception? innerException,
-    StackTrace? stackTrace,
-    String typeName = 'ExceptionBase',
-  })  : _message = message ?? '',
-        _innerException = innerException,
-        _stackTrace = stackTrace,
-        _typeName = typeName;
+    this._innerException,
+    this._stackTrace,
+    this._typeName = 'ExceptionBase',
+  })  : _message = message ?? '';
 
   /// The message that describes the current exception.
   String? get message =>

@@ -27,10 +27,9 @@ class PollingWildcardChangeToken implements ChangeToken {
   PollingWildcardChangeToken(
     this._root,
     this._pattern, {
-    Duration pollingInterval = const Duration(seconds: 4),
-    CancellationTokenSource? cancellationTokenSource,
-  })  : _pollingInterval = pollingInterval,
-        _cancellationTokenSource = cancellationTokenSource {
+    this._pollingInterval = const Duration(seconds: 4),
+    this._cancellationTokenSource,
+  }) {
     _initializeState();
   }
 

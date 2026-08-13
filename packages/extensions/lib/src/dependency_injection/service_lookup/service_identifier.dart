@@ -5,10 +5,9 @@ class ServiceIdentifier {
   final Type _serviceType;
 
   ServiceIdentifier({
-    required Type serviceType,
-    Object? serviceKey,
-  })  : _serviceKey = serviceKey,
-        _serviceType = serviceType;
+    required this._serviceType,
+    this._serviceKey,
+  });
 
   Object? get serviceKey => _serviceKey;
 

@@ -20,8 +20,8 @@ class ConfigureOptionsTextToSpeechClient extends DelegatingTextToSpeechClient {
   /// Creates a new [ConfigureOptionsTextToSpeechClient].
   ConfigureOptionsTextToSpeechClient(
     super.innerClient, {
-    required void Function(TextToSpeechOptions) configure,
-  }) : _configure = configure;
+    required this._configure,
+  });
 
   final void Function(TextToSpeechOptions) _configure;
 

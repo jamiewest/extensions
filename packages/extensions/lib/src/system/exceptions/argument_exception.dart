@@ -11,8 +11,8 @@ class ArgumentException extends SystemException {
     super.message = 'Value does not fall within the expected range',
     super.innerException,
     super.stackTrace,
-    String? paramName,
-  }) : _paramName = paramName;
+    this._paramName,
+  });
 
   String? get paramName => _paramName;
 

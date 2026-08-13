@@ -4,10 +4,9 @@ import 'package:test/test.dart';
 
 class _StubChatClient implements ChatClient {
   _StubChatClient({
-    Future<ChatResponse> Function()? onGetResponse,
-    Stream<ChatResponseUpdate> Function()? onGetStreamingResponse,
-  })  : _onGetResponse = onGetResponse,
-        _onGetStreamingResponse = onGetStreamingResponse;
+    this._onGetResponse,
+    this._onGetStreamingResponse,
+  });
 
   final Future<ChatResponse> Function()? _onGetResponse;
   final Stream<ChatResponseUpdate> Function()? _onGetStreamingResponse;
@@ -138,7 +137,7 @@ void main() {
           ChatResponseUpdate(contents: [TextContent('b')]),
         ]),
       );
-      final client = RoutingChatClient.fromSelector((_, __) async => inner);
+      final client = RoutingChatClient.fromSelector((_, _) async => inner);
 
       final texts = await client
           .getStreamingResponse(messages: _userMessages('hi'))
@@ -150,7 +149,7 @@ void main() {
 
     test('getService returns itself without a key and null with one', () {
       final client = RoutingChatClient.fromSelector(
-        (_, __) async => _StubChatClient(),
+        (_, _) async => _StubChatClient(),
       );
 
       expect(client.getService<RoutingChatClient>(), same(client));

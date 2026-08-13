@@ -33,10 +33,9 @@ class ServiceDescriptor {
     required this.serviceType,
     this.lifetime = ServiceLifetime.singleton,
     this.serviceKey,
-    Object? implementationInstance,
-    Object? implementationFactory,
-  })  : _implementationInstance = implementationInstance,
-        _implementationFactory = implementationFactory;
+    this._implementationInstance,
+    this._implementationFactory,
+  });
 
   /// Initializes a new instance of [ServiceDescriptor] with the specified
   /// [instance] and default [ServiceLifetime].

@@ -27,13 +27,12 @@ final class CollectionModel {
 
   /// Creates a [CollectionModel].
   CollectionModel({
-    required Object Function() recordFactory,
+    required this._recordFactory,
     required this.keyProperties,
     required this.dataProperties,
     required this.vectorProperties,
     required this.propertyMap,
-  })  : _recordFactory = recordFactory,
-        embeddingGenerationRequired =
+  })  : embeddingGenerationRequired =
             vectorProperties.any((p) => p.embeddingType != null);
 
   /// The key properties of the record.

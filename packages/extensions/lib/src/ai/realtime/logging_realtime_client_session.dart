@@ -18,8 +18,8 @@ class LoggingRealtimeClientSession implements RealtimeClientSession {
   /// Creates a new [LoggingRealtimeClientSession] wrapping [innerSession].
   LoggingRealtimeClientSession(
     this._innerSession, {
-    required Logger logger,
-  }) : _logger = logger;
+    required this._logger,
+  });
 
   final RealtimeClientSession _innerSession;
   final Logger _logger;

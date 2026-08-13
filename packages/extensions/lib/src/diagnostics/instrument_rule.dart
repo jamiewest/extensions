@@ -14,9 +14,9 @@ class InstrumentRule {
     this.meterName,
     this.instrumentName,
     this.listenerName,
-    required int scopes,
+    required this._scopes,
     this.enable = false,
-  }) : _scopes = scopes;
+  });
 
   /// Gets the [Meter.name], either an exact match or the longest prefix match.
   final String? meterName;

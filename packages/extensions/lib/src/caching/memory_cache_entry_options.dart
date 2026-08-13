@@ -13,13 +13,11 @@ class MemoryCacheEntryOptions {
     Duration? slidingExpiration,
     this.priority = CacheItemPriority.normal,
     int? size,
-    List<Stream<void>>? expirationTokens,
-    List<PostEvictionCallbackRegistration>? postEvictionCallbacks,
+    this._expirationTokens,
+    this._postEvictionCallbacks,
   })  : _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
         _slidingExpiration = slidingExpiration,
-        _size = size,
-        _expirationTokens = expirationTokens,
-        _postEvictionCallbacks = postEvictionCallbacks {
+        _size = size {
     if (absoluteExpirationRelativeToNow != null &&
         absoluteExpirationRelativeToNow <= Duration.zero) {
       throw ArgumentError.value(

@@ -16,8 +16,8 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
   /// Creates a new [LoggingSpeechToTextClient].
   LoggingSpeechToTextClient(
     super.innerClient, {
-    required Logger logger,
-  }) : _logger = logger;
+    required this._logger,
+  });
 
   final Logger _logger;
 

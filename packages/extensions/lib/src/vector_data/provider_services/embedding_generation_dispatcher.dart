@@ -109,18 +109,9 @@ abstract class EmbeddingGenerationDispatcher {
 final class _CallbackDispatcher extends EmbeddingGenerationDispatcher {
   _CallbackDispatcher({
     required this.embeddingType,
-    required Future<List<Embedding>> Function(
-      VectorPropertyModel,
-      Iterable<Object?>,
-      CancellationToken?,
-    ) generateBatch,
-    required Future<Embedding> Function(
-      VectorPropertyModel,
-      Object?,
-      CancellationToken?,
-    ) generateSingle,
-  })  : _generateBatch = generateBatch,
-        _generateSingle = generateSingle;
+    required this._generateBatch,
+    required this._generateSingle,
+  });
 
   @override
   final Type embeddingType;

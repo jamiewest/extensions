@@ -23,12 +23,10 @@ class DefaultServiceFactoryAdapter<TContainerBuilder>
   FactoryResolver<TContainerBuilder>? _factoryResolver;
 
   DefaultServiceFactoryAdapter._({
-    ServiceProviderFactory<TContainerBuilder>? serviceProviderFactory,
-    ContextResolver? contextResolver,
-    FactoryResolver<TContainerBuilder>? factoryResolver,
-  })  : _serviceProviderFactory = serviceProviderFactory,
-        _contextResolver = contextResolver,
-        _factoryResolver = factoryResolver;
+    this._serviceProviderFactory,
+    this._contextResolver,
+    this._factoryResolver,
+  });
 
   DefaultServiceFactoryAdapter(
     ServiceProviderFactory<TContainerBuilder> serviceProviderFactory,

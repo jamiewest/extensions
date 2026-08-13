@@ -249,13 +249,11 @@ class CancellationCallbackInfo {
 
   CancellationCallbackInfo({
     required this.id,
-    required CancellationCallback callback,
+    required this._callback,
     required this.registrations,
-    Object? stateForCallback,
-    CancellationTokenSource? cancellationTokenSource,
-  })  : _callback = callback,
-        _stateForCallback = stateForCallback,
-        _cancellationTokenSource = cancellationTokenSource;
+    this._stateForCallback,
+    this._cancellationTokenSource,
+  });
 
   CancellationCallback get callback => _callback;
 

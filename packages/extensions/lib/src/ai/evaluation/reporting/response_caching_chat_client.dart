@@ -21,12 +21,10 @@ class ResponseCachingChatClient extends CachingChatClient {
   /// Creates a [ResponseCachingChatClient].
   ResponseCachingChatClient(
     super.innerClient, {
-    required ResponseCache cache,
-    required ChatDetails chatDetails,
+    required this._cache,
+    required this._chatDetails,
     List<String>? cachingKeys,
-  })  : _cache = cache,
-        _chatDetails = chatDetails,
-        _cachingKeys = cachingKeys ?? [];
+  })  : _cachingKeys = cachingKeys ?? [];
 
   final ResponseCache _cache;
   final ChatDetails _chatDetails;

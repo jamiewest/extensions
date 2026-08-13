@@ -20,16 +20,14 @@ class DistributedCachingEmbeddingGenerator extends CachingEmbeddingGenerator {
   final Embedding Function(Uint8List data)? _deserialize;
 
   /// Creates a new [DistributedCachingEmbeddingGenerator] backed by
-  /// [storage].
+  /// [_storage].
   DistributedCachingEmbeddingGenerator(
     super.innerGenerator, {
-    required DistributedCache storage,
-    DistributedCacheEntryOptions? cacheOptions,
+    required this._storage,
+    this._cacheOptions,
     Uint8List Function(Embedding embedding)? serializeEmbedding,
     Embedding Function(Uint8List data)? deserializeEmbedding,
-  })  : _storage = storage,
-        _cacheOptions = cacheOptions,
-        _serialize = serializeEmbedding,
+  })  : _serialize = serializeEmbedding,
         _deserialize = deserializeEmbedding;
 
   @override
