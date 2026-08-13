@@ -1,7 +1,8 @@
 import 'embedding_generator_builder.dart';
 import 'open_telemetry_embedding_generator.dart';
 
-/// Extension methods for adding [OpenTelemetryEmbeddingGenerator] to a pipeline.
+/// Extension methods for adding [OpenTelemetryEmbeddingGenerator] to a
+/// pipeline.
 extension OpenTelemetryEmbeddingGeneratorBuilderExtensions
     on EmbeddingGeneratorBuilder {
   /// Adds an [OpenTelemetryEmbeddingGenerator] to the pipeline.

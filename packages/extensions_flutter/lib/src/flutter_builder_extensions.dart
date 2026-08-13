@@ -37,7 +37,8 @@ class _ConfigureFlutterLifetimeOptions
 /// These extensions provide methods for setting up the root widget,
 /// adding widget wrappers, and configuring lifetime options.
 extension FlutterBuilderExtensions on FlutterBuilder {
-  /// Registers the root application widget and sets up the Flutter host lifetime.
+  /// Registers the root application widget and sets up the Flutter host
+  /// lifetime.
   ///
   /// The [builder] callback receives a [ServiceProvider] and returns the root
   /// widget for the application. The root widget is automatically wrapped with

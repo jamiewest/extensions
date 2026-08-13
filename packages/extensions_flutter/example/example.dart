@@ -21,14 +21,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final environment = services.getRequiredService<HostEnvironment>();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Extensions Flutter Example')),
-        body: Center(
-          child: Text(
-            'Hello, ${services.getRequiredService<HostEnvironment>().applicationName}!',
-          ),
-        ),
+        body: Center(child: Text('Hello, ${environment.applicationName}!')),
       ),
     );
   }

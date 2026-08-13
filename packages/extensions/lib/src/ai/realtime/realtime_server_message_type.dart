@@ -8,8 +8,9 @@ import 'package:extensions/annotations.dart';
 /// values.
 ///
 /// Provider implementations that want to support the built-in middleware
-/// pipeline must emit [responseCreated], [responseDone], [responseOutputItemAdded],
-/// and [responseOutputItemDone] at the appropriate points during response
+/// pipeline must emit [responseCreated], [responseDone],
+/// [responseOutputItemAdded] and [responseOutputItemDone] at the appropriate
+/// points during response
 /// generation.
 ///
 /// This is an experimental feature.

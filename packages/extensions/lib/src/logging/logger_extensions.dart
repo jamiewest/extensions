@@ -78,6 +78,8 @@ extension LoggerExtensions on Logger {
   // ) =>
   //     beginScope(FormattedLogValues(messageFormat, args));
 
-  // static String _messageFormatter(FormattedLogValues state, Exception? error)=>
-  //     state.toString();
+  // static String _messageFormatter(
+  //   FormattedLogValues state,
+  //   Exception? error,
+  // ) => state.toString();
 }

@@ -3,7 +3,8 @@ import 'package:extensions/logging.dart';
 /// Marker type used for typed logger examples.
 class UserService {}
 
-/// Demonstrates advanced logging APIs such as typed loggers and `LoggerMessage`.
+/// Demonstrates advanced logging APIs such as typed loggers and
+/// `LoggerMessage`.
 ///
 /// Run this file to see structured output for several advanced patterns.
 void main() {

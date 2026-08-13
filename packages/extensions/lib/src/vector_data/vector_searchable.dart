@@ -20,8 +20,8 @@ abstract interface class VectorSearchable<TRecord> {
   ///
   /// [value] is the query vector or embedding input. The type accepted depends
   /// on the underlying provider. [top] is the maximum number of results to
-  /// return. [options] controls filtering, skip, and scoring. [cancellationToken]
-  /// can be used to cancel the operation.
+  /// return. [options] controls filtering, skip, and scoring.
+  /// [cancellationToken] can be used to cancel the operation.
   Stream<VectorSearchResult<TRecord>> searchAsync<TInput>(
     TInput value, {
     int top = 3,

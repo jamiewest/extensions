@@ -143,7 +143,9 @@ void main() {
       );
     });
 
-    test('CreateLinkedToken_MultistepComposition_SourceTokenAlreadySignalled', () {
+    const multistepAlreadySignalled =
+        'CreateLinkedToken_MultistepComposition_SourceTokenAlreadySignalled';
+    test(multistepAlreadySignalled, () {
       // Two-step composition
       var signal1 = CancellationTokenSource()..cancel();
 

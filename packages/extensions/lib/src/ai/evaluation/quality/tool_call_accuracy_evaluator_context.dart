@@ -24,10 +24,13 @@ class ToolCallAccuracyEvaluatorContext extends EvaluationContext {
             if (t is AIFunctionDeclaration)
               TextContent(
                 '${t.name}: ${t.description ?? ""}'
-                '${t.parametersSchema != null ? " | params: ${t.parametersSchema}" : ""}',
+                '${_paramsSuffix(t.parametersSchema)}',
               ),
         ],
       );
+
+  static String _paramsSuffix(Object? parametersSchema) =>
+      parametersSchema == null ? '' : ' | params: $parametersSchema';
 
   /// Unique context name used when recording contexts on metrics.
   static const String toolDefinitionsContextName =

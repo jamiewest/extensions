@@ -45,8 +45,9 @@ class TaskAdherenceEvaluator extends QualityEvaluatorBase {
         .map((m) => '[${m.role.value}]: ${m.text}')
         .join('\n');
     final response = modelResponse.text;
+    final toolLines = ctx?.contents.map((c) => c.toString()).join('\n');
     final toolsSection = ctx != null && ctx.toolDefinitions.isNotEmpty
-        ? '\nAVAILABLE TOOLS:\n${ctx.contents.map((c) => c.toString()).join("\n")}'
+        ? '\nAVAILABLE TOOLS:\n$toolLines'
         : '';
 
     final prompt =

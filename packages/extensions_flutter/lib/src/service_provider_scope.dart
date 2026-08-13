@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 
 /// An InheritedWidget that provides access to the service provider.
 ///
-/// Wrap your app with this widget to make services available to all descendants.
+/// Wrap your app with this widget to make services available to all
+/// descendants.
 /// Services are registered during app initialization via the host builder.
 class ServiceProviderScope extends InheritedWidget {
   const ServiceProviderScope({
@@ -28,7 +29,8 @@ class ServiceProviderScope extends InheritedWidget {
   /// Retrieves the ServiceProviderScope without establishing a dependency.
   ///
   /// Use this when you need the services but don't want rebuilds when
-  /// the scope changes (which is rare since the scope typically doesn't change).
+  /// the scope changes (which is rare since the scope typically doesn't
+  /// change).
   static ServiceProviderScope read(BuildContext context) {
     final scope = context.getInheritedWidgetOfExactType<ServiceProviderScope>();
     assert(scope != null, 'No ServiceProviderScope found in context');

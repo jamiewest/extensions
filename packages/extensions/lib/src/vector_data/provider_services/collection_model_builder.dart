@@ -146,6 +146,22 @@ abstract class CollectionModelBuilder {
     propertyMap[propertyName] = property;
   }
 
+  String _unsupportedConfiguredEmbeddingTypeMessage(
+    VectorPropertyModel vectorProperty,
+    Type userRequestedEmbeddingType,
+    String? supportedVectorTypes, {
+    required bool isSupportedByProvider,
+  }) => isSupportedByProvider
+      ? VectorDataStrings.configuredEmbeddingTypeIsUnsupportedByTheGenerator(
+          vectorProperty,
+          userRequestedEmbeddingType,
+        )
+      : VectorDataStrings.configuredEmbeddingTypeIsUnsupportedByTheProvider(
+          vectorProperty,
+          userRequestedEmbeddingType,
+          supportedVectorTypes ?? 'none',
+        );
+
   void _setPropertyStorageName(PropertyModel property, String? storageName) {
     if (property is KeyPropertyModel &&
         options.reservedKeyStorageName != null) {
@@ -331,20 +347,17 @@ abstract class CollectionModelBuilder {
               .firstOrNull;
 
           if (userRequestedEmbeddingType != null) {
+            final isSupportedByProvider = isVectorPropertyTypeValid(
+              userRequestedEmbeddingType,
+              supportedTypes: supportedVectorTypes,
+            );
             throw StateError(
-              isVectorPropertyTypeValid(
-                    userRequestedEmbeddingType,
-                    supportedTypes: supportedVectorTypes,
-                  )
-                  ? VectorDataStrings.configuredEmbeddingTypeIsUnsupportedByTheGenerator(
-                      vectorProperty,
-                      userRequestedEmbeddingType,
-                    )
-                  : VectorDataStrings.configuredEmbeddingTypeIsUnsupportedByTheProvider(
-                      vectorProperty,
-                      userRequestedEmbeddingType,
-                      supportedVectorTypes ?? 'none',
-                    ),
+              _unsupportedConfiguredEmbeddingTypeMessage(
+                vectorProperty,
+                userRequestedEmbeddingType,
+                supportedVectorTypes,
+                isSupportedByProvider: isSupportedByProvider,
+              ),
             );
           }
 
