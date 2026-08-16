@@ -125,6 +125,8 @@ export 'src/ai/embeddings/distributed_caching_embedding_generator_builder_extens
 export 'src/ai/embeddings/embedding.dart';
 export 'src/ai/embeddings/embedding_generation_options.dart';
 export 'src/ai/embeddings/embedding_generator.dart';
+export 'src/ai/embeddings/embedding_generator_extensions.dart';
+export 'src/ai/embeddings/anonymous_delegating_embedding_generator.dart';
 export 'src/ai/embeddings/embedding_generator_builder.dart';
 export 'src/ai/embeddings/embedding_generator_builder_embedding_generator_extensions.dart';
 export 'src/ai/embeddings/embedding_generator_builder_service_collection_extensions.dart';
@@ -148,6 +150,7 @@ export 'src/ai/image_generation/configure_options_image_generator.dart';
 export 'src/ai/image_generation/configure_options_image_generator_builder_extensions.dart';
 export 'src/ai/image_generation/delegating_image_generator.dart';
 export 'src/ai/image_generation/image_generator.dart';
+export 'src/ai/image_generation/image_generator_extensions.dart';
 export 'src/ai/image_generation/image_generator_builder.dart';
 export 'src/ai/image_generation/image_generator_builder_image_generator_extensions.dart';
 export 'src/ai/image_generation/image_generator_builder_service_collection_extensions.dart';
@@ -159,6 +162,7 @@ export 'src/ai/image_generation/open_telemetry_image_generator_builder_extension
 // Files (hosted)
 export 'src/ai/files/delegating_hosted_file_client.dart';
 export 'src/ai/files/hosted_file_client.dart';
+export 'src/ai/files/hosted_file_client_extensions.dart';
 export 'src/ai/files/hosted_file_client_builder.dart';
 export 'src/ai/files/hosted_file_client_builder_hosted_file_client_extensions.dart';
 export 'src/ai/files/logging_hosted_file_client.dart';
@@ -183,6 +187,7 @@ export 'src/ai/text_to_speech/text_to_speech_client_metadata.dart';
 export 'src/ai/text_to_speech/text_to_speech_options.dart';
 export 'src/ai/text_to_speech/text_to_speech_response.dart';
 export 'src/ai/text_to_speech/text_to_speech_response_update.dart';
+export 'src/ai/text_to_speech/text_to_speech_response_update_extensions.dart';
 // Speech to text
 export 'src/ai/speech_to_text/configure_options_speech_to_text_client.dart';
 export 'src/ai/speech_to_text/configure_options_speech_to_text_client_builder_extensions.dart';
@@ -196,7 +201,9 @@ export 'src/ai/speech_to_text/speech_to_text_client_builder.dart';
 export 'src/ai/speech_to_text/speech_to_text_client_builder_service_collection_extensions.dart';
 export 'src/ai/speech_to_text/speech_to_text_client_builder_speech_to_text_client_extensions.dart';
 export 'src/ai/speech_to_text/speech_to_text_client_metadata.dart';
+export 'src/ai/speech_to_text/speech_to_text_client_extensions.dart';
 export 'src/ai/speech_to_text/speech_to_text_response_update.dart';
+export 'src/ai/speech_to_text/speech_to_text_response_update_extensions.dart';
 export 'src/ai/speech_to_text/transcription_options.dart';
 // Realtime
 export 'src/ai/realtime/create_conversation_item_realtime_client_message.dart';

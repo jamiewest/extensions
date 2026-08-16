@@ -8,6 +8,7 @@ import '../../system/exceptions/operation_cancelled_exception.dart';
 import '../../system/threading/cancellation_token.dart';
 import 'delegating_speech_to_text_client.dart';
 import 'speech_to_text_client.dart';
+import 'speech_to_text_response_update.dart';
 
 /// A delegating speech-to-text client that logs operations to a [Logger].
 ///
@@ -70,12 +71,12 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
   }) {
-    Stream<SpeechToTextResponse> streamFn() async* {
+    Stream<SpeechToTextResponseUpdate> streamFn() async* {
       if (_logger.isEnabled(LogLevel.debug)) {
         _logger.logDebug('getStreamingText invoked.');
       }
@@ -97,7 +98,7 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
           if (_logger.isEnabled(LogLevel.trace)) {
             _logger.logTrace(
               'getStreamingText received update. '
-              'Update: ${_asJson(_responseToMap(update))}.',
+              'Update: ${_asJson(_updateToMap(update))}.',
             );
           }
           yield update;
@@ -140,4 +141,12 @@ class LoggingSpeechToTextClient extends DelegatingSpeechToTextClient {
     if (response.modelId != null) 'modelId': response.modelId,
     'text': response.text,
   };
+
+  static Map<String, Object?> _updateToMap(SpeechToTextResponseUpdate update) =>
+      {
+        'kind': update.kind.value,
+        if (update.responseId != null) 'responseId': update.responseId,
+        if (update.modelId != null) 'modelId': update.modelId,
+        'text': update.text,
+      };
 }

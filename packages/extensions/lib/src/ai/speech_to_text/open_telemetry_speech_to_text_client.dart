@@ -7,6 +7,7 @@ import '../common/telemetry_helpers.dart';
 import '../open_telemetry_consts.dart';
 import 'delegating_speech_to_text_client.dart';
 import 'speech_to_text_client.dart';
+import 'speech_to_text_response_update.dart';
 
 /// A [DelegatingSpeechToTextClient] that records OpenTelemetry spans.
 ///
@@ -71,7 +72,7 @@ class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,

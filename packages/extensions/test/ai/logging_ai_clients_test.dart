@@ -151,12 +151,15 @@ class _SpeechToTextClient implements SpeechToTextClient {
   }) async => SpeechToTextResponse.fromText('text');
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
   }) async* {
-    yield SpeechToTextResponse.fromText('stream');
+    yield SpeechToTextResponseUpdate.fromText(
+      SpeechToTextResponseUpdateKind.textUpdated,
+      'stream',
+    );
   }
 
   @override
@@ -202,11 +205,11 @@ class _ThrowingSpeechToTextClient implements SpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) => Stream<SpeechToTextResponse>.error(exception);
+  }) => Stream<SpeechToTextResponseUpdate>.error(exception);
 
   @override
   T? getService<T>({Object? key}) => null;

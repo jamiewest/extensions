@@ -94,6 +94,9 @@ reason whenever a port decision rules something out.
 | `TimingHelper`, `TaskExtensions` | ai (evaluation) | `Stopwatch` / `Future.wait` at call sites — same rationale as `ValueStopwatch` |
 | `ContentSafetyChatClient`, `ContentSafetyChatOptions`, `ContentSafetyServiceConfigurationExtensions` | ai (evaluation) | the IChatClient facade over the safety service; unneeded — Dart safety evaluators call the service directly via the `ContentSafetyEvaluator` base class |
 | `ContentSafetyService` + payload family (`ContentSafetyServicePayload{Format,Strategy,Utilities}`) | ai (evaluation) | collapsed into the `ContentSafetyEvaluator` base + `ContentSafetyServiceConfiguration` (simplified single-payload client). Fidelity caveat: upstream's 565-line payload builder handles per-task/multimodal formats and LRO polling the Dart client does not — revisit if a safety task mis-serves (tracked in priorities) |
+| `TextToSpeechClientExtensions` | ai | only `getService` overloads; collapses into the interface method (same rule as `RealtimeClientExtensions`). Ruled 2026-08-16 |
+| `HostedFileDownloadStream` | ai | collapsed: `HostedFileClient.download` returns a plain `Stream<List<int>>` and the file's media type/name come from `getFile` (see `HostedFileClientExtensions.downloadAsDataContent`); `DownloadToAsync` is `dart:io`-bound and the AI abstractions stay io-free — callers pipe the stream. Ruled 2026-08-16 |
+| `AIJsonSchemaCreateContext`, `AIJsonSchemaCreateOptions` | ai | belong to the schema-*creation* side (`AIJsonUtilities.Schema.Create.cs`), which is N/A per the existing schema-creation row. Ruled 2026-08-16 |
 
 ## Open priorities
 
@@ -220,13 +223,35 @@ form remains a correct port of a C# primary constructor.
      context yet — the context type exists but is not flowed).
    - Dart-only note: `ai/tool_reduction/` (`ToolReducingChatClient`) still has
      no counterpart in upstream main (re-checked 2026-08-16) — keep.
-   - Abstraction-side `*Extensions` helpers: `EmbeddingGeneratorExtensions`,
-     `ImageGeneratorExtensions`, `SpeechToTextClientExtensions`,
-     `SpeechToTextResponseUpdateExtensions`, `TextToSpeechClientExtensions`,
-     `TextToSpeechResponseUpdateExtensions`, `HostedFileClientExtensions`.
-   - `AIJsonUtilities`/JSON-schema family (transform/validate parts only,
-     ~6 types, design-heavy); `AnonymousDelegatingEmbeddingGenerator`;
-     `HostedFileDownloadStream`; `TextToSpeechResponseUpdateKind`.
+   - ~~Abstraction-side `*Extensions` helpers~~ — **closed 2026-08-16.**
+     Six ported as Dart extensions with tests (`EmbeddingGenerator`,
+     `ImageGenerator`, `SpeechToTextClient`, `SpeechToTextResponseUpdate`,
+     `TextToSpeechResponseUpdate`, `HostedFileClient`);
+     `TextToSpeechClientExtensions` ruled N/A (getService-only). Also ported
+     the same day: `TextToSpeechResponseUpdateKind` (+ a `kind` field on the
+     update, defaulting to `audioUpdating` per upstream) and
+     `AnonymousDelegatingEmbeddingGenerator` (public, wired via
+     `EmbeddingGeneratorBuilder.useGenerate`).
+     `HostedFileDownloadStream` ruled N/A (see table).
+   - **STT streaming interface fixed 2026-08-16** (breaking, rides 0.8.0):
+     `SpeechToTextClient.getStreamingText` returned
+     `Stream<SpeechToTextResponse>` while upstream streams *updates*, and
+     the already-ported `SpeechToTextResponseUpdate` type was dead code.
+     Now returns `Stream<SpeechToTextResponseUpdate>` across the interface,
+     all four decorators, and the OpenAI client.
+   - Small new gap (found 2026-08-16): hosted-file scope plumbing —
+     upstream `HostedFileClientOptions.Scope` and `HostedFileContent.Scope`
+     have no Dart counterpart, so the `downloadFromContent` convenience
+     cannot propagate scope.
+   - `AIJsonUtilities`/JSON-schema family, re-scoped 2026-08-16: what
+     remains portable is `AIJsonSchemaTransformCache` /
+     `AIJsonSchemaTransformContext` / `AIJsonSchemaTransformOptions` plus
+     the transform walker in `AIJsonUtilities.Schema.Transform.cs` (~9 KB
+     over `Map<String, Object?>` schemas) and the shared helpers it uses
+     from `AIJsonUtilities.cs`. Schema *creation*
+     (`AIJsonUtilities.Schema.Create.cs`, 42 KB, reflection-driven) stays
+     N/A, and `AIJsonSchemaCreateContext`/`CreateOptions` go with it.
+     Design-heavy; the one remaining open ai port.
    - OTel note: decorators for chat/embeddings/image/TTS/STT/files/realtime
      all exist, spans-only via `dart:developer` Timeline (never port
      `Activity`/`ActivitySource`). `OtelMessageParts`, `OtelMessageSerializer`,

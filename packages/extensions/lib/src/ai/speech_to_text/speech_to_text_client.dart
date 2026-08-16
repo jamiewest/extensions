@@ -6,6 +6,7 @@ import '../additional_properties_dictionary.dart';
 import '../ai_content.dart';
 import '../text_content.dart';
 import '../usage_details.dart';
+import 'speech_to_text_response_update.dart';
 
 /// Options for speech-to-text requests.
 ///
@@ -119,7 +120,11 @@ abstract class SpeechToTextClient implements Disposable {
 
   /// Transcribes the given audio [stream] as a stream of
   /// updates.
-  Stream<SpeechToTextResponse> getStreamingText({
+  ///
+  /// Combine the updates into a single response with
+  /// `toSpeechToTextResponse()` from
+  /// `speech_to_text_response_update_extensions.dart`.
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,

@@ -8,6 +8,7 @@ import '../../system/threading/cancellation_token.dart';
 import '../speech_to_text/speech_to_text_client.dart';
 import '../speech_to_text/speech_to_text_client_builder.dart';
 import '../speech_to_text/speech_to_text_client_metadata.dart';
+import '../speech_to_text/speech_to_text_response_update.dart';
 import '../text_content.dart';
 import '../usage_details.dart';
 import 'open_ai_client_options.dart';
@@ -99,17 +100,28 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
   }) async* {
     // OpenAI does not support streaming transcription in the standard API;
     // fall back to the non-streaming method and yield a single update.
-    yield await getText(
+    final response = await getText(
       stream: stream,
       options: options,
       cancellationToken: cancellationToken,
+    );
+    yield SpeechToTextResponseUpdate(
+      kind: SpeechToTextResponseUpdateKind.textUpdated,
+      contents: response.contents,
+      startTime: response.startTime,
+      endTime: response.endTime,
+      responseId: response.responseId,
+      modelId: response.modelId,
+      rawRepresentation: response.rawRepresentation,
+      additionalProperties: response.additionalProperties,
+      usage: response.usage,
     );
   }
 

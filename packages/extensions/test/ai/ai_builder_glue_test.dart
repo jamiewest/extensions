@@ -81,7 +81,7 @@ class _TestSpeechToTextClient implements SpeechToTextClient {
   }) async => SpeechToTextResponse();
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,

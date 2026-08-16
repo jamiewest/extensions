@@ -1,5 +1,6 @@
 import '../../dependency_injection/service_provider.dart';
 import '../empty_service_provider.dart';
+import 'anonymous_delegating_embedding_generator.dart';
 import 'embedding_generator.dart';
 
 /// A factory that creates an [EmbeddingGenerator] from a [ServiceProvider].
@@ -41,6 +42,20 @@ class EmbeddingGeneratorBuilder {
   EmbeddingGeneratorBuilder use(
     EmbeddingGenerator Function(EmbeddingGenerator) factory,
   ) => useWithServices((inner, _) => factory(inner));
+
+  /// Adds an anonymous delegating middleware that routes
+  /// [EmbeddingGenerator.generateEmbeddings] through [generateFunc].
+  EmbeddingGeneratorBuilder useGenerate(
+    GenerateEmbeddingsHandler generateFunc,
+  ) {
+    ArgumentError.checkNotNull(generateFunc, 'generateFunc');
+    return useWithServices(
+      (inner, _) => AnonymousDelegatingEmbeddingGenerator(
+        inner,
+        generateHandler: generateFunc,
+      ),
+    );
+  }
 
   /// Adds a middleware factory that also receives the active
   /// [ServiceProvider].

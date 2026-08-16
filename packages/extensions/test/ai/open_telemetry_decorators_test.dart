@@ -22,14 +22,20 @@ class _FakeSpeechToTextClient implements SpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
   }) async* {
     calls.add('getStreamingText');
-    yield SpeechToTextResponse.fromText('chunk-1');
-    yield SpeechToTextResponse.fromText('chunk-2');
+    yield SpeechToTextResponseUpdate.fromText(
+      SpeechToTextResponseUpdateKind.textUpdating,
+      'chunk-1',
+    );
+    yield SpeechToTextResponseUpdate.fromText(
+      SpeechToTextResponseUpdateKind.textUpdated,
+      'chunk-2',
+    );
   }
 
   @override

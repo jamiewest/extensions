@@ -1,5 +1,24 @@
 ## Unreleased
 
+* **Breaking: `SpeechToTextClient.getStreamingText` now returns
+  `Stream<SpeechToTextResponseUpdate>`** instead of
+  `Stream<SpeechToTextResponse>`, matching upstream. The update type
+  existed but was unreachable; all decorators and the OpenAI client now
+  stream updates, and `toSpeechToTextResponse()` combines them.
+* **New AI conveniences**, ported from upstream `Microsoft.Extensions.AI`:
+  `EmbeddingGeneratorExtensions` (`generateEmbedding`, `generateVector`,
+  `generateAndZip`), `ImageGeneratorExtensions` (`generateImages`,
+  `editImage`, `editImages`), `SpeechToTextClientExtensions`
+  (`getTextFromDataContent`, `getStreamingTextFromDataContent`),
+  `HostedFileClientExtensions` (`uploadDataContent`, `downloadFromContent`,
+  `downloadAsDataContent`, `getMetadata`), and update-combining extensions
+  for speech-to-text and text-to-speech streams.
+* **New types:** `TextToSpeechResponseUpdateKind` (with a `kind` field on
+  `TextToSpeechResponseUpdate`, defaulting to `audioUpdating`) and
+  `AnonymousDelegatingEmbeddingGenerator` with
+  `EmbeddingGeneratorBuilder.useGenerate`.
+* `InvalidOperationException` is now exported from `system.dart`; it was
+  thrown by public APIs but not importable without reaching into `src/`.
 * **Requires Dart 3.13.** The SDK constraint moves from `^3.6.0` to
   `^3.13.0`. This raises the floor for consumers: anything on an older SDK
   stays on 0.7.1. The bump makes Dart primary constructors available, which
