@@ -16,7 +16,7 @@ abstract class LoggerProviderConfigurationFactory {
   /// - The full type name of the provider
   /// - The provider's alias (if defined via ProviderAlias attribute)
   ///
-  /// Returns an [IConfiguration] containing the merged configuration from
+  /// Returns an [Configuration] containing the merged configuration from
   /// all matching sections.
-  IConfiguration getConfiguration(Type providerType);
+  Configuration getConfiguration(Type providerType);
 }

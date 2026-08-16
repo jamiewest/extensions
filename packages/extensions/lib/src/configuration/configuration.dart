@@ -3,7 +3,10 @@ import '../primitives/change_token.dart';
 import 'configuration_section.dart';
 
 /// Represents a set of key/value application configuration properties.
-abstract class IConfiguration {
+///
+/// Ports the C# `IConfiguration` interface; the `I` prefix is dropped per
+/// this repo's naming rules.
+abstract class Configuration {
   /// Gets a configuration value.
   String? operator [](String key);
 
@@ -27,5 +30,6 @@ abstract class IConfiguration {
   ChangeToken getReloadToken();
 }
 
-/// Alias for [IConfiguration] for backwards compatibility.
-typedef Configuration = IConfiguration;
+/// Alias for [Configuration], kept for one release of migration room.
+@Deprecated('Use Configuration instead. Removed in the release after 0.8.0.')
+typedef IConfiguration = Configuration;

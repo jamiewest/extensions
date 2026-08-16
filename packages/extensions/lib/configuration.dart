@@ -41,7 +41,7 @@
 /// Monitor configuration changes with change tokens:
 ///
 /// ```dart
-/// ChangeToken.onChangeTyped<IConfiguration>(
+/// ChangeToken.onChangeTyped<Configuration>(
 ///   () => config.getReloadToken(),
 ///   (config) {
 ///     print('Configuration reloaded!');

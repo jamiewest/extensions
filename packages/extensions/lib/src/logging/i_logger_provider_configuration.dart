@@ -11,7 +11,7 @@ import '../configuration/configuration.dart';
 abstract class LoggerProviderConfiguration<T> {
   /// Gets the configuration for the logger provider.
   ///
-  /// Returns an [IConfiguration] containing the provider-specific
+  /// Returns an [Configuration] containing the provider-specific
   /// configuration settings extracted from the application configuration.
-  IConfiguration get configuration;
+  Configuration get configuration;
 }

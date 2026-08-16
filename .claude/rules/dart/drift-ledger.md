@@ -188,24 +188,31 @@ form remains a correct port of a C# primary constructor.
      which had no such rule at all (5 more). All 22 were comments, doc text,
      or string literals the formatter cannot break; three needed small
      restructures. Both packages analyze clean.
-   - `IMetricListenerConfigurationFactory`
-     (`diagnostics/configuration/`) is an `I`-prefixed name outside the
-     documented globbing exception — rename to
-     `MetricListenerConfigurationFactory` or record the exception.
+   - ~~`IMetricListenerConfigurationFactory`~~ — **closed 2026-08-16.**
+     The earlier rename suggestion assumed no concrete existed; in fact
+     `MetricListenerConfigurationFactory` already implemented it as the
+     only implementation, so the interface collapsed into the concrete per
+     the porting matrix and its file was deleted.
    - `diagnostics/debug_console_metric_listener.dart` uses `print()` (3
      sites). Intentional for a debug console listener, but it should either
      move to `dart:developer` `log()` or carry a dartdoc note.
-   - **New 2026-08-16:** `configuration/configuration.dart` declares
-     `abstract class IConfiguration` and `configuration_section.dart`
-     `abstract class IConfigurationSection`, with
-     `typedef Configuration = IConfiguration` as a compat alias — the
-     inverse of the no-`I`-prefix rule (the bare name should be the type,
-     the alias shouldn't exist). Public API, so the flip is breaking;
-     schedule with the next major, alongside the
-     `IMetricListenerConfigurationFactory` rename above. Found by a broader
-     grep (`^abstract class I[A-Z]`) than the audit's
+   - ~~`IConfiguration`/`IConfigurationSection` I-prefix inversion~~ —
+     **closed 2026-08-16**, riding the 0.8.0 break: `Configuration` is now
+     the abstract type and `IConfiguration` a `@Deprecated` typedef (remove
+     in the release after 0.8.0). `IConfigurationSection` keeps its `I` as
+     a documented exception — the bare name is taken by the concrete
+     `ConfigurationSection`, the same collision rule as the globbing
+     `IPattern` family (dartdoc on the type records this). Found by a
+     broader grep (`^abstract class I[A-Z]`) than the audit's
      `^abstract interface class I[A-Z]` pattern, which is why three prior
      full audits missed it.
+   - Cosmetic remainder (filename-only): `logging/` keeps
+     `i_logger_provider_configuration.dart` and
+     `i_logger_provider_configuration_factory.dart` as filenames although
+     the types inside were long since renamed without the prefix; the
+     natural factory filename is taken by the `*Impl` file. Their stale
+     `[ILoggerProviderConfiguration*]` dartdoc references were fixed
+     2026-08-16 (4 of the 19 standing dartdoc warnings).
    - ~~`.claude/commands/drift.md` primary-constructor note stale~~ —
      **fixed 2026-08-16**: it still described the workspace as pinned to
      `^3.6.0`/`^3.10.1` after the 3.13 bump; now defers to porting.md as

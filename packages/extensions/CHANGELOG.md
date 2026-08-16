@@ -1,5 +1,16 @@
 ## Unreleased
 
+* **Breaking: `IConfiguration` is now `Configuration`.** The abstract type
+  drops its C# `I` prefix per the repo naming rules; `IConfiguration`
+  remains as a `@Deprecated` typedef for one release. The old
+  `typedef Configuration = IConfiguration` compat alias pointed the wrong
+  way and is gone. `IConfigurationSection` keeps its `I` as a documented
+  exception (the bare name belongs to the concrete
+  `ConfigurationSection`).
+* **Breaking: the `IMetricListenerConfigurationFactory` interface is
+  removed.** It had exactly one implementation; per the porting rules it
+  collapses into the concrete `MetricListenerConfigurationFactory`, which
+  keeps the same `getConfiguration` signature.
 * **Breaking: `SpeechToTextClient.getStreamingText` now returns
   `Stream<SpeechToTextResponseUpdate>`** instead of
   `Stream<SpeechToTextResponse>`, matching upstream. The update type

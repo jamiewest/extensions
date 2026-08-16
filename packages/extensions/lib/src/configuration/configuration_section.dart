@@ -6,12 +6,16 @@ import 'internal_configuration_root_extensions.dart';
 
 /// Represents a section of application configuration values.
 ///
-/// Adapted from [`Microsoft.Extensions.Configuration.Abstractions`]()
-abstract class IConfigurationSection implements IConfiguration {
+/// Adapted from `Microsoft.Extensions.Configuration.Abstractions`.
+///
+/// Keeps the C# `I` prefix as a documented exception to the repo's naming
+/// rules: the bare name is taken by the concrete [ConfigurationSection],
+/// exactly like the globbing `IPattern` family.
+abstract class IConfigurationSection implements Configuration {
   /// Gets the key this section occupies in its parent.
   String get key;
 
-  /// Gets the full path to this section within the [IConfiguration].
+  /// Gets the full path to this section within the [Configuration].
   String get path;
 
   /// Gets or sets the section value.
