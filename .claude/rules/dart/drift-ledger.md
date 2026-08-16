@@ -26,8 +26,8 @@ the most recent `/drift` run covering that subsystem.
 | ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | ported (220/254 upstream files; rest N/A or open); `ChatRouting/` family (6 types, upstream `[Experimental]`), the `UsageDetails`/`AIFunction`/`ChatResponseExtensions` member gaps, and the `Common/` invocation processor+logger all closed 2026-08-04; OTel spans-only | 2026-08-16 |
 | ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline); no new gaps 2026-08-04 | 2026-08-16 |
 | vector_data | dotnet/extensions | `src/Libraries/Microsoft.Extensions.VectorData.Abstractions/` | `vector_data/` | ported incl. `provider_services/` core; `ProviderServices/Filter/` trio open | 2026-08-16 |
-| ai (evaluation) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Evaluation{,.NLP,.Quality,.Reporting,.Safety,.Console,.Reporting.Azure}/` | `ai/evaluation/` | **first audited 2026-08-13** — was ported without ever being in audit scope. 82/137 upstream files matched; 55 unmatched, scope decision pending (see priorities) | 2026-08-16 |
-| ai (open_ai) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.OpenAI/` | `ai/open_ai/` | **first audited 2026-08-13** — same story. 6/21 upstream files matched; the Dart side is a hand-rolled minimal client, not a port of the OpenAI .NET SDK adapters. Scope decision pending | 2026-08-16 |
+| ai (evaluation) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Evaluation{,.NLP,.Quality,.Reporting,.Safety,.Console,.Reporting.Azure}/` | `ai/evaluation/` | **scoped 2026-08-16** — every previously-unmatched type ruled: `.Console` + `.Reporting.Azure` N/A by library, ~20 types N/A by collapse (see table), 4 genuine gap clusters open (report pipeline, IntentResolutionRating protocol, result-level helpers, disk-store hardening — see priorities) | 2026-08-16 |
+| ai (open_ai) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.OpenAI/` | `ai/open_ai/` | **scoped 2026-08-16** — ruled N/A by library: upstream is adapters over the official OpenAI .NET SDK, and no allowlisted OpenAI Dart SDK exists to adapt. The Dart `open_ai/` is a deliberate hand-rolled minimal client. Revisit only if an allowlisted OpenAI Dart SDK appears | 2026-08-16 |
 
 `lib/src/system/` is local Dart utility code with no upstream counterpart —
 excluded from all audits.
@@ -78,6 +78,22 @@ reason whenever a port decision rules something out.
 | `HttpClientBuilderExtensions`, `HttpClientBuilderExtensions.Logging` | http | C# static extension classes over `IHttpClientBuilder`; collapsed into instance methods on the Dart `HttpClientBuilder` (`configureHttpClient`, `addHttpMessageHandler`, `redactLoggedHeaders`, `setHandlerLifetime`, `addAsKeyed`, …). Verified member-for-member 2026-08-13 |
 | `NamedAsyncValidateOptionsFilter` | options | async sibling of `NamedValidateOptionsFilter`; both drive the C# options source generator, and there is no codegen in the Dart port |
 | `CacheEntry.CacheEntryTokens` | caching | C# partial splitting `CacheEntry`'s token bookkeeping; the Dart `CacheEntry`/`MemoryCacheEntryOptions` carry `expirationTokens` + `postEvictionCallbacks` directly |
+| `Microsoft.Extensions.AI.Evaluation.Console` (whole library: `Program`, `Commands/`, its `Telemetry/` + `Utilities/` helpers) | ai (evaluation) | executable dotnet CLI tool, not library surface; a Dart equivalent would be a new `bin/` tool designed for pub, out of port scope. Ruled 2026-08-16 |
+| `Microsoft.Extensions.AI.Evaluation.Reporting.Azure` (whole library: `AzureStorage*` types) | ai (evaluation) | Azure Blob Storage bindings over the Azure.Storage .NET SDK; no allowlisted Azure Storage Dart package. Disk-based stores are ported. Ruled 2026-08-16 |
+| OpenAI .NET SDK adapter layer (all 15 unmatched `Microsoft.Extensions.AI.OpenAI` types: `OpenAIResponsesChatClient`, `OpenAIAssistantsChatClient`, `OpenAIRealtime*`, `OpenAIHostedFileClient`, `OpenAIFileDownloadStream`, `MicrosoftExtensionsAI*Extensions`, `OpenAIJsonContext`, `OpenAIRequestPolicies`, `RequestOptionsExtensions`, `ResponsesClientContinuationToken`) | ai (open_ai) | adapters over the official OpenAI .NET SDK; no allowlisted OpenAI Dart SDK to adapt — the Dart `open_ai/` is a hand-rolled minimal REST client instead. Ruled 2026-08-16 |
+| `ChatMessageExtensions` (Evaluation core + internal Quality/Safety copies) | ai (evaluation) | collapsed into `QualityMessageListExtensions` (`quality/quality_evaluator_base.dart`) and `ChatMessageListExtensions` |
+| `EvaluatorExtensions` | ai (evaluation) | C# `EvaluateAsync` convenience overloads collapse into the single `Evaluator.evaluate(messages, modelResponse, …)`; callers pass `const []` |
+| `ScenarioRunExtensions` | ai (evaluation) | `EvaluateAsync` overloads collapse into the `ScenarioRun.evaluate` instance method |
+| `ChatDetailsExtensions` | ai (evaluation) | collapsed into the `ChatDetails.addTurnDetails` instance method |
+| `NGramExtensions` | ai (evaluation) | collapsed into `NGramListExtensions` (`createNGrams`/`createNGramCounts`) in `nlp/common/n_gram.dart` |
+| `AIToolExtensions` | ai (evaluation) | internal `RenderAsJson`; tool rendering is inlined in `ToolCallAccuracyEvaluatorContext` and the quality evaluators |
+| `JsonOutputFixer` | ai (evaluation) | markdown-fence stripping inlined in `relevance_truth_and_completeness_rating.dart` parsing |
+| `SerializerContext` (Quality), `CamelCaseEnumConverter`, `EvaluationContextConverter`, `TimeSpanConverter`, `JsonUtilities` (Reporting) | ai (evaluation) | STJ source-gen/converter layer; plain `dart:convert` maps instead — same rationale as `OtelContext` |
+| `SimpleChatClient` | ai (evaluation) | turn-detail recording collapsed into `ResponseCachingChatClient` (constructs `ChatTurnDetails` directly) |
+| `Defaults` | ai (evaluation) | three constants inlined at use sites (`'Default'` execution name in `reporting_configuration.dart`, 14-day TTL in `disk_based_response_cache.dart`) |
+| `TimingHelper`, `TaskExtensions` | ai (evaluation) | `Stopwatch` / `Future.wait` at call sites — same rationale as `ValueStopwatch` |
+| `ContentSafetyChatClient`, `ContentSafetyChatOptions`, `ContentSafetyServiceConfigurationExtensions` | ai (evaluation) | the IChatClient facade over the safety service; unneeded — Dart safety evaluators call the service directly via the `ContentSafetyEvaluator` base class |
+| `ContentSafetyService` + payload family (`ContentSafetyServicePayload{Format,Strategy,Utilities}`) | ai (evaluation) | collapsed into the `ContentSafetyEvaluator` base + `ContentSafetyServiceConfiguration` (simplified single-payload client). Fidelity caveat: upstream's 565-line payload builder handles per-task/multimodal formats and LRO polling the Dart client does not — revisit if a safety task mis-serves (tracked in priorities) |
 
 ## Open priorities
 
@@ -93,34 +109,41 @@ public constructor's `lifetime` + factory parameters. The audit ran at
 language version 3.13 (constraints raised 2026-08-16); either constructor
 form remains a correct port of a C# primary constructor.
 
-1. **Unaudited ported scope (new 2026-08-13, decide first)** — two upstream
-   library families are ported in `lib/src/ai/` but had never been in the
-   `/drift` scope table, so they had never been audited:
-   - `ai/evaluation/` ← `Microsoft.Extensions.AI.Evaluation` + `.NLP` /
-     `.Quality` / `.Reporting` / `.Safety` / `.Console` / `.Reporting.Azure`
-     — 82/137 upstream files matched, 55 unmatched. The unmatched set splits
-     three ways and each needs a recorded decision: (a) likely N/A —
-     `*Extensions` helper classes, `JsonSerialization/` converters
-     (`CamelCaseEnumConverter`, `TimeSpanConverter`, `SerializerContext`,
-     `JsonUtilities`), and utility types (`TimingHelper`, `TaskExtensions`,
-     `PathValidation`, `ModelInfo`); (b) probably out of scope as whole
-     libraries — `.Console` (12 files, a `System.CommandLine` CLI) and
-     `.Reporting.Azure` (6 files, Azure Storage SDK); (c) genuine gaps —
-     `ContentSafetyService` + its payload family (8 files, the Azure AI
-     Content Safety client backing the `safety/` evaluators),
-     `HtmlReportWriter` / `JsonReportWriter` / `IEvaluationReportWriter` /
-     `Dataset`, and `IntentResolutionRating`.
-   - `ai/open_ai/` ← `Microsoft.Extensions.AI.OpenAI` — 6/21 matched. The
-     Dart side is a hand-rolled minimal client; upstream's file set is
-     adapters over the official OpenAI .NET SDK (`OpenAIResponsesChatClient`,
-     `OpenAIAssistantsChatClient`, `OpenAIRealtimeClient`, the
-     `MicrosoftExtensionsAI*Extensions` bridges). There is no OpenAI Dart SDK
-     to adapt, so this is likely "Dart-only reimplementation, N/A by
-     library" — but it must be written down, not left implicit.
-
-   Scope rows for both were added to `.claude/commands/drift.md` on
-   2026-08-13, so the next `all` run covers them; what is still owed is the
-   N/A / port rulings, recorded here.
+1. **Evaluation genuine gaps (scoped 2026-08-16; rulings recorded)** — the
+   2026-08-13 "scope decision pending" item is resolved: `.Console`,
+   `.Reporting.Azure`, and the OpenAI adapter layer are N/A by library, and
+   ~20 helper/serialization types are N/A by collapse (all in the N/A table
+   with evidence). Every characterization was verified against fetched
+   upstream source, not assumed. What remains are four genuine gap
+   clusters, in priority order:
+   - **Report generation pipeline** (`IEvaluationReportWriter`,
+     `JsonReportWriter` + `Dataset`, `HtmlReportWriter`): the Dart reporting
+     layer stores results (`disk_based_result_store.dart`) but cannot render
+     a report. `JsonReportWriter`+`Dataset` are small and mechanical;
+     `HtmlReportWriter` embeds a template built from upstream's
+     `TypeScript/` frontend, so it needs a template-sourcing decision first.
+     Fold in `BuiltInMetricUtilities` (metric-metadata stamping the report
+     UI reads — Dart evaluators do not stamp `eval-model`/token metadata)
+     and `ModelInfo` (well-known model tables) as the writers need them.
+   - **`IntentResolutionRating` + evaluator protocol**: upstream's
+     `IntentResolutionEvaluator` asks the judge model for a JSON payload
+     parsed into a typed rating (`resolution_score`,
+     `agent_perceived_intent`, …); the Dart evaluator still uses the older
+     `<S0>/<S1>/<S2>` tag protocol with a bare 1–5 score. Port the rating
+     type following the in-repo `relevance_truth_and_completeness_rating.dart`
+     pattern and rework the prompt/parse to match upstream.
+   - **Result-level helpers**: `EvaluationResultExtensions`'s bulk mutators
+     (`AddOrUpdate*InAllMetrics`, `AddDiagnosticsToAllMetrics`,
+     result-level `Interpret`/`ContainsDiagnostics`) and
+     `ScenarioRunResultExtensions.ContainsDiagnostics` — the metric-level
+     halves exist in `evaluation_metric_extensions.dart`; the result-level
+     loops do not. Small.
+   - **Disk-store hardening** (minor): `PathValidation`
+     (`EnsureWithinRoot` path-traversal guard — scenario names become
+     directory segments unguarded in the Dart disk stores) and
+     `IterationNameComparer` (natural ordering of iteration names).
+   - Safety payload fidelity (watch item, no action): see the
+     `ContentSafetyService` N/A row's caveat.
 
 2. **Doc examples: 25 hand-written barrel snippets still unverified (new
    2026-08-13)** — the example set was reorganised the same day: 18 runnable
