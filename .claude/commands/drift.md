@@ -177,20 +177,18 @@ field only where the body captures it) and compare them against the Dart
 constructor.
 
 Dart has primary constructors too, as of **3.13**
-(`class Point(final int x, final int y);`), but this workspace is pinned below
-that: `packages/extensions` declares `sdk: ^3.6.0` and `extensions_flutter`
-`^3.10.1`. So:
+(`class Point(final int x, final int y);`), and the workspace floor is
+`sdk: ^3.13.0` (raised 2026-08-16), so both Dart forms are legal. So:
 
-- A conventional Dart constructor carrying the same parameters is a **correct
-  port of a C# primary constructor — never report it as drift**, and never
-  propose rewriting the Dart side into primary-constructor syntax while the
-  SDK constraints stand. It would not compile for consumers on the declared
-  minimum.
-- Only report a gap when the *parameters themselves* differ.
-- If the SDK constraints are ever raised to `^3.13.0`, revisit this note and
-  `.claude/rules/dart/porting.md` § "Primary constructors" together — that
-  section also records the `final`-formal-parameter breaking change the bump
-  would trigger.
+- **Either Dart constructor form carrying the same parameters is a correct
+  port of a C# primary constructor — never report it as drift**, and do not
+  propose rewriting conventional constructors into primary-constructor
+  syntax; there is no conversion campaign.
+- Only report a gap when the *parameters themselves* differ. Note that a
+  named initializing formal `this._bar` surfaces to callers as `bar:` (3.13
+  strips the underscore), so compare against the public name.
+- `.claude/rules/dart/porting.md` § "Primary constructors" is the
+  authoritative version of this note.
 
 ## Step 4 — Implementation debt scan
 

@@ -6,27 +6,28 @@ each run. Porting rules live in [porting.md](porting.md).
 
 ## Subsystem status
 
-Upstream paths verified 2026-07-06. "Last audited" is the date of the most
-recent `/drift` run covering that subsystem.
+Upstream paths verified 2026-07-06 (Contents API) and 2026-08-16 (git trees
+API, all 22 library folders, none truncated). "Last audited" is the date of
+the most recent `/drift` run covering that subsystem.
 
 | Subsystem | Upstream repo | Upstream path | Dart folder (`packages/extensions/lib/src/`) | Status | Last audited |
 |---|---|---|---|---|---|
-| hosting | dotnet/runtime | `src/libraries/Microsoft.Extensions.Hosting/src/` | `hosting/` | ported; no gaps | 2026-08-13 |
-| dependency_injection | dotnet/runtime | `src/libraries/Microsoft.Extensions.DependencyInjection/src/` | `dependency_injection/` | ported; 4 portable call-site types open (see priorities) | 2026-08-13 |
-| logging | dotnet/runtime | `src/libraries/Microsoft.Extensions.Logging/src/` | `logging/` | ported; `LoggerFactory` `options`/`scopeProvider` ctor params open | 2026-08-13 |
-| configuration | dotnet/runtime | `src/libraries/Microsoft.Extensions.Configuration/src/` | `configuration/` | ported; ReferenceCountedProviders, `ConfigurationKeyComparer`, `ConfigurationSectionDebugView` open | 2026-08-13 |
-| options | dotnet/runtime | `src/libraries/Microsoft.Extensions.Options/src/` | `options/` | ported; async validation + `OptionsMonitorExtensions` open | 2026-08-13 |
-| caching | dotnet/runtime | `src/libraries/Microsoft.Extensions.Caching.Memory/src/` | `caching/` | ported; `MemoryCache.Count`/`Keys` + logger/meter ctor hooks open | 2026-08-13 |
-| http | dotnet/runtime | `src/libraries/Microsoft.Extensions.Http/src/` | `http/` | ported; DI-layer gap closed 2026-07-13 (tracking entries + timer cleanup, `addAsKeyed`, `configureAdditionalHttpMessageHandlers` ported; remainder collapsed/N/A — see tables) | 2026-08-13 |
-| primitives | dotnet/runtime | `src/libraries/Microsoft.Extensions.Primitives/src/` | `primitives/` | ported; StringSegment family (6 types) + async `ChangeToken.onChange` overloads open | 2026-08-13 |
-| file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-08-13 |
-| file_system_globbing | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/` | `file_system_globbing/` | fully ported incl. `Internal/` (2026-07-04) | 2026-08-13 |
-| diagnostics | dotnet/runtime | `src/libraries/Microsoft.Extensions.Diagnostics/src/` | `diagnostics/` | metrics ported; `Tracing/` ruled N/A 2026-07-13 (would require an Activity mini-port) | 2026-08-13 |
-| ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | ported (220/254 upstream files; rest N/A or open); `ChatRouting/` family (6 types, upstream `[Experimental]`), the `UsageDetails`/`AIFunction`/`ChatResponseExtensions` member gaps, and the `Common/` invocation processor+logger all closed 2026-08-04; OTel spans-only | 2026-08-13 |
-| ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline); no new gaps 2026-08-04 | 2026-08-13 |
-| vector_data | dotnet/extensions | `src/Libraries/Microsoft.Extensions.VectorData.Abstractions/` | `vector_data/` | ported incl. `provider_services/` core; `ProviderServices/Filter/` trio open | 2026-08-13 |
-| ai (evaluation) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Evaluation{,.NLP,.Quality,.Reporting,.Safety,.Console,.Reporting.Azure}/` | `ai/evaluation/` | **first audited 2026-08-13** — was ported without ever being in audit scope. 82/137 upstream files matched; 55 unmatched, scope decision pending (see priorities) | 2026-08-13 |
-| ai (open_ai) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.OpenAI/` | `ai/open_ai/` | **first audited 2026-08-13** — same story. 6/21 upstream files matched; the Dart side is a hand-rolled minimal client, not a port of the OpenAI .NET SDK adapters. Scope decision pending | 2026-08-13 |
+| hosting | dotnet/runtime | `src/libraries/Microsoft.Extensions.Hosting/src/` | `hosting/` | ported; no gaps | 2026-08-16 |
+| dependency_injection | dotnet/runtime | `src/libraries/Microsoft.Extensions.DependencyInjection/src/` | `dependency_injection/` | ported; 4 portable call-site types open (see priorities) | 2026-08-16 |
+| logging | dotnet/runtime | `src/libraries/Microsoft.Extensions.Logging/src/` | `logging/` | ported; `LoggerFactory` `options`/`scopeProvider` ctor params open | 2026-08-16 |
+| configuration | dotnet/runtime | `src/libraries/Microsoft.Extensions.Configuration/src/` | `configuration/` | ported; ReferenceCountedProviders, `ConfigurationKeyComparer`, `ConfigurationSectionDebugView` open | 2026-08-16 |
+| options | dotnet/runtime | `src/libraries/Microsoft.Extensions.Options/src/` | `options/` | ported; async validation + `OptionsMonitorExtensions` open | 2026-08-16 |
+| caching | dotnet/runtime | `src/libraries/Microsoft.Extensions.Caching.Memory/src/` | `caching/` | ported; `MemoryCache.Count`/`Keys` + logger/meter ctor hooks open | 2026-08-16 |
+| http | dotnet/runtime | `src/libraries/Microsoft.Extensions.Http/src/` | `http/` | ported; DI-layer gap closed 2026-07-13 (tracking entries + timer cleanup, `addAsKeyed`, `configureAdditionalHttpMessageHandlers` ported; remainder collapsed/N/A — see tables) | 2026-08-16 |
+| primitives | dotnet/runtime | `src/libraries/Microsoft.Extensions.Primitives/src/` | `primitives/` | ported; StringSegment family (6 types) + async `ChangeToken.onChange` overloads open | 2026-08-16 |
+| file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-08-16 |
+| file_system_globbing | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/` | `file_system_globbing/` | fully ported incl. `Internal/` (2026-07-04) | 2026-08-16 |
+| diagnostics | dotnet/runtime | `src/libraries/Microsoft.Extensions.Diagnostics/src/` | `diagnostics/` | metrics ported; `Tracing/` ruled N/A 2026-07-13 (would require an Activity mini-port) | 2026-08-16 |
+| ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | ported (220/254 upstream files; rest N/A or open); `ChatRouting/` family (6 types, upstream `[Experimental]`), the `UsageDetails`/`AIFunction`/`ChatResponseExtensions` member gaps, and the `Common/` invocation processor+logger all closed 2026-08-04; OTel spans-only | 2026-08-16 |
+| ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline); no new gaps 2026-08-04 | 2026-08-16 |
+| vector_data | dotnet/extensions | `src/Libraries/Microsoft.Extensions.VectorData.Abstractions/` | `vector_data/` | ported incl. `provider_services/` core; `ProviderServices/Filter/` trio open | 2026-08-16 |
+| ai (evaluation) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Evaluation{,.NLP,.Quality,.Reporting,.Safety,.Console,.Reporting.Azure}/` | `ai/evaluation/` | **first audited 2026-08-13** — was ported without ever being in audit scope. 82/137 upstream files matched; 55 unmatched, scope decision pending (see priorities) | 2026-08-16 |
+| ai (open_ai) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.OpenAI/` | `ai/open_ai/` | **first audited 2026-08-13** — same story. 6/21 upstream files matched; the Dart side is a hand-rolled minimal client, not a port of the OpenAI .NET SDK adapters. Scope decision pending | 2026-08-16 |
 
 `lib/src/system/` is local Dart utility code with no upstream counterpart —
 excluded from all audits.
@@ -80,9 +81,17 @@ reason whenever a port decision rules something out.
 
 ## Open priorities
 
-Full-scope audit 2026-08-13. **No new upstream drift**: every unmatched type
-in the 13 scoped subsystems was already an N/A entry or a known open item
-below. The new findings are scope and hygiene, not missed ports.
+Full-scope audit 2026-08-16 (previous: 2026-08-13). **No new upstream
+drift**: upstream counts are unchanged since 2026-08-13 (AI 254, evaluation
+137, OpenAI 21) and every unmatched type across all 15 scope rows was
+already an N/A entry or a known open item below. API surface sample
+(10 types: IChatClient, IEmbeddingGenerator, ILoggerFactory,
+IOptionsMonitor, IMemoryCache, IConfigurationBuilder, IHost,
+ServiceDescriptor, IChangeToken, PhysicalFileProvider): no member gaps —
+C# `ServiceDescriptor.Describe`/`DescribeKeyed` collapse into the Dart
+public constructor's `lifetime` + factory parameters. The audit ran at
+language version 3.13 (constraints raised 2026-08-16); either constructor
+form remains a correct port of a C# primary constructor.
 
 1. **Unaudited ported scope (new 2026-08-13, decide first)** — two upstream
    library families are ported in `lib/src/ai/` but had never been in the
@@ -160,6 +169,21 @@ below. The new findings are scope and hygiene, not missed ports.
    - `diagnostics/debug_console_metric_listener.dart` uses `print()` (3
      sites). Intentional for a debug console listener, but it should either
      move to `dart:developer` `log()` or carry a dartdoc note.
+   - **New 2026-08-16:** `configuration/configuration.dart` declares
+     `abstract class IConfiguration` and `configuration_section.dart`
+     `abstract class IConfigurationSection`, with
+     `typedef Configuration = IConfiguration` as a compat alias — the
+     inverse of the no-`I`-prefix rule (the bare name should be the type,
+     the alias shouldn't exist). Public API, so the flip is breaking;
+     schedule with the next major, alongside the
+     `IMetricListenerConfigurationFactory` rename above. Found by a broader
+     grep (`^abstract class I[A-Z]`) than the audit's
+     `^abstract interface class I[A-Z]` pattern, which is why three prior
+     full audits missed it.
+   - ~~`.claude/commands/drift.md` primary-constructor note stale~~ —
+     **fixed 2026-08-16**: it still described the workspace as pinned to
+     `^3.6.0`/`^3.10.1` after the 3.13 bump; now defers to porting.md as
+     authoritative.
 
 4. **ai** — unchanged from the 2026-08-04 audit; upstream `AI` +
    `AI.Abstractions` are still at 254 files with no new types.
@@ -172,7 +196,7 @@ below. The new findings are scope and hygiene, not missed ports.
      `FunctionInvocationContext` wiring (tools cannot set `terminate`/observe
      context yet — the context type exists but is not flowed).
    - Dart-only note: `ai/tool_reduction/` (`ToolReducingChatClient`) still has
-     no counterpart in upstream main (re-checked 2026-08-13) — keep.
+     no counterpart in upstream main (re-checked 2026-08-16) — keep.
    - Abstraction-side `*Extensions` helpers: `EmbeddingGeneratorExtensions`,
      `ImageGeneratorExtensions`, `SpeechToTextClientExtensions`,
      `SpeechToTextResponseUpdateExtensions`, `TextToSpeechClientExtensions`,
@@ -189,8 +213,9 @@ below. The new findings are scope and hygiene, not missed ports.
      avoids `dart:io`, so hosts set
      `TelemetryHelpers.enableSensitiveDataDefault` at bootstrap.
 
-5. **Test coverage** — 997 tests pass, but only 63 of 491 substantive source
-   files (≥20 non-blank lines) have a same-named `*_test.dart`. The 1:1
+5. **Test coverage** — 997 tests pass, but only 63 of 489 substantive source
+   files (≥20 non-blank lines; recounted 2026-08-16 after the tall-style
+   reformat) have a same-named `*_test.dart`. The 1:1
    filename heuristic understates real coverage (many tests cover several
    files), so treat this as a hot-spot map rather than a percentage: `ai`
    accounts for 221 of the 428 untested files — `evaluation` (68),
@@ -200,7 +225,7 @@ below. The new findings are scope and hygiene, not missed ports.
    lines), `ai/chat_completion/function_invoking_chat_client.dart` (326),
    `ai/chat_routing/semantic_routing_chat_client.dart` (309).
 
-6. **Smaller** (all re-confirmed still open 2026-08-13) —
+6. **Smaller** (all re-confirmed still open 2026-08-16) —
    - options: async validation (`AsyncValidateOptions`,
      `IAsyncValidateOptions`, `IAsyncStartupValidator`) and
      `OptionsMonitorExtensions` (`onChange` helper).
