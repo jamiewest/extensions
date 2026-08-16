@@ -10,8 +10,9 @@ import 'text_to_speech_response_update.dart';
 /// [TextToSpeechResponse].
 ///
 /// Upstream accumulates every content item into the response's content
-/// list; the Dart [TextToSpeechResponse] instead carries a single [audio]
-/// [DataContent], so audio chunks that carry in-memory bytes are
+/// list; the Dart [TextToSpeechResponse] instead carries a single
+/// [TextToSpeechResponse.audio] [DataContent], so audio chunks that carry
+/// in-memory bytes are
 /// concatenated (the media type is taken from the first chunk). When any
 /// chunk lacks bytes — a URI-only [DataContent] — the last chunk wins.
 ///
