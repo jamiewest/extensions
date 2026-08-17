@@ -79,8 +79,11 @@ mixin LoggerMixin on Logger {
         continue;
       }
 
-      var (isEnabled, ex) =
-          loggerIsEnabled(logLevel, loggerInfo.logger, exceptions);
+      var (isEnabled, ex) = loggerIsEnabled(
+        logLevel,
+        loggerInfo.logger,
+        exceptions,
+      );
       if (isEnabled) {
         break;
       }

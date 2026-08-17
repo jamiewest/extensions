@@ -6,6 +6,11 @@ extension OpenTelemetryImageGeneratorBuilderExtensions
     on ImageGeneratorBuilder {
   /// Adds an [OpenTelemetryImageGenerator] to the pipeline.
   ImageGeneratorBuilder useOpenTelemetry({String? modelId, String? system}) =>
-      use((inner) =>
-          OpenTelemetryImageGenerator(inner, modelId: modelId, system: system));
+      use(
+        (inner) => OpenTelemetryImageGenerator(
+          inner,
+          modelId: modelId,
+          system: system,
+        ),
+      );
 }

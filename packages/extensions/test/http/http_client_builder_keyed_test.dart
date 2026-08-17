@@ -18,8 +18,9 @@ void main() {
           .addAsKeyed(lifetime: ServiceLifetime.transient);
 
       final provider = services.buildServiceProvider();
-      final client =
-          provider.getRequiredKeyedService<http.BaseClient>('github');
+      final client = provider.getRequiredKeyedService<http.BaseClient>(
+        'github',
+      );
 
       expect(client, isA<http.BaseClient>());
     });
@@ -33,10 +34,7 @@ void main() {
 
       final provider = services.buildServiceProvider();
 
-      expect(
-        provider.getKeyedService<http.BaseClient>('github'),
-        isNull,
-      );
+      expect(provider.getKeyedService<http.BaseClient>('github'), isNull);
     });
 
     test('addAsKeyed twice does not duplicate the registration', () {
@@ -63,19 +61,17 @@ void main() {
           .addHttpClient('api')
           .addHttpMessageHandler((sp) => _RecordingHandler('auth'))
           .addHttpMessageHandler((sp) => _RecordingHandler('retry'))
-          .configureAdditionalHttpMessageHandlers(
-        (handlers, sp) {
-          observed = handlers
-              .whereType<_RecordingHandler>()
-              .map((handler) => handler.label)
-              .toList();
-        },
-      );
+          .configureAdditionalHttpMessageHandlers((handlers, sp) {
+            observed = handlers
+                .whereType<_RecordingHandler>()
+                .map((handler) => handler.label)
+                .toList();
+          });
 
       final provider = services.buildServiceProvider();
-      provider
-          .getRequiredService<HttpMessageHandlerFactory>()
-          .createHandler('api');
+      provider.getRequiredService<HttpMessageHandlerFactory>().createHandler(
+        'api',
+      );
 
       expect(observed, ['auth', 'retry']);
     });

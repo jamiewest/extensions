@@ -12,8 +12,8 @@ class OptionsManager<TOptions>
   OptionsManager(
     OptionsImplementationFactory<TOptions> builder,
     OptionsFactory<TOptions> factory,
-  )   : _factory = factory,
-        _cache = OptionsCache<TOptions>(builder);
+  ) : _factory = factory,
+      _cache = OptionsCache<TOptions>(builder);
 
   @override
   TOptions get(String? name) {

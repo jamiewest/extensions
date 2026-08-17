@@ -7,8 +7,8 @@ class CancellationTokenRegistration implements Disposable {
   final CallbackNode? _node;
 
   CancellationTokenRegistration(int id, CallbackNode? node)
-      : _id = id,
-        _node = node;
+    : _id = id,
+      _node = node;
 
   @override
   void dispose() {

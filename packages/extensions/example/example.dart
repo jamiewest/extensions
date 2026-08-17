@@ -12,9 +12,9 @@ Future<void> main(List<String> args) async => Host.createDefaultBuilder()
     .configureServices(
       (_, services) => services.addHostedService<ExampleHostedService>(
         (services) => ExampleHostedService(
-          services
-              .getRequiredService<LoggerFactory>()
-              .createLogger('ExampleHostedService'),
+          services.getRequiredService<LoggerFactory>().createLogger(
+            'ExampleHostedService',
+          ),
           services.getRequiredService<HostApplicationLifetime>(),
         ),
       ),
@@ -28,10 +28,8 @@ Future<void> main(List<String> args) async => Host.createDefaultBuilder()
 class ExampleHostedService extends HostedService {
   final Logger _logger;
 
-  ExampleHostedService(
-    Logger logger,
-    HostApplicationLifetime lifetime,
-  ) : _logger = logger {
+  ExampleHostedService(Logger logger, HostApplicationLifetime lifetime)
+    : _logger = logger {
     lifetime
       ..applicationStarted.register((_) => _onStarted())
       ..applicationStopping.register((_) => _onStopping())

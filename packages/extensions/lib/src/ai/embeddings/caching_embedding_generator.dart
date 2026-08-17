@@ -60,8 +60,9 @@ abstract class CachingEmbeddingGenerator extends DelegatingEmbeddingGenerator {
 
     final generated = GeneratedEmbeddings();
     if (uncachedIndices.isNotEmpty) {
-      final freshValues =
-          uncachedIndices.map((index) => inputs[index]).toList();
+      final freshValues = uncachedIndices
+          .map((index) => inputs[index])
+          .toList();
       final fresh = await super.generateEmbeddings(
         values: freshValues,
         options: options,

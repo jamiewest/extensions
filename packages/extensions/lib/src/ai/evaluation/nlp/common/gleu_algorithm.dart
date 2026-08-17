@@ -25,7 +25,8 @@ class GLEUAlgorithm {
     if (hypothesis.isEmpty) throw ArgumentError('hypothesis cannot be empty.');
 
     final hypCounts = MatchCounter<NGram<String>>(
-        hypothesis.createAllNGrams(minN: minN, maxN: maxN));
+      hypothesis.createAllNGrams(minN: minN, maxN: maxN),
+    );
     final truePosFalsePos = hypCounts.sum();
 
     var corpusNMatch = 0;
@@ -33,7 +34,8 @@ class GLEUAlgorithm {
 
     for (final reference in references) {
       final refCounts = MatchCounter<NGram<String>>(
-          reference.createAllNGrams(minN: minN, maxN: maxN));
+        reference.createAllNGrams(minN: minN, maxN: maxN),
+      );
       final truePosFalseNeg = refCounts.sum();
       final overlapCounts = hypCounts.intersect(refCounts);
       final truePos = overlapCounts.sum();

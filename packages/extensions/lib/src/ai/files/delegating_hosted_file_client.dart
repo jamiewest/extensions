@@ -30,60 +30,55 @@ class DelegatingHostedFileClient implements HostedFileClient {
     String? fileName,
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.upload(
-        content,
-        mediaType: mediaType,
-        fileName: fileName,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.upload(
+    content,
+    mediaType: mediaType,
+    fileName: fileName,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<List<int>> download(
     String fileId, {
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.download(
-        fileId,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.download(
+    fileId,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Future<HostedFileContent?> getFile(
     String fileId, {
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getFile(
-        fileId,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getFile(
+    fileId,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<HostedFileContent> listFiles({
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.listFiles(
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.listFiles(
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Future<bool> delete(
     String fileId, {
     HostedFileClientOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.delete(
-        fileId,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.delete(
+    fileId,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) {

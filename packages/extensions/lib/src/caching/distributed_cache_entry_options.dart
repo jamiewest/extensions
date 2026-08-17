@@ -2,13 +2,12 @@
 class DistributedCacheEntryOptions {
   /// Creates a new instance of [DistributedCacheEntryOptions].
   DistributedCacheEntryOptions({
-    DateTime? absoluteExpiration,
+    this._absoluteExpiration,
     Duration? absoluteExpirationRelativeToNow,
     Duration? slidingExpiration,
-  })  : _absoluteExpiration = absoluteExpiration,
-        _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
-        _slidingExpiration = slidingExpiration,
-        _isFrozen = false {
+  }) : _absoluteExpirationRelativeToNow = absoluteExpirationRelativeToNow,
+       _slidingExpiration = slidingExpiration,
+       _isFrozen = false {
     if (absoluteExpirationRelativeToNow != null &&
         (absoluteExpirationRelativeToNow.isNegative ||
             absoluteExpirationRelativeToNow == Duration.zero)) {

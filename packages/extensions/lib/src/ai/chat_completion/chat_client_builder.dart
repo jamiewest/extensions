@@ -34,7 +34,8 @@ typedef ChatClientSharedDelegate = Future<void> Function(
     Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  ) next,
+  )
+  next,
   CancellationToken? cancellationToken,
 );
 
@@ -58,7 +59,7 @@ class ChatClientBuilder {
   List<ChatClientFactoryWithServices>? _clientFactories;
 
   ChatClientBuilder._(InnerClientFactory innerClientFactory)
-      : _innerClientFactory = innerClientFactory;
+    : _innerClientFactory = innerClientFactory;
 
   /// Creates a new [ChatClientBuilder] wrapping [innerClient].
   ChatClientBuilder(ChatClient innerClient) {
@@ -68,8 +69,7 @@ class ChatClientBuilder {
   /// Creates a new [ChatClientBuilder] from a factory function.
   factory ChatClientBuilder.fromFactory(
     InnerClientFactory innerClientFactory,
-  ) =>
-      ChatClientBuilder._(innerClientFactory);
+  ) => ChatClientBuilder._(innerClientFactory);
 
   /// Adds a middleware factory to the pipeline.
   ///
@@ -84,7 +84,8 @@ class ChatClientBuilder {
   /// This corresponds to the `Use` overload that receives
   /// `IServiceProvider` in .NET.
   ChatClientBuilder useWithServices(
-      ChatClientFactoryWithServices clientFactory) {
+    ChatClientFactoryWithServices clientFactory,
+  ) {
     ArgumentError.checkNotNull(clientFactory, 'clientFactory');
 
     (_clientFactories ??= <ChatClientFactoryWithServices>[]).add(clientFactory);
@@ -102,18 +103,17 @@ class ChatClientBuilder {
         responseHandler: (messages, options, inner, cancellationToken) async {
           ChatResponse? response;
 
-          await sharedFunc(
-            messages,
-            options,
-            (nextMessages, nextOptions, nextCancellationToken) async {
-              response = await inner.getResponse(
-                messages: nextMessages,
-                options: nextOptions,
-                cancellationToken: nextCancellationToken,
-              );
-            },
-            cancellationToken,
-          );
+          await sharedFunc(messages, options, (
+            nextMessages,
+            nextOptions,
+            nextCancellationToken,
+          ) async {
+            response = await inner.getResponse(
+              messages: nextMessages,
+              options: nextOptions,
+              cancellationToken: nextCancellationToken,
+            );
+          }, cancellationToken);
 
           final result = response;
           if (result == null) {
@@ -127,40 +127,39 @@ class ChatClientBuilder {
         },
         streamingResponseHandler:
             (messages, options, inner, cancellationToken) {
-          final controller = StreamController<ChatResponseUpdate>();
+              final controller = StreamController<ChatResponseUpdate>();
 
-          Future<void>(() async {
-            Object? error;
-            StackTrace? stackTrace;
+              Future<void>(() async {
+                Object? error;
+                StackTrace? stackTrace;
 
-            try {
-              await sharedFunc(
-                messages,
-                options,
-                (nextMessages, nextOptions, nextCancellationToken) async {
-                  await for (final update in inner.getStreamingResponse(
-                    messages: nextMessages,
-                    options: nextOptions,
-                    cancellationToken: nextCancellationToken,
-                  )) {
-                    controller.add(update);
+                try {
+                  await sharedFunc(messages, options, (
+                    nextMessages,
+                    nextOptions,
+                    nextCancellationToken,
+                  ) async {
+                    await for (final update in inner.getStreamingResponse(
+                      messages: nextMessages,
+                      options: nextOptions,
+                      cancellationToken: nextCancellationToken,
+                    )) {
+                      controller.add(update);
+                    }
+                  }, cancellationToken);
+                } catch (e, st) {
+                  error = e;
+                  stackTrace = st;
+                } finally {
+                  if (error != null) {
+                    controller.addError(error, stackTrace);
                   }
-                },
-                cancellationToken,
-              );
-            } catch (e, st) {
-              error = e;
-              stackTrace = st;
-            } finally {
-              if (error != null) {
-                controller.addError(error, stackTrace);
-              }
-              await controller.close();
-            }
-          });
+                  await controller.close();
+                }
+              });
 
-          return controller.stream;
-        },
+              return controller.stream;
+            },
       ),
     );
   }
@@ -182,7 +181,8 @@ class ChatClientBuilder {
       );
     }
 
-    final responseHandler = getResponseFunc ??
+    final responseHandler =
+        getResponseFunc ??
         (messages, options, innerClient, cancellationToken) =>
             getStreamingResponseFunc!(
               messages,
@@ -191,7 +191,8 @@ class ChatClientBuilder {
               cancellationToken,
             ).toChatResponse();
 
-    final streamingHandler = getStreamingResponseFunc ??
+    final streamingHandler =
+        getStreamingResponseFunc ??
         (messages, options, innerClient, cancellationToken) async* {
           final response = await getResponseFunc!(
             messages,

@@ -27,18 +27,18 @@ class ChatResponseUpdate {
 
   /// Creates a [ChatResponseUpdate] with text content.
   ChatResponseUpdate.fromText(this.role, String text)
-      : contents = [TextContent(text)],
-        authorName = null,
-        rawRepresentation = null,
-        additionalProperties = null,
-        responseId = null,
-        messageId = null,
-        conversationId = null,
-        createdAt = null,
-        finishReason = null,
-        modelId = null,
-        continuationToken = null,
-        usage = null;
+    : contents = [TextContent(text)],
+      authorName = null,
+      rawRepresentation = null,
+      additionalProperties = null,
+      responseId = null,
+      messageId = null,
+      conversationId = null,
+      createdAt = null,
+      finishReason = null,
+      modelId = null,
+      continuationToken = null,
+      usage = null;
 
   /// The role of the update author.
   ChatRole? role;
@@ -85,21 +85,22 @@ class ChatResponseUpdate {
 
   /// Creates a deep copy of this update.
   ChatResponseUpdate clone() => ChatResponseUpdate(
-        role: role,
-        authorName: authorName,
-        contents: List<AIContent>.of(contents),
-        rawRepresentation: rawRepresentation,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-        responseId: responseId,
-        messageId: messageId,
-        conversationId: conversationId,
-        createdAt: createdAt,
-        finishReason: finishReason,
-        modelId: modelId,
-        continuationToken: continuationToken,
-        usage: usage,
-      );
+    role: role,
+    authorName: authorName,
+    contents: List<AIContent>.of(contents),
+    rawRepresentation: rawRepresentation,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+    responseId: responseId,
+    messageId: messageId,
+    conversationId: conversationId,
+    createdAt: createdAt,
+    finishReason: finishReason,
+    modelId: modelId,
+    continuationToken: continuationToken,
+    usage: usage,
+  );
 
   @override
   String toString() => text;

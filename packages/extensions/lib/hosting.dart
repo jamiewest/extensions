@@ -77,7 +77,4 @@ HostBuilder createDefaultBuilder([List<String>? args]) {
 
 HostApplicationBuilder createApplicationBuilder({
   HostApplicationBuilderSettings? settings,
-}) =>
-    HostApplicationBuilder(
-      settings: settings,
-    );
+}) => HostApplicationBuilder(settings: settings);

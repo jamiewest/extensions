@@ -14,7 +14,8 @@ import 'property_model.dart';
   name: 'VectorPropertyModel.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path:
+      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 class VectorPropertyModel extends PropertyModel {
@@ -83,11 +84,7 @@ class VectorPropertyModel extends PropertyModel {
         "No embedding generation is configured for property '$modelName'.",
       );
     }
-    return dispatcher.generateEmbeddingsAsync(
-      this,
-      values,
-      cancellationToken,
-    );
+    return dispatcher.generateEmbeddingsAsync(this, values, cancellationToken);
   }
 
   /// Generates a single embedding for [value] using the configured
@@ -104,11 +101,7 @@ class VectorPropertyModel extends PropertyModel {
         "No embedding generation is configured for property '$modelName'.",
       );
     }
-    return dispatcher.generateEmbeddingAsync(
-      this,
-      value,
-      cancellationToken,
-    );
+    return dispatcher.generateEmbeddingAsync(this, value, cancellationToken);
   }
 
   @override

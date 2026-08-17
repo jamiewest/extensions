@@ -11,14 +11,17 @@ extension LoggingChatClientBuilderExtensions on ChatClientBuilder {
     return useWithServices((innerClient, services) {
       loggerFactory ??= services.getRequiredService<LoggerFactory>();
 
-      // If the factory we resolve is for the null logger, the LoggingChatClient will end up
-      // being an expensive nop, so skip adding it and just return the inner client.
+      // If the factory we resolve is for the null logger, the
+      // LoggingChatClient will end up being an expensive nop, so skip adding
+      // it and just return the inner client.
       if (loggerFactory == NullLoggerFactory.instance) {
         return innerClient;
       }
 
-      var chatClient = LoggingChatClient(innerClient,
-          logger: loggerFactory!.createLogger('LoggingChatClient'));
+      var chatClient = LoggingChatClient(
+        innerClient,
+        logger: loggerFactory!.createLogger('LoggingChatClient'),
+      );
       configure?.call(chatClient);
       return chatClient;
     });

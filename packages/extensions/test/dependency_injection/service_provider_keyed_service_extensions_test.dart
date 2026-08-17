@@ -22,7 +22,9 @@ void main() {
     test('returns empty when no services registered under key', () {
       final services = ServiceCollection()
         ..addKeyedSingletonInstance<FakeService>(
-            'other-key', FakeServiceImplementation());
+          'other-key',
+          FakeServiceImplementation(),
+        );
 
       final sp = services.buildServiceProvider();
       final result = sp.getKeyedServices<FakeService>('unknown-key').toList();
@@ -69,7 +71,9 @@ void main() {
     test('getKeyedServicesFromType throws UnsupportedError', () {
       final services = ServiceCollection()
         ..addKeyedSingletonInstance<FakeService>(
-            'key', FakeServiceImplementation());
+          'key',
+          FakeServiceImplementation(),
+        );
       final sp = services.buildServiceProvider();
 
       expect(

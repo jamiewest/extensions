@@ -31,10 +31,11 @@ void main() {
         ..parent.createSync(recursive: true)
         ..writeAsStringSync('{"AllowedHosts":"*"}');
 
-      final config = (ConfigurationBuilder()
-            ..setFileProvider(PhysicalFileProvider('/app', fileSystem: fs))
-            ..addJsonFile('appsettings.json'))
-          .build();
+      final config =
+          (ConfigurationBuilder()
+                ..setFileProvider(PhysicalFileProvider('/app', fileSystem: fs))
+                ..addJsonFile('appsettings.json'))
+              .build();
 
       expect(config['AllowedHosts'], '*');
     });

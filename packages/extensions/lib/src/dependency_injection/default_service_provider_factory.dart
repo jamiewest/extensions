@@ -12,7 +12,7 @@ class DefaultServiceProviderFactory
   /// Initializes a new instance of the [DefaultServiceProviderFactory] class
   /// with the specified options or default options if none is provided.
   DefaultServiceProviderFactory({ServiceProviderOptions? options})
-      : _options = options ??= ServiceProviderOptions();
+    : _options = options ??= ServiceProviderOptions();
 
   @override
   ServiceCollection createBuilder(ServiceCollection services) => services;

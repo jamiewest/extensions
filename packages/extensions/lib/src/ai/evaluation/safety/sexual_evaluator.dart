@@ -18,8 +18,8 @@ class SexualEvaluator extends ContentSafetyEvaluator {
 
   /// Creates a [SexualEvaluator].
   SexualEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'content harm',
-          metricNames: const {'sexual': sexualMetricName},
-        );
+    : super(
+        annotationTask: 'content harm',
+        metricNames: const {'sexual': sexualMetricName},
+      );
 }

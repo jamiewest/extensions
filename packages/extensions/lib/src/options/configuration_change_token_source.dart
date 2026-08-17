@@ -11,11 +11,8 @@ class ConfigurationChangeTokenSource<TOptions>
   final Configuration _config;
   final String _name;
 
-  ConfigurationChangeTokenSource({
-    required Configuration config,
-    String? name,
-  })  : _config = config,
-        _name = name ?? Options.defaultName;
+  ConfigurationChangeTokenSource({required this._config, String? name})
+    : _name = name ?? Options.defaultName;
 
   /// The name of the option instance being changed.
   @override

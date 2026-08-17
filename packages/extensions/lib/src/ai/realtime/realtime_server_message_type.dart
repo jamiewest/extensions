@@ -8,8 +8,9 @@ import 'package:extensions/annotations.dart';
 /// values.
 ///
 /// Provider implementations that want to support the built-in middleware
-/// pipeline must emit [responseCreated], [responseDone], [responseOutputItemAdded],
-/// and [responseOutputItemDone] at the appropriate points during response
+/// pipeline must emit [responseCreated], [responseDone],
+/// [responseOutputItemAdded] and [responseOutputItemDone] at the appropriate
+/// points during response
 /// generation.
 ///
 /// This is an experimental feature.
@@ -96,8 +97,9 @@ class RealtimeServerMessageType {
       RealtimeServerMessageType('ConversationItemDone');
 
   /// Indicates an error occurred while processing the request.
-  static const RealtimeServerMessageType error =
-      RealtimeServerMessageType('Error');
+  static const RealtimeServerMessageType error = RealtimeServerMessageType(
+    'Error',
+  );
 
   @override
   bool operator ==(Object other) =>

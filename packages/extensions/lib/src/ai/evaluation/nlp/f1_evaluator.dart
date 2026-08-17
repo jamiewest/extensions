@@ -46,15 +46,21 @@ class F1Evaluator implements Evaluator {
 
     final responseText = modelResponse.text;
     if (responseText.isEmpty) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'The modelResponse supplied for evaluation was null or empty.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'The modelResponse supplied for evaluation was null or empty.',
+        ),
+      );
       return result;
     }
 
     final ctx = additionalContext?.whereType<F1EvaluatorContext>().firstOrNull;
     if (ctx == null) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'An F1EvaluatorContext was not found in additionalContext.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'An F1EvaluatorContext was not found in additionalContext.',
+        ),
+      );
       return result;
     }
 

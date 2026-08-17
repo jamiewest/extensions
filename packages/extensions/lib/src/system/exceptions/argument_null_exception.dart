@@ -17,7 +17,6 @@ class ArgumentNullException extends ArgumentException {
     }
   }
 
-  static void _throw(String? paramName) => throw ArgumentNullException(
-        paramName: paramName,
-      );
+  static void _throw(String? paramName) =>
+      throw ArgumentNullException(paramName: paramName);
 }

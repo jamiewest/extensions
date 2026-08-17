@@ -3,11 +3,7 @@ import 'package:extensions/system.dart' show CancellationToken;
 import 'package:test/test.dart';
 
 class _StubChatClient implements ChatClient {
-  _StubChatClient({
-    Future<ChatResponse> Function()? onGetResponse,
-    Stream<ChatResponseUpdate> Function()? onGetStreamingResponse,
-  })  : _onGetResponse = onGetResponse,
-        _onGetStreamingResponse = onGetStreamingResponse;
+  _StubChatClient({this._onGetResponse, this._onGetStreamingResponse});
 
   final Future<ChatResponse> Function()? _onGetResponse;
   final Stream<ChatResponseUpdate> Function()? _onGetStreamingResponse;
@@ -104,32 +100,35 @@ class _StubEmbeddingGenerator implements EmbeddingGenerator {
 ChatResponse _response(String text) =>
     ChatResponse(messages: [ChatMessage.fromText(ChatRole.assistant, text)]);
 
-List<ChatMessage> _userMessages(String text) =>
-    [ChatMessage.fromText(ChatRole.user, text)];
+List<ChatMessage> _userMessages(String text) => [
+  ChatMessage.fromText(ChatRole.user, text),
+];
 
 void main() {
   group('RoutingChatClient', () {
-    test('fromSelector invokes the selected client with cloned options',
-        () async {
-      final inner = _StubChatClient(
-        onGetResponse: () async => _response('routed'),
-      );
-      final client = RoutingChatClient.fromSelector((context, ct) async {
-        expect(context.messages, hasLength(1));
-        return inner;
-      });
-      final options = ChatOptions(modelId: 'model-1');
+    test(
+      'fromSelector invokes the selected client with cloned options',
+      () async {
+        final inner = _StubChatClient(
+          onGetResponse: () async => _response('routed'),
+        );
+        final client = RoutingChatClient.fromSelector((context, ct) async {
+          expect(context.messages, hasLength(1));
+          return inner;
+        });
+        final options = ChatOptions(modelId: 'model-1');
 
-      final response = await client.getResponse(
-        messages: _userMessages('hi'),
-        options: options,
-      );
+        final response = await client.getResponse(
+          messages: _userMessages('hi'),
+          options: options,
+        );
 
-      expect(response.text, 'routed');
-      expect(inner.responseCalls, 1);
-      expect(inner.lastOptions, isNot(same(options)));
-      expect(inner.lastOptions!.modelId, 'model-1');
-    });
+        expect(response.text, 'routed');
+        expect(inner.responseCalls, 1);
+        expect(inner.lastOptions, isNot(same(options)));
+        expect(inner.lastOptions!.modelId, 'model-1');
+      },
+    );
 
     test('fromSelector streams from the selected client', () async {
       final inner = _StubChatClient(
@@ -138,7 +137,7 @@ void main() {
           ChatResponseUpdate(contents: [TextContent('b')]),
         ]),
       );
-      final client = RoutingChatClient.fromSelector((_, __) async => inner);
+      final client = RoutingChatClient.fromSelector((_, _) async => inner);
 
       final texts = await client
           .getStreamingResponse(messages: _userMessages('hi'))
@@ -150,7 +149,7 @@ void main() {
 
     test('getService returns itself without a key and null with one', () {
       final client = RoutingChatClient.fromSelector(
-        (_, __) async => _StubChatClient(),
+        (_, _) async => _StubChatClient(),
       );
 
       expect(client.getService<RoutingChatClient>(), same(client));
@@ -163,42 +162,43 @@ void main() {
     test('rejects a non-positive attempt limit', () {
       final client = _RecordingFailoverClient([]);
 
-      expect(
-        () => client.maximumAttemptsPerRequest = 0,
-        throwsArgumentError,
-      );
+      expect(() => client.maximumAttemptsPerRequest = 0, throwsArgumentError);
       client.maximumAttemptsPerRequest = 3;
       expect(client.maximumAttemptsPerRequest, 3);
     });
 
-    test('reports a nonterminal failed attempt then a terminal success',
-        () async {
-      final failing = _StubChatClient(
-        onGetResponse: () async => throw StateError('down'),
-      );
-      final succeeding = _StubChatClient(
-        onGetResponse: () async => _response('ok'),
-      );
-      final client = _RecordingFailoverClient([failing, succeeding]);
+    test(
+      'reports a nonterminal failed attempt then a terminal success',
+      () async {
+        final failing = _StubChatClient(
+          onGetResponse: () async => throw StateError('down'),
+        );
+        final succeeding = _StubChatClient(
+          onGetResponse: () async => _response('ok'),
+        );
+        final client = _RecordingFailoverClient([failing, succeeding]);
 
-      final response = await client.getResponse(messages: _userMessages('hi'));
+        final response = await client.getResponse(
+          messages: _userMessages('hi'),
+        );
 
-      expect(response.text, 'ok');
-      expect(client.updates, hasLength(2));
+        expect(response.text, 'ok');
+        expect(client.updates, hasLength(2));
 
-      final (firstAttempt, firstTerminal) = client.updates[0];
-      expect(firstTerminal, isFalse);
-      expect(firstAttempt.client, same(failing));
-      expect(firstAttempt.exception, isA<StateError>());
-      expect(firstAttempt.responseCompleted, isFalse);
-      expect(firstAttempt.outputCommitted, isFalse);
+        final (firstAttempt, firstTerminal) = client.updates[0];
+        expect(firstTerminal, isFalse);
+        expect(firstAttempt.client, same(failing));
+        expect(firstAttempt.exception, isA<StateError>());
+        expect(firstAttempt.responseCompleted, isFalse);
+        expect(firstAttempt.outputCommitted, isFalse);
 
-      final (secondAttempt, secondTerminal) = client.updates[1];
-      expect(secondTerminal, isTrue);
-      expect(secondAttempt.client, same(succeeding));
-      expect(secondAttempt.exception, isNull);
-      expect(secondAttempt.responseCompleted, isTrue);
-    });
+        final (secondAttempt, secondTerminal) = client.updates[1];
+        expect(secondTerminal, isTrue);
+        expect(secondAttempt.client, same(succeeding));
+        expect(secondAttempt.exception, isNull);
+        expect(secondAttempt.responseCompleted, isTrue);
+      },
+    );
 
     test('attempt limit makes the last permitted failure terminal', () async {
       final failing = _StubChatClient(
@@ -324,12 +324,14 @@ void main() {
 
     test('handles sequential requests independently', () async {
       var fail = true;
-      final flaky = _StubChatClient(onGetResponse: () async {
-        if (fail) {
-          throw StateError('flaky');
-        }
-        return _response('flaky ok');
-      });
+      final flaky = _StubChatClient(
+        onGetResponse: () async {
+          if (fail) {
+            throw StateError('flaky');
+          }
+          return _response('flaky ok');
+        },
+      );
       final backup = _StubChatClient(
         onGetResponse: () async => _response('backup'),
       );
@@ -358,12 +360,12 @@ void main() {
 
   group('SemanticRoutingChatClient', () {
     _StubEmbeddingGenerator generator() => _StubEmbeddingGenerator({
-          'weather': [1.0, 0.0],
-          'math': [0.0, 1.0],
-          'what is the weather': [0.9, 0.1],
-          'integrate x squared': [0.1, 0.9],
-          'unrelated': [0.0, 0.0],
-        });
+      'weather': [1.0, 0.0],
+      'math': [0.0, 1.0],
+      'what is the weather': [0.9, 0.1],
+      'integrate x squared': [0.1, 0.9],
+      'unrelated': [0.0, 0.0],
+    });
 
     test('validates constructor arguments', () {
       final defaultClient = _StubChatClient();

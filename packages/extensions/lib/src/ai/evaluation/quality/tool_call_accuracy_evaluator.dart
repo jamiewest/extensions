@@ -52,7 +52,8 @@ class ToolCallAccuracyEvaluator extends QualityEvaluatorBase {
     final toolDefs = ctx.contents.map((c) => c.toString()).join('\n');
     final userRequest = messages.lastUserMessage?.text ?? '';
 
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Tool Call Accuracy** measures how accurately the AI used available tools — whether the right tools were called, with correct parameter names, and accurate values extracted from the conversation.
 

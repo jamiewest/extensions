@@ -40,12 +40,14 @@ class CompletenessEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx =
-        additionalContext.whereType<CompletenessEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        .whereType<CompletenessEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) return null;
 
     final response = modelResponse.text;
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Completeness** measures whether the RESPONSE includes all key information, claims, and statements from the GROUND TRUTH.
 

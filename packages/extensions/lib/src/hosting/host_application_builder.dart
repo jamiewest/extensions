@@ -91,7 +91,7 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
   late final ConfigurationManager _configuration;
 
   DefaultHostApplicationBuilder({HostApplicationBuilderSettings? settings})
-      : _hostBuilt = false {
+    : _hostBuilt = false {
     settings ??= HostApplicationBuilderSettings();
     _configuration = settings.configuration ?? ConfigurationManager();
 
@@ -157,10 +157,7 @@ class DefaultHostApplicationBuilder implements HostApplicationBuilder {
     ServiceProviderOptions? serviceProviderOptions;
 
     if (!settings.disableDefaults) {
-      addDefaultServices(
-        _hostBuilderContext,
-        services,
-      );
+      addDefaultServices(_hostBuilderContext, services);
       serviceProviderOptions = createDefaultServiceProviderOptions(
         _hostBuilderContext,
       );
@@ -256,15 +253,14 @@ class HostBuilderAdapter implements HostBuilder {
   final List<ConfigureAppConfigurationDelegate> _configureAppConfigActions =
       <ConfigureAppConfigurationDelegate>[];
   final List<DefaultConfigureContainerAdapter<dynamic>>
-      _configureContainerActions =
-      <DefaultConfigureContainerAdapter<dynamic>>[];
+  _configureContainerActions = <DefaultConfigureContainerAdapter<dynamic>>[];
   final List<ConfigureServicesDelegate> _configureServicesActions =
       <ConfigureServicesDelegate>[];
 
   ServiceFactoryAdapter? _serviceProviderFactory;
 
   HostBuilderAdapter(HostApplicationBuilder hostApplicationBuilder)
-      : _hostApplicationBuilder = hostApplicationBuilder;
+    : _hostApplicationBuilder = hostApplicationBuilder;
 
   void applyChanges() {
     var config = _hostApplicationBuilder.configuration;
@@ -311,9 +307,10 @@ class HostBuilderAdapter implements HostBuilder {
 
     for (var configureAppAction in _configureAppConfigActions) {
       configureAppAction(
-          (_hostApplicationBuilder as DefaultHostApplicationBuilder)
-              ._hostBuilderContext,
-          config);
+        (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+            ._hostBuilderContext,
+        config,
+      );
     }
     for (var configureServicesAction in _configureServicesActions) {
       configureServicesAction(
@@ -340,11 +337,13 @@ class HostBuilderAdapter implements HostBuilder {
 
       if (_serviceProviderFactory != null) {
         _hostApplicationBuilder._createServiceProvider = () {
-          var containerBuilder = _serviceProviderFactory!
-              .createBuilder(_hostApplicationBuilder.services);
+          var containerBuilder = _serviceProviderFactory!.createBuilder(
+            _hostApplicationBuilder.services,
+          );
           _hostApplicationBuilder._configureContainer(containerBuilder);
-          return _serviceProviderFactory!
-              .createServiceProvider(containerBuilder);
+          return _serviceProviderFactory!.createServiceProvider(
+            containerBuilder,
+          );
         };
       }
     }
@@ -355,14 +354,16 @@ class HostBuilderAdapter implements HostBuilder {
 
   @override
   HostBuilder configureHostConfiguration(
-      ConfigureHostConfigurationDelegate configureDelegate) {
+    ConfigureHostConfigurationDelegate configureDelegate,
+  ) {
     _configureHostConfigActions.add(configureDelegate);
     return this;
   }
 
   @override
   HostBuilder configureAppConfiguration(
-      ConfigureAppConfigurationDelegate configureDelegate) {
+    ConfigureAppConfigurationDelegate configureDelegate,
+  ) {
     _configureAppConfigActions.add(configureDelegate);
     return this;
   }
@@ -380,10 +381,10 @@ class HostBuilderAdapter implements HostBuilder {
   }) {
     _serviceProviderFactory =
         DefaultServiceFactoryAdapter<TContainerBuilder>.builder(
-      () => (_hostApplicationBuilder as DefaultHostApplicationBuilder)
-          ._hostBuilderContext,
-      factory!,
-    );
+          () => (_hostApplicationBuilder as DefaultHostApplicationBuilder)
+              ._hostBuilderContext,
+          factory!,
+        );
     return this;
   }
 

@@ -16,19 +16,18 @@ extension LoggingEmbeddingGeneratorBuilderExtensions
   EmbeddingGeneratorBuilder useLogging({
     LoggerFactory? loggerFactory,
     void Function(LoggingEmbeddingGenerator generator)? configure,
-  }) =>
-      useWithServices((inner, services) {
-        loggerFactory ??= services.getRequiredService<LoggerFactory>();
+  }) => useWithServices((inner, services) {
+    loggerFactory ??= services.getRequiredService<LoggerFactory>();
 
-        if (loggerFactory == NullLoggerFactory.instance) {
-          return inner;
-        }
+    if (loggerFactory == NullLoggerFactory.instance) {
+      return inner;
+    }
 
-        final generator = LoggingEmbeddingGenerator(
-          inner,
-          logger: loggerFactory!.createLogger('LoggingEmbeddingGenerator'),
-        );
-        configure?.call(generator);
-        return generator;
-      });
+    final generator = LoggingEmbeddingGenerator(
+      inner,
+      logger: loggerFactory!.createLogger('LoggingEmbeddingGenerator'),
+    );
+    configure?.call(generator);
+    return generator;
+  });
 }

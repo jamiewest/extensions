@@ -3,21 +3,20 @@ import 'package:extensions/logging.dart';
 /// Marker type used for typed logger examples.
 class UserService {}
 
-/// Demonstrates advanced logging APIs such as typed loggers and `LoggerMessage`.
+/// Demonstrates advanced logging APIs such as typed loggers and
+/// `LoggerMessage`.
 ///
 /// Run this file to see structured output for several advanced patterns.
 void main() {
   print('=== Advanced Logging Features ===');
 
   print('\n--- Example 1: Typed Logger (Logger<T>) ---');
-  final factory = LoggerFactory.create(
-    (builder) => builder.addConsole(),
-  );
+  final factory = LoggerFactory.create((builder) => builder.addConsole());
 
   // #region typed_logger
-  factory
-      .createTypedLogger<UserService>()
-      .logInformation('Typed logger for UserService created');
+  factory.createTypedLogger<UserService>().logInformation(
+    'Typed logger for UserService created',
+  );
   // #endregion
 
   print('\n--- Example 2: High-Performance LoggerMessage ---');
@@ -88,8 +87,9 @@ void main() {
 
   print('\n--- Example 6: NullTypedLogger<T> ---');
 
-  NullTypedLogger.instance<UserService>()
-      .logInformation('This will not be logged');
+  NullTypedLogger.instance<UserService>().logInformation(
+    'This will not be logged',
+  );
   print('NullTypedLogger created (no output expected)');
 
   print('\n--- Example 7: Multiple Typed Loggers ---');

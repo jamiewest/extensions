@@ -77,7 +77,8 @@ class LoggingHttpMessageHandler extends DelegatingHandler {
     }
 
     final headers = _formatHeaders(response.headers);
-    final message = 'HTTP ${request.method} ${request.url} responded '
+    final message =
+        'HTTP ${request.method} ${request.url} responded '
         '${response.statusCode} in ${elapsed.inMilliseconds}ms'
         '\nHeaders: $headers';
 
@@ -89,16 +90,13 @@ class LoggingHttpMessageHandler extends DelegatingHandler {
     );
   }
 
-  void _logRequestFailed(
-    BaseRequest request,
-    Object error,
-    Duration elapsed,
-  ) {
+  void _logRequestFailed(BaseRequest request, Object error, Duration elapsed) {
     if (!logger.isEnabled(LogLevel.error)) {
       return;
     }
 
-    final message = 'HTTP ${request.method} ${request.url} failed '
+    final message =
+        'HTTP ${request.method} ${request.url} failed '
         'after ${elapsed.inMilliseconds}ms';
 
     logger.log(

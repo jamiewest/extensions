@@ -18,15 +18,10 @@ class MeterListener implements Disposable {
   MeterListener();
 
   /// Callbacks to get notification when an instrument is published.
-  void Function(
-    Instrument instrument,
-    MeterListener meterListener,
-  )? instrumentPublished;
+  void Function(Instrument instrument, MeterListener meterListener)?
+  instrumentPublished;
 
-  void Function(
-    Instrument instrument,
-    Object? object,
-  )? measurementsCompleted;
+  void Function(Instrument instrument, Object? object)? measurementsCompleted;
 
   /// Start listening to a specific instrument measurement recording.
   void enabledMeasurementEvents(Instrument instrument, Object? state) {

@@ -26,7 +26,8 @@ extension ServiceProviderServiceExtensions on ServiceProvider {
     var service = getServiceFromType(serviceType);
     if (service == null) {
       throw InvalidOperationException(
-        message: 'No service for type \'$serviceType\''
+        message:
+            'No service for type \'$serviceType\''
             ' has been registered.',
       );
     }

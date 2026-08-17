@@ -18,10 +18,8 @@ class HateAndUnfairnessEvaluator extends ContentSafetyEvaluator {
 
   /// Creates a [HateAndUnfairnessEvaluator].
   HateAndUnfairnessEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'content harm',
-          metricNames: const {
-            'hate_unfairness': hateAndUnfairnessMetricName,
-          },
-        );
+    : super(
+        annotationTask: 'content harm',
+        metricNames: const {'hate_unfairness': hateAndUnfairnessMetricName},
+      );
 }

@@ -16,17 +16,16 @@ class ConfigureOptionsEmbeddingGenerator extends DelegatingEmbeddingGenerator {
 
   /// The callback that configures options before each request.
   final EmbeddingGenerationOptions Function(EmbeddingGenerationOptions options)
-      configure;
+  configure;
 
   @override
   Future<GeneratedEmbeddings> generateEmbeddings({
     required Iterable<String> values,
     EmbeddingGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.generateEmbeddings(
-        values: values,
-        options: configure(options ?? EmbeddingGenerationOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.generateEmbeddings(
+    values: values,
+    options: configure(options ?? EmbeddingGenerationOptions()),
+    cancellationToken: cancellationToken,
+  );
 }

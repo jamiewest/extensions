@@ -24,20 +24,21 @@ class LoggingBuilder {
 extension LoggingServiceCollectionExtensions on ServiceCollection {
   /// Adds logging services to the specified [ServiceCollection].
   ServiceCollection addLogging([ConfigureLoggingBuilder? configure]) {
-    tryAdd(ServiceDescriptor.singleton<LoggerFactory>(
-      (services) => LoggerFactory(
-        (services.getServices<LoggerProvider>() as List)
-            .map((item) => item as LoggerProvider)
-            .toList(),
-        services.getService<OptionsMonitor<LoggerFilterOptions>>(),
+    tryAdd(
+      ServiceDescriptor.singleton<LoggerFactory>(
+        (services) => LoggerFactory(
+          (services.getServices<LoggerProvider>() as List)
+              .map((item) => item as LoggerProvider)
+              .toList(),
+          services.getService<OptionsMonitor<LoggerFilterOptions>>(),
+        ),
       ),
-    ));
+    );
 
     tryAddIterable(
       ServiceDescriptor.singletonInstance<
-          ConfigureOptions<LoggerFilterOptions>>(
-        DefaultLoggerLevelConfigureOptions(LogLevel.information),
-      ),
+        ConfigureOptions<LoggerFilterOptions>
+      >(DefaultLoggerLevelConfigureOptions(LogLevel.information)),
     );
 
     if (configure != null) {

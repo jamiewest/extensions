@@ -4,9 +4,7 @@ enum CallSiteResultCacheLocation {
   dispose(value: 2),
   none(value: 3);
 
-  const CallSiteResultCacheLocation({
-    required this.value,
-  });
+  const CallSiteResultCacheLocation({required this.value});
 
   final int value;
 }

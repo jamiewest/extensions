@@ -4,11 +4,7 @@ class ServiceIdentifier {
   final Object? _serviceKey;
   final Type _serviceType;
 
-  ServiceIdentifier({
-    required Type serviceType,
-    Object? serviceKey,
-  })  : _serviceKey = serviceKey,
-        _serviceType = serviceType;
+  ServiceIdentifier({required this._serviceType, this._serviceKey});
 
   Object? get serviceKey => _serviceKey;
 
@@ -19,11 +15,10 @@ class ServiceIdentifier {
 
   static ServiceIdentifier fromDescriptor(
     ServiceDescriptor serviceDescriptor,
-  ) =>
-      ServiceIdentifier(
-        serviceType: serviceDescriptor.serviceType,
-        serviceKey: serviceDescriptor.serviceKey,
-      );
+  ) => ServiceIdentifier(
+    serviceType: serviceDescriptor.serviceType,
+    serviceKey: serviceDescriptor.serviceKey,
+  );
 
   @override
   bool operator ==(Object other) {

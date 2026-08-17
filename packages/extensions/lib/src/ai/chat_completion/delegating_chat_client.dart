@@ -23,24 +23,22 @@ abstract class DelegatingChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getResponse(
-        messages: messages,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getResponse(
+    messages: messages,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getStreamingResponse(
-        messages: messages,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getStreamingResponse(
+    messages: messages,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) => innerClient.getService<T>(key: key);

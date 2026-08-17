@@ -40,7 +40,8 @@ class FluencyEvaluator extends QualityEvaluatorBase {
     List<EvaluationContext> additionalContext,
   ) {
     final response = modelResponse.text;
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Fluency** refers to the quality of individual sentences in a response, measuring whether they are well-written and grammatically correct. A fluent response uses correct grammar, appropriate vocabulary, and clear sentence structure without errors.
 

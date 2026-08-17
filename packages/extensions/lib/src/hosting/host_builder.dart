@@ -24,7 +24,8 @@ import 'host_application_lifetime.dart';
 import 'host_builder_context.dart';
 import 'host_builder_stub.dart'
     if (dart.library.html) 'host_builder_web.dart'
-    if (dart.library.io) 'host_builder_io.dart' as host_builder;
+    if (dart.library.io) 'host_builder_io.dart'
+    as host_builder;
 import 'host_defaults.dart';
 import 'host_environment.dart';
 import 'host_lifetime.dart';
@@ -48,13 +49,16 @@ typedef ConfigureHostConfigurationDelegate = void Function(
   ConfigurationBuilder configuration,
 );
 
-typedef ServiceProviderFactoryDelegate<TContainerBuilder>
-    = ServiceProviderFactory<TContainerBuilder> Function(
-  HostBuilderContext? context,
-);
+typedef ServiceProviderFactoryDelegate<TContainerBuilder> =
+    ServiceProviderFactory<TContainerBuilder> Function(
+      HostBuilderContext? context,
+    );
 
-typedef ConfigureContainerDelegate<TContainerBuilder> = TContainerBuilder
-    Function(HostBuilderContext context, TContainerBuilder builder);
+typedef ConfigureContainerDelegate<TContainerBuilder> =
+    TContainerBuilder Function(
+      HostBuilderContext context,
+      TContainerBuilder builder,
+    );
 
 /// A program initialization abstraction.
 abstract class HostBuilder {
@@ -75,9 +79,7 @@ abstract class HostBuilder {
     ConfigureAppConfigurationDelegate configureDelegate,
   );
 
-  HostBuilder configureServices(
-    ConfigureServicesDelegate configureDelegate,
-  );
+  HostBuilder configureServices(ConfigureServicesDelegate configureDelegate);
 
   HostBuilder useServiceProviderFactory<TContainerBuilder>({
     ServiceProviderFactory<TContainerBuilder>? implementation,
@@ -99,13 +101,12 @@ class DefaultHostBuilder implements HostBuilder {
   final List<ConfigureServicesDelegate> _configureServicesActions =
       <ConfigureServicesDelegate>[];
   final List<DefaultConfigureContainerAdapter<dynamic>>
-      _configureContainerActions =
-      <DefaultConfigureContainerAdapter<dynamic>>[];
+  _configureContainerActions = <DefaultConfigureContainerAdapter<dynamic>>[];
 
   ServiceFactoryAdapter? _serviceProviderFactory =
       DefaultServiceFactoryAdapter<ServiceCollection>(
-    DefaultServiceProviderFactory(),
-  );
+        DefaultServiceProviderFactory(),
+      );
 
   bool _hostBuilt = false;
   Configuration? _hostConfiguration;
@@ -149,9 +150,7 @@ class DefaultHostBuilder implements HostBuilder {
   /// times and the results will be additive.
   // ignore: avoid_returning_this
   @override
-  HostBuilder configureServices(
-    ConfigureServicesDelegate configureDelegate,
-  ) {
+  HostBuilder configureServices(ConfigureServicesDelegate configureDelegate) {
     _configureServicesActions.add(configureDelegate);
     return this;
   }
@@ -164,8 +163,9 @@ class DefaultHostBuilder implements HostBuilder {
     FactoryResolver<TContainerBuilder>? factory,
   }) {
     if (implementation != null) {
-      _serviceProviderFactory =
-          DefaultServiceFactoryAdapter<TContainerBuilder>(implementation);
+      _serviceProviderFactory = DefaultServiceFactoryAdapter<TContainerBuilder>(
+        implementation,
+      );
     } else {
       if (factory != null) {
         _serviceProviderFactory = DefaultServiceFactoryAdapter.builder(
@@ -270,8 +270,9 @@ class DefaultHostBuilder implements HostBuilder {
       }
     }
 
-    _appServices =
-        _serviceProviderFactory?.createServiceProvider(containerBuilder!);
+    _appServices = _serviceProviderFactory?.createServiceProvider(
+      containerBuilder!,
+    );
   }
 }
 
@@ -280,7 +281,8 @@ HostEnvironment createHostingEnvironment(Configuration hostConfiguration) {
   var hostingEnvironment = HostingEnvironment()
     ..applicationName =
         hostConfiguration[HostDefaults.applicationKey] ?? 'application'
-    ..environmentName = hostConfiguration[HostDefaults.environmentKey] ??
+    ..environmentName =
+        hostConfiguration[HostDefaults.environmentKey] ??
         Environments.production
     ..contentRootPath = resolveContentRootPath(
       hostConfiguration[HostDefaults.contentRootKey],
@@ -308,26 +310,23 @@ void populateServiceCollection(
     )
     ..addSingleton<HostApplicationLifetime>(
       (ServiceProvider s) => ApplicationLifetime(
-        (s.getRequiredService<LoggerFactory>())
-            .createLogger('ApplicationLifetime'),
+        (s.getRequiredService<LoggerFactory>()).createLogger(
+          'ApplicationLifetime',
+        ),
       ),
     )
     ..tryAdd(
-      ServiceDescriptor.singleton<Host>(
-        (_) {
-          var appServices = serviceProviderGetter();
+      ServiceDescriptor.singleton<Host>((_) {
+        var appServices = serviceProviderGetter();
 
-          return Host(
-            appServices,
-            appServices.getRequiredService<HostApplicationLifetime>(),
-            appServices
-                .getRequiredService<LoggerFactory>()
-                .createLogger('Host'),
-            appServices.getRequiredService<HostLifetime>(),
-            appServices.getRequiredService<Options<HostOptions>>(),
-          );
-        },
-      ),
+        return Host(
+          appServices,
+          appServices.getRequiredService<HostApplicationLifetime>(),
+          appServices.getRequiredService<LoggerFactory>().createLogger('Host'),
+          appServices.getRequiredService<HostLifetime>(),
+          appServices.getRequiredService<Options<HostOptions>>(),
+        );
+      }),
     )
     ..configure<HostOptions>(HostOptions.new, (options) {
       options.initialize(hostBuilderContext.configuration!);

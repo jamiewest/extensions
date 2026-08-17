@@ -21,9 +21,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.transient] service
   /// using the factory specified in [implementationFactory] to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddTransient<TService>(
-    ImplementationFactory implementationFactory,
-  ) {
+  void tryAddTransient<TService>(ImplementationFactory implementationFactory) {
     final descriptor = ServiceDescriptor.transient<TService>(
       implementationFactory,
     );
@@ -33,9 +31,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.scoped] service
   /// using the factory specified in [implementationFactory] to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddScoped<TService>(
-    ImplementationFactory implementationFactory,
-  ) {
+  void tryAddScoped<TService>(ImplementationFactory implementationFactory) {
     final descriptor = ServiceDescriptor.scoped<TService>(
       implementationFactory,
     );
@@ -45,9 +41,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
   /// Adds the specified `TService` as a [ServiceLifetime.singleton] service
   /// using the factory specified in `implementationFactory` to the `services`
   /// if the service type hasn't already been registered.
-  void tryAddSingleton<TService>(
-    ImplementationFactory implementationFactory,
-  ) {
+  void tryAddSingleton<TService>(ImplementationFactory implementationFactory) {
     final descriptor = ServiceDescriptor.singleton<TService>(
       implementationFactory,
     );
@@ -55,9 +49,7 @@ extension ServiceCollectionDescriptorExtensions on ServiceCollection {
     tryAdd(descriptor);
   }
 
-  void tryAddSingletonInstance<TService>(
-    Object implementationInstance,
-  ) {
+  void tryAddSingletonInstance<TService>(Object implementationInstance) {
     final descriptor = ServiceDescriptor.singletonInstance<TService>(
       implementationInstance,
     );

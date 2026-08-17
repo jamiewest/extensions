@@ -20,7 +20,7 @@ import 'text_to_speech_response_update.dart';
 class LoggingTextToSpeechClient extends DelegatingTextToSpeechClient {
   /// Creates a new [LoggingTextToSpeechClient].
   LoggingTextToSpeechClient(super.innerClient, {String? loggerName})
-      : _loggerName = loggerName ?? 'TextToSpeechClient';
+    : _loggerName = loggerName ?? 'TextToSpeechClient';
 
   final String _loggerName;
 
@@ -30,22 +30,14 @@ class LoggingTextToSpeechClient extends DelegatingTextToSpeechClient {
     TextToSpeechOptions? options,
     CancellationToken? cancellationToken,
   }) async {
-    developer.log(
-      'GetAudio invoked',
-      name: _loggerName,
-      level: 500,
-    );
+    developer.log('GetAudio invoked', name: _loggerName, level: 500);
     try {
       final response = await super.getAudio(
         text,
         options: options,
         cancellationToken: cancellationToken,
       );
-      developer.log(
-        'GetAudio succeeded',
-        name: _loggerName,
-        level: 500,
-      );
+      developer.log('GetAudio succeeded', name: _loggerName, level: 500);
       return response;
     } catch (e, s) {
       developer.log(
@@ -65,11 +57,7 @@ class LoggingTextToSpeechClient extends DelegatingTextToSpeechClient {
     TextToSpeechOptions? options,
     CancellationToken? cancellationToken,
   }) async* {
-    developer.log(
-      'GetStreamingAudio invoked',
-      name: _loggerName,
-      level: 500,
-    );
+    developer.log('GetStreamingAudio invoked', name: _loggerName, level: 500);
     try {
       yield* super.getStreamingAudio(
         text,

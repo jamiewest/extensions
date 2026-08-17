@@ -11,7 +11,7 @@ class PhysicalDirectoryContents extends DirectoryContents {
   /// Initializes an instance of [PhysicalDirectoryContents] backed by
   /// [fileSystem] at [directory].
   PhysicalDirectoryContents(FileSystem fileSystem, String directory)
-      : _info = PhysicalDirectoryInfo(fileSystem.directory(directory));
+    : _info = PhysicalDirectoryInfo(fileSystem.directory(directory));
 
   @override
   bool get exists => _info.exists;

@@ -8,9 +8,8 @@ import 'validate_options.dart';
 class StartupValidator {
   final StartupValidatorOptions _validatorOptions;
 
-  StartupValidator({
-    required Options<StartupValidatorOptions> validators,
-  }) : _validatorOptions = validators.value!;
+  StartupValidator({required Options<StartupValidatorOptions> validators})
+    : _validatorOptions = validators.value!;
 
   /// Calls the [ValidateOptions] validators.
   void validate() {

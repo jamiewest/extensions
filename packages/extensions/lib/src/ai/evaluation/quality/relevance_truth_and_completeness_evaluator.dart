@@ -40,10 +40,10 @@ class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
 
   @override
   List<String> get evaluationMetricNames => const [
-        relevanceMetricName,
-        truthMetricName,
-        completenessMetricName,
-      ];
+    relevanceMetricName,
+    truthMetricName,
+    completenessMetricName,
+  ];
 
   @override
   Future<EvaluationResult> evaluate(
@@ -77,9 +77,9 @@ class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
 
     final msgList = messages.toList();
     final lastUser = msgList.cast<ChatMessage?>().lastWhere(
-          (m) => m?.role == ChatRole.user,
-          orElse: () => null,
-        );
+      (m) => m?.role == ChatRole.user,
+      orElse: () => null,
+    );
 
     if (lastUser == null || lastUser.text.isEmpty) {
       const msg = 'No user message found in the conversation history.';
@@ -89,10 +89,15 @@ class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
       return result;
     }
 
-    final history =
-        msgList.where((m) => m != lastUser).map((m) => m.text).join('\n');
-    final instructions =
-        _buildPrompt(lastUser.text, modelResponse.text, history);
+    final history = msgList
+        .where((m) => m != lastUser)
+        .map((m) => m.text)
+        .join('\n');
+    final instructions = _buildPrompt(
+      lastUser.text,
+      modelResponse.text,
+      history,
+    );
 
     final start = DateTime.now();
     final evalResponse = await chatConfiguration.chatClient.getResponse(
@@ -102,8 +107,9 @@ class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
     );
     final duration = DateTime.now().difference(start);
 
-    final rating =
-        RelevanceTruthAndCompletenessRating.tryParse(evalResponse.text);
+    final rating = RelevanceTruthAndCompletenessRating.tryParse(
+      evalResponse.text,
+    );
 
     if (rating == null || rating.isInconclusive) {
       const msg = 'Could not parse scores from the evaluation response.';

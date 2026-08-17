@@ -4,13 +4,13 @@ import 'package:test/test.dart';
 // Minimal concrete builder that accepts all types.
 final class _TestBuilder extends CollectionModelBuilder {
   _TestBuilder([CollectionModelBuildingOptions? options])
-      : super(
-          options ??
-              const CollectionModelBuildingOptions(
-                supportsMultipleVectors: true,
-                requiresAtLeastOneVector: false,
-              ),
-        );
+    : super(
+        options ??
+            const CollectionModelBuildingOptions(
+              supportsMultipleVectors: true,
+              requiresAtLeastOneVector: false,
+            ),
+      );
 
   @override
   bool isDataPropertyTypeValid(Type type, {String? supportedTypes}) => true;
@@ -99,9 +99,7 @@ void main() {
       );
 
       final definition = VectorStoreCollectionDefinition(
-        properties: [
-          VectorStoreKeyProperty('id')..storageName = 'ignored',
-        ],
+        properties: [VectorStoreKeyProperty('id')..storageName = 'ignored'],
       );
 
       final model = b.buildDynamic(definition);
@@ -114,10 +112,7 @@ void main() {
         properties: [VectorStoreDataProperty('title')],
       );
 
-      expect(
-        () => builder.buildDynamic(definition),
-        throwsStateError,
-      );
+      expect(() => builder.buildDynamic(definition), throwsStateError);
     });
 
     test('validate throws when multiple key properties', () {
@@ -128,10 +123,7 @@ void main() {
         ],
       );
 
-      expect(
-        () => builder.buildDynamic(definition),
-        throwsStateError,
-      );
+      expect(() => builder.buildDynamic(definition), throwsStateError);
     });
 
     test('validate throws when requiresAtLeastOneVector and none present', () {
@@ -149,25 +141,27 @@ void main() {
       expect(() => b.buildDynamic(definition), throwsStateError);
     });
 
-    test('validate throws when supportsMultipleVectors=false and two given',
-        () {
-      final b = _TestBuilder(
-        const CollectionModelBuildingOptions(
-          supportsMultipleVectors: false,
-          requiresAtLeastOneVector: false,
-        ),
-      );
+    test(
+      'validate throws when supportsMultipleVectors=false and two given',
+      () {
+        final b = _TestBuilder(
+          const CollectionModelBuildingOptions(
+            supportsMultipleVectors: false,
+            requiresAtLeastOneVector: false,
+          ),
+        );
 
-      final definition = VectorStoreCollectionDefinition(
-        properties: [
-          VectorStoreKeyProperty('id'),
-          VectorStoreVectorProperty('v1', dimensions: 3),
-          VectorStoreVectorProperty('v2', dimensions: 3),
-        ],
-      );
+        final definition = VectorStoreCollectionDefinition(
+          properties: [
+            VectorStoreKeyProperty('id'),
+            VectorStoreVectorProperty('v1', dimensions: 3),
+            VectorStoreVectorProperty('v2', dimensions: 3),
+          ],
+        );
 
-      expect(() => b.buildDynamic(definition), throwsStateError);
-    });
+        expect(() => b.buildDynamic(definition), throwsStateError);
+      },
+    );
 
     test('validate throws when duplicate storage names', () {
       final definition = VectorStoreCollectionDefinition(
@@ -177,10 +171,7 @@ void main() {
         ],
       );
 
-      expect(
-        () => builder.buildDynamic(definition),
-        throwsStateError,
-      );
+      expect(() => builder.buildDynamic(definition), throwsStateError);
     });
 
     test('vectorProperty validates positive dimensions', () {
@@ -222,10 +213,7 @@ void main() {
         vectorPropertyName: 'v2',
       );
 
-      expect(
-        model.getVectorPropertyOrSingle(opts).modelName,
-        equals('v2'),
-      );
+      expect(model.getVectorPropertyOrSingle(opts).modelName, equals('v2'));
     });
   });
 }

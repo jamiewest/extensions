@@ -40,12 +40,14 @@ class EquivalenceEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx =
-        additionalContext.whereType<EquivalenceEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        .whereType<EquivalenceEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) return null;
 
     final response = modelResponse.text;
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Equivalence** measures whether the RESPONSE conveys the same meaning and factual content as the GROUND TRUTH, even if phrased differently.
 

@@ -98,7 +98,9 @@ void main() {
         isTrue,
       );
       expect(
-          matcher.matchFile('/root/other/a.dart', '/root').hasFiles, isFalse);
+        matcher.matchFile('/root/other/a.dart', '/root').hasFiles,
+        isFalse,
+      );
     });
   });
 
@@ -112,7 +114,9 @@ void main() {
       );
 
       expect(
-          result.files.single.path, equals('src/project/interfaces/file.cs'));
+        result.files.single.path,
+        equals('src/project/interfaces/file.cs'),
+      );
       expect(result.files.single.stem, equals('interfaces/file.cs'));
     });
 
@@ -132,31 +136,31 @@ void main() {
         ..addExclude('sub/**')
         ..addInclude('sub/keep.txt');
 
-      final result = matcher.matchFiles(
-        ['a.txt', 'sub/drop.txt', 'sub/keep.txt'],
-        '/root',
-      );
+      final result = matcher.matchFiles([
+        'a.txt',
+        'sub/drop.txt',
+        'sub/keep.txt',
+      ], '/root');
 
       final paths = result.files.map((m) => m.path).toList();
       expect(paths, containsAll(['a.txt', 'sub/keep.txt']));
       expect(paths, isNot(contains('sub/drop.txt')));
     });
 
-    test('default mode applies includes before excludes regardless of order',
-        () {
-      final matcher = Matcher()
-        ..addInclude('**/*.txt')
-        ..addExclude('sub/**')
-        ..addInclude('sub/keep.txt');
+    test(
+      'default mode applies includes before excludes regardless of order',
+      () {
+        final matcher = Matcher()
+          ..addInclude('**/*.txt')
+          ..addExclude('sub/**')
+          ..addInclude('sub/keep.txt');
 
-      final result = matcher.matchFiles(
-        ['a.txt', 'sub/keep.txt'],
-        '/root',
-      );
+        final result = matcher.matchFiles(['a.txt', 'sub/keep.txt'], '/root');
 
-      final paths = result.files.map((m) => m.path).toList();
-      expect(paths, equals(['a.txt']));
-    });
+        final paths = result.files.map((m) => m.path).toList();
+        expect(paths, equals(['a.txt']));
+      },
+    );
   });
 
   group('matchFiles (no file system access)', () {
@@ -217,8 +221,9 @@ void main() {
     test('a non-existent directory yields no results', () {
       final matcher = Matcher()..addInclude('**/*');
 
-      final results =
-          matcher.getResultsInFullPath(p.join(tempDir.path, 'missing'));
+      final results = matcher.getResultsInFullPath(
+        p.join(tempDir.path, 'missing'),
+      );
 
       expect(results, isEmpty);
     });

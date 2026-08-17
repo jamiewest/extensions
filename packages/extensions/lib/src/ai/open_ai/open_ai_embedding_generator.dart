@@ -29,9 +29,9 @@ final class OpenAIEmbeddingGenerator implements EmbeddingGenerator {
     String apiKey, {
     int? defaultModelDimensions,
     OpenAIClientOptions? options,
-  })  : _modelId = modelId,
-        _apiKey = apiKey,
-        _options = options ?? OpenAIClientOptions() {
+  }) : _modelId = modelId,
+       _apiKey = apiKey,
+       _options = options ?? OpenAIClientOptions() {
     if (defaultModelDimensions != null && defaultModelDimensions <= 0) {
       throw ArgumentError.value(
         defaultModelDimensions,
@@ -129,10 +129,12 @@ final class OpenAIEmbeddingGenerator implements EmbeddingGenerator {
     for (final item in data) {
       final d = item as Map<String, dynamic>;
       final raw = d['embedding'] as List<dynamic>;
-      embeddings.add(Embedding(
-        vector: raw.map((v) => (v as num).toDouble()).toList(),
-        modelId: modelId,
-      ));
+      embeddings.add(
+        Embedding(
+          vector: raw.map((v) => (v as num).toDouble()).toList(),
+          modelId: modelId,
+        ),
+      );
     }
 
     return embeddings;

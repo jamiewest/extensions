@@ -13,15 +13,16 @@ import '../evaluation_context.dart';
 class RetrievalEvaluatorContext extends EvaluationContext {
   /// Creates a [RetrievalEvaluatorContext] from [retrievedContextChunks].
   RetrievalEvaluatorContext({List<String>? retrievedContextChunks})
-      : retrievedContextChunks =
-            List.unmodifiable(retrievedContextChunks ?? const []),
-        super(
-          retrievedContextChunksContextName,
-          contents: [
-            for (final c in retrievedContextChunks ?? const <String>[])
-              TextContent(c),
-          ],
-        );
+    : retrievedContextChunks = List.unmodifiable(
+        retrievedContextChunks ?? const [],
+      ),
+      super(
+        retrievedContextChunksContextName,
+        contents: [
+          for (final c in retrievedContextChunks ?? const <String>[])
+            TextContent(c),
+        ],
+      );
 
   /// Unique context name used when recording contexts on metrics.
   static const String retrievedContextChunksContextName =

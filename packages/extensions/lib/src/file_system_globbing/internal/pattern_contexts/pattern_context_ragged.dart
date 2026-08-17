@@ -44,9 +44,9 @@ class RaggedFrameData {
     this.backtrackAvailable = 0,
     this.segmentIndex = 0,
     this.inStem = false,
-    List<String>? stemItems,
+    this._stemItems,
     this.addedStemItem = false,
-  }) : _stemItems = stemItems;
+  });
 
   /// The directory names accumulated for the stem. The list is shared
   /// between copied frames, matching the C# struct's list reference copy.
@@ -60,15 +60,15 @@ class RaggedFrameData {
 
   /// Returns a shallow copy sharing the stem item list.
   RaggedFrameData copy() => RaggedFrameData(
-        isNotApplicable: isNotApplicable,
-        segmentGroupIndex: segmentGroupIndex,
-        segmentGroup: segmentGroup,
-        backtrackAvailable: backtrackAvailable,
-        segmentIndex: segmentIndex,
-        inStem: inStem,
-        stemItems: _stemItems,
-        addedStemItem: addedStemItem,
-      );
+    isNotApplicable: isNotApplicable,
+    segmentGroupIndex: segmentGroupIndex,
+    segmentGroup: segmentGroup,
+    backtrackAvailable: backtrackAvailable,
+    segmentIndex: segmentIndex,
+    inStem: inStem,
+    stemItems: _stemItems,
+    addedStemItem: addedStemItem,
+  );
 }
 
 /// Matches a pattern containing recursive wildcards (`**`) as a directory

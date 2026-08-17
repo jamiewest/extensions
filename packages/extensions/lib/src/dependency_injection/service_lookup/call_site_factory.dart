@@ -10,7 +10,7 @@ class CallSiteFactory
       <ServiceIdentifier, ServiceDescriptorCacheItem>{};
 
   CallSiteFactory(Iterable<ServiceDescriptor> descriptors)
-      : _descriptors = descriptors.toList() {
+    : _descriptors = descriptors.toList() {
     populate();
   }
 
@@ -30,8 +30,9 @@ class CallSiteFactory
   }
 
   int? getSlot(ServiceDescriptor serviceDescriptor) {
-    final serviceIdentifier =
-        ServiceIdentifier.fromDescriptor(serviceDescriptor);
+    final serviceIdentifier = ServiceIdentifier.fromDescriptor(
+      serviceDescriptor,
+    );
     if (_descriptorLookup.containsKey(serviceIdentifier)) {
       final item = _descriptorLookup[serviceIdentifier];
       return item!.getSlot(serviceDescriptor);
@@ -43,8 +44,9 @@ class CallSiteFactory
     ServiceDescriptor serviceDescriptor,
     CallSiteChain callSiteChain,
   ) {
-    final serviceIdentifier =
-        ServiceIdentifier.fromDescriptor(serviceDescriptor);
+    final serviceIdentifier = ServiceIdentifier.fromDescriptor(
+      serviceDescriptor,
+    );
 
     if (_descriptorLookup.containsKey(serviceIdentifier)) {
       var descriptor = _descriptorLookup[serviceIdentifier];
@@ -60,7 +62,9 @@ class CallSiteFactory
   }
 
   void add(
-      ServiceIdentifier serviceIdentifier, ServiceCallSite serviceCallSite) {
+    ServiceIdentifier serviceIdentifier,
+    ServiceCallSite serviceCallSite,
+  ) {
     _callSiteCache[ServiceCacheKey(serviceIdentifier, defaultslot)] =
         serviceCallSite;
   }
@@ -73,8 +77,9 @@ class CallSiteFactory
 
     callSiteChain.checkCircularDependency(serviceIdentifier);
 
-    if (_callSiteCache
-        .containsKey(ServiceCacheKey(serviceIdentifier, defaultslot))) {
+    if (_callSiteCache.containsKey(
+      ServiceCacheKey(serviceIdentifier, defaultslot),
+    )) {
       var site =
           _callSiteCache[ServiceCacheKey(serviceIdentifier, defaultslot)];
       if (site != null) {
@@ -93,8 +98,9 @@ class CallSiteFactory
   ) {
     callSiteChain.checkCircularDependency(serviceIdentifier);
 
-    if (_callSiteCache
-        .containsKey(ServiceCacheKey(serviceIdentifier, defaultslot))) {
+    if (_callSiteCache.containsKey(
+      ServiceCacheKey(serviceIdentifier, defaultslot),
+    )) {
       var site =
           _callSiteCache[ServiceCacheKey(serviceIdentifier, defaultslot)];
       if (site != null) {
@@ -116,7 +122,8 @@ class CallSiteFactory
         ..checkCircularDependency(serviceIdentifier)
         ..add(serviceIdentifier);
 
-      final callSite = _tryCreateExact(serviceIdentifier, callSiteChain) ??
+      final callSite =
+          _tryCreateExact(serviceIdentifier, callSiteChain) ??
           tryCreateIterable(serviceIdentifier, callSiteChain);
 
       return callSite;
@@ -225,13 +232,10 @@ class CallSiteFactory
         }
 
         callSitesByIndex.sortBy<num>((e) => e.key);
-        callSites.addAll(callSitesByIndex
-            .map(
-              (e) => e.value,
-            )
-            .toList());
+        callSites.addAll(callSitesByIndex.map((e) => e.value).toList());
 
-        var resultCache = (cacheLocation == CallSiteResultCacheLocation.scope ||
+        var resultCache =
+            (cacheLocation == CallSiteResultCacheLocation.scope ||
                 cacheLocation == CallSiteResultCacheLocation.root)
             ? ResultCache._(cacheLocation, callSiteKey)
             : ResultCache._(CallSiteResultCacheLocation.none, callSiteKey);
@@ -254,10 +258,7 @@ class CallSiteFactory
     CallSiteResultCacheLocation locationA,
     CallSiteResultCacheLocation locationB,
   ) =>
-      CallSiteResultCacheLocation.values[max(
-        locationA.value,
-        locationB.value,
-      )];
+      CallSiteResultCacheLocation.values[max(locationA.value, locationB.value)];
 
   ServiceCallSite? tryCreateExact(
     ServiceDescriptor descriptor,
@@ -272,11 +273,7 @@ class CallSiteFactory
       }
 
       ServiceCallSite callSite;
-      var lifetime = ResultCache(
-        descriptor.lifetime,
-        serviceIdentifier,
-        slot,
-      );
+      var lifetime = ResultCache(descriptor.lifetime, serviceIdentifier, slot);
 
       if (descriptor.hasImplementationInstance()) {
         callSite = ConstantCallSite(
@@ -334,16 +331,13 @@ class CallSiteFactory
   }
 
   @override
-  bool isService(Type serviceType) => _isService(
-        ServiceIdentifier(
-          serviceKey: null,
-          serviceType: serviceType,
-        ),
-      );
+  bool isService(Type serviceType) =>
+      _isService(ServiceIdentifier(serviceKey: null, serviceType: serviceType));
 
   @override
   bool isKeyedService(Type serviceType, Object? serviceKey) => _isService(
-      ServiceIdentifier(serviceKey: serviceKey, serviceType: serviceType));
+    ServiceIdentifier(serviceKey: serviceKey, serviceType: serviceType),
+  );
 }
 
 class ServiceDescriptorCacheItem {
@@ -411,10 +405,7 @@ class ServiceDescriptorCacheItem {
 
 /// Returns true if both keys are null or equals, or if key1 is
 /// KeyedService.AnyKey and key2 is not null
-bool _keysMatch(
-  Object? key1,
-  Object? key2,
-) {
+bool _keysMatch(Object? key1, Object? key2) {
   if (key1 == null && key2 == null) {
     return true;
   }

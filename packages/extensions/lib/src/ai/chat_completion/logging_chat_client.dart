@@ -22,11 +22,8 @@ class LoggingChatClient extends DelegatingChatClient {
   /// Creates a new [LoggingChatClient].
   ///
   /// [innerClient] is the underlying client to delegate to.
-  /// [logger] is the logger used to record information.
-  LoggingChatClient(
-    super.innerClient, {
-    required Logger logger,
-  }) : _logger = logger;
+  /// [_logger] is the logger used to record information.
+  LoggingChatClient(super.innerClient, {required this._logger});
 
   final Logger _logger;
 
@@ -149,10 +146,7 @@ class LoggingChatClient extends DelegatingChatClient {
   }
 
   void _logInvocationFailed(String methodName, Object error) {
-    _logger.logError(
-      '$methodName failed.',
-      error: error,
-    );
+    _logger.logError('$methodName failed.', error: error);
   }
 
   String _asJson(Object? value) {
@@ -164,34 +158,34 @@ class LoggingChatClient extends DelegatingChatClient {
   }
 
   static Map<String, Object?> _messageToMap(ChatMessage message) => {
-        'role': message.role.value,
-        if (message.authorName != null) 'authorName': message.authorName,
-        'contents': message.contents.map((c) => c.toString()).toList(),
-      };
+    'role': message.role.value,
+    if (message.authorName != null) 'authorName': message.authorName,
+    'contents': message.contents.map((c) => c.toString()).toList(),
+  };
 
   static Map<String, Object?> _optionsToMap(ChatOptions options) => {
-        if (options.modelId != null) 'modelId': options.modelId,
-        if (options.temperature != null) 'temperature': options.temperature,
-        if (options.topP != null) 'topP': options.topP,
-        if (options.topK != null) 'topK': options.topK,
-        if (options.maxOutputTokens != null)
-          'maxOutputTokens': options.maxOutputTokens,
-      };
+    if (options.modelId != null) 'modelId': options.modelId,
+    if (options.temperature != null) 'temperature': options.temperature,
+    if (options.topP != null) 'topP': options.topP,
+    if (options.topK != null) 'topK': options.topK,
+    if (options.maxOutputTokens != null)
+      'maxOutputTokens': options.maxOutputTokens,
+  };
 
   static Map<String, Object?> _responseToMap(ChatResponse response) => {
-        if (response.responseId != null) 'responseId': response.responseId,
-        if (response.modelId != null) 'modelId': response.modelId,
-        if (response.finishReason != null)
-          'finishReason': response.finishReason.toString(),
-        'messages': response.messages.map(_messageToMap).toList(),
-      };
+    if (response.responseId != null) 'responseId': response.responseId,
+    if (response.modelId != null) 'modelId': response.modelId,
+    if (response.finishReason != null)
+      'finishReason': response.finishReason.toString(),
+    'messages': response.messages.map(_messageToMap).toList(),
+  };
 
   static Map<String, Object?> _updateToMap(ChatResponseUpdate update) => {
-        if (update.role != null) 'role': update.role!.value,
-        if (update.authorName != null) 'authorName': update.authorName,
-        'contents': update.contents.map((c) => c.toString()).toList(),
-        if (update.finishReason != null)
-          'finishReason': update.finishReason.toString(),
-        if (update.modelId != null) 'modelId': update.modelId,
-      };
+    if (update.role != null) 'role': update.role!.value,
+    if (update.authorName != null) 'authorName': update.authorName,
+    'contents': update.contents.map((c) => c.toString()).toList(),
+    if (update.finishReason != null)
+      'finishReason': update.finishReason.toString(),
+    if (update.modelId != null) 'modelId': update.modelId,
+  };
 }

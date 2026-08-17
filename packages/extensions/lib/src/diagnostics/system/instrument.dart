@@ -36,10 +36,7 @@ abstract final class TypedInstrument<T> {
 
   void _notifyForUnpublishedInstrument() {}
 
-  void recordMeasurement(
-    T measurement,
-    Map<String, Object?> tags,
-  ) {
+  void recordMeasurement(T measurement, Map<String, Object?> tags) {
     // var current = _subscriptions.first;
     // while (current != null) {
     //   current.

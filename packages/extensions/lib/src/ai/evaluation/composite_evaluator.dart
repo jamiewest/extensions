@@ -21,7 +21,7 @@ import 'evaluator.dart';
 class CompositeEvaluator implements Evaluator {
   /// Creates a [CompositeEvaluator] from the supplied [evaluators].
   CompositeEvaluator(List<Evaluator> evaluators)
-      : _evaluators = List.unmodifiable(evaluators);
+    : _evaluators = List.unmodifiable(evaluators);
 
   final List<Evaluator> _evaluators;
 
@@ -38,14 +38,16 @@ class CompositeEvaluator implements Evaluator {
     CancellationToken? cancellationToken,
   }) async {
     final results = await Future.wait(
-      _evaluators.map((e) => _safeEvaluate(
-            e,
-            messages,
-            modelResponse,
-            chatConfiguration: chatConfiguration,
-            additionalContext: additionalContext,
-            cancellationToken: cancellationToken,
-          )),
+      _evaluators.map(
+        (e) => _safeEvaluate(
+          e,
+          messages,
+          modelResponse,
+          chatConfiguration: chatConfiguration,
+          additionalContext: additionalContext,
+          cancellationToken: cancellationToken,
+        ),
+      ),
     );
     final merged = EvaluationResult();
     for (final result in results) {
@@ -63,14 +65,16 @@ class CompositeEvaluator implements Evaluator {
     CancellationToken? cancellationToken,
   }) async* {
     final futures = _evaluators
-        .map((e) => _safeEvaluate(
-              e,
-              messages,
-              modelResponse,
-              chatConfiguration: chatConfiguration,
-              additionalContext: additionalContext,
-              cancellationToken: cancellationToken,
-            ))
+        .map(
+          (e) => _safeEvaluate(
+            e,
+            messages,
+            modelResponse,
+            chatConfiguration: chatConfiguration,
+            additionalContext: additionalContext,
+            cancellationToken: cancellationToken,
+          ),
+        )
         .toList();
 
     for (final future in futures) {

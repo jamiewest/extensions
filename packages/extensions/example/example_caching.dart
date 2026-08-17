@@ -10,7 +10,6 @@ Future<void> main() async {
   print('\n--- Example 1: Basic Memory Cache ---');
   // #region memory_cache_basics
   final cache = MemoryCacheImpl(MemoryCacheOptions())
-
     // Simple set/get
     ..set('name', 'John Doe');
   final name = cache.get<String>('name');
@@ -53,26 +52,24 @@ Future<void> main() async {
 
   // Example 4: Cache with priority and size limits
   print('\n--- Example 4: Priority-Based Eviction ---');
-  final limitedCache = MemoryCacheImpl(
-    MemoryCacheOptions(
-      sizeLimit: 100,
-      compactionPercentage: 0.5,
-    ),
-  )
-    ..set(
-      'low',
-      'Low priority item',
-      MemoryCacheEntryOptions()
-        ..priority = CacheItemPriority.low
-        ..size = 50,
-    )
-    ..set(
-      'high',
-      'High priority item',
-      MemoryCacheEntryOptions()
-        ..priority = CacheItemPriority.high
-        ..size = 60,
-    );
+  final limitedCache =
+      MemoryCacheImpl(
+          MemoryCacheOptions(sizeLimit: 100, compactionPercentage: 0.5),
+        )
+        ..set(
+          'low',
+          'Low priority item',
+          MemoryCacheEntryOptions()
+            ..priority = CacheItemPriority.low
+            ..size = 50,
+        )
+        ..set(
+          'high',
+          'High priority item',
+          MemoryCacheEntryOptions()
+            ..priority = CacheItemPriority.high
+            ..size = 60,
+        );
 
   print('Before compaction - Low: ${limitedCache.get<String>('low')}');
   print('Before compaction - High: ${limitedCache.get<String>('high')}');
@@ -109,9 +106,7 @@ Future<void> main() async {
       ..postEvictionCallbacks.add(
         PostEvictionCallbackRegistration(
           evictionCallback: (key, value, reason, _) {
-            print(
-              'Item evicted: key=$key, value=$value, reason=$reason',
-            );
+            print('Item evicted: key=$key, value=$value, reason=$reason');
           },
         ),
       ),
@@ -123,9 +118,7 @@ Future<void> main() async {
 
   // Example 7: Statistics tracking
   print('\n--- Example 7: Cache Statistics ---');
-  final statsCache = MemoryCacheImpl(
-    MemoryCacheOptions(trackStatistics: true),
-  )
+  final statsCache = MemoryCacheImpl(MemoryCacheOptions(trackStatistics: true))
     ..set('key1', 'value1')
     ..set('key2', 'value2')
     ..get<String>('key1') // Hit
@@ -151,7 +144,7 @@ Future<void> main() async {
     Object _,
     Object? value,
     EvictionReason reason,
-    Object? __,
+    Object? _,
   ) {
     if (value is AlphabetLetter) {
       print('${value.letter} was evicted for $reason.');
@@ -161,9 +154,11 @@ Future<void> main() async {
   Future<void> iterateAlphabetAsync(
     Future<void> Function(String) onLetter,
   ) async {
-    for (var charCode = 'A'.codeUnitAt(0);
-        charCode <= 'Z'.codeUnitAt(0);
-        charCode++) {
+    for (
+      var charCode = 'A'.codeUnitAt(0);
+      charCode <= 'Z'.codeUnitAt(0);
+      charCode++
+    ) {
       final letter = String.fromCharCode(charCode);
       await onLetter(letter);
     }
@@ -173,12 +168,11 @@ Future<void> main() async {
   // Add letters to cache with expiration
   await iterateAlphabetAsync((letter) async {
     final options = MemoryCacheEntryOptions()
-      ..absoluteExpirationRelativeToNow =
-          const Duration(milliseconds: millisecondsAbsoluteExpiration)
+      ..absoluteExpirationRelativeToNow = const Duration(
+        milliseconds: millisecondsAbsoluteExpiration,
+      )
       ..postEvictionCallbacks.add(
-        PostEvictionCallbackRegistration(
-          evictionCallback: onPostEviction,
-        ),
+        PostEvictionCallbackRegistration(evictionCallback: onPostEviction),
       );
 
     alphabetCache.set(letter, AlphabetLetter(letter), options);

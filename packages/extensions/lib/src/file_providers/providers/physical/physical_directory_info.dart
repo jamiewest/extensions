@@ -49,10 +49,12 @@ class PhysicalDirectoryInfo extends DirectoryContents implements FileInfo {
   }
 
   void _ensureInitialized() {
-    _entries = _info.listSync().map((e) => switch (e) {
-          (File file) => PhysicalFileInfo(file),
-          (Directory dir) => PhysicalDirectoryInfo(dir),
-          _ => throw Exception(),
-        });
+    _entries = _info.listSync().map(
+      (e) => switch (e) {
+        (File file) => PhysicalFileInfo(file),
+        (Directory dir) => PhysicalDirectoryInfo(dir),
+        _ => throw Exception(),
+      },
+    );
   }
 }

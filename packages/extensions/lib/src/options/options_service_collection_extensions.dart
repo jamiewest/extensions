@@ -61,8 +61,8 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
         (sp) => OptionsFactory<TOptions>(
           instance,
           setups: sp.getServices<ConfigureOptions<TOptions>>(),
-          postConfigureOptions:
-              sp.getServices<PostConfigureOptions<TOptions>>(),
+          postConfigureOptions: sp
+              .getServices<PostConfigureOptions<TOptions>>(),
           validations: sp.getServices<ValidateOptions<TOptions>>(),
         ),
       ),
@@ -74,10 +74,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
       ),
     );
 
-    return OptionsBuilder<TOptions>(
-      this,
-      name,
-    );
+    return OptionsBuilder<TOptions>(this, name);
   }
 
   /// Registers an action used to configure a particular type of options.
@@ -88,10 +85,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
   }) {
     addOptions<TOptions>(instance);
     addSingleton<ConfigureOptions<TOptions>>(
-      (_) => ConfigureNamedOptions0<TOptions>(
-        name,
-        configureOptions,
-      ),
+      (_) => ConfigureNamedOptions0<TOptions>(name, configureOptions),
     );
     return this;
   }
@@ -102,8 +96,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
     OptionsImplementationFactory<TOptions> instance,
     ConfigureOptionsAction<TOptions> configureOptions, {
     String? name,
-  }) =>
-      configure<TOptions>(instance, configureOptions);
+  }) => configure<TOptions>(instance, configureOptions);
 
   /// Registers an action used to configure a particular type of options.
   ServiceCollection postConfigure<TOptions>(
@@ -113,10 +106,7 @@ extension OptionsServiceCollectionExtensions on ServiceCollection {
   ) {
     addOptions<TOptions>(instance);
     addSingleton<PostConfigureOptions<TOptions>>(
-      (_) => PostConfigureOptions0<TOptions>(
-        name,
-        configureOptions,
-      ),
+      (_) => PostConfigureOptions0<TOptions>(name, configureOptions),
     );
     return this;
   }

@@ -3,10 +3,7 @@ import 'event_id.dart';
 import 'log_level.dart';
 
 /// Function to create a `String` message of the `state` and `exception`.
-typedef LogFormatter<TState> = String Function(
-  TState state,
-  Object? error,
-);
+typedef LogFormatter<TState> = String Function(TState state, Object? error);
 
 /// Represents a type used to perform logging.
 ///

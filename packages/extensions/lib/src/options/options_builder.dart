@@ -20,7 +20,7 @@ class OptionsBuilder<TOptions> {
 
   /// Creates a new [OptionsBuilder] instance.
   OptionsBuilder(this.services, String? name)
-      : _name = name ?? Options.defaultName;
+    : _name = name ?? Options.defaultName;
 
   /// The default name of the [TOptions] instance.
   String get name => _name;
@@ -33,10 +33,7 @@ class OptionsBuilder<TOptions> {
     ConfigureNamedOptionsActionT0<TOptions> configureOptions,
   ) {
     services.addSingleton<ConfigureOptions<TOptions>>(
-      (_) => ConfigureNamedOptions0<TOptions>(
-        name,
-        configureOptions,
-      ),
+      (_) => ConfigureNamedOptions0<TOptions>(name, configureOptions),
     );
     return this;
   }
@@ -73,7 +70,7 @@ class OptionsBuilder<TOptions> {
   // ignore: avoid_returning_this
   OptionsBuilder<TOptions> configure3<TDep1, TDep2, TDep3>(
     ConfigureNamedOptionsActionT3<TOptions, TDep1, TDep2, TDep3>
-        configureOptions,
+    configureOptions,
   ) {
     services.addTransient<ConfigureOptions<TOptions>>(
       (sp) => ConfigureNamedOptions3<TOptions, TDep1, TDep2, TDep3>(
@@ -90,7 +87,7 @@ class OptionsBuilder<TOptions> {
   // ignore: avoid_returning_this
   OptionsBuilder<TOptions> configure4<TDep1, TDep2, TDep3, TDep4>(
     ConfigureNamedOptionsActionT4<TOptions, TDep1, TDep2, TDep3, TDep4>
-        configureOptions,
+    configureOptions,
   ) {
     services.addTransient<ConfigureOptions<TOptions>>(
       (sp) => ConfigureNamedOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>(
@@ -108,19 +105,19 @@ class OptionsBuilder<TOptions> {
   // ignore: avoid_returning_this
   OptionsBuilder<TOptions> configure5<TDep1, TDep2, TDep3, TDep4, TDep5>(
     ConfigureNamedOptionsActionT5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
-        configureOptions,
+    configureOptions,
   ) {
     services.addTransient<ConfigureOptions<TOptions>>(
       (sp) =>
           ConfigureNamedOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>(
-        name,
-        configureOptions,
-        sp.getRequiredService<TDep1>(),
-        sp.getRequiredService<TDep2>(),
-        sp.getRequiredService<TDep3>(),
-        sp.getRequiredService<TDep4>(),
-        sp.getRequiredService<TDep5>(),
-      ),
+            name,
+            configureOptions,
+            sp.getRequiredService<TDep1>(),
+            sp.getRequiredService<TDep2>(),
+            sp.getRequiredService<TDep3>(),
+            sp.getRequiredService<TDep4>(),
+            sp.getRequiredService<TDep5>(),
+          ),
     );
     return this;
   }
@@ -130,10 +127,7 @@ class OptionsBuilder<TOptions> {
     PostConfigureActionT0<TOptions> configureOptions,
   ) {
     services.addSingleton<PostConfigureOptions<TOptions>>(
-      (_) => PostConfigureOptions0<TOptions>(
-        name,
-        configureOptions,
-      ),
+      (_) => PostConfigureOptions0<TOptions>(name, configureOptions),
     );
     return this;
   }
@@ -186,7 +180,7 @@ class OptionsBuilder<TOptions> {
   // ignore: avoid_returning_this
   OptionsBuilder<TOptions> postConfigure4<TDep1, TDep2, TDep3, TDep4>(
     PostConfigureActionT4<TOptions, TDep1, TDep2, TDep3, TDep4>
-        configureOptions,
+    configureOptions,
   ) {
     services.addTransient<PostConfigureOptions<TOptions>>(
       (sp) => PostConfigureOptions4<TOptions, TDep1, TDep2, TDep3, TDep4>(
@@ -204,19 +198,19 @@ class OptionsBuilder<TOptions> {
   // ignore: avoid_returning_this
   OptionsBuilder<TOptions> postConfigure5<TDep1, TDep2, TDep3, TDep4, TDep5>(
     PostConfigureActionT5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
-        configureOptions,
+    configureOptions,
   ) {
     services.addTransient<PostConfigureOptions<TOptions>>(
       (sp) =>
           PostConfigureOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>(
-        name,
-        configureOptions,
-        sp.getRequiredService<TDep1>(),
-        sp.getRequiredService<TDep2>(),
-        sp.getRequiredService<TDep3>(),
-        sp.getRequiredService<TDep4>(),
-        sp.getRequiredService<TDep5>(),
-      ),
+            name,
+            configureOptions,
+            sp.getRequiredService<TDep1>(),
+            sp.getRequiredService<TDep2>(),
+            sp.getRequiredService<TDep3>(),
+            sp.getRequiredService<TDep4>(),
+            sp.getRequiredService<TDep5>(),
+          ),
     );
     return this;
   }
@@ -227,11 +221,7 @@ class OptionsBuilder<TOptions> {
     String failureMessage,
   ) {
     services.addSingleton<ValidateOptions<TOptions>>(
-      (_) => ValidateOptions0<TOptions>(
-        name,
-        validation,
-        failureMessage,
-      ),
+      (_) => ValidateOptions0<TOptions>(name, validation, failureMessage),
     );
     return this;
   }

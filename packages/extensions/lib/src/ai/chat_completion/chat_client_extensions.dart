@@ -22,26 +22,22 @@ extension ChatClientExtensions on ChatClient {
     String message, {
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      getResponse(
-        messages: [
-          ChatMessage.fromText(ChatRole.user, message),
-        ],
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => getResponse(
+    messages: [ChatMessage.fromText(ChatRole.user, message)],
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   /// Sends a single message and returns the response.
   Future<ChatResponse> getChatResponseFromMessage(
     ChatMessage message, {
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      getResponse(
-        messages: [message],
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => getResponse(
+    messages: [message],
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   /// Sends a single user text message and returns a streaming
   /// response.
@@ -49,24 +45,20 @@ extension ChatClientExtensions on ChatClient {
     String message, {
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      getStreamingResponse(
-        messages: [
-          ChatMessage.fromText(ChatRole.user, message),
-        ],
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => getStreamingResponse(
+    messages: [ChatMessage.fromText(ChatRole.user, message)],
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   /// Sends a single message and returns a streaming response.
   Stream<ChatResponseUpdate> getStreamingChatResponseFromMessage(
     ChatMessage message, {
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      getStreamingResponse(
-        messages: [message],
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => getStreamingResponse(
+    messages: [message],
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 }

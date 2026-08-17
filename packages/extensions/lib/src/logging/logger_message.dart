@@ -119,7 +119,7 @@ class LoggerMessage {
 
   /// Defines a log message with four parameters.
   static void Function(Logger, T1, T2, T3, T4, Exception?)
-      define4<T1, T2, T3, T4>(
+  define4<T1, T2, T3, T4>(
     LogLevel logLevel,
     EventId eventId,
     String formatString, {
@@ -152,28 +152,27 @@ class LoggerMessage {
   static Disposable? Function(Logger, T1) defineScope1<T1>(
     String formatString,
   ) =>
-      (logger, arg1) => logger.beginScope(
-            formatString.replaceAll('{0}', arg1.toString()),
-          );
+      (logger, arg1) =>
+          logger.beginScope(formatString.replaceAll('{0}', arg1.toString()));
 
   /// Defines a log scope with two parameters.
   static Disposable? Function(Logger, T1, T2) defineScope2<T1, T2>(
     String formatString,
   ) =>
       (logger, arg1, arg2) => logger.beginScope(
-            formatString
-                .replaceAll('{0}', arg1.toString())
-                .replaceAll('{1}', arg2.toString()),
-          );
+        formatString
+            .replaceAll('{0}', arg1.toString())
+            .replaceAll('{1}', arg2.toString()),
+      );
 
   /// Defines a log scope with three parameters.
   static Disposable? Function(Logger, T1, T2, T3) defineScope3<T1, T2, T3>(
     String formatString,
   ) =>
       (logger, arg1, arg2, arg3) => logger.beginScope(
-            formatString
-                .replaceAll('{0}', arg1.toString())
-                .replaceAll('{1}', arg2.toString())
-                .replaceAll('{2}', arg3.toString()),
-          );
+        formatString
+            .replaceAll('{0}', arg1.toString())
+            .replaceAll('{1}', arg2.toString())
+            .replaceAll('{2}', arg3.toString()),
+      );
 }

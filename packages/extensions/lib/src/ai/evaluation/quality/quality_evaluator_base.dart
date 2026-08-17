@@ -32,14 +32,20 @@ abstract class QualityEvaluatorBase implements Evaluator {
     final result = EvaluationResult.fromList([metric]);
 
     if (chatConfiguration == null) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'chatConfiguration is required for AI-based evaluators.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'chatConfiguration is required for AI-based evaluators.',
+        ),
+      );
       return result;
     }
 
     if (modelResponse.text.isEmpty) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'The modelResponse supplied for evaluation was null or empty.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'The modelResponse supplied for evaluation was null or empty.',
+        ),
+      );
       return result;
     }
 
@@ -51,8 +57,11 @@ abstract class QualityEvaluatorBase implements Evaluator {
 
     if (instructions == null) {
       metric.addDiagnostic(
-          EvaluationDiagnostic.error('Could not build evaluation instructions. '
-              'A required evaluation context may be missing.'));
+        EvaluationDiagnostic.error(
+          'Could not build evaluation instructions. '
+          'A required evaluation context may be missing.',
+        ),
+      );
       return result;
     }
 
@@ -65,8 +74,11 @@ abstract class QualityEvaluatorBase implements Evaluator {
     final duration = DateTime.now().difference(start);
 
     if (!metric.tryParseEvaluationResponseWithTags(evalResponse, duration)) {
-      metric.addDiagnostic(EvaluationDiagnostic.error(
-          'Could not parse a score from the evaluation response.'));
+      metric.addDiagnostic(
+        EvaluationDiagnostic.error(
+          'Could not parse a score from the evaluation response.',
+        ),
+      );
     } else {
       metric.interpretation = metric.interpretScore();
     }
@@ -85,6 +97,8 @@ abstract class QualityEvaluatorBase implements Evaluator {
 
 /// Finds the last user message in a list.
 extension QualityMessageListExtensions on List<ChatMessage> {
-  ChatMessage? get lastUserMessage => cast<ChatMessage?>()
-      .lastWhere((m) => m?.role == ChatRole.user, orElse: () => null);
+  ChatMessage? get lastUserMessage => cast<ChatMessage?>().lastWhere(
+    (m) => m?.role == ChatRole.user,
+    orElse: () => null,
+  );
 }

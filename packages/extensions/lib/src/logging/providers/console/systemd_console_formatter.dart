@@ -32,8 +32,9 @@ class SystemdConsoleFormatter extends ConsoleFormatter {
 
     // Write timestamp if configured
     if (_options.timestampFormat != null) {
-      final dateTime =
-          _options.useUtcTimestamp ? DateTime.now().toUtc() : DateTime.now();
+      final dateTime = _options.useUtcTimestamp
+          ? DateTime.now().toUtc()
+          : DateTime.now();
       textWriter
         ..write(_formatTimestamp(dateTime))
         ..write(' ');

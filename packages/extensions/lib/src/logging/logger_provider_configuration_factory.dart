@@ -7,7 +7,7 @@ import 'provider_alias_utilities.dart';
 
 /// Internal wrapper for a single logging configuration source.
 class _LoggingConfiguration {
-  final IConfiguration configuration;
+  final Configuration configuration;
 
   _LoggingConfiguration(this.configuration);
 }
@@ -31,14 +31,13 @@ class LoggerProviderConfigurationFactoryImpl
   ///
   /// The [configurations] parameter contains all logging configuration sources
   /// that should be consulted when retrieving provider-specific configuration.
-  LoggerProviderConfigurationFactoryImpl(
-    Iterable<IConfiguration> configurations,
-  ) : _configurations = configurations
-            .map(_LoggingConfiguration.new)
-            .toList(growable: false);
+  LoggerProviderConfigurationFactoryImpl(Iterable<Configuration> configurations)
+    : _configurations = configurations
+          .map(_LoggingConfiguration.new)
+          .toList(growable: false);
 
   @override
-  IConfiguration getConfiguration(Type providerType) {
+  Configuration getConfiguration(Type providerType) {
     ArgumentError.checkNotNull(providerType, 'providerType');
 
     // Get the provider's alias (e.g., "Console" from "ConsoleLoggerProvider")
@@ -73,13 +72,10 @@ class LoggerProviderConfigurationFactoryImpl
   }
 
   /// Checks if a configuration section has any children.
-  bool _hasChildren(IConfiguration section) => section.getChildren().isNotEmpty;
+  bool _hasChildren(Configuration section) => section.getChildren().isNotEmpty;
 
   /// Adds all key-value pairs from a configuration section to the builder.
-  void _addConfiguration(
-    ConfigurationBuilder builder,
-    IConfiguration section,
-  ) {
+  void _addConfiguration(ConfigurationBuilder builder, Configuration section) {
     // Add all child key-value pairs from the section
     _addConfigurationValues(builder, section, prefix: '');
   }
@@ -87,7 +83,7 @@ class LoggerProviderConfigurationFactoryImpl
   /// Recursively adds configuration values to the builder.
   void _addConfigurationValues(
     ConfigurationBuilder builder,
-    IConfiguration section, {
+    Configuration section, {
     required String prefix,
   }) {
     final children = section.getChildren();
@@ -99,9 +95,7 @@ class LoggerProviderConfigurationFactoryImpl
       // If this child has a value, add it
       if (value != null) {
         // Create an in-memory source for this key-value pair
-        builder.add(
-          _InMemoryConfigurationSource({key: value}),
-        );
+        builder.add(_InMemoryConfigurationSource({key: value}));
       }
 
       // Recursively process children

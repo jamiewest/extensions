@@ -5,7 +5,8 @@ repository: https://www.github.com/jamiewest/extensions
 issue_tracker: https://github.com/jamiewest/extensions/issues?q=is%3Aissue+is%3Aopen+label%3Aextensions-flutter
 
 environment:
-  sdk: "^3.10.1"
+  sdk: "^3.13.0"
+  flutter: ">=3.47.0"
 resolution: workspace
 
 dependencies:

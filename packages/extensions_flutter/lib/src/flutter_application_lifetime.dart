@@ -58,7 +58,8 @@ class FlutterApplicationLifetime extends ApplicationLifetime {
 
   /// Notifies all [applicationResumed] handlers that the app has resumed.
   ///
-  /// Called by [FlutterLifecycleObserver] when the app returns to the foreground.
+  /// Called by [FlutterLifecycleObserver] when the app returns to the
+  /// foreground.
   /// Handlers are executed in reverse registration order.
   void notifyResumed() {
     try {

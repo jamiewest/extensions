@@ -1,5 +1,6 @@
 import '../../system/threading/cancellation_token.dart';
 import 'delegating_speech_to_text_client.dart';
+import 'speech_to_text_response_update.dart';
 import 'speech_to_text_client.dart';
 
 /// A delegating speech-to-text client that applies configuration to
@@ -21,22 +22,20 @@ class ConfigureOptionsSpeechToTextClient extends DelegatingSpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.getText(
-        stream: stream,
-        options: configure(options ?? SpeechToTextOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.getText(
+    stream: stream,
+    options: configure(options ?? SpeechToTextOptions()),
+    cancellationToken: cancellationToken,
+  );
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.getStreamingText(
-        stream: stream,
-        options: configure(options ?? SpeechToTextOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.getStreamingText(
+    stream: stream,
+    options: configure(options ?? SpeechToTextOptions()),
+    cancellationToken: cancellationToken,
+  );
 }

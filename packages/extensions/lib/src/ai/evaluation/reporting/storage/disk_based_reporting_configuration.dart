@@ -31,18 +31,18 @@ class DiskBasedReportingConfiguration {
     Iterable<String>? cachingKeys,
     String? executionName,
     EvaluationMetricInterpretation? Function(EvaluationMetric)?
-        evaluationMetricInterpreter,
+    evaluationMetricInterpreter,
     Iterable<String>? tags,
   }) {
     final rootPath = Directory(storageRootPath).absolute.path;
     final resultStore = DiskBasedResultStore(rootPath);
     final responseCacheProvider =
         (chatConfiguration != null && enableResponseCaching)
-            ? DiskBasedResponseCacheProvider(
-                rootPath,
-                timeToLive: responseTimeToLive,
-              )
-            : null;
+        ? DiskBasedResponseCacheProvider(
+            rootPath,
+            timeToLive: responseTimeToLive,
+          )
+        : null;
 
     return ReportingConfiguration(
       evaluators,

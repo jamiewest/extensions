@@ -22,8 +22,8 @@ class OptionsMonitor<TOptions> implements Disposable {
     OptionsFactory<TOptions> factory,
     Iterable<OptionsChangeTokenSource<TOptions>> sources,
     OptionsMonitorCache<TOptions> cache,
-  )   : _factory = factory,
-        _cache = cache {
+  ) : _factory = factory,
+      _cache = cache {
     for (var source in sources.toList()) {
       var registration = ChangeToken.onChangeWithState(
         () => source.getChangeToken(),
@@ -76,8 +76,8 @@ class _ChangeTrackerDisposable<TOptions> implements Disposable {
   _ChangeTrackerDisposable(
     OptionsMonitor<TOptions> monitor,
     OnChangeListener<TOptions> listener,
-  )   : _listener = listener,
-        _monitor = monitor;
+  ) : _listener = listener,
+      _monitor = monitor;
 
   void onChange(TOptions options, [String? name]) =>
       _listener.call(options, name);

@@ -13,12 +13,11 @@ sealed class ChatResponseFormat {
     required Map<String, dynamic> schema,
     String? schemaName,
     String? schemaDescription,
-  }) =>
-      ChatResponseFormatJsonSchema(
-        schema: schema,
-        schemaName: schemaName,
-        schemaDescription: schemaDescription,
-      );
+  }) => ChatResponseFormatJsonSchema(
+    schema: schema,
+    schemaName: schemaName,
+    schemaDescription: schemaDescription,
+  );
 }
 
 /// Requests unstructured text output.

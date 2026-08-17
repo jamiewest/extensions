@@ -13,8 +13,6 @@ class JsonConfigurationProvider extends ConfigurationProvider
   /// Loads the JSON data from a stream.
   @override
   void load() {
-    data = LinkedHashMap.from(
-      JsonConfigurationParser.parse(input),
-    );
+    data = LinkedHashMap.from(JsonConfigurationParser.parse(input));
   }
 }

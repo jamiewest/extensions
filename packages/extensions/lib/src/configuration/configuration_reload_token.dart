@@ -22,11 +22,7 @@ class ConfigurationReloadToken implements ChangeToken {
   Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
-  ) =>
-      _cts.token.register(
-        (c) => callback(c),
-        state,
-      );
+  ) => _cts.token.register((c) => callback(c), state);
 
   /// Used to trigger the change token when a reload occurs.
   void onReload() => _cts.cancel();

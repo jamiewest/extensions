@@ -9,11 +9,9 @@ extension ConfigureOptionsEmbeddingGeneratorBuilderExtensions
   /// Adds a callback that configures the [EmbeddingGenerationOptions]
   /// passed to each request.
   EmbeddingGeneratorBuilder useConfigureOptions(
-          EmbeddingGenerationOptions Function(
-                  EmbeddingGenerationOptions options)
-              configure) =>
-      use(
-        (inner) =>
-            ConfigureOptionsEmbeddingGenerator(inner, configure: configure),
-      );
+    EmbeddingGenerationOptions Function(EmbeddingGenerationOptions options)
+    configure,
+  ) => use(
+    (inner) => ConfigureOptionsEmbeddingGenerator(inner, configure: configure),
+  );
 }

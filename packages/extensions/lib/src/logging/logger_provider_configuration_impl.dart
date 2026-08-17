@@ -2,7 +2,7 @@ import '../configuration/configuration.dart';
 import 'i_logger_provider_configuration.dart';
 import 'i_logger_provider_configuration_factory.dart';
 
-/// Implementation of [ILoggerProviderConfiguration] that retrieves
+/// Implementation of [LoggerProviderConfiguration] that retrieves
 /// configuration for a specific logger provider type.
 ///
 /// This class acts as a bridge between the configuration factory and
@@ -12,7 +12,7 @@ import 'i_logger_provider_configuration_factory.dart';
 /// Type parameter [T] represents the logger provider type.
 class LoggerProviderConfigurationImpl<T>
     implements LoggerProviderConfiguration<T> {
-  final IConfiguration _configuration;
+  final Configuration _configuration;
 
   /// Creates a new instance of [LoggerProviderConfigurationImpl].
   ///
@@ -23,5 +23,5 @@ class LoggerProviderConfigurationImpl<T>
   ) : _configuration = providerConfigurationFactory.getConfiguration(T);
 
   @override
-  IConfiguration get configuration => _configuration;
+  Configuration get configuration => _configuration;
 }

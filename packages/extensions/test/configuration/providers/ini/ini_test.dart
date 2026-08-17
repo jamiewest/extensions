@@ -18,13 +18,19 @@ SubHeader:Provider=MySql
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('defaultconnection:ConnectionString'),
-          equals('TestConnectionString'));
-      expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
-      expect(iniConfig.get('Data:Inventory:CONNECTIONSTRING'),
-          equals('AnotherTestConnectionString'));
       expect(
-          iniConfig.get('Data:Inventory:SubHeader:Provider'), equals('MySql'));
+        iniConfig.get('defaultconnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
+      expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
+      expect(
+        iniConfig.get('Data:Inventory:CONNECTIONSTRING'),
+        equals('AnotherTestConnectionString'),
+      );
+      expect(
+        iniConfig.get('Data:Inventory:SubHeader:Provider'),
+        equals('MySql'),
+      );
     });
 
     test('LoadMethodCanHandleEmptyValue', () {
@@ -47,8 +53,10 @@ Provider='SqlClient'
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
       expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
     });
 
@@ -60,8 +68,10 @@ ConnectionString="TestConnectionString
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('"TestConnectionString'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('"TestConnectionString'),
+      );
     });
 
     test('SingleQuoteIsPartOfValueIfNotPaired', () {
@@ -72,8 +82,10 @@ ConnectionString='TestConnectionString
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals("'TestConnectionString"));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals("'TestConnectionString"),
+      );
     });
 
     test('DoubleQuoteIsPartOfValueIfAppearInTheMiddleOfValue', () {
@@ -84,8 +96,10 @@ ConnectionString=Test"Connection"String
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('Test"Connection"String'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('Test"Connection"String'),
+      );
     });
 
     test('LoadKeyValuePairsFromValidIniWithoutSectionHeader', () {
@@ -96,8 +110,10 @@ DefaultConnection:Provider=SqlClient
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
       expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
     });
 
@@ -112,8 +128,10 @@ Provider=SqlClient
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
       expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
     });
 
@@ -128,8 +146,10 @@ Provider=SqlClient
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
       expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
     });
 
@@ -144,8 +164,10 @@ Provider=SqlClient
 
       final iniConfig = IniConfigurationProvider(ini)..load();
 
-      expect(iniConfig.get('DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
+      expect(
+        iniConfig.get('DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
       expect(iniConfig.get('DefaultConnection:Provider'), equals('SqlClient'));
     });
 

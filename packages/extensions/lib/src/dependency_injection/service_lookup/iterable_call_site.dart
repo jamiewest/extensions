@@ -11,9 +11,9 @@ class IterableCallSite extends ServiceCallSite {
     Type serviceType,
     Type? itemType,
     Iterable<ServiceCallSite> serviceCallSites,
-  )   : _itemType = itemType,
-        _serviceType = serviceType,
-        _serviceCallSites = serviceCallSites;
+  ) : _itemType = itemType,
+      _serviceType = serviceType,
+      _serviceCallSites = serviceCallSites;
 
   Type? get itemType => _itemType;
   Iterable<ServiceCallSite> get serviceCallSites => _serviceCallSites;

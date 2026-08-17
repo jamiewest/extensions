@@ -3,8 +3,10 @@
 /// This API supports infrastructure and is not intended to be used directly.
 class PatternTestResult {
   /// The shared failure result.
-  static final PatternTestResult failed =
-      PatternTestResult._(isSuccessful: false, stem: null);
+  static final PatternTestResult failed = PatternTestResult._(
+    isSuccessful: false,
+    stem: null,
+  );
 
   /// Whether the file matched the pattern.
   final bool isSuccessful;

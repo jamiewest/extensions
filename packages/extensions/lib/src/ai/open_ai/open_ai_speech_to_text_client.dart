@@ -8,6 +8,7 @@ import '../../system/threading/cancellation_token.dart';
 import '../speech_to_text/speech_to_text_client.dart';
 import '../speech_to_text/speech_to_text_client_builder.dart';
 import '../speech_to_text/speech_to_text_client_metadata.dart';
+import '../speech_to_text/speech_to_text_response_update.dart';
 import '../text_content.dart';
 import '../usage_details.dart';
 import 'open_ai_client_options.dart';
@@ -29,9 +30,9 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
     String modelId,
     String apiKey, {
     OpenAIClientOptions? options,
-  })  : _modelId = modelId,
-        _apiKey = apiKey,
-        _options = options ?? OpenAIClientOptions() {
+  }) : _modelId = modelId,
+       _apiKey = apiKey,
+       _options = options ?? OpenAIClientOptions() {
     metadata = SpeechToTextClientMetadata(
       providerName: 'openai',
       providerUri: _options.endpoint,
@@ -57,30 +58,30 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
   }) async {
     final bytes = await _collectBytes(stream);
     final isTranslation = _isTranslationRequest(options);
-    final endpoint =
-        isTranslation ? 'audio/translations' : 'audio/transcriptions';
+    final endpoint = isTranslation
+        ? 'audio/translations'
+        : 'audio/transcriptions';
 
     final client = _options.httpClient ?? http.Client();
     final owned = _options.httpClient == null;
 
     try {
-      final request = http.MultipartRequest(
-        'POST',
-        Uri.parse('${_options.endpoint}/$endpoint'),
-      )
-        ..headers['Authorization'] = 'Bearer $_apiKey'
-        ..fields['model'] = options?.modelId ?? _modelId
-        ..fields['response_format'] = 'verbose_json';
+      final request =
+          http.MultipartRequest(
+              'POST',
+              Uri.parse('${_options.endpoint}/$endpoint'),
+            )
+            ..headers['Authorization'] = 'Bearer $_apiKey'
+            ..fields['model'] = options?.modelId ?? _modelId
+            ..fields['response_format'] = 'verbose_json';
 
       if (options?.speechLanguage != null && !isTranslation) {
         request.fields['language'] = options!.speechLanguage!;
       }
 
-      request.files.add(http.MultipartFile.fromBytes(
-        'file',
-        bytes,
-        filename: 'audio.mp3',
-      ));
+      request.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: 'audio.mp3'),
+      );
 
       final streamed = await client.send(request);
       final body = await streamed.stream.bytesToString();
@@ -99,17 +100,28 @@ final class OpenAISpeechToTextClient implements SpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
   }) async* {
     // OpenAI does not support streaming transcription in the standard API;
     // fall back to the non-streaming method and yield a single update.
-    yield await getText(
+    final response = await getText(
       stream: stream,
       options: options,
       cancellationToken: cancellationToken,
+    );
+    yield SpeechToTextResponseUpdate(
+      kind: SpeechToTextResponseUpdateKind.textUpdated,
+      contents: response.contents,
+      startTime: response.startTime,
+      endTime: response.endTime,
+      responseId: response.responseId,
+      modelId: response.modelId,
+      rawRepresentation: response.rawRepresentation,
+      additionalProperties: response.additionalProperties,
+      usage: response.usage,
     );
   }
 

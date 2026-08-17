@@ -37,16 +37,16 @@ class MatcherContext {
     Iterable<IPattern> excludePatterns,
     DirectoryInfoBase directoryInfo,
     StringComparison comparison,
-  )   : _root = directoryInfo,
-        _comparison = comparison,
-        _patternContext = IncludesFirstCompositePatternContext(
-          includePatterns
-              .map((pattern) => pattern.createPatternContextForInclude())
-              .toList(),
-          excludePatterns
-              .map((pattern) => pattern.createPatternContextForExclude())
-              .toList(),
-        );
+  ) : _root = directoryInfo,
+      _comparison = comparison,
+      _patternContext = IncludesFirstCompositePatternContext(
+        includePatterns
+            .map((pattern) => pattern.createPatternContextForInclude())
+            .toList(),
+        excludePatterns
+            .map((pattern) => pattern.createPatternContextForExclude())
+            .toList(),
+      );
 
   /// Creates a context that applies [orderedPatterns] in the order they
   /// were added while walking [directoryInfo].
@@ -54,20 +54,20 @@ class MatcherContext {
     List<IncludeOrExcludeValue<IPattern>> orderedPatterns,
     DirectoryInfoBase directoryInfo,
     StringComparison comparison,
-  )   : _root = directoryInfo,
-        _comparison = comparison,
-        _patternContext = PreserveOrderCompositePatternContext(
-          orderedPatterns
-              .map(
-                (item) => IncludeOrExcludeValue<IPatternContext>(
-                  value: item.isInclude
-                      ? item.value.createPatternContextForInclude()
-                      : item.value.createPatternContextForExclude(),
-                  isInclude: item.isInclude,
-                ),
-              )
-              .toList(),
-        );
+  ) : _root = directoryInfo,
+      _comparison = comparison,
+      _patternContext = PreserveOrderCompositePatternContext(
+        orderedPatterns
+            .map(
+              (item) => IncludeOrExcludeValue<IPatternContext>(
+                value: item.isInclude
+                    ? item.value.createPatternContextForInclude()
+                    : item.value.createPatternContextForExclude(),
+                isInclude: item.isInclude,
+              ),
+            )
+            .toList(),
+      );
 
   /// Walks the directory tree and returns the matched files.
   PatternMatchingResult execute() {
@@ -90,8 +90,9 @@ class MatcherContext {
     } else {
       for (final candidate in directory.enumerateFileSystemInfos()) {
         if (candidate is DirectoryInfoBase &&
-            _declaredLiteralFolderSegments
-                .contains(stringComparisonKey(candidate.name, _comparison))) {
+            _declaredLiteralFolderSegments.contains(
+              stringComparisonKey(candidate.name, _comparison),
+            )) {
           entities.add(candidate);
         }
       }
@@ -147,8 +148,9 @@ class MatcherContext {
       if (isLastSegment) {
         _declaredLiteralFileSegments.add(patternSegment);
       } else {
-        _declaredLiteralFolderSegments
-            .add(stringComparisonKey(patternSegment.value, _comparison));
+        _declaredLiteralFolderSegments.add(
+          stringComparisonKey(patternSegment.value, _comparison),
+        );
       }
     } else if (patternSegment is ParentPathSegment) {
       _declaredParentPathSegment = true;

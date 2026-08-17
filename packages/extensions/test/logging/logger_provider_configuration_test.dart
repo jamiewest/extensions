@@ -76,16 +76,13 @@ void main() {
       // Arrange
       final config1 = ConfigurationBuilder()
         ..addInMemoryCollection(
-          <String, String>{
-            'Logging:Console:LogLevel:Default': 'Debug',
-          }.entries,
+          <String, String>{'Logging:Console:LogLevel:Default': 'Debug'}.entries,
         );
 
       final config2 = ConfigurationBuilder()
         ..addInMemoryCollection(
-          <String, String>{
-            'Logging:Console:LogLevel:MyApp': 'Information',
-          }.entries,
+          <String, String>{'Logging:Console:LogLevel:MyApp': 'Information'}
+              .entries,
         );
 
       final factory = LoggerProviderConfigurationFactoryImpl([
@@ -105,9 +102,7 @@ void main() {
       // Arrange
       final config = ConfigurationBuilder()
         ..addInMemoryCollection(
-          <String, String>{
-            'Logging:Debug:LogLevel:Default': 'Debug',
-          }.entries,
+          <String, String>{'Logging:Debug:LogLevel:Default': 'Debug'}.entries,
         );
 
       final builtConfig = config.build();
@@ -150,9 +145,7 @@ void main() {
       // Arrange
       final config = ConfigurationBuilder()
         ..addInMemoryCollection(
-          <String, String>{
-            'Logging:Console:LogLevel:Default': 'Debug',
-          }.entries,
+          <String, String>{'Logging:Console:LogLevel:Default': 'Debug'}.entries,
         );
 
       final builtConfig = config.build();
@@ -182,14 +175,12 @@ void main() {
 
       final consoleConfig =
           LoggerProviderConfigurationImpl<ConsoleLoggerProvider>(factory);
-      final debugConfig =
-          LoggerProviderConfigurationImpl<DebugLoggerProvider>(factory);
+      final debugConfig = LoggerProviderConfigurationImpl<DebugLoggerProvider>(
+        factory,
+      );
 
       // Act & Assert
-      expect(
-        consoleConfig.configuration['LogLevel:Default'],
-        equals('Debug'),
-      );
+      expect(consoleConfig.configuration['LogLevel:Default'], equals('Debug'));
       expect(
         debugConfig.configuration['LogLevel:Default'],
         equals('Information'),

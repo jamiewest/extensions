@@ -41,10 +41,7 @@ void main() {
       test('setter throws on negative skip', () {
         final options = VectorSearchOptions<String>();
 
-        expect(
-          () => options.skip = -1,
-          throwsA(isA<ArgumentError>()),
-        );
+        expect(() => options.skip = -1, throwsA(isA<ArgumentError>()));
       });
 
       test('setter accepts zero', () {

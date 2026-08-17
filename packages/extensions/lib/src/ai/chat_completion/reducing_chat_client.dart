@@ -18,10 +18,7 @@ class ReducingChatClient extends DelegatingChatClient {
   ///
   /// [innerClient] is the underlying client to delegate to.
   /// [reducer] is the [ChatReducer] used to reduce messages.
-  ReducingChatClient(
-    super.innerClient, {
-    required this.reducer,
-  });
+  ReducingChatClient(super.innerClient, {required this.reducer});
 
   /// The reducer used to reduce messages before forwarding.
   final ChatReducer reducer;

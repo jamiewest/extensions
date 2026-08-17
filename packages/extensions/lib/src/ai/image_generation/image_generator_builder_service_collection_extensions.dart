@@ -19,14 +19,14 @@ extension ImageGeneratorBuilderServiceCollectionExtensions
     final builder = ImageGeneratorBuilder.fromFactory(innerGeneratorFactory);
     add(switch (lifetime) {
       ServiceLifetime.singleton => ServiceDescriptor.singleton<ImageGenerator>(
-          (sp) => builder.build(sp),
-        ),
+        (sp) => builder.build(sp),
+      ),
       ServiceLifetime.scoped => ServiceDescriptor.scoped<ImageGenerator>(
-          (sp) => builder.build(sp),
-        ),
+        (sp) => builder.build(sp),
+      ),
       ServiceLifetime.transient => ServiceDescriptor.transient<ImageGenerator>(
-          (sp) => builder.build(sp),
-        ),
+        (sp) => builder.build(sp),
+      ),
     });
     return builder;
   }

@@ -28,13 +28,7 @@ class _TestLogger implements Logger {
     Object? error,
     required LogFormatter<TState> formatter,
   }) {
-    entries.add(
-      _TestLogEntry(
-        logLevel,
-        formatter(state, error),
-        error,
-      ),
-    );
+    entries.add(_TestLogEntry(logLevel, formatter(state, error), error));
   }
 }
 
@@ -136,15 +130,19 @@ void main() {
       });
 
       test('logs critical error when handler throws', () {
-        lifetime.applicationInactive
-            .add(() => throw Exception('handler error'));
+        lifetime.applicationInactive.add(
+          () => throw Exception('handler error'),
+        );
 
         lifetime.notifyInactive();
 
         expect(logger.entries, hasLength(1));
         final entry = logger.entries.first;
         expect(entry.level, LogLevel.critical);
-        expect(entry.message, contains('An error occurred while the application was inactive'));
+        expect(
+          entry.message,
+          contains('An error occurred while the application was inactive'),
+        );
       });
     });
 
@@ -170,8 +168,9 @@ void main() {
       });
 
       test('logs critical error when handler throws', () {
-        lifetime.applicationDetached
-            .add(() => throw Exception('handler error'));
+        lifetime.applicationDetached.add(
+          () => throw Exception('handler error'),
+        );
 
         lifetime.notifyDetached();
 

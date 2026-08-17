@@ -38,10 +38,10 @@ class ReportingConfiguration {
     String? executionName,
     this.evaluationMetricInterpreter,
     Iterable<String>? tags,
-  })  : evaluators = List.unmodifiable(evaluators),
-        cachingKeys = List.unmodifiable(cachingKeys ?? []),
-        executionName = executionName ?? 'Default',
-        tags = tags != null ? List.unmodifiable(tags) : null;
+  }) : evaluators = List.unmodifiable(evaluators),
+       cachingKeys = List.unmodifiable(cachingKeys ?? []),
+       executionName = executionName ?? 'Default',
+       tags = tags != null ? List.unmodifiable(tags) : null;
 
   /// The evaluators invoked for each scenario run.
   final List<Evaluator> evaluators;
@@ -63,7 +63,7 @@ class ReportingConfiguration {
 
   /// Optional function that overrides [EvaluationMetricInterpretation]s.
   final EvaluationMetricInterpretation? Function(EvaluationMetric)?
-      evaluationMetricInterpreter;
+  evaluationMetricInterpreter;
 
   /// Labels applied to every [ScenarioRun] created from this configuration.
   final List<String>? tags;

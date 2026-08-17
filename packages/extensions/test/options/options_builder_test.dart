@@ -11,8 +11,9 @@ void main() {
       var services = ServiceCollection();
       var dic = <String, String>{'Message': '!'};
 
-      var config =
-          ConfigurationBuilder().addInMemoryCollection(dic.entries).build();
+      var config = ConfigurationBuilder()
+          .addInMemoryCollection(dic.entries)
+          .build();
 
       var builder = services.addOptions<FakeOptions>(FakeOptions.new);
 
@@ -24,7 +25,8 @@ void main() {
           .postConfigure((options) => options.message = '${options.message}]')
           .configure((options) => options.message = '${options.message}[')
           .configure(
-              (options) => options.message = '${options.message}Default');
+            (options) => options.message = '${options.message}Default',
+          );
 
       var sp = services.buildServiceProvider();
       var factory = sp.getRequiredService<OptionsFactory<FakeOptions>>();
@@ -36,18 +38,13 @@ void main() {
     var services = ServiceCollection();
     var dic = <String, String>{'Message': '!'};
 
-    var config =
-        ConfigurationBuilder().addInMemoryCollection(dic.entries).build();
+    var config = ConfigurationBuilder()
+        .addInMemoryCollection(dic.entries)
+        .build();
 
-    var builder1 = services.addOptions<FakeOptions>(
-      FakeOptions.new,
-      name: '1',
-    );
+    var builder1 = services.addOptions<FakeOptions>(FakeOptions.new, name: '1');
 
-    var builder2 = services.addOptions<FakeOptions>(
-      FakeOptions.new,
-      name: '2',
-    );
+    var builder2 = services.addOptions<FakeOptions>(FakeOptions.new, name: '2');
 
     builder1
         .configure((options) => options.message = config['Message']!)

@@ -15,10 +15,15 @@ void main() {
         ServiceProviderOptions(),
       );
 
-      var serviceProviderEngineScope =
-          ServiceProviderEngineScope(provider, isRootScope: true);
+      var serviceProviderEngineScope = ServiceProviderEngineScope(
+        provider,
+        isRootScope: true,
+      );
       serviceProviderEngineScope.resolvedServices[ServiceCacheKey(
-          ServiceIdentifier.fromServiceType(FakeService), 0)] = null;
+            ServiceIdentifier.fromServiceType(FakeService),
+            0,
+          )] =
+          null;
 
       serviceProviderEngineScope
         ..dispose()
@@ -31,8 +36,10 @@ void main() {
       var s = sp.getRequiredService<ServiceProvider>();
       (s as Disposable).dispose();
 
-      expect(() => sp.getRequiredService<ServiceProvider>(),
-          throwsA(const TypeMatcher<ObjectDisposedException>()));
+      expect(
+        () => sp.getRequiredService<ServiceProvider>(),
+        throwsA(const TypeMatcher<ObjectDisposedException>()),
+      );
     });
   });
 }

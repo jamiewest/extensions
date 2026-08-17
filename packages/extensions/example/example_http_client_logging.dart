@@ -21,40 +21,41 @@ Future<void> main() async {
   // Create service collection
   // #region http_client_factory_setup
   final services = ServiceCollection()
-
     // Add logging services
     ..addLogging((builder) {
       builder
         ..setMinimumLevel(LogLevel.debug)
         ..addSimpleConsole();
     })
-
     // Add HTTP client factory
     ..addHttpClient()
-
     // Add HTTP client logging filter
     ..addHttpClientLogging();
   // #endregion
 
   // Configure a named HTTP client for GitHub API
   // #region named_client_redaction
-  services.addHttpClient('GitHub').configureHttpClient((client, sp) {
-    // Note: BaseClient doesn't have baseAddress, this is conceptual
-    print('Configuring GitHub client');
-  }).redactLoggedHeaderNames([
-    'Authorization',
-    'X-GitHub-Token'
-  ]).setHandlerLifetime(const Duration(minutes: 5));
+  services
+      .addHttpClient('GitHub')
+      .configureHttpClient((client, sp) {
+        // Note: BaseClient doesn't have baseAddress, this is conceptual
+        print('Configuring GitHub client');
+      })
+      .redactLoggedHeaderNames(['Authorization', 'X-GitHub-Token'])
+      .setHandlerLifetime(const Duration(minutes: 5));
   // #endregion
 
   // Configure a named HTTP client for weather API
-  services.addHttpClient('WeatherApi').configureHttpClient((client, sp) {
-    print('Configuring WeatherApi client');
-  }).redactLoggedHeaders(
-    (name) =>
-        name.toLowerCase() == 'x-api-key' ||
-        name.toLowerCase() == 'authorization',
-  );
+  services
+      .addHttpClient('WeatherApi')
+      .configureHttpClient((client, sp) {
+        print('Configuring WeatherApi client');
+      })
+      .redactLoggedHeaders(
+        (name) =>
+            name.toLowerCase() == 'x-api-key' ||
+            name.toLowerCase() == 'authorization',
+      );
 
   // Build service provider
   final provider = services.buildServiceProvider();

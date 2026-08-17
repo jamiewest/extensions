@@ -29,9 +29,9 @@ class LinearFrameData {
     this.isNotApplicable = false,
     this.segmentIndex = 0,
     this.inStem = false,
-    List<String>? stemItems,
+    this._stemItems,
     this.addedStemItem = false,
-  }) : _stemItems = stemItems;
+  });
 
   /// The directory names accumulated for the stem. The list is shared
   /// between copied frames, matching the C# struct's list reference copy.
@@ -45,12 +45,12 @@ class LinearFrameData {
 
   /// Returns a shallow copy sharing the stem item list.
   LinearFrameData copy() => LinearFrameData(
-        isNotApplicable: isNotApplicable,
-        segmentIndex: segmentIndex,
-        inStem: inStem,
-        stemItems: _stemItems,
-        addedStemItem: addedStemItem,
-      );
+    isNotApplicable: isNotApplicable,
+    segmentIndex: segmentIndex,
+    inStem: inStem,
+    stemItems: _stemItems,
+    addedStemItem: addedStemItem,
+  );
 }
 
 /// Matches a pattern without recursive wildcards segment by segment as a

@@ -20,10 +20,10 @@ class LoggerFilterRule {
     String? categoryName,
     LogLevel? logLevel,
     MessageLoggerFilter? filter,
-  )   : _providerName = providerName,
-        _categoryName = categoryName,
-        _logLevel = logLevel,
-        _filter = filter;
+  ) : _providerName = providerName,
+      _categoryName = categoryName,
+      _logLevel = logLevel,
+      _filter = filter;
 
   /// Gets the logger provider type or alias this rule applies to.
   String? get providerName => _providerName;
@@ -39,7 +39,8 @@ class LoggerFilterRule {
   MessageLoggerFilter? get filter => _filter;
 
   @override
-  String toString() => '''ProviderName: $providerName, 
+  String toString() =>
+      '''ProviderName: $providerName, 
       CategoryName: $categoryName,
       LogLevel: ${logLevel.toString()},
       ''';

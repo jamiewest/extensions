@@ -28,20 +28,20 @@ class AIFunctionFactory {
     required Future<Object?> Function(
       AIFunctionArguments arguments, {
       CancellationToken? cancellationToken,
-    }) callback,
+    })
+    callback,
     String? description,
     Map<String, dynamic>? parametersSchema,
     Map<String, dynamic>? returnSchema,
     bool? isStrict,
-  }) =>
-      _CallbackAIFunction(
-        name: name,
-        description: description,
-        parametersSchema: parametersSchema,
-        returnSchema: returnSchema,
-        isStrict: isStrict,
-        callback: callback,
-      );
+  }) => _CallbackAIFunction(
+    name: name,
+    description: description,
+    parametersSchema: parametersSchema,
+    returnSchema: returnSchema,
+    isStrict: isStrict,
+    callback: callback,
+  );
 }
 
 class _CallbackAIFunction extends AIFunction {
@@ -57,12 +57,12 @@ class _CallbackAIFunction extends AIFunction {
   final Future<Object?> Function(
     AIFunctionArguments arguments, {
     CancellationToken? cancellationToken,
-  }) callback;
+  })
+  callback;
 
   @override
   Future<Object?> invokeCore(
     AIFunctionArguments arguments, {
     CancellationToken? cancellationToken,
-  }) =>
-      callback(arguments, cancellationToken: cancellationToken);
+  }) => callback(arguments, cancellationToken: cancellationToken);
 }

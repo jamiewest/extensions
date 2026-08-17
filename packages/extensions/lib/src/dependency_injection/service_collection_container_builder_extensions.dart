@@ -9,8 +9,5 @@ extension ServiceCollectionContainerBuilderExtensions on ServiceCollection {
   /// Creates a [ServiceProvider] containing services from the
   /// provided [ServiceCollection].
   ServiceProvider buildServiceProvider([ServiceProviderOptions? options]) =>
-      DefaultServiceProvider(
-        this,
-        options ??= ServiceProviderOptions(),
-      );
+      DefaultServiceProvider(this, options ??= ServiceProviderOptions());
 }

@@ -7,7 +7,9 @@ void main() {
       expect(ConfigurationPath.combine(['parent', '']), 'parent:');
       expect(ConfigurationPath.combine(['parent', '', '']), 'parent::');
       expect(
-          ConfigurationPath.combine(['parent', '', '', 'key']), 'parent:::key');
+        ConfigurationPath.combine(['parent', '', '', 'key']),
+        'parent:::key',
+      );
     });
 
     test('GetLastSegmenGetSectionKeyTests', () {

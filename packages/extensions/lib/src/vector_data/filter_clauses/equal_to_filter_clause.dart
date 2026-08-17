@@ -11,8 +11,7 @@ import 'filter_clause.dart';
   name: 'EqualToFilterClause.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/FilterClauses/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/FilterClauses/',
 )
 // ignore: deprecated_member_use_from_same_package
 final class EqualToFilterClause extends FilterClause {

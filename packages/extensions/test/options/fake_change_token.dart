@@ -10,10 +10,7 @@ class FakeChangeToken implements ChangeToken, Disposable {
   bool hasChanged = false;
 
   @override
-  Disposable registerChangeCallback(
-    ChangeCallback callback,
-    Object? state,
-  ) {
+  Disposable registerChangeCallback(ChangeCallback callback, Object? state) {
     _callback = () => callback(state);
     return this;
   }

@@ -19,12 +19,11 @@ abstract class DelegatingEmbeddingGenerator implements EmbeddingGenerator {
     required Iterable<String> values,
     EmbeddingGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerGenerator.generateEmbeddings(
-        values: values,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerGenerator.generateEmbeddings(
+    values: values,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) => innerGenerator.getService<T>(key: key);

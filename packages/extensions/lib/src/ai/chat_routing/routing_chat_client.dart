@@ -107,6 +107,5 @@ class _CallbackRoutingChatClient extends RoutingChatClient {
   Future<ChatClient> selectClient(
     RoutingContext context,
     CancellationToken? cancellationToken,
-  ) =>
-      _clientSelector(context, cancellationToken);
+  ) => _clientSelector(context, cancellationToken);
 }

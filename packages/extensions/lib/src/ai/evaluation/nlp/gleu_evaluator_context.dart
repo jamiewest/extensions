@@ -14,13 +14,13 @@ import '../evaluation_context.dart';
 class GLEUEvaluatorContext extends EvaluationContext {
   /// Creates a [GLEUEvaluatorContext] with the given [references].
   GLEUEvaluatorContext({Iterable<String>? references})
-      : references = List.unmodifiable(references ?? const []),
-        super(
-          referencesContextName,
-          contents: [
-            for (final r in references ?? const <String>[]) TextContent(r),
-          ],
-        );
+    : references = List.unmodifiable(references ?? const []),
+      super(
+        referencesContextName,
+        contents: [
+          for (final r in references ?? const <String>[]) TextContent(r),
+        ],
+      );
 
   /// Unique context name used when recording contexts on metrics.
   static const String referencesContextName = 'references(GLEU)';

@@ -12,9 +12,16 @@ abstract class HttpClientLogger {
 
   /// Logs after receiving an HTTP response.
   void logRequestStop(
-      Object? context, BaseRequest response, Duration elapsed) {}
+    Object? context,
+    BaseRequest response,
+    Duration elapsed,
+  ) {}
 
   /// Logs the exception happened while sending an HTTP request.
-  void logRequestFailed(Object? context, BaseRequest? request,
-      Exception exception, Duration elapsed) {}
+  void logRequestFailed(
+    Object? context,
+    BaseRequest? request,
+    Exception exception,
+    Duration elapsed,
+  ) {}
 }

@@ -6,6 +6,7 @@ import '../additional_properties_dictionary.dart';
 import '../ai_content.dart';
 import '../text_content.dart';
 import '../usage_details.dart';
+import 'speech_to_text_response_update.dart';
 
 /// Options for speech-to-text requests.
 ///
@@ -37,13 +38,14 @@ class SpeechToTextOptions {
 
   /// Creates a deep copy of this [SpeechToTextOptions].
   SpeechToTextOptions clone() => SpeechToTextOptions(
-        modelId: modelId,
-        speechLanguage: speechLanguage,
-        speechSampleRate: speechSampleRate,
-        textLanguage: textLanguage,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-      );
+    modelId: modelId,
+    speechLanguage: speechLanguage,
+    speechSampleRate: speechSampleRate,
+    textLanguage: textLanguage,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+  );
 }
 
 /// Represents a speech-to-text response.
@@ -64,14 +66,14 @@ class SpeechToTextResponse {
 
   /// Creates a response from a text string.
   SpeechToTextResponse.fromText(String text)
-      : contents = [TextContent(text)],
-        startTime = null,
-        endTime = null,
-        responseId = null,
-        modelId = null,
-        rawRepresentation = null,
-        additionalProperties = null,
-        usage = null;
+    : contents = [TextContent(text)],
+      startTime = null,
+      endTime = null,
+      responseId = null,
+      modelId = null,
+      rawRepresentation = null,
+      additionalProperties = null,
+      usage = null;
 
   /// The content items.
   final List<AIContent> contents;
@@ -118,7 +120,11 @@ abstract class SpeechToTextClient implements Disposable {
 
   /// Transcribes the given audio [stream] as a stream of
   /// updates.
-  Stream<SpeechToTextResponse> getStreamingText({
+  ///
+  /// Combine the updates into a single response with
+  /// `toSpeechToTextResponse()` from
+  /// `speech_to_text_response_update_extensions.dart`.
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,

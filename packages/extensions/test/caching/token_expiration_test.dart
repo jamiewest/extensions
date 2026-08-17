@@ -206,7 +206,6 @@ void main() {
             'value',
             MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
-
           // Remove entry manually
           ..remove('key');
 
@@ -258,7 +257,6 @@ void main() {
     group('Disposal Cleanup', () {
       test('Cache disposal cancels token subscriptions', () async {
         final controller = StreamController<void>.broadcast()
-
           // After disposal, token emissions should not cause issues
           ..add(null);
         await Future<void>.delayed(const Duration(milliseconds: 50));
@@ -313,7 +311,6 @@ void main() {
       test('Immediate token emission expires entry', () async {
         final cache = MemoryCacheImpl(MemoryCacheOptions());
         final controller = StreamController<void>.broadcast()
-
           // Emit before adding to cache
           ..add(null);
 

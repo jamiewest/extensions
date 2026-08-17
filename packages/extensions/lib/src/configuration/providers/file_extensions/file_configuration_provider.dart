@@ -36,7 +36,8 @@ abstract class FileConfigurationProvider extends ConfigurationProvider
 
   /// Generates a string representing this provider name and relevant details.
   @override
-  String toString() => "$runtimeType for '${source.path}' "
+  String toString() =>
+      "$runtimeType for '${source.path}' "
       "(${source.optional ? 'Optional' : 'Required'})";
 
   /// Loads the contents of the file at [FileConfigurationSource.path].
@@ -74,9 +75,7 @@ abstract class FileConfigurationProvider extends ConfigurationProvider
             " The expected physical path was '${file.physicalPath}'.",
           );
         }
-        _handleException(
-          FileSystemException(error.toString(), source.path),
-        );
+        _handleException(FileSystemException(error.toString(), source.path));
       }
     } else {
       try {

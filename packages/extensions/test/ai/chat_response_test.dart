@@ -4,10 +4,12 @@ import 'package:test/test.dart';
 void main() {
   group('ChatResponse', () {
     test('text returns last message text', () {
-      final response = ChatResponse(messages: [
-        ChatMessage.fromText(ChatRole.user, 'Hi'),
-        ChatMessage.fromText(ChatRole.assistant, 'Hello'),
-      ]);
+      final response = ChatResponse(
+        messages: [
+          ChatMessage.fromText(ChatRole.user, 'Hi'),
+          ChatMessage.fromText(ChatRole.assistant, 'Hello'),
+        ],
+      );
 
       expect(response.text, 'Hello');
     });

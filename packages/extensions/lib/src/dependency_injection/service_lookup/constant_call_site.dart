@@ -6,12 +6,10 @@ class ConstantCallSite extends ServiceCallSite {
   final Type _serviceType;
   final Object? _defaultValue;
 
-  ConstantCallSite(
-    Type serviceType,
-    Object? defaultValue,
-  )   : _serviceType = serviceType,
-        _defaultValue = defaultValue,
-        super(ResultCache.none(serviceType));
+  ConstantCallSite(Type serviceType, Object? defaultValue)
+    : _serviceType = serviceType,
+      _defaultValue = defaultValue,
+      super(ResultCache.none(serviceType));
 
   Object? get defaultValue => _defaultValue;
 

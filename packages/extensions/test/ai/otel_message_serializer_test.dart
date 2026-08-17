@@ -33,10 +33,9 @@ void main() {
 
     test('maps finish reasons to convention values', () {
       String reasonFor(ChatFinishReason reason) {
-        final json = OtelMessageSerializer.serializeChatMessages(
-          [ChatMessage.fromText(ChatRole.assistant, 'x')],
-          finishReason: reason,
-        );
+        final json = OtelMessageSerializer.serializeChatMessages([
+          ChatMessage.fromText(ChatRole.assistant, 'x'),
+        ], finishReason: reason);
         final decoded = jsonDecode(json) as List<dynamic>;
         final message = decoded.single as Map<String, dynamic>;
         return message['finish_reason'] as String;
@@ -50,16 +49,20 @@ void main() {
 
     test('serializes function call and result parts', () {
       final messages = [
-        ChatMessage(role: ChatRole.assistant, contents: [
-          FunctionCallContent(
-            callId: 'call-1',
-            name: 'getWeather',
-            arguments: {'city': 'Seattle'},
-          ),
-        ]),
-        ChatMessage(role: ChatRole.tool, contents: [
-          FunctionResultContent(callId: 'call-1', result: 'rainy'),
-        ]),
+        ChatMessage(
+          role: ChatRole.assistant,
+          contents: [
+            FunctionCallContent(
+              callId: 'call-1',
+              name: 'getWeather',
+              arguments: {'city': 'Seattle'},
+            ),
+          ],
+        ),
+        ChatMessage(
+          role: ChatRole.tool,
+          contents: [FunctionResultContent(callId: 'call-1', result: 'rainy')],
+        ),
       ];
 
       final json = OtelMessageSerializer.serializeChatMessages(messages);
@@ -83,12 +86,15 @@ void main() {
 
     test('serializes uri content with derived modality', () {
       final messages = [
-        ChatMessage(role: ChatRole.user, contents: [
-          UriContent(
-            Uri.parse('https://example.com/cat.png'),
-            mediaType: 'image/png',
-          ),
-        ]),
+        ChatMessage(
+          role: ChatRole.user,
+          contents: [
+            UriContent(
+              Uri.parse('https://example.com/cat.png'),
+              mediaType: 'image/png',
+            ),
+          ],
+        ),
       ];
 
       final json = OtelMessageSerializer.serializeChatMessages(messages);
@@ -105,10 +111,10 @@ void main() {
 
     test('skips whitespace-only text parts', () {
       final messages = [
-        ChatMessage(role: ChatRole.assistant, contents: [
-          TextContent('   '),
-          TextContent('real'),
-        ]),
+        ChatMessage(
+          role: ChatRole.assistant,
+          contents: [TextContent('   '), TextContent('real')],
+        ),
       ];
 
       final json = OtelMessageSerializer.serializeChatMessages(messages);
@@ -138,10 +144,7 @@ void main() {
         OtelMessageSerializer.deriveModalityFromMediaType('text/plain'),
         isNull,
       );
-      expect(
-        OtelMessageSerializer.deriveModalityFromMediaType(null),
-        isNull,
-      );
+      expect(OtelMessageSerializer.deriveModalityFromMediaType(null), isNull);
     });
   });
 }

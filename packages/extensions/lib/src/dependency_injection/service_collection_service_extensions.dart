@@ -19,9 +19,7 @@ extension ServiceCollectionServiceExtensions on ServiceCollection {
   ServiceCollection addScoped<TService>(
     ImplementationFactory implementationFactory,
   ) {
-    var descriptor = ServiceDescriptor.scoped<TService>(
-      implementationFactory,
-    );
+    var descriptor = ServiceDescriptor.scoped<TService>(implementationFactory);
     add(descriptor);
     return this;
   }

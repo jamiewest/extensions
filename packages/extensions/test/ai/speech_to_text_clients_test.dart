@@ -24,13 +24,16 @@ class _RecordingSpeechToTextClient implements SpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
   }) async* {
     lastOptions = options;
-    yield SpeechToTextResponse.fromText('stream');
+    yield SpeechToTextResponseUpdate.fromText(
+      SpeechToTextResponseUpdateKind.textUpdated,
+      'stream',
+    );
   }
 
   @override

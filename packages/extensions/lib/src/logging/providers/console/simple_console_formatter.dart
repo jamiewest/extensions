@@ -40,8 +40,9 @@ class SimpleConsoleFormatter extends ConsoleFormatter {
     String? timestamp;
     final timestampFormat = _options.timestampFormat;
     if (timestampFormat != null) {
-      final dateTime =
-          _options.useUtcTimestamp ? DateTime.now().toUtc() : DateTime.now();
+      final dateTime = _options.useUtcTimestamp
+          ? DateTime.now().toUtc()
+          : DateTime.now();
       timestamp = _formatTimestamp(dateTime, timestampFormat);
     }
 
@@ -172,11 +173,7 @@ class SimpleConsoleFormatter extends ConsoleFormatter {
     }
   }
 
-  void _writeMessage(
-    StringBuffer textWriter,
-    String message,
-    bool singleLine,
-  ) {
+  void _writeMessage(StringBuffer textWriter, String message, bool singleLine) {
     if (singleLine) {
       textWriter
         ..write(' ')

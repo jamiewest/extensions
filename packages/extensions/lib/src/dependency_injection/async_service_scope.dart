@@ -11,7 +11,7 @@ class AsyncServiceScope implements ServiceScope, AsyncDisposable {
   /// Initializes a new instance of the [AsyncServiceScope] class. Wraps
   /// an instance of [ServiceScope].
   const AsyncServiceScope(ServiceScope serviceScope)
-      : _serviceScope = serviceScope;
+    : _serviceScope = serviceScope;
 
   @override
   ServiceProvider get serviceProvider => _serviceScope.serviceProvider;

@@ -26,14 +26,14 @@ import 'lifetime_tracking_http_message_handler.dart';
 class DefaultHttpClientFactory implements HttpClientFactory, Disposable {
   /// Creates a new [DefaultHttpClientFactory].
   ///
-  /// [cleanupInterval] controls how often rotated handlers are checked
+  /// [_cleanupInterval] controls how often rotated handlers are checked
   /// for disposal once requests have drained.
   DefaultHttpClientFactory(
     this._services,
     this._messageHandlerFactory,
     this._optionsMonitor, {
-    Duration cleanupInterval = const Duration(seconds: 10),
-  }) : _cleanupInterval = cleanupInterval;
+    this._cleanupInterval = const Duration(seconds: 10),
+  });
 
   final ServiceProvider _services;
   final HttpMessageHandlerFactory _messageHandlerFactory;

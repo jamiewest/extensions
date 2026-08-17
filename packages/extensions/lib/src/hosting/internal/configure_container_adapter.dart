@@ -24,9 +24,5 @@ class DefaultConfigureContainerAdapter<TContainerBuilder>
   void configureContainer(
     HostBuilderContext hostContext,
     Object containerBuilder,
-  ) =>
-      _action(
-        hostContext,
-        containerBuilder as TContainerBuilder,
-      );
+  ) => _action(hostContext, containerBuilder as TContainerBuilder);
 }

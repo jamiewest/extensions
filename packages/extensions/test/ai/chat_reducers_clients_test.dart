@@ -8,8 +8,8 @@ class _RecordingChatClient implements ChatClient {
   _RecordingChatClient({
     ChatResponse? response,
     Stream<ChatResponseUpdate>? stream,
-  })  : response = response ?? ChatResponse(),
-        stream = stream ?? const Stream<ChatResponseUpdate>.empty();
+  }) : response = response ?? ChatResponse(),
+       stream = stream ?? const Stream<ChatResponseUpdate>.empty();
 
   final ChatResponse response;
   final Stream<ChatResponseUpdate> stream;
@@ -83,8 +83,7 @@ class _SummaryChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -205,14 +204,16 @@ void main() {
         inner,
         streamingResponseHandler:
             (messages, options, innerClient, cancellationToken) async* {
-          expect(innerClient, same(inner));
-          yield ChatResponseUpdate.fromText(ChatRole.assistant, 'stream');
-        },
+              expect(innerClient, same(inner));
+              yield ChatResponseUpdate.fromText(ChatRole.assistant, 'stream');
+            },
       );
 
-      final updates = await client.getStreamingResponse(
-        messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
-      ).toList();
+      final updates = await client
+          .getStreamingResponse(
+            messages: [ChatMessage.fromText(ChatRole.user, 'hi')],
+          )
+          .toList();
 
       expect(updates, hasLength(1));
       expect(updates.single.text, 'stream');

@@ -1,5 +1,6 @@
 import '../../system/threading/cancellation_token.dart';
 import 'speech_to_text_client.dart';
+import 'speech_to_text_response_update.dart';
 
 /// A [SpeechToTextClient] that delegates all calls to an inner client.
 ///
@@ -19,24 +20,22 @@ abstract class DelegatingSpeechToTextClient implements SpeechToTextClient {
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getText(
-        stream: stream,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getText(
+    stream: stream,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getStreamingText(
-        stream: stream,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getStreamingText(
+    stream: stream,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) => innerClient.getService<T>(key: key);

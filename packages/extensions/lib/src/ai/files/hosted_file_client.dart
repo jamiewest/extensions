@@ -33,10 +33,7 @@ class HostedFileClientOptions {
 )
 class HostedFileClientMetadata {
   /// Creates a new [HostedFileClientMetadata].
-  const HostedFileClientMetadata({
-    this.providerName,
-    this.providerUri,
-  });
+  const HostedFileClientMetadata({this.providerName, this.providerUri});
 
   /// The name of the file storage provider.
   final String? providerName;

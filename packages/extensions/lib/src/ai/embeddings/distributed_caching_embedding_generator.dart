@@ -20,17 +20,15 @@ class DistributedCachingEmbeddingGenerator extends CachingEmbeddingGenerator {
   final Embedding Function(Uint8List data)? _deserialize;
 
   /// Creates a new [DistributedCachingEmbeddingGenerator] backed by
-  /// [storage].
+  /// [_storage].
   DistributedCachingEmbeddingGenerator(
     super.innerGenerator, {
-    required DistributedCache storage,
-    DistributedCacheEntryOptions? cacheOptions,
+    required this._storage,
+    this._cacheOptions,
     Uint8List Function(Embedding embedding)? serializeEmbedding,
     Embedding Function(Uint8List data)? deserializeEmbedding,
-  })  : _storage = storage,
-        _cacheOptions = cacheOptions,
-        _serialize = serializeEmbedding,
-        _deserialize = deserializeEmbedding;
+  }) : _serialize = serializeEmbedding,
+       _deserialize = deserializeEmbedding;
 
   @override
   Future<Embedding?> getCachedEmbedding(String key) async {
@@ -42,19 +40,18 @@ class DistributedCachingEmbeddingGenerator extends CachingEmbeddingGenerator {
   }
 
   @override
-  Future<void> setCachedEmbedding(String key, Embedding embedding) =>
-      _storage.set(
-        key,
-        (_serialize ?? _defaultSerialize)(embedding),
-        _cacheOptions,
-      );
+  Future<void> setCachedEmbedding(String key, Embedding embedding) => _storage
+      .set(key, (_serialize ?? _defaultSerialize)(embedding), _cacheOptions);
 
-  static Uint8List _defaultSerialize(Embedding embedding) =>
-      Uint8List.fromList(utf8.encode(jsonEncode(<String, Object?>{
+  static Uint8List _defaultSerialize(Embedding embedding) => Uint8List.fromList(
+    utf8.encode(
+      jsonEncode(<String, Object?>{
         'vector': embedding.vector,
         'modelId': embedding.modelId,
         'createdAt': embedding.createdAt?.toIso8601String(),
-      })));
+      }),
+    ),
+  );
 
   static Embedding _defaultDeserialize(Uint8List data) {
     final json = jsonDecode(utf8.decode(data)) as Map<String, dynamic>;

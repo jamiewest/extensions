@@ -44,7 +44,7 @@ class _RecordingEmbeddingGenerator implements EmbeddingGenerator {
     lastValues = values;
     lastOptions = options;
     return GeneratedEmbeddings([
-      Embedding(vector: [0.1, 0.2])
+      Embedding(vector: [0.1, 0.2]),
     ]);
   }
 
@@ -114,16 +114,14 @@ class _SingleResponseChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      response;
+  }) async => response;
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -135,13 +133,12 @@ class _SingleResponseChatClient implements ChatClient {
 void main() {
   group('ImageGeneratingChatClient', () {
     test('invokes image generator and appends result message', () async {
-      final imageCall =
-          ImageGenerationToolCallContent(callId: 'call-1', prompt: 'img-1');
+      final imageCall = ImageGenerationToolCallContent(
+        callId: 'call-1',
+        prompt: 'img-1',
+      );
       final innerResponse = ChatResponse.fromMessage(
-        ChatMessage(
-          role: ChatRole.assistant,
-          contents: [imageCall],
-        ),
+        ChatMessage(role: ChatRole.assistant, contents: [imageCall]),
       );
       final inner = _SingleResponseChatClient(innerResponse);
       final generator = _RecordingImageGenerator();

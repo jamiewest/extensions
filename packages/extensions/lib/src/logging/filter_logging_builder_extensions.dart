@@ -28,10 +28,7 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
     MessageLoggerFilter? filter,
   }) {
     if (category != null && level != null) {
-      _addRule(
-        category: category,
-        level: level,
-      );
+      _addRule(category: category, level: level);
     }
 
     if (level != null) {
@@ -46,24 +43,18 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
     }
 
     if (levelFilter != null) {
-      _addRule(
-        filter: (provider, category, level) => levelFilter(level!),
-      );
+      _addRule(filter: (provider, category, level) => levelFilter(level!));
     }
 
     if (categoryLevelFilter != null) {
       _addRule(
-        filter: (provider, category, level) => categoryLevelFilter(
-          category,
-          level!,
-        ),
+        filter: (provider, category, level) =>
+            categoryLevelFilter(category, level!),
       );
     }
 
     if (filter != null) {
-      _addRule(
-        filter: filter,
-      );
+      _addRule(filter: filter);
     }
     return this;
   }
@@ -74,14 +65,7 @@ extension LoggerFilterOptionsExtensions on LoggerFilterOptions {
     LogLevel? level,
     MessageLoggerFilter? filter,
   }) {
-    rules.add(
-      LoggerFilterRule(
-        type,
-        category,
-        level,
-        filter,
-      ),
-    );
+    rules.add(LoggerFilterRule(type, category, level, filter));
   }
 }
 
@@ -93,20 +77,17 @@ extension FilterLoggingBuilderExtensions on LoggingBuilder {
     MessageLoggerFilter? filter,
     CategoryLevelFilterAction? categoryLevelFilter,
     LevelFilterAction? levelFilter,
-  }) =>
-      _configureFilter(
-        (options) => options.addFilter(
-          category: category,
-          level: level,
-          levelFilter: levelFilter,
-          categoryLevelFilter: categoryLevelFilter,
-          filter: filter,
-        ),
-      );
+  }) => _configureFilter(
+    (options) => options.addFilter(
+      category: category,
+      level: level,
+      levelFilter: levelFilter,
+      categoryLevelFilter: categoryLevelFilter,
+      filter: filter,
+    ),
+  );
 
-  LoggingBuilder _configureFilter(
-    ConfigureOptionsAction1 configure,
-  ) {
+  LoggingBuilder _configureFilter(ConfigureOptionsAction1 configure) {
     services.configure<LoggerFilterOptions>(
       LoggerFilterOptions.new,
       (options) => configure(options),

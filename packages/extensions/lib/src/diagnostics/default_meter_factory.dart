@@ -10,9 +10,7 @@ class DefaultMeterFactory implements MeterFactory {
   @override
   Meter create(MeterOptions options) {
     if (_disposed) {
-      throw ObjectDisposedException(
-        objectName: 'DefaultMeterFactory',
-      );
+      throw ObjectDisposedException(objectName: 'DefaultMeterFactory');
     }
 
     // Validate scope - if options.scope is set and not this factory, throw
@@ -68,12 +66,7 @@ class DefaultMeterFactory implements MeterFactory {
 }
 
 class FactoryMeter extends Meter {
-  FactoryMeter({
-    required super.name,
-    super.version,
-    super.tags,
-    super.scope,
-  });
+  FactoryMeter({required super.name, super.version, super.tags, super.scope});
 
   void release() => super.dispose();
 

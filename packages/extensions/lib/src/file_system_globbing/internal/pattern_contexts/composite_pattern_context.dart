@@ -13,7 +13,7 @@ abstract class CompositePatternContext implements IPatternContext {
   PatternTestResult matchPatternContexts<TFileInfoBase>(
     TFileInfoBase fileInfo,
     PatternTestResult Function(IPatternContext context, TFileInfoBase file)
-        test,
+    test,
   );
 
   @override

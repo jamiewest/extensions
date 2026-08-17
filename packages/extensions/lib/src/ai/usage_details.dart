@@ -63,18 +63,30 @@ class UsageDetails {
     inputTokenCount = _addNullable(inputTokenCount, other.inputTokenCount);
     outputTokenCount = _addNullable(outputTokenCount, other.outputTokenCount);
     totalTokenCount = _addNullable(totalTokenCount, other.totalTokenCount);
-    cachedInputTokenCount =
-        _addNullable(cachedInputTokenCount, other.cachedInputTokenCount);
-    reasoningTokenCount =
-        _addNullable(reasoningTokenCount, other.reasoningTokenCount);
-    inputAudioTokenCount =
-        _addNullable(inputAudioTokenCount, other.inputAudioTokenCount);
-    inputTextTokenCount =
-        _addNullable(inputTextTokenCount, other.inputTextTokenCount);
-    outputAudioTokenCount =
-        _addNullable(outputAudioTokenCount, other.outputAudioTokenCount);
-    outputTextTokenCount =
-        _addNullable(outputTextTokenCount, other.outputTextTokenCount);
+    cachedInputTokenCount = _addNullable(
+      cachedInputTokenCount,
+      other.cachedInputTokenCount,
+    );
+    reasoningTokenCount = _addNullable(
+      reasoningTokenCount,
+      other.reasoningTokenCount,
+    );
+    inputAudioTokenCount = _addNullable(
+      inputAudioTokenCount,
+      other.inputAudioTokenCount,
+    );
+    inputTextTokenCount = _addNullable(
+      inputTextTokenCount,
+      other.inputTextTokenCount,
+    );
+    outputAudioTokenCount = _addNullable(
+      outputAudioTokenCount,
+      other.outputAudioTokenCount,
+    );
+    outputTextTokenCount = _addNullable(
+      outputTextTokenCount,
+      other.outputTextTokenCount,
+    );
 
     if (other.additionalCounts != null) {
       additionalCounts ??= {};

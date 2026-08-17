@@ -3,11 +3,7 @@
 /// This is an experimental feature.
 class TranscriptionOptions {
   /// Creates a new [TranscriptionOptions].
-  TranscriptionOptions({
-    this.speechLanguage,
-    this.modelId,
-    this.prompt,
-  });
+  TranscriptionOptions({this.speechLanguage, this.modelId, this.prompt});
 
   /// The language of the input speech.
   String? speechLanguage;

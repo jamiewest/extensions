@@ -129,10 +129,9 @@ void main() {
         final filterOptions = LoggerFilterOptions()
           ..minLevel = LogLevel.warning;
 
-        final factory = LoggerFactory(
-          [provider],
-          StaticFilterOptionsMonitor(filterOptions),
-        );
+        final factory = LoggerFactory([
+          provider,
+        ], StaticFilterOptionsMonitor(filterOptions));
 
         final logger = factory.createLogger('TestCategory');
 
@@ -155,10 +154,9 @@ void main() {
           ),
         );
 
-        final factory = LoggerFactory(
-          [provider],
-          StaticFilterOptionsMonitor(filterOptions),
-        );
+        final factory = LoggerFactory([
+          provider,
+        ], StaticFilterOptionsMonitor(filterOptions));
 
         final logger1 = factory.createLogger('MyApp.Services');
         final logger2 = factory.createLogger('OtherApp.Services');
@@ -171,10 +169,9 @@ void main() {
         final provider = TestLoggerProvider();
         final filterOptions = LoggerFilterOptions()..minLevel = LogLevel.none;
 
-        final factory = LoggerFactory(
-          [provider],
-          StaticFilterOptionsMonitor(filterOptions),
-        );
+        final factory = LoggerFactory([
+          provider,
+        ], StaticFilterOptionsMonitor(filterOptions));
 
         final logger = factory.createLogger('TestCategory');
 
@@ -185,10 +182,9 @@ void main() {
         final provider = TestLoggerProvider();
         final filterOptions = LoggerFilterOptions()..captureScopes = true;
 
-        final factory = LoggerFactory(
-          [provider],
-          StaticFilterOptionsMonitor(filterOptions),
-        );
+        final factory = LoggerFactory([
+          provider,
+        ], StaticFilterOptionsMonitor(filterOptions));
 
         // Just verify it doesn't throw - scope implementation details
         expect(() => factory.createLogger('TestCategory'), returnsNormally);
@@ -198,10 +194,9 @@ void main() {
         final provider = TestLoggerProvider();
         final filterOptions = LoggerFilterOptions()..captureScopes = false;
 
-        final factory = LoggerFactory(
-          [provider],
-          StaticFilterOptionsMonitor(filterOptions),
-        );
+        final factory = LoggerFactory([
+          provider,
+        ], StaticFilterOptionsMonitor(filterOptions));
 
         // Just verify it doesn't throw - scope implementation details
         expect(() => factory.createLogger('TestCategory'), returnsNormally);

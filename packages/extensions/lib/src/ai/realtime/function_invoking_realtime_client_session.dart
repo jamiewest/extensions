@@ -57,8 +57,7 @@ class FunctionInvokingRealtimeClientSession implements RealtimeClientSession {
   Future<void> send(
     RealtimeClientMessage message, {
     CancellationToken? cancellationToken,
-  }) =>
-      _innerSession.send(message, cancellationToken: cancellationToken);
+  }) => _innerSession.send(message, cancellationToken: cancellationToken);
 
   @override
   T? getService<T>({Object? key}) => _innerSession.getService<T>(key: key);
@@ -98,8 +97,9 @@ class FunctionInvokingRealtimeClientSession implements RealtimeClientSession {
       iterations++;
       final results = await _invokeFunctions(functionCalls, cancellationToken);
 
-      final hasErrors =
-          results.any((r) => r.status == FunctionInvocationStatus.exception);
+      final hasErrors = results.any(
+        (r) => r.status == FunctionInvocationStatus.exception,
+      );
       if (hasErrors) {
         consecutiveErrors++;
         if (consecutiveErrors >= _client.maximumConsecutiveErrorsPerRequest) {

@@ -18,7 +18,7 @@ class StaticFilterOptionsMonitor
   final LoggerFilterOptions _currentValue;
 
   StaticFilterOptionsMonitor(LoggerFilterOptions currentValue)
-      : _currentValue = currentValue;
+    : _currentValue = currentValue;
 
   @override
   Disposable? onChange(OnChangeListener<LoggerFilterOptions> listener) => null;
@@ -58,13 +58,14 @@ class LoggerFactory implements Disposable {
     }
 
     if (filterOption == null) {
-      _filterOptions =
-          StaticFilterOptionsMonitor(LoggerFilterOptions()).currentValue;
+      _filterOptions = StaticFilterOptionsMonitor(LoggerFilterOptions())
+          .currentValue;
     }
 
     if (filterOption != null) {
-      _changeTokenRegistration =
-          filterOption.onChange((a, [b]) => _refreshFilters(a));
+      _changeTokenRegistration = filterOption.onChange(
+        (a, [b]) => _refreshFilters(a),
+      );
       _refreshFilters(filterOption.currentValue);
     }
   }
@@ -170,12 +171,7 @@ class LoggerFactory implements Disposable {
       );
 
       if (!loggerInformation.externalScope) {
-        scopeLoggers?.add(
-          ScopeLogger(
-            loggerInformation.logger,
-            null,
-          ),
-        );
+        scopeLoggers?.add(ScopeLogger(loggerInformation.logger, null));
       }
     }
 
@@ -183,10 +179,7 @@ class LoggerFactory implements Disposable {
 
     // }
 
-    return (
-      messageLoggers,
-      scopeLoggers ?? <ScopeLogger>[],
-    );
+    return (messageLoggers, scopeLoggers ?? <ScopeLogger>[]);
   }
 
   /// Adds an [LoggerProvider] to the logging system.
@@ -202,10 +195,7 @@ class LoggerFactory implements Disposable {
       var loggerInformation = logger.loggers;
 
       // Add the new logger information to the list
-      final newLoggerInfo = LoggerInformation(
-        provider,
-        existingLogger.key,
-      );
+      final newLoggerInfo = LoggerInformation(provider, existingLogger.key);
       loggerInformation!.add(newLoggerInfo);
       logger.loggers = loggerInformation;
 
@@ -250,10 +240,7 @@ class LoggerFactory implements Disposable {
 }
 
 class _ProviderRegistration {
-  _ProviderRegistration(
-    this.provider,
-    this.shouldDispose,
-  );
+  _ProviderRegistration(this.provider, this.shouldDispose);
 
   final LoggerProvider provider;
   final bool shouldDispose;
@@ -267,8 +254,8 @@ class _DisposingLoggerFactory extends LoggerFactory {
     LoggerFactory loggerFactory,
     DefaultServiceProvider serviceProvider,
     Iterable<LoggerProvider> super.providerRegistrations,
-  )   : _loggerFactory = loggerFactory,
-        _serviceProvider = serviceProvider;
+  ) : _loggerFactory = loggerFactory,
+      _serviceProvider = serviceProvider;
 
   @override
   void dispose() => _serviceProvider.dispose();

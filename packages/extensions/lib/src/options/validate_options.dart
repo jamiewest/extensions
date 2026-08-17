@@ -16,40 +16,33 @@ typedef ValidationCallback3<TOptions, TDep1, TDep2, TDep3> = bool Function(
   TDep2 dependency2,
   TDep3 dependency3,
 );
-typedef ValidationCallback4<TOptions, TDep1, TDep2, TDep3, TDep4> = bool
-    Function(
-  TOptions options,
-  TDep1 dependency1,
-  TDep2 dependency2,
-  TDep3 dependency3,
-  TDep4 dependency4,
-);
-typedef ValidationCallback5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5> = bool
-    Function(
-  TOptions options,
-  TDep1 dependency1,
-  TDep2 dependency2,
-  TDep3 dependency3,
-  TDep4 dependency4,
-  TDep5 dependency5,
-);
+typedef ValidationCallback4<TOptions, TDep1, TDep2, TDep3, TDep4> =
+    bool Function(
+      TOptions options,
+      TDep1 dependency1,
+      TDep2 dependency2,
+      TDep3 dependency3,
+      TDep4 dependency4,
+    );
+typedef ValidationCallback5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5> =
+    bool Function(
+      TOptions options,
+      TDep1 dependency1,
+      TDep2 dependency2,
+      TDep3 dependency3,
+      TDep4 dependency4,
+      TDep5 dependency5,
+    );
 
 /// Interface used to validate options.
 abstract class ValidateOptions<TOptions> {
   /// Validates a specific named options instance (or all when name is null).
-  ValidateOptionsResult validate(
-    String name,
-    TOptions options,
-  );
+  ValidateOptionsResult validate(String name, TOptions options);
 }
 
 /// Implementation of [ValidateOptions<TOptions>]
 class ValidateOptions0<TOptions> implements ValidateOptions<TOptions> {
-  const ValidateOptions0(
-    this.name,
-    this.validation,
-    this.failureMessage,
-  );
+  const ValidateOptions0(this.name, this.validation, this.failureMessage);
 
   /// The options name, or `null` to validate all named instances.
   final String? name;
@@ -148,11 +141,7 @@ class ValidateOptions2<TOptions, TDep1, TDep2>
     // A null configured name validates all named options instances.
     if (this.name == null || name == this.name) {
       if (validation != null) {
-        if (validation!.call(
-          options,
-          dependency1,
-          dependency2,
-        )) {
+        if (validation!.call(options, dependency1, dependency2)) {
           return ValidateOptionsResult.success;
         }
       }
@@ -199,12 +188,7 @@ class ValidateOptions3<TOptions, TDep1, TDep2, TDep3>
     // A null configured name validates all named options instances.
     if (this.name == null || name == this.name) {
       if (validation != null) {
-        if (validation!.call(
-          options,
-          dependency1,
-          dependency2,
-          dependency3,
-        )) {
+        if (validation!.call(options, dependency1, dependency2, dependency3)) {
           return ValidateOptionsResult.success;
         }
       }
@@ -292,7 +276,7 @@ class ValidateOptions5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>
 
   /// The validation function.
   final ValidationCallback5<TOptions, TDep1, TDep2, TDep3, TDep4, TDep5>?
-      validation;
+  validation;
 
   /// The error to return when validation fails.
   final String failureMessage;

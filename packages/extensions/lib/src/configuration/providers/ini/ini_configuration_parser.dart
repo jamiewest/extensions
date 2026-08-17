@@ -43,9 +43,7 @@ class IniConfigurationParser {
       if (line.startsWith('[') && line.endsWith(']')) {
         currentSection = line.substring(1, line.length - 1).trim();
         if (currentSection.isEmpty) {
-          throw FormatException(
-            'Empty section name at line ${lineNumber + 1}',
-          );
+          throw FormatException('Empty section name at line ${lineNumber + 1}');
         }
         continue;
       }
@@ -70,9 +68,7 @@ class IniConfigurationParser {
       }
 
       if (key.isEmpty) {
-        throw FormatException(
-          'Empty key at line ${lineNumber + 1}',
-        );
+        throw FormatException('Empty key at line ${lineNumber + 1}');
       }
 
       // Build hierarchical key with section prefix

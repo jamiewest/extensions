@@ -21,13 +21,15 @@ void main() {
       'data': vectors
           .asMap()
           .entries
-          .map((e) =>
-              {'object': 'embedding', 'index': e.key, 'embedding': e.value})
+          .map(
+            (e) => {
+              'object': 'embedding',
+              'index': e.key,
+              'embedding': e.value,
+            },
+          )
           .toList(),
-      'usage': {
-        'prompt_tokens': promptTokens,
-        'total_tokens': totalTokens,
-      },
+      'usage': {'prompt_tokens': promptTokens, 'total_tokens': totalTokens},
     });
   }
 
@@ -122,10 +124,12 @@ void main() {
   group('generateEmbeddings', () {
     test('returns embeddings for input values', () async {
       final fakeHttp = VerbatimHttpClient(
-        embeddingJson(vectors: [
-          [0.1, 0.2, 0.3],
-          [0.4, 0.5, 0.6],
-        ]),
+        embeddingJson(
+          vectors: [
+            [0.1, 0.2, 0.3],
+            [0.4, 0.5, 0.6],
+          ],
+        ),
       );
       final gen = OpenAIEmbeddingGenerator(
         'text-embedding-3-small',

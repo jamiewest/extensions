@@ -79,12 +79,12 @@ class OpenTelemetryChatClient extends DelegatingChatClient {
   }
 
   Map<String, Object?> _buildArguments(ChatOptions? options) => {
-        if (system != null) OpenTelemetryConsts.systemKey: system,
-        OpenTelemetryConsts.requestModelKey:
-            options?.modelId ?? modelId ?? 'unknown',
-        if (options?.temperature != null)
-          OpenTelemetryConsts.requestTemperatureKey: options!.temperature,
-        if (options?.maxOutputTokens != null)
-          OpenTelemetryConsts.requestMaxTokensKey: options!.maxOutputTokens,
-      };
+    if (system != null) OpenTelemetryConsts.systemKey: system,
+    OpenTelemetryConsts.requestModelKey:
+        options?.modelId ?? modelId ?? 'unknown',
+    if (options?.temperature != null)
+      OpenTelemetryConsts.requestTemperatureKey: options!.temperature,
+    if (options?.maxOutputTokens != null)
+      OpenTelemetryConsts.requestMaxTokensKey: options!.maxOutputTokens,
+  };
 }

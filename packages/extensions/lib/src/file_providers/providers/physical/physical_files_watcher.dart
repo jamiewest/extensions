@@ -33,16 +33,15 @@ class PhysicalFilesWatcher implements Disposable {
   /// [root] - The root directory to watch.
   /// [useEventBasedWatcher] - If true, subscribes to filesystem events (when
   /// the platform supports them); otherwise polls on each token's interval.
-  /// [pollingInterval] - The interval at which polling tokens check for
+  /// [_pollingInterval] - The interval at which polling tokens check for
   /// changes.
   PhysicalFilesWatcher(
     this._fileSystem,
     String root,
     bool useEventBasedWatcher, {
-    Duration pollingInterval = const Duration(seconds: 4),
-  })  : _root = root,
-        _usePolling = !useEventBasedWatcher,
-        _pollingInterval = pollingInterval {
+    this._pollingInterval = const Duration(seconds: 4),
+  }) : _root = root,
+       _usePolling = !useEventBasedWatcher {
     if (useEventBasedWatcher) {
       _eventWatcher = createEventWatcher(root);
     }

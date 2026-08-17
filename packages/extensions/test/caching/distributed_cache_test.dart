@@ -103,8 +103,9 @@ void main() {
           'key',
           Uint8List.fromList([1, 2, 3]),
           DistributedCacheEntryOptions()
-            ..absoluteExpirationRelativeToNow =
-                const Duration(milliseconds: 100),
+            ..absoluteExpirationRelativeToNow = const Duration(
+              milliseconds: 100,
+            ),
         );
 
         var result = await cache.get('key');
@@ -124,8 +125,9 @@ void main() {
           'key',
           Uint8List.fromList([1, 2, 3]),
           DistributedCacheEntryOptions()
-            ..absoluteExpiration =
-                DateTime.now().add(const Duration(milliseconds: 100)),
+            ..absoluteExpiration = DateTime.now().add(
+              const Duration(milliseconds: 100),
+            ),
         );
 
         var result = await cache.get('key');
@@ -199,9 +201,7 @@ void main() {
     group('Binary Data', () {
       test('Stores and retrieves binary data correctly', () async {
         final cache = MemoryDistributedCache();
-        final data = Uint8List.fromList(
-          List<int>.generate(256, (i) => i),
-        );
+        final data = Uint8List.fromList(List<int>.generate(256, (i) => i));
 
         await cache.set('binary', data);
         final result = await cache.get('binary');
@@ -230,8 +230,9 @@ void main() {
     group('Options Validation', () {
       test('Options with zero expiration throws', () {
         expect(
-          () => DistributedCacheEntryOptions()
-            ..absoluteExpirationRelativeToNow = Duration.zero,
+          () =>
+              DistributedCacheEntryOptions()
+                ..absoluteExpirationRelativeToNow = Duration.zero,
           throwsArgumentError,
         );
       });
@@ -239,8 +240,9 @@ void main() {
       test('Options with negative expiration throws', () {
         final options = DistributedCacheEntryOptions();
         expect(
-          () => options.absoluteExpirationRelativeToNow =
-              const Duration(seconds: -1),
+          () => options.absoluteExpirationRelativeToNow = const Duration(
+            seconds: -1,
+          ),
           throwsArgumentError,
         );
       });

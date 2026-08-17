@@ -17,9 +17,7 @@ class XFileInfo implements FileInfo {
   ///
   /// The backing file enables synchronous access to length and modification
   /// time; without it those values are only available asynchronously.
-  XFileInfo.fromFile(File file)
-      : _file = XFile(file.path),
-        _backing = file;
+  XFileInfo.fromFile(File file) : _file = XFile(file.path), _backing = file;
 
   @override
   bool get exists {

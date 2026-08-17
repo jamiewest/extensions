@@ -61,15 +61,21 @@ extension EvaluationMetricExtensions on EvaluationMetric {
     if (usage != null) {
       if (usage.inputTokenCount != null) {
         addOrUpdateMetadata(
-            'evaluation.input_tokens', usage.inputTokenCount.toString());
+          'evaluation.input_tokens',
+          usage.inputTokenCount.toString(),
+        );
       }
       if (usage.outputTokenCount != null) {
         addOrUpdateMetadata(
-            'evaluation.output_tokens', usage.outputTokenCount.toString());
+          'evaluation.output_tokens',
+          usage.outputTokenCount.toString(),
+        );
       }
       if (usage.totalTokenCount != null) {
         addOrUpdateMetadata(
-            'evaluation.total_tokens', usage.totalTokenCount.toString());
+          'evaluation.total_tokens',
+          usage.totalTokenCount.toString(),
+        );
       }
     }
     if (duration != null) {
@@ -87,17 +93,18 @@ extension NumericMetricInterpretationExtensions on NumericMetric {
     final v = value;
     if (v == null || v < 0 || v > 1) {
       return EvaluationMetricInterpretation(
-          rating: EvaluationRating.inconclusive);
+        rating: EvaluationRating.inconclusive,
+      );
     }
     final rating = v > 0.8
         ? EvaluationRating.exceptional
         : v > 0.6
-            ? EvaluationRating.good
-            : v > 0.4
-                ? EvaluationRating.average
-                : v > 0.2
-                    ? EvaluationRating.poor
-                    : EvaluationRating.unacceptable;
+        ? EvaluationRating.good
+        : v > 0.4
+        ? EvaluationRating.average
+        : v > 0.2
+        ? EvaluationRating.poor
+        : EvaluationRating.unacceptable;
     const threshold = 0.5;
     if (v < threshold) {
       return EvaluationMetricInterpretation(
@@ -116,17 +123,18 @@ extension NumericMetricInterpretationExtensions on NumericMetric {
     final v = value;
     if (v == null) {
       return EvaluationMetricInterpretation(
-          rating: EvaluationRating.inconclusive);
+        rating: EvaluationRating.inconclusive,
+      );
     }
     final rating = v >= 5
         ? EvaluationRating.exceptional
         : v >= 4
-            ? EvaluationRating.good
-            : v >= 3
-                ? EvaluationRating.average
-                : v >= 2
-                    ? EvaluationRating.poor
-                    : EvaluationRating.unacceptable;
+        ? EvaluationRating.good
+        : v >= 3
+        ? EvaluationRating.average
+        : v >= 2
+        ? EvaluationRating.poor
+        : EvaluationRating.unacceptable;
     return EvaluationMetricInterpretation(rating: rating, failed: v < 3);
   }
 
@@ -137,15 +145,16 @@ extension NumericMetricInterpretationExtensions on NumericMetric {
     final v = value;
     if (v == null) {
       return EvaluationMetricInterpretation(
-          rating: EvaluationRating.inconclusive);
+        rating: EvaluationRating.inconclusive,
+      );
     }
     final rating = v == 0
         ? EvaluationRating.exceptional
         : v <= 2
-            ? EvaluationRating.poor
-            : v <= 4
-                ? EvaluationRating.unacceptable
-                : EvaluationRating.unacceptable;
+        ? EvaluationRating.poor
+        : v <= 4
+        ? EvaluationRating.unacceptable
+        : EvaluationRating.unacceptable;
     return EvaluationMetricInterpretation(rating: rating, failed: v > 0);
   }
 
@@ -153,20 +162,24 @@ extension NumericMetricInterpretationExtensions on NumericMetric {
   ///
   /// Returns `true` if a score was successfully parsed.
   bool tryParseEvaluationResponseWithTags(
-      ChatResponse response, Duration duration) {
+    ChatResponse response,
+    Duration duration,
+  ) {
     final text = response.text;
     if (text.isEmpty) return false;
 
-    final scoreMatch =
-        RegExp(r'<S2>\s*(\d+(?:\.\d+)?)\s*</S2>').firstMatch(text);
+    final scoreMatch = RegExp(r'<S2>\s*(\d+(?:\.\d+)?)\s*</S2>')
+        .firstMatch(text);
     if (scoreMatch == null) return false;
 
     final score = double.tryParse(scoreMatch.group(1) ?? '');
     if (score == null) return false;
     value = score;
 
-    final explanationMatch =
-        RegExp(r'<S1>(.*?)</S1>', dotAll: true).firstMatch(text);
+    final explanationMatch = RegExp(
+      r'<S1>(.*?)</S1>',
+      dotAll: true,
+    ).firstMatch(text);
     if (explanationMatch != null) {
       reason = explanationMatch.group(1)?.trim();
     }

@@ -8,7 +8,8 @@ import 'package:extensions/annotations.dart';
   name: 'PropertyModel.cs',
   namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
   repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
+  path:
+      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
       'ProviderServices/',
 )
 abstract class PropertyModel {

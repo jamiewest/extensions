@@ -7,6 +7,7 @@ import '../common/telemetry_helpers.dart';
 import '../open_telemetry_consts.dart';
 import 'delegating_speech_to_text_client.dart';
 import 'speech_to_text_client.dart';
+import 'speech_to_text_response_update.dart';
 
 /// A [DelegatingSpeechToTextClient] that records OpenTelemetry spans.
 ///
@@ -29,7 +30,7 @@ class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
     this.system,
     bool? enableSensitiveData,
   }) : enableSensitiveData =
-            enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
+           enableSensitiveData ?? TelemetryHelpers.enableSensitiveDataDefault;
 
   /// The model ID to record on spans (overrides per-request model).
   final String? modelId;
@@ -71,7 +72,7 @@ class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
   }
 
   @override
-  Stream<SpeechToTextResponse> getStreamingText({
+  Stream<SpeechToTextResponseUpdate> getStreamingText({
     required Stream<List<int>> stream,
     SpeechToTextOptions? options,
     CancellationToken? cancellationToken,
@@ -94,8 +95,8 @@ class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
   }
 
   Map<String, Object?> _buildArguments(SpeechToTextOptions? options) => {
-        if (system != null) OpenTelemetryConsts.systemKey: system,
-        OpenTelemetryConsts.requestModelKey:
-            options?.modelId ?? modelId ?? 'unknown',
-      };
+    if (system != null) OpenTelemetryConsts.systemKey: system,
+    OpenTelemetryConsts.requestModelKey:
+        options?.modelId ?? modelId ?? 'unknown',
+  };
 }

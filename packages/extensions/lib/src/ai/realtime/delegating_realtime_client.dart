@@ -22,11 +22,10 @@ abstract class DelegatingRealtimeClient implements RealtimeClient {
   Future<RealtimeClientSession> createSession({
     RealtimeSessionOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.createSession(
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.createSession(
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) => innerClient.getService<T>(key: key);

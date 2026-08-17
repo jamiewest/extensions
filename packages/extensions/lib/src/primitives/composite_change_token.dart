@@ -12,8 +12,8 @@ class CompositeChangeToken extends ChangeToken {
   bool? _activeChangeCallbacks;
 
   CompositeChangeToken(List<ChangeToken>? changeTokens)
-      : _changeTokens = _validateTokens(changeTokens),
-        _registeredCallbackProxy = false {
+    : _changeTokens = _validateTokens(changeTokens),
+      _registeredCallbackProxy = false {
     for (var i = 0; i < _changeTokens.length; i++) {
       if (_changeTokens[i].activeChangeCallbacks) {
         _activeChangeCallbacks = true;
@@ -64,12 +64,9 @@ class CompositeChangeToken extends ChangeToken {
     _onChangeDelegate = onChange;
     for (var i = 0; i < _changeTokens.length; i++) {
       if (_changeTokens[i].activeChangeCallbacks) {
-        _changeTokens[i].registerChangeCallback(
-          (state) {
-            _onChangeDelegate!(state);
-          },
-          this,
-        );
+        _changeTokens[i].registerChangeCallback((state) {
+          _onChangeDelegate!(state);
+        }, this);
       }
     }
     _registeredCallbackProxy = true;

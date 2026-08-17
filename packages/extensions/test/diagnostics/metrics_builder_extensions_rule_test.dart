@@ -58,10 +58,7 @@ void main() {
       expect(rule.meterName, equals('meter'));
       expect(rule.instrumentName, equals('instance'));
       expect(rule.listenerName, equals('listener'));
-      expect(
-        rule.scopes.hasFlag(MeterScope.local),
-        isTrue,
-      );
+      expect(rule.scopes.hasFlag(MeterScope.local), isTrue);
       expect(rule.enable, isTrue);
     });
 
@@ -70,9 +67,7 @@ void main() {
         var services = ServiceCollection()
           ..configure<MetricsOptions>(
             MetricsOptions.new,
-            (options) => options.enableMetrics(
-              meterName: meterName,
-            ),
+            (options) => options.enableMetrics(meterName: meterName),
           );
         _FakeBuilder(services).enableMetrics(meterName: meterName);
 
@@ -116,10 +111,7 @@ void main() {
       expect(rule.meterName, equals('meter'));
       expect(rule.instrumentName, equals('instrument'));
       expect(rule.listenerName, equals('listener'));
-      expect(
-        rule.scopes.hasFlag(MeterScope.global),
-        isTrue,
-      );
+      expect(rule.scopes.hasFlag(MeterScope.global), isTrue);
       expect(rule.enable, isTrue);
     });
 
@@ -167,10 +159,7 @@ void main() {
       expect(rule.meterName, equals('meter'));
       expect(rule.instrumentName, equals('instance'));
       expect(rule.listenerName, equals('listener'));
-      expect(
-        rule.scopes.hasFlag(MeterScope.local),
-        isTrue,
-      );
+      expect(rule.scopes.hasFlag(MeterScope.local), isTrue);
       expect(rule.enable, isFalse);
     });
 
@@ -179,9 +168,7 @@ void main() {
         var services = ServiceCollection()
           ..configure<MetricsOptions>(
             MetricsOptions.new,
-            (options) => options.disableMetrics(
-              meterName: meterName,
-            ),
+            (options) => options.disableMetrics(meterName: meterName),
           );
         _FakeBuilder(services).enableMetrics(meterName: meterName);
 
@@ -225,10 +212,7 @@ void main() {
       expect(rule.meterName, equals('meter'));
       expect(rule.instrumentName, equals('instrument'));
       expect(rule.listenerName, equals('listener'));
-      expect(
-        rule.scopes.hasFlag(MeterScope.global),
-        isTrue,
-      );
+      expect(rule.scopes.hasFlag(MeterScope.global), isTrue);
       expect(rule.enable, isFalse);
     });
   });

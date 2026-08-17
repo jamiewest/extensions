@@ -51,8 +51,9 @@ extension MatcherExtensions on Matcher {
 
     final result = execute(DirectoryInfoWrapper(dir));
 
-    return result.files
-        .map((match) => p.normalize(p.join(directoryPath, match.path)));
+    return result.files.map(
+      (match) => p.normalize(p.join(directoryPath, match.path)),
+    );
   }
 
   /// Matches a single file path without accessing the file system.

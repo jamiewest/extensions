@@ -4,7 +4,8 @@ import 'speech_to_text_client.dart';
 
 /// A factory that creates a [SpeechToTextClient] from a [ServiceProvider].
 typedef InnerSpeechToTextClientFactory = SpeechToTextClient Function(
-    ServiceProvider services);
+  ServiceProvider services,
+);
 
 /// Builds a pipeline of speech-to-text client middleware.
 ///
@@ -18,7 +19,7 @@ class SpeechToTextClientBuilder {
   late final InnerSpeechToTextClientFactory _innerFactory;
 
   SpeechToTextClientBuilder._(InnerSpeechToTextClientFactory innerFactory)
-      : _innerFactory = innerFactory;
+    : _innerFactory = innerFactory;
 
   /// Creates a new [SpeechToTextClientBuilder] wrapping [innerClient].
   SpeechToTextClientBuilder(SpeechToTextClient innerClient) {
@@ -27,27 +28,31 @@ class SpeechToTextClientBuilder {
 
   /// Creates a new [SpeechToTextClientBuilder] from a factory function.
   factory SpeechToTextClientBuilder.fromFactory(
-          InnerSpeechToTextClientFactory innerFactory) =>
-      SpeechToTextClientBuilder._(innerFactory);
+    InnerSpeechToTextClientFactory innerFactory,
+  ) => SpeechToTextClientBuilder._(innerFactory);
 
   final List<
-      SpeechToTextClient Function(
-        SpeechToTextClient inner,
-        ServiceProvider services,
-      )> _factories = [];
+    SpeechToTextClient Function(
+      SpeechToTextClient inner,
+      ServiceProvider services,
+    )
+  >
+  _factories = [];
 
   /// Adds a middleware factory to the pipeline.
   SpeechToTextClientBuilder use(
-          SpeechToTextClient Function(SpeechToTextClient) factory) =>
-      useWithServices((inner, _) => factory(inner));
+    SpeechToTextClient Function(SpeechToTextClient) factory,
+  ) => useWithServices((inner, _) => factory(inner));
 
   /// Adds a middleware factory that also receives the active
   /// [ServiceProvider].
   SpeechToTextClientBuilder useWithServices(
-      SpeechToTextClient Function(
-        SpeechToTextClient inner,
-        ServiceProvider services,
-      ) factory) {
+    SpeechToTextClient Function(
+      SpeechToTextClient inner,
+      ServiceProvider services,
+    )
+    factory,
+  ) {
     _factories.add(factory);
     return this;
   }

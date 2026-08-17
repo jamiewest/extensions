@@ -17,10 +17,10 @@ void main() {
     });
 
     test('works with generic record types', () {
-      const mapResult = VectorSearchResult<Map<String, Object?>>(
-        {'id': 'abc', 'name': 'Grand Hotel'},
-        score: 0.85,
-      );
+      const mapResult = VectorSearchResult<Map<String, Object?>>({
+        'id': 'abc',
+        'name': 'Grand Hotel',
+      }, score: 0.85);
 
       expect(mapResult.record['id'], equals('abc'));
       expect(mapResult.score, equals(0.85));
@@ -28,7 +28,9 @@ void main() {
 
     test('is sealed (final class)', () {
       expect(
-          VectorSearchResult<String>('r'), isA<VectorSearchResult<String>>());
+        VectorSearchResult<String>('r'),
+        isA<VectorSearchResult<String>>(),
+      );
     });
   });
 }

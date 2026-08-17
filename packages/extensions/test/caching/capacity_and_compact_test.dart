@@ -26,9 +26,7 @@ void main() {
         cache
           ..getCurrentStatistics()
           // Note: stats might be null if trackStatistics is not enabled
-
           // Add one more to exceed limit
-
           ..set(
             'key10',
             'value10',
@@ -36,7 +34,6 @@ void main() {
               ..size = 10
               ..priority = CacheItemPriority.normal,
           )
-
           // Some entries should have been removed
           // Exact behavior depends on compaction algorithm
           ..dispose();
@@ -44,10 +41,7 @@ void main() {
 
       test('Entries without size do not contribute to limit', () {
         final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
+          MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
         );
 
         // Add entries without size
@@ -59,11 +53,7 @@ void main() {
         expect(stats?.currentEstimatedSize, equals(0));
 
         // Add entry with size
-        cache.set(
-          'with-size',
-          'value',
-          MemoryCacheEntryOptions()..size = 50,
-        );
+        cache.set('with-size', 'value', MemoryCacheEntryOptions()..size = 50);
 
         final stats2 = cache.getCurrentStatistics();
         expect(stats2?.currentEstimatedSize, equals(50));
@@ -86,34 +76,35 @@ void main() {
       });
 
       test('NeverRemove priority prevents eviction during capacity', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            compactionPercentage: 0.5,
-            trackStatistics: true,
-          ),
-        )
-          ..set(
-            'critical',
-            'important data',
-            MemoryCacheEntryOptions()
-              ..size = 60
-              ..priority = CacheItemPriority.neverRemove,
-          )
-          ..set(
-            'normal1',
-            'data1',
-            MemoryCacheEntryOptions()
-              ..size = 30
-              ..priority = CacheItemPriority.normal,
-          )
-          ..set(
-            'normal2',
-            'data2',
-            MemoryCacheEntryOptions()
-              ..size = 30
-              ..priority = CacheItemPriority.normal,
-          );
+        final cache =
+            MemoryCacheImpl(
+                MemoryCacheOptions(
+                  sizeLimit: 100,
+                  compactionPercentage: 0.5,
+                  trackStatistics: true,
+                ),
+              )
+              ..set(
+                'critical',
+                'important data',
+                MemoryCacheEntryOptions()
+                  ..size = 60
+                  ..priority = CacheItemPriority.neverRemove,
+              )
+              ..set(
+                'normal1',
+                'data1',
+                MemoryCacheEntryOptions()
+                  ..size = 30
+                  ..priority = CacheItemPriority.normal,
+              )
+              ..set(
+                'normal2',
+                'data2',
+                MemoryCacheEntryOptions()
+                  ..size = 30
+                  ..priority = CacheItemPriority.normal,
+              );
         // Total: 120 > 100, should trigger compaction
 
         // Critical entry should never be removed
@@ -124,25 +115,14 @@ void main() {
 
       test('Replacing entry updates size tracking', () {
         final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
-        )..set(
-            'key',
-            'value1',
-            MemoryCacheEntryOptions()..size = 50,
-          );
+          MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
+        )..set('key', 'value1', MemoryCacheEntryOptions()..size = 50);
 
         var stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(50));
 
         // Replace with larger entry
-        cache.set(
-          'key',
-          'value2',
-          MemoryCacheEntryOptions()..size = 75,
-        );
+        cache.set('key', 'value2', MemoryCacheEntryOptions()..size = 75);
 
         stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(75));
@@ -151,14 +131,12 @@ void main() {
       });
 
       test('Removing entry updates size tracking', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
-        )
-          ..set('key1', 'value1', MemoryCacheEntryOptions()..size = 40)
-          ..set('key2', 'value2', MemoryCacheEntryOptions()..size = 35);
+        final cache =
+            MemoryCacheImpl(
+                MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
+              )
+              ..set('key1', 'value1', MemoryCacheEntryOptions()..size = 40)
+              ..set('key2', 'value2', MemoryCacheEntryOptions()..size = 35);
 
         var stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(75));
@@ -173,10 +151,7 @@ void main() {
 
       test('Clear resets size to zero', () {
         final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
+          MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
         );
 
         for (var i = 0; i < 5; i++) {
@@ -244,7 +219,6 @@ void main() {
             'value',
             MemoryCacheEntryOptions()..priority = CacheItemPriority.high,
           )
-
           // Compact 50% (remove 2 entries)
           ..compact(0.5);
 
@@ -258,10 +232,7 @@ void main() {
       });
 
       test('Compact removes entries based on priority and age', () async {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(trackStatistics: true),
-        )
-
+        final cache = MemoryCacheImpl(MemoryCacheOptions(trackStatistics: true))
           // Add entries with different priorities
           ..set(
             'low1',
@@ -278,7 +249,6 @@ void main() {
             'value',
             MemoryCacheEntryOptions()..priority = CacheItemPriority.high,
           )
-
           // Compact 33% (remove 1 entry)
           ..compact(0.33);
 
@@ -297,8 +267,9 @@ void main() {
             'expired',
             'value',
             MemoryCacheEntryOptions()
-              ..absoluteExpirationRelativeToNow =
-                  const Duration(milliseconds: 50)
+              ..absoluteExpirationRelativeToNow = const Duration(
+                milliseconds: 50,
+              )
               ..priority = CacheItemPriority.high,
           )
           ..set(
@@ -334,9 +305,7 @@ void main() {
       });
 
       test('Compact with 1.0 percentage removes all non-NeverRemove', () {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(trackStatistics: true),
-        )
+        final cache = MemoryCacheImpl(MemoryCacheOptions(trackStatistics: true))
           ..set('removable', 'value')
           ..set(
             'critical',
@@ -395,29 +364,24 @@ void main() {
 
     group('Mixed Scenarios', () {
       test('Size limit with expiration', () async {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
-        )..set(
-            'expires-soon',
-            'value',
-            MemoryCacheEntryOptions()
-              ..size = 50
-              ..absoluteExpirationRelativeToNow =
-                  const Duration(milliseconds: 50),
-          );
+        final cache =
+            MemoryCacheImpl(
+              MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
+            )..set(
+              'expires-soon',
+              'value',
+              MemoryCacheEntryOptions()
+                ..size = 50
+                ..absoluteExpirationRelativeToNow = const Duration(
+                  milliseconds: 50,
+                ),
+            );
 
         var stats = cache.getCurrentStatistics();
         expect(stats?.currentEstimatedSize, equals(50));
 
         // Adding second entry may trigger automatic compaction
-        cache.set(
-          'permanent',
-          'value',
-          MemoryCacheEntryOptions()..size = 60,
-        );
+        cache.set('permanent', 'value', MemoryCacheEntryOptions()..size = 60);
 
         await Future<void>.delayed(const Duration(milliseconds: 100));
 
@@ -433,18 +397,16 @@ void main() {
       });
 
       test('Size limit with sliding expiration', () async {
-        final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
-        )..set(
-            'sliding',
-            'value',
-            MemoryCacheEntryOptions()
-              ..size = 50
-              ..slidingExpiration = const Duration(milliseconds: 100),
-          );
+        final cache =
+            MemoryCacheImpl(
+              MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
+            )..set(
+              'sliding',
+              'value',
+              MemoryCacheEntryOptions()
+                ..size = 50
+                ..slidingExpiration = const Duration(milliseconds: 100),
+            );
 
         // Keep accessing to prevent expiration
         for (var i = 0; i < 5; i++) {

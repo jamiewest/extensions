@@ -33,15 +33,14 @@ extension MetricsBuilderExtensions on MetricsBuilder {
     String? instrumentName,
     String? listenerName,
     int? scopes,
-  }) =>
-      _configureRule(
-        (options) => options.enableMetrics(
-          meterName: meterName,
-          instrumentName: instrumentName,
-          listenerName: listenerName,
-          scopes: scopes ??= scopes ??= MeterScope.global | MeterScope.local,
-        ),
-      );
+  }) => _configureRule(
+    (options) => options.enableMetrics(
+      meterName: meterName,
+      instrumentName: instrumentName,
+      listenerName: listenerName,
+      scopes: scopes ??= scopes ??= MeterScope.global | MeterScope.local,
+    ),
+  );
 
   /// Disables a specified [Instrument] for the given [Meter] and
   /// [MetricsListener].
@@ -50,23 +49,19 @@ extension MetricsBuilderExtensions on MetricsBuilder {
     String? instrumentName,
     String? listenerName,
     int? scopes,
-  }) =>
-      _configureRule(
-        (options) => options.disableMetrics(
-          meterName: meterName,
-          instrumentName: instrumentName,
-          listenerName: listenerName,
-          scopes: scopes ??= scopes ??= MeterScope.global | MeterScope.local,
-        ),
-      );
+  }) => _configureRule(
+    (options) => options.disableMetrics(
+      meterName: meterName,
+      instrumentName: instrumentName,
+      listenerName: listenerName,
+      scopes: scopes ??= scopes ??= MeterScope.global | MeterScope.local,
+    ),
+  );
 
   MetricsBuilder _configureRule(
     void Function(MetricsOptions options) configureOptions,
   ) {
-    services.configure<MetricsOptions>(
-      MetricsOptions.new,
-      configureOptions,
-    );
+    services.configure<MetricsOptions>(MetricsOptions.new, configureOptions);
     return this;
   }
 }

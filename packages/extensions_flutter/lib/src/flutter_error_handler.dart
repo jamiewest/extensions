@@ -10,15 +10,17 @@ abstract class ErrorHandler {
 
 class FlutterErrorHandler implements ErrorHandler {
   FlutterErrorHandler(Logger logger)
-      : _logger = logger,
-        _previousPlatformOnError = PlatformDispatcher.instance.onError,
-        _previousFlutterOnError = FlutterError.onError {
+    : _logger = logger,
+      _previousPlatformOnError = PlatformDispatcher.instance.onError,
+      _previousFlutterOnError = FlutterError.onError {
     onError = (exception, stackTrace) {
       _logPlatformError(exception, stackTrace);
 
       try {
-        final handledByPrevious =
-            _previousPlatformOnError?.call(exception, stackTrace);
+        final handledByPrevious = _previousPlatformOnError?.call(
+          exception,
+          stackTrace,
+        );
         return handledByPrevious ?? false;
       } catch (callbackError, callbackStack) {
         _logger.logError(

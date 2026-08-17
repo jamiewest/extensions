@@ -16,17 +16,15 @@ class DistributedCachingChatClient extends CachingChatClient {
   final Uint8List Function(ChatResponse response) _serialize;
   final ChatResponse Function(Uint8List data) _deserialize;
 
-  /// Creates a new [DistributedCachingChatClient] backed by [storage].
+  /// Creates a new [DistributedCachingChatClient] backed by [_storage].
   DistributedCachingChatClient(
     super.innerClient, {
-    required DistributedCache storage,
+    required this._storage,
     required Uint8List Function(ChatResponse response) serializeResponse,
     required ChatResponse Function(Uint8List data) deserializeResponse,
-    DistributedCacheEntryOptions? cacheOptions,
-  })  : _storage = storage,
-        _serialize = serializeResponse,
-        _deserialize = deserializeResponse,
-        _cacheOptions = cacheOptions;
+    this._cacheOptions,
+  }) : _serialize = serializeResponse,
+       _deserialize = deserializeResponse;
 
   @override
   Future<ChatResponse?> getCachedResponse(String key) async {

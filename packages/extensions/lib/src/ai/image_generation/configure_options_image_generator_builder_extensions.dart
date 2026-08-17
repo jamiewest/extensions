@@ -11,9 +11,8 @@ extension ConfigureOptionsImageGeneratorBuilderExtensions
   /// Adds a callback that configures the [ImageGenerationOptions] passed to
   /// each request.
   ImageGeneratorBuilder useConfigureOptions(
-          ImageGenerationOptions Function(ImageGenerationOptions options)
-              configure) =>
-      use(
-        (inner) => ConfigureOptionsImageGenerator(inner, configure: configure),
-      );
+    ImageGenerationOptions Function(ImageGenerationOptions options) configure,
+  ) => use(
+    (inner) => ConfigureOptionsImageGenerator(inner, configure: configure),
+  );
 }

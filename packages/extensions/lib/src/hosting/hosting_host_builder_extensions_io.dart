@@ -25,25 +25,23 @@ extension HostingHostBuilderExtensions on HostBuilder {
   /// This will unblock extensions like RunAsync and WaitForShutdownAsync.
   HostBuilder useConsoleLifetime([
     void Function(ConsoleLifetimeOptions options)? configure,
-  ]) =>
-      configureServices(
-        (_, collection) => collection
-          ..addSingleton<HostLifetime>(
-            (sp) => ConsoleLifetime(
-              sp.getRequiredService<Options<ConsoleLifetimeOptions>>(),
-              sp.getRequiredService<HostEnvironment>(),
-              sp.getRequiredService<ApplicationLifetime>(),
-              sp.getRequiredService<Options<HostOptions>>(),
-              sp.getRequiredService<LoggerFactory>(),
-            ),
-          )
-          ..configure<ConsoleLifetimeOptions>(
-            ConsoleLifetimeOptions.new,
-            (options) {
-              options.suppressStatusMessages = false;
-            },
-          ),
-      );
+  ]) => configureServices(
+    (_, collection) => collection
+      ..addSingleton<HostLifetime>(
+        (sp) => ConsoleLifetime(
+          sp.getRequiredService<Options<ConsoleLifetimeOptions>>(),
+          sp.getRequiredService<HostEnvironment>(),
+          sp.getRequiredService<ApplicationLifetime>(),
+          sp.getRequiredService<Options<HostOptions>>(),
+          sp.getRequiredService<LoggerFactory>(),
+        ),
+      )
+      ..configure<ConsoleLifetimeOptions>(ConsoleLifetimeOptions.new, (
+        options,
+      ) {
+        options.suppressStatusMessages = false;
+      }),
+  );
 
   /// Enables console support, builds and starts the host, and waits for
   /// Ctrl+C or SIGTERM to shut down.
@@ -55,9 +53,9 @@ extension HostingHostBuilderExtensions on HostBuilder {
     List<String>? args,
   ) {
     hostConfigBuilder
-      ..addInMemoryCollection(
-        [MapEntry<String, String>(HostDefaults.contentRootKey, '')],
-      )
+      ..addInMemoryCollection([
+        MapEntry<String, String>(HostDefaults.contentRootKey, ''),
+      ])
       ..addEnvironmentVariables(prefix: 'DOTNET_');
 
     if (args != null && args.isNotEmpty) {

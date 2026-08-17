@@ -92,10 +92,11 @@ void main() {
       });
       final provider = PhysicalFileProvider('/app', fileSystem: fs);
 
-      final config = (ConfigurationBuilder()
-            ..setFileProvider(provider)
-            ..addJsonFile('appsettings.json'))
-          .build();
+      final config =
+          (ConfigurationBuilder()
+                ..setFileProvider(provider)
+                ..addJsonFile('appsettings.json'))
+              .build();
 
       expect(config['Greeting'], 'hello');
       expect(config['Nested:Value'], '42');

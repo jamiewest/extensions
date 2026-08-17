@@ -10,8 +10,8 @@ class ArgumentOutOfRangeException extends ArgumentException {
     super.innerException,
     super.stackTrace,
     super.paramName,
-    Object? actualValue,
-  }) : _actualValue = actualValue;
+    this._actualValue,
+  });
 
   Object? get actualValue => _actualValue;
 

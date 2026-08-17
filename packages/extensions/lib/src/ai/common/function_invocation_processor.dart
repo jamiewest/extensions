@@ -61,9 +61,7 @@ final class FunctionInvocationProcessor {
     bool terminateOnUnknownCalls = false,
     CancellationToken? cancellationToken,
   }) async {
-    Future<FunctionInvocationResult> processSingle(
-      FunctionCallContent call,
-    ) =>
+    Future<FunctionInvocationResult> processSingle(FunctionCallContent call) =>
         _processSingleCall(
           call,
           findTool: findTool,
@@ -111,11 +109,7 @@ final class FunctionInvocationProcessor {
     }
 
     try {
-      final result = await _instrumentedInvoke(
-        tool,
-        call,
-        cancellationToken,
-      );
+      final result = await _instrumentedInvoke(tool, call, cancellationToken);
       return FunctionInvocationResult(
         status: FunctionInvocationStatus.ranToCompletion,
         callContent: call,

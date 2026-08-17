@@ -18,15 +18,15 @@ import '../evaluation_context.dart';
 class IntentResolutionEvaluatorContext extends EvaluationContext {
   /// Creates an [IntentResolutionEvaluatorContext] with [toolDefinitions].
   IntentResolutionEvaluatorContext({List<AITool>? toolDefinitions})
-      : toolDefinitions = List.unmodifiable(toolDefinitions ?? const []),
-        super(
-          toolDefinitionsContextName,
-          contents: [
-            for (final t in toolDefinitions ?? const <AITool>[])
-              if (t is AIFunctionDeclaration)
-                TextContent('${t.name}: ${t.description ?? ""}'),
-          ],
-        );
+    : toolDefinitions = List.unmodifiable(toolDefinitions ?? const []),
+      super(
+        toolDefinitionsContextName,
+        contents: [
+          for (final t in toolDefinitions ?? const <AITool>[])
+            if (t is AIFunctionDeclaration)
+              TextContent('${t.name}: ${t.description ?? ""}'),
+        ],
+      );
 
   /// Unique context name used when recording contexts on metrics.
   static const String toolDefinitionsContextName =

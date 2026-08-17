@@ -87,8 +87,9 @@ void main() {
             'key',
             'replaced',
             MemoryCacheEntryOptions()
-              ..absoluteExpirationRelativeToNow =
-                  const Duration(milliseconds: 100),
+              ..absoluteExpirationRelativeToNow = const Duration(
+                milliseconds: 100,
+              ),
           );
 
         await Future<void>.delayed(const Duration(milliseconds: 150));
@@ -101,10 +102,7 @@ void main() {
 
       test('Replacement with size updates tracking', () {
         final cache = MemoryCacheImpl(
-          MemoryCacheOptions(
-            sizeLimit: 100,
-            trackStatistics: true,
-          ),
+          MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
         )..set('key', 'value1', MemoryCacheEntryOptions()..size = 30);
 
         var stats = cache.getCurrentStatistics();
@@ -128,7 +126,6 @@ void main() {
             'original',
             MemoryCacheEntryOptions()..expirationTokens.add(controller.stream),
           )
-
           // Replace without token
           ..set('key', 'replaced');
 
@@ -197,8 +194,10 @@ void main() {
           ..set<String?>('null-value', null);
 
         String? result;
-        final found =
-            cache.tryGetValue<String?>('null-value', (value) => result = value);
+        final found = cache.tryGetValue<String?>(
+          'null-value',
+          (value) => result = value,
+        );
 
         expect(found, isTrue);
         expect(result, isNull);
@@ -231,9 +230,11 @@ void main() {
 
         final futures = <Future<void>>[];
         for (var i = 0; i < 100; i++) {
-          futures.add(Future(() {
-            cache.set('key$i', 'value$i');
-          }));
+          futures.add(
+            Future(() {
+              cache.set('key$i', 'value$i');
+            }),
+          );
         }
 
         await Future.wait(futures);
@@ -254,16 +255,20 @@ void main() {
 
         // Concurrent reads
         for (var i = 0; i < 50; i++) {
-          futures.add(Future(() {
-            cache.get<String>('key');
-          }));
+          futures.add(
+            Future(() {
+              cache.get<String>('key');
+            }),
+          );
         }
 
         // Concurrent writes
         for (var i = 0; i < 50; i++) {
-          futures.add(Future(() {
-            cache.set('key', 'value$i');
-          }));
+          futures.add(
+            Future(() {
+              cache.set('key', 'value$i');
+            }),
+          );
         }
 
         await Future.wait(futures);
@@ -326,8 +331,9 @@ void main() {
             'key$i',
             'value$i',
             MemoryCacheEntryOptions()
-              ..absoluteExpirationRelativeToNow =
-                  const Duration(milliseconds: 100)
+              ..absoluteExpirationRelativeToNow = const Duration(
+                milliseconds: 100,
+              )
               ..postEvictionCallbacks.add(
                 PostEvictionCallbackRegistration(
                   evictionCallback: (key, value, reason, state) {

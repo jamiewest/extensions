@@ -22,13 +22,13 @@ void main() {
     test('CanConfigureAppConfigurationAndRetrieveFromDI', () {
       final builder = _createEmptyBuilder();
 
-      builder.configuration.addInMemoryCollection(<String, String>{
-        'key1': 'value1',
-      }.entries);
+      builder.configuration.addInMemoryCollection(
+        <String, String>{'key1': 'value1'}.entries,
+      );
 
-      builder.configuration.addInMemoryCollection(<String, String>{
-        'key2': 'value2',
-      }.entries);
+      builder.configuration.addInMemoryCollection(
+        <String, String>{'key2': 'value2'}.entries,
+      );
 
       final host = builder.build();
 
@@ -38,9 +38,9 @@ void main() {
       expect(config['key1'], equals('value1'));
       expect(config['key2'], equals('value2'));
 
-      builder.configuration.addInMemoryCollection(<String, String>{
-        'key2': 'value3',
-      }.entries);
+      builder.configuration.addInMemoryCollection(
+        <String, String>{'key2': 'value3'}.entries,
+      );
 
       expect(config['key1'], equals('value1'));
       expect(config['key2'], equals('value3'));
@@ -62,17 +62,21 @@ void main() {
       );
 
       expect(
-          builder.configuration[HostDefaults.applicationKey], equals('AppA'));
+        builder.configuration[HostDefaults.applicationKey],
+        equals('AppA'),
+      );
       expect(
-          builder.configuration[HostDefaults.environmentKey], equals('EnvA'));
+        builder.configuration[HostDefaults.environmentKey],
+        equals('EnvA'),
+      );
 
       expect(builder.environment.applicationName, equals('AppA'));
       expect(builder.environment.environmentName, equals('EnvA'));
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices =
-          host.services.getRequiredService<HostEnvironment>();
+      final hostEnvironmentFromServices = host.services
+          .getRequiredService<HostEnvironment>();
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
@@ -96,61 +100,71 @@ void main() {
       );
 
       expect(
-          builder.configuration[HostDefaults.applicationKey], equals('AppB'));
+        builder.configuration[HostDefaults.applicationKey],
+        equals('AppB'),
+      );
       expect(
-          builder.configuration[HostDefaults.environmentKey], equals('EnvB'));
+        builder.configuration[HostDefaults.environmentKey],
+        equals('EnvB'),
+      );
 
       expect(builder.environment.applicationName, equals('AppB'));
       expect(builder.environment.environmentName, equals('EnvB'));
 
       final host = builder.build();
 
-      final hostEnvironmentFromServices =
-          host.services.getRequiredService<HostEnvironment>();
+      final hostEnvironmentFromServices = host.services
+          .getRequiredService<HostEnvironment>();
 
       expect(hostEnvironmentFromServices.applicationName, equals('AppB'));
       expect(hostEnvironmentFromServices.environmentName, equals('EnvB'));
     });
 
-    test('ChangingConfigurationPostBuilderConsturctionDoesNotChangeEnvironment',
-        () {
-      final config = ConfigurationManager()
-        ..addInMemoryCollection(
+    test(
+      'ChangingConfigurationPostBuilderConsturctionDoesNotChangeEnvironment',
+      () {
+        final config = ConfigurationManager()
+          ..addInMemoryCollection(
+            <String, String>{
+              HostDefaults.applicationKey: 'AppA',
+              HostDefaults.environmentKey: 'EnvA',
+            }.entries,
+          );
+
+        final builder = HostApplicationBuilder(
+          settings: HostApplicationBuilderSettings()
+            ..disableDefaults = true
+            ..configuration = config,
+        );
+
+        config.addInMemoryCollection(
           <String, String>{
-            HostDefaults.applicationKey: 'AppA',
-            HostDefaults.environmentKey: 'EnvA',
+            HostDefaults.applicationKey: 'AppB',
+            HostDefaults.environmentKey: 'EnvB',
           }.entries,
         );
 
-      final builder = HostApplicationBuilder(
-        settings: HostApplicationBuilderSettings()
-          ..disableDefaults = true
-          ..configuration = config,
-      );
+        expect(
+          builder.configuration[HostDefaults.applicationKey],
+          equals('AppB'),
+        );
+        expect(
+          builder.configuration[HostDefaults.environmentKey],
+          equals('EnvB'),
+        );
 
-      config.addInMemoryCollection(
-        <String, String>{
-          HostDefaults.applicationKey: 'AppB',
-          HostDefaults.environmentKey: 'EnvB',
-        }.entries,
-      );
+        expect(builder.environment.applicationName, equals('AppA'));
+        expect(builder.environment.environmentName, equals('EnvA'));
 
-      expect(
-          builder.configuration[HostDefaults.applicationKey], equals('AppB'));
-      expect(
-          builder.configuration[HostDefaults.environmentKey], equals('EnvB'));
+        final host = builder.build();
 
-      expect(builder.environment.applicationName, equals('AppA'));
-      expect(builder.environment.environmentName, equals('EnvA'));
+        final hostEnvironmentFromServices = host.services
+            .getRequiredService<HostEnvironment>();
 
-      final host = builder.build();
-
-      final hostEnvironmentFromServices =
-          host.services.getRequiredService<HostEnvironment>();
-
-      expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
-      expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
-    });
+        expect(hostEnvironmentFromServices.applicationName, equals('AppA'));
+        expect(hostEnvironmentFromServices.environmentName, equals('EnvA'));
+      },
+    );
 
     test('HostConfigParametersReadCorrectly', () {
       final parameters = <String, String>{
@@ -168,8 +182,10 @@ void main() {
       );
 
       expect(builder.environment.applicationName, equals('MyProjectReference'));
-      expect(builder.environment.environmentName,
-          equals(Environments.development));
+      expect(
+        builder.environment.environmentName,
+        equals(Environments.development),
+      );
 
       final host = builder.build();
 
@@ -182,4 +198,5 @@ void main() {
 }
 
 HostApplicationBuilder _createEmptyBuilder() => HostApplicationBuilder(
-    settings: HostApplicationBuilderSettings()..disableDefaults = true);
+  settings: HostApplicationBuilderSettings()..disableDefaults = true,
+);

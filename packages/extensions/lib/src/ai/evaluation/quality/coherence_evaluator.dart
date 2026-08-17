@@ -41,7 +41,8 @@ class CoherenceEvaluator extends QualityEvaluatorBase {
   ) {
     final userRequest = messages.lastUserMessage?.text ?? '';
     final response = modelResponse.text;
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Coherence** refers to the logical and orderly presentation of ideas in a response, allowing the reader to easily follow and understand the writer's train of thought. A coherent answer directly addresses the question with clear connections between sentences and paragraphs, using appropriate transitions and a logical sequence of ideas.
 

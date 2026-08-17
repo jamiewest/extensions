@@ -9,8 +9,8 @@ class ObjectDisposedException extends InvalidOperationException {
     super.message = 'Cannot access a disposed object.',
     super.innerException,
     super.stackTrace,
-    String? objectName,
-  }) : _objectName = objectName;
+    this._objectName,
+  });
 
   /// Gets the text for the message for this exception.
   @override

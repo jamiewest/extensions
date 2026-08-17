@@ -51,12 +51,12 @@ libraries (port referenced upstream commit `2e537166`).
 | Closed set of magic strings | value-object class with `const` instances | `ChatRole`; realtime `RealtimeServerMessageType`, `RealtimeSessionKind` |
 | `[JsonConverter]` / `[JsonConstructor]` layers | dropped — pass through via `rawRepresentation` | ai realtime data model |
 | Generic type parameter used only for reflection | `Type?` field | `VectorStoreVectorProperty<TInput>` → `Type? embeddingType` |
-| Primary constructor (`class Foo(ILogger logger)`) | conventional Dart constructor today; Dart primary constructor only after the SDK bump — see below | ai / http types ported from primary-ctor C# |
+| Primary constructor (`class Foo(ILogger logger)`) | Dart primary constructor, or a conventional constructor — both are correct; see below | ai / http types ported from primary-ctor C# |
 
 ## Primary constructors
 
-Both languages have them, so the shapes line up almost 1:1 — but the Dart
-side is gated on an SDK bump that has not happened in this workspace.
+Both languages have them and the shapes line up almost 1:1. The workspace
+moved to `sdk: ^3.13.0` on 2026-08-13, so the Dart side is available.
 
 - C# has had primary constructors since C# 12 (records) / C# 12 for classes,
   and upstream `dotnet/extensions` uses them heavily in the AI libraries:
@@ -68,24 +68,54 @@ side is gated on an SDK bump that has not happened in this workspace.
   induces a field, a bare parameter does not. Named (`class Point.custom(…)`),
   `const` (`class const Point(…)`), `super.` parameters, and enum forms are
   all supported; a `;` replaces an empty body.
-- **This workspace cannot use them yet.** `packages/extensions` declares
-  `environment: sdk: ^3.6.0` and `extensions_flutter` `^3.10.1`; primary
-  constructor syntax requires language version 3.13, so using it would break
-  every consumer on the declared minimum. Port C# primary constructors to
-  conventional Dart constructors until someone deliberately raises both
-  constraints to `^3.13.0`.
-- **A C# primary constructor is not drift.** When auditing, compare the
-  header parameter list against the Dart constructor signature; a
-  conventional Dart constructor carrying the same parameters is a correct
-  port, and no audit should report it as a gap or propose a rewrite.
-- Migration note for whoever does the SDK bump: at language version 3.13,
-  `final`/`var` on a *normal function's* formal parameters becomes a
-  compile-time error. That idiom appears in this codebase, so the bump is a
-  real migration, not a one-line pubspec edit. Dart ships IDE refactorings
-  and six new lints (`use_declaring_parameters`,
+- Both packages declare `environment: sdk: ^3.13.0`, and
+  `extensions_flutter` additionally declares `flutter: ">=3.47.0"` — the
+  release that ships Dart 3.13. Consumers below that floor stay on
+  `extensions` 0.7.1 / `extensions_flutter` 0.5.2.
+- **A C# primary constructor is not drift, and neither is a conventional
+  Dart one.** When auditing, compare the header parameter list against the
+  Dart constructor signature; either Dart form carrying the same parameters
+  is a correct port, and no audit should report it as a gap or propose a
+  rewrite. There is no campaign to convert existing constructors.
+- A private field initialized from a named parameter is written
+  `Foo({required this._bar})`. From language version 3.13 the leading
+  underscore is stripped from the *public* parameter name, so callers still
+  write `Foo(bar: …)` — this is what lets a primary constructor initialize
+  private fields. For a **positional** parameter the underscored name shows
+  in dartdoc and IDE signature help, which is cosmetic but worth a thought on
+  public types.
+- The 3.13 migration hazard is `final`/`var` on a *normal function's* formal
+  parameters, which became a compile-time error. **This codebase never used
+  that idiom** — verified 2026-08-13, zero occurrences and zero analyzer
+  errors at language version 3.13. (An earlier revision of this file claimed
+  otherwise and warned the bump was "a real migration"; that was wrong.) The
+  bump cost was entirely formatting and lints, not code. Dart also ships six
+  new lints for the feature (`use_declaring_parameters`,
   `unnecessary_primary_constructor_body`, `empty_container_bodies`,
   `initialize_in_field_declaration`, `unnecessary_const_in_enum_constructor`,
-  `unnecessary_type_name_in_constructor`) to automate most of it.
+  `unnecessary_type_name_in_constructor`), none of them currently enabled.
+
+## Formatting
+
+The tall-style formatter is gated on language version 3.7, so it switched on
+with the 3.13 bump and the workspace was reformatted wholesale on 2026-08-13
+(456 files). There is no supported way back to short style —
+`formatter: page_width` sets width, not style. Keep any future reformat in
+its own commit so it does not contaminate a feature diff.
+
+`lines_longer_than_80_chars` is enabled in **both** packages'
+`analysis_options.yaml`. Write it as a bare list entry:
+
+```yaml
+linter:
+  rules:
+    - lines_longer_than_80_chars
+```
+
+`- lines_longer_than_80_chars: true` is a list entry holding a map, which the
+analyzer silently ignores — that typo disabled the rule in `extensions` for
+its whole history. The formatter cannot break comments, doc text, or string
+literals, so those are the only lines that still need hand-wrapping.
 
 ## Examples and doc references
 

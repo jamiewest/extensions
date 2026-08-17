@@ -5,7 +5,5 @@ import 'logger_filter_options.dart';
 class DefaultLoggerLevelConfigureOptions
     extends ConfigureOptionsBase<LoggerFilterOptions> {
   DefaultLoggerLevelConfigureOptions(LogLevel level)
-      : super(
-          (options) => options.minLevel = level,
-        );
+    : super((options) => options.minLevel = level);
 }

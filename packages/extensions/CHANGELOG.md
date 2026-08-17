@@ -1,3 +1,49 @@
+## Unreleased
+
+* **Breaking: `IConfiguration` is now `Configuration`.** The abstract type
+  drops its C# `I` prefix per the repo naming rules; `IConfiguration`
+  remains as a `@Deprecated` typedef for one release. The old
+  `typedef Configuration = IConfiguration` compat alias pointed the wrong
+  way and is gone. `IConfigurationSection` keeps its `I` as a documented
+  exception (the bare name belongs to the concrete
+  `ConfigurationSection`).
+* **Breaking: the `IMetricListenerConfigurationFactory` interface is
+  removed.** It had exactly one implementation; per the porting rules it
+  collapses into the concrete `MetricListenerConfigurationFactory`, which
+  keeps the same `getConfiguration` signature.
+* **Breaking: `SpeechToTextClient.getStreamingText` now returns
+  `Stream<SpeechToTextResponseUpdate>`** instead of
+  `Stream<SpeechToTextResponse>`, matching upstream. The update type
+  existed but was unreachable; all decorators and the OpenAI client now
+  stream updates, and `toSpeechToTextResponse()` combines them.
+* **New AI conveniences**, ported from upstream `Microsoft.Extensions.AI`:
+  `EmbeddingGeneratorExtensions` (`generateEmbedding`, `generateVector`,
+  `generateAndZip`), `ImageGeneratorExtensions` (`generateImages`,
+  `editImage`, `editImages`), `SpeechToTextClientExtensions`
+  (`getTextFromDataContent`, `getStreamingTextFromDataContent`),
+  `HostedFileClientExtensions` (`uploadDataContent`, `downloadFromContent`,
+  `downloadAsDataContent`, `getMetadata`), and update-combining extensions
+  for speech-to-text and text-to-speech streams.
+* **New types:** `TextToSpeechResponseUpdateKind` (with a `kind` field on
+  `TextToSpeechResponseUpdate`, defaulting to `audioUpdating`) and
+  `AnonymousDelegatingEmbeddingGenerator` with
+  `EmbeddingGeneratorBuilder.useGenerate`.
+* `InvalidOperationException` is now exported from `system.dart`; it was
+  thrown by public APIs but not importable without reaching into `src/`.
+* **Requires Dart 3.13.** The SDK constraint moves from `^3.6.0` to
+  `^3.13.0`. This raises the floor for consumers: anything on an older SDK
+  stays on 0.7.1. The bump makes Dart primary constructors available, which
+  map 1:1 onto the C# primary constructors used throughout upstream
+  `dotnet/extensions`.
+* No API or behavior changes. The source needed no migration — the codebase
+  never used `final`/`var` on normal function parameters, the one idiom that
+  became a compile-time error at language version 3.13.
+* Reformatted under the tall-style formatter, which is gated on language
+  version 3.7 and so switched on with the bump.
+* `lines_longer_than_80_chars` is now actually enforced. It had been written
+  as `- lines_longer_than_80_chars: true`, which the analyzer silently
+  ignores, so the repo's own 80-character rule had never applied.
+
 ## 0.7.1
 
 * **Documentation examples are now compiled code.** Public API dartdoc

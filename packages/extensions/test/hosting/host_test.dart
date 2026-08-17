@@ -53,14 +53,14 @@ void main() {
     });
 
     test('CreateDefaultBuilder_EnablesScopeValidation', () {
-      var host = (Host.createDefaultBuilder()
-            ..useEnvironment(Environments.development)
-            ..configureServices(
-              (context, services) => services.addScoped<ServiceA>(
-                (sp) => ServiceA(),
-              ),
-            ))
-          .build();
+      var host =
+          (Host.createDefaultBuilder()
+                ..useEnvironment(Environments.development)
+                ..configureServices(
+                  (context, services) =>
+                      services.addScoped<ServiceA>((sp) => ServiceA()),
+                ))
+              .build();
 
       expect(
         () => host.services.getRequiredService<ServiceA>(),

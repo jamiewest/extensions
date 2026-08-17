@@ -163,7 +163,8 @@ void main() {
         // Combining works step by step:
         // dotPrefixed | hidden = none (no such enum value)
         // none | system = system
-        final result = ExclusionFilters.dotPrefixed |
+        final result =
+            ExclusionFilters.dotPrefixed |
             ExclusionFilters.hidden |
             ExclusionFilters.system;
 

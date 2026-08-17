@@ -9,7 +9,9 @@ import 'match_counter.dart';
 class F1Algorithm {
   /// Computes the F1 score between [groundTruth] and [response] token lists.
   static double calculateF1Score(
-      List<String> groundTruth, List<String> response) {
+    List<String> groundTruth,
+    List<String> response,
+  ) {
     if (groundTruth.isEmpty) {
       throw ArgumentError('groundTruth cannot be empty.');
     }

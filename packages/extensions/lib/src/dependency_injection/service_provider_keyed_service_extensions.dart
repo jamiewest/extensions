@@ -7,8 +7,10 @@ extension ServiceProviderKeyedServiceExtensions on ServiceProvider {
   /// Get service of type [T] from the [ServiceProvider].
   T? getKeyedService<T>(Object? serviceKey) {
     if (this is KeyedServiceProvider) {
-      var service =
-          (this as KeyedServiceProvider).getKeyedServiceFromType(T, serviceKey);
+      var service = (this as KeyedServiceProvider).getKeyedServiceFromType(
+        T,
+        serviceKey,
+      );
       if (service != null) {
         return service as T;
       }
@@ -21,10 +23,7 @@ extension ServiceProviderKeyedServiceExtensions on ServiceProvider {
   }
 
   /// /// Get service of type [serviceType] from the [ServiceProvider].
-  Object getRequiredKeyedServiceFromType(
-    Type serviceType,
-    Object? serviceKey,
-  ) {
+  Object getRequiredKeyedServiceFromType(Type serviceType, Object? serviceKey) {
     if (this is KeyedServiceProvider) {
       return (this as KeyedServiceProvider).getRequiredKeyedServiceFromType(
         serviceType,
@@ -44,8 +43,10 @@ extension ServiceProviderKeyedServiceExtensions on ServiceProvider {
   /// Get an enumeration of services of type [T] from the [ServiceProvider].
   Iterable<T> getKeyedServices<T>(Object? serviceKey) {
     if (this is KeyedServiceProvider) {
-      final result = (this as KeyedServiceProvider)
-          .getKeyedServiceFromType(Iterable<T>, serviceKey);
+      final result = (this as KeyedServiceProvider).getKeyedServiceFromType(
+        Iterable<T>,
+        serviceKey,
+      );
       if (result is List<dynamic>) {
         return result.cast<T>();
       }
@@ -65,9 +66,8 @@ extension ServiceProviderKeyedServiceExtensions on ServiceProvider {
   Iterable<Object> getKeyedServicesFromType(
     Type serviceType,
     Object? serviceKey,
-  ) =>
-      throw UnsupportedError(
-        'getKeyedServicesFromType cannot construct Iterable<T> from a '
-        'runtime Type. Use getKeyedServices<T>(serviceKey) instead.',
-      );
+  ) => throw UnsupportedError(
+    'getKeyedServicesFromType cannot construct Iterable<T> from a '
+    'runtime Type. Use getKeyedServices<T>(serviceKey) instead.',
+  );
 }

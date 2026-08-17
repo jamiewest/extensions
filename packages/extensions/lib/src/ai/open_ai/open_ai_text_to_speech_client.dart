@@ -31,9 +31,9 @@ final class OpenAITextToSpeechClient implements TextToSpeechClient {
     String modelId,
     String apiKey, {
     OpenAIClientOptions? options,
-  })  : _modelId = modelId,
-        _apiKey = apiKey,
-        _options = options ?? OpenAIClientOptions() {
+  }) : _modelId = modelId,
+       _apiKey = apiKey,
+       _options = options ?? OpenAIClientOptions() {
     metadata = TextToSpeechClientMetadata(
       providerName: 'openai',
       providerUri: _options.endpoint,
@@ -80,9 +80,7 @@ final class OpenAITextToSpeechClient implements TextToSpeechClient {
         );
       }
 
-      final mediaType = _mediaTypeForFormat(
-        options?.audioFormat ?? 'mp3',
-      );
+      final mediaType = _mediaTypeForFormat(options?.audioFormat ?? 'mp3');
       return TextToSpeechResponse(
         audio: DataContent(
           Uint8List.fromList(response.bodyBytes),
@@ -107,13 +105,11 @@ final class OpenAITextToSpeechClient implements TextToSpeechClient {
     final owned = _options.httpClient == null;
 
     try {
-      final request = http.Request(
-        'POST',
-        Uri.parse('${_options.endpoint}/audio/speech'),
-      )
-        ..headers['Authorization'] = 'Bearer $_apiKey'
-        ..headers['Content-Type'] = 'application/json'
-        ..body = jsonEncode(body);
+      final request =
+          http.Request('POST', Uri.parse('${_options.endpoint}/audio/speech'))
+            ..headers['Authorization'] = 'Bearer $_apiKey'
+            ..headers['Content-Type'] = 'application/json'
+            ..body = jsonEncode(body);
 
       final response = await client.send(request);
       if (response.statusCode != 200) {
@@ -166,22 +162,22 @@ final class OpenAITextToSpeechClient implements TextToSpeechClient {
   }
 
   String _formatForMediaType(String audioFormat) => switch (audioFormat) {
-        'audio/mpeg' || 'mp3' => 'mp3',
-        'audio/opus' || 'opus' => 'opus',
-        'audio/aac' || 'aac' => 'aac',
-        'audio/flac' || 'flac' => 'flac',
-        'audio/wav' || 'wav' => 'wav',
-        'audio/pcm' || 'pcm' => 'pcm',
-        _ => 'mp3',
-      };
+    'audio/mpeg' || 'mp3' => 'mp3',
+    'audio/opus' || 'opus' => 'opus',
+    'audio/aac' || 'aac' => 'aac',
+    'audio/flac' || 'flac' => 'flac',
+    'audio/wav' || 'wav' => 'wav',
+    'audio/pcm' || 'pcm' => 'pcm',
+    _ => 'mp3',
+  };
 
   String _mediaTypeForFormat(String audioFormat) => switch (audioFormat) {
-        'mp3' || 'audio/mpeg' => 'audio/mpeg',
-        'opus' || 'audio/opus' => 'audio/opus',
-        'aac' || 'audio/aac' => 'audio/aac',
-        'flac' || 'audio/flac' => 'audio/flac',
-        'wav' || 'audio/wav' => 'audio/wav',
-        'pcm' || 'audio/pcm' => 'audio/pcm',
-        _ => 'audio/mpeg',
-      };
+    'mp3' || 'audio/mpeg' => 'audio/mpeg',
+    'opus' || 'audio/opus' => 'audio/opus',
+    'aac' || 'audio/aac' => 'audio/aac',
+    'flac' || 'audio/flac' => 'audio/flac',
+    'wav' || 'audio/wav' => 'audio/wav',
+    'pcm' || 'audio/pcm' => 'audio/pcm',
+    _ => 'audio/mpeg',
+  };
 }

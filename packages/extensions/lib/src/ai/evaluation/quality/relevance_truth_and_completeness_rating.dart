@@ -23,9 +23,9 @@ class RelevanceTruthAndCompletenessRating {
     required this.completeness,
     this.completenessReasoning,
     List<String>? completenessReasons,
-  })  : relevanceReasons = relevanceReasons ?? const [],
-        truthReasons = truthReasons ?? const [],
-        completenessReasons = completenessReasons ?? const [];
+  }) : relevanceReasons = relevanceReasons ?? const [],
+       truthReasons = truthReasons ?? const [],
+       completenessReasons = completenessReasons ?? const [];
 
   /// Relevance score (1–5).
   final int relevance;
@@ -86,17 +86,16 @@ class RelevanceTruthAndCompletenessRating {
 
   /// Deserializes from a JSON map.
   factory RelevanceTruthAndCompletenessRating.fromJson(
-          Map<String, dynamic> j) =>
-      RelevanceTruthAndCompletenessRating(
-        relevance: (j['relevance'] as num?)?.toInt() ?? 0,
-        relevanceReasoning: j['relevanceReasoning'] as String?,
-        relevanceReasons: (j['relevanceReasons'] as List?)?.cast<String>(),
-        truth: (j['truth'] as num?)?.toInt() ?? 0,
-        truthReasoning: j['truthReasoning'] as String?,
-        truthReasons: (j['truthReasons'] as List?)?.cast<String>(),
-        completeness: (j['completeness'] as num?)?.toInt() ?? 0,
-        completenessReasoning: j['completenessReasoning'] as String?,
-        completenessReasons:
-            (j['completenessReasons'] as List?)?.cast<String>(),
-      );
+    Map<String, dynamic> j,
+  ) => RelevanceTruthAndCompletenessRating(
+    relevance: (j['relevance'] as num?)?.toInt() ?? 0,
+    relevanceReasoning: j['relevanceReasoning'] as String?,
+    relevanceReasons: (j['relevanceReasons'] as List?)?.cast<String>(),
+    truth: (j['truth'] as num?)?.toInt() ?? 0,
+    truthReasoning: j['truthReasoning'] as String?,
+    truthReasons: (j['truthReasons'] as List?)?.cast<String>(),
+    completeness: (j['completeness'] as num?)?.toInt() ?? 0,
+    completenessReasoning: j['completenessReasoning'] as String?,
+    completenessReasons: (j['completenessReasons'] as List?)?.cast<String>(),
+  );
 }

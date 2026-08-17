@@ -22,6 +22,5 @@ class NullChangeToken implements ChangeToken {
   Disposable registerChangeCallback(
     void Function(Object? state) callback,
     Object? state,
-  ) =>
-      EmptyDisposable.instance();
+  ) => EmptyDisposable.instance();
 }

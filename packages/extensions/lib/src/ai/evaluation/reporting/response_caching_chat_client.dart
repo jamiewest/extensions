@@ -21,12 +21,10 @@ class ResponseCachingChatClient extends CachingChatClient {
   /// Creates a [ResponseCachingChatClient].
   ResponseCachingChatClient(
     super.innerClient, {
-    required ResponseCache cache,
-    required ChatDetails chatDetails,
+    required this._cache,
+    required this._chatDetails,
     List<String>? cachingKeys,
-  })  : _cache = cache,
-        _chatDetails = chatDetails,
-        _cachingKeys = cachingKeys ?? [];
+  }) : _cachingKeys = cachingKeys ?? [];
 
   final ResponseCache _cache;
   final ChatDetails _chatDetails;
@@ -47,13 +45,15 @@ class ResponseCachingChatClient extends CachingChatClient {
     final response = await _cache.get(key);
     stopwatch.stop();
     if (response != null) {
-      _chatDetails.addTurnDetails(ChatTurnDetails(
-        latency: stopwatch.elapsed,
-        model: response.modelId,
-        usage: response.usage,
-        cacheKey: key,
-        cacheHit: true,
-      ));
+      _chatDetails.addTurnDetails(
+        ChatTurnDetails(
+          latency: stopwatch.elapsed,
+          model: response.modelId,
+          usage: response.usage,
+          cacheKey: key,
+          cacheHit: true,
+        ),
+      );
     }
     return response;
   }
@@ -77,12 +77,14 @@ class ResponseCachingChatClient extends CachingChatClient {
     stopwatch.stop();
     final cached = await getCachedResponse(getCacheKey(messages, options));
     if (cached == null) {
-      _chatDetails.addTurnDetails(ChatTurnDetails(
-        latency: stopwatch.elapsed,
-        model: response.modelId,
-        usage: response.usage,
-        cacheHit: false,
-      ));
+      _chatDetails.addTurnDetails(
+        ChatTurnDetails(
+          latency: stopwatch.elapsed,
+          model: response.modelId,
+          usage: response.usage,
+          cacheHit: false,
+        ),
+      );
     }
     return response;
   }

@@ -33,10 +33,7 @@ void basicMeterExample() {
   // #region create_meter
   final meterOptions = MeterOptions('MyApplication')
     ..version = '1.0.0'
-    ..tags = {
-      'environment': 'development',
-      'service': 'example-service',
-    };
+    ..tags = {'environment': 'development', 'service': 'example-service'};
 
   final meter = Meter.from(meterOptions);
   // #endregion

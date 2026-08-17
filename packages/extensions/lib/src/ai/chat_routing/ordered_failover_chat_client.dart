@@ -29,15 +29,12 @@ final class OrderedFailoverChatClient extends FailoverChatClient {
   /// Creates a new [OrderedFailoverChatClient] over [clients], in
   /// fallback order.
   ///
-  /// When [leaveOpen] is `true`, the inner clients are left open when this
+  /// When [_leaveOpen] is `true`, the inner clients are left open when this
   /// instance is disposed.
   ///
   /// Throws [ArgumentError] when [clients] is empty.
-  OrderedFailoverChatClient(
-    List<ChatClient> clients, {
-    bool leaveOpen = false,
-  })  : _leaveOpen = leaveOpen,
-        _clients = List.unmodifiable(clients) {
+  OrderedFailoverChatClient(List<ChatClient> clients, {this._leaveOpen = false})
+    : _clients = List.unmodifiable(clients) {
     if (_clients.isEmpty) {
       throw ArgumentError.value(
         clients,
@@ -61,8 +58,7 @@ final class OrderedFailoverChatClient extends FailoverChatClient {
   Future<ChatClient> selectClient(
     RoutingContext context,
     CancellationToken? cancellationToken,
-  ) async =>
-      _clients[_requestStates[context] ?? 0];
+  ) async => _clients[_requestStates[context] ?? 0];
 
   @override
   Future<void> onRoutingUpdate(

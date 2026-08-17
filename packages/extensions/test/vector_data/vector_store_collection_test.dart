@@ -19,30 +19,26 @@ class _FakeCollection
   @override
   Future<void> ensureCollectionExistsAsync({
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value();
+  }) => Future.value();
 
   @override
   Future<void> ensureCollectionDeletedAsync({
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value();
+  }) => Future.value();
 
   @override
   Future<Map<String, Object?>?> getAsync(
     String key, {
     RecordRetrievalOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value(null);
+  }) => Future.value(null);
 
   @override
   Stream<Map<String, Object?>> getBatchAsync(
     Iterable<String> keys, {
     RecordRetrievalOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      Stream.empty();
+  }) => Stream.empty();
 
   @override
   Stream<Map<String, Object?>> getFilteredAsync({
@@ -50,36 +46,31 @@ class _FakeCollection
     int? top,
     FilteredRecordRetrievalOptions<Map<String, Object?>>? options,
     CancellationToken? cancellationToken,
-  }) =>
-      Stream.empty();
+  }) => Stream.empty();
 
   @override
   Future<String> upsertAsync(
     Map<String, Object?> record, {
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value('key1');
+  }) => Future.value('key1');
 
   @override
   Stream<String> upsertBatchAsync(
     Iterable<Map<String, Object?>> records, {
     CancellationToken? cancellationToken,
-  }) =>
-      Stream.empty();
+  }) => Stream.empty();
 
   @override
   Future<void> deleteAsync(
     String key, {
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value();
+  }) => Future.value();
 
   @override
   Future<void> deleteBatchAsync(
     Iterable<String> keys, {
     CancellationToken? cancellationToken,
-  }) =>
-      Future.value();
+  }) => Future.value();
 
   @override
   Stream<VectorSearchResult<Map<String, Object?>>> searchAsync<TInput>(
@@ -87,8 +78,7 @@ class _FakeCollection
     int top = 3,
     VectorSearchOptions<Map<String, Object?>>? options,
     CancellationToken? cancellationToken,
-  }) =>
-      Stream.empty();
+  }) => Stream.empty();
 }
 
 void main() {

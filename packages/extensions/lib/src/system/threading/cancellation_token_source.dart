@@ -157,15 +157,19 @@ class CancellationTokenSource implements Disposable {
 
     if (exceptionsList != null) {
       assert(
-          exceptionsList.isNotEmpty, 'Expected ${exceptionsList.length} > 0');
+        exceptionsList.isNotEmpty,
+        'Expected ${exceptionsList.length} > 0',
+      );
       throw AggregateException(innerExceptions: exceptionsList);
     }
   }
 
   /// Registers a callback object. If cancellation has already occurred, the
   /// callback will have been run by the time this method returns.
-  CancellationTokenRegistration register(CancellationCallback callback,
-      [Object? state]) {
+  CancellationTokenRegistration register(
+    CancellationCallback callback, [
+    Object? state,
+  ]) {
     // If not canceled, register the handler; if canceled already, run the
     // callback synchronously.
     if (!isCancellationRequested) {
@@ -236,8 +240,8 @@ class CancellationTokenSource implements Disposable {
   /// Creates a [CancellationTokenSource] that will be in the canceled state
   /// when any of the source tokens are in the canceled state.
   static CancellationTokenSource createLinkedTokenSource(
-          List<CancellationToken> tokens) =>
-      LinkedNCancellationTokenSource(tokens);
+    List<CancellationToken> tokens,
+  ) => LinkedNCancellationTokenSource(tokens);
 }
 
 class CancellationCallbackInfo {
@@ -249,13 +253,11 @@ class CancellationCallbackInfo {
 
   CancellationCallbackInfo({
     required this.id,
-    required CancellationCallback callback,
+    required this._callback,
     required this.registrations,
-    Object? stateForCallback,
-    CancellationTokenSource? cancellationTokenSource,
-  })  : _callback = callback,
-        _stateForCallback = stateForCallback,
-        _cancellationTokenSource = cancellationTokenSource;
+    this._stateForCallback,
+    this._cancellationTokenSource,
+  });
 
   CancellationCallback get callback => _callback;
 
@@ -275,12 +277,14 @@ class LinkedNCancellationTokenSource extends CancellationTokenSource {
   final List<CancellationToken> _tokens;
 
   LinkedNCancellationTokenSource(List<CancellationToken> tokens)
-      : _tokens = tokens {
+    : _tokens = tokens {
     for (var i = 0; i < tokens.length; i++) {
       if (_tokens[i].canBeCanceled) {
-        _linkingRegistrations.add(_tokens[i].register((a) {
-          (a as CancellationTokenSource)._notifyCancellation(false);
-        }, this));
+        _linkingRegistrations.add(
+          _tokens[i].register((a) {
+            (a as CancellationTokenSource)._notifyCancellation(false);
+          }, this),
+        );
       }
     }
   }
@@ -387,7 +391,7 @@ class CallbackNode {
 
   int id = 0;
   void Function(Object? o)?
-      callback; // Action<object> or Action<object,CancellationToken>
+  callback; // Action<object> or Action<object,CancellationToken>
   Object? callbackState;
 
   CallbackNode(this.registrations);

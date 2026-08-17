@@ -24,7 +24,7 @@ class CancellationToken {
   /// Internal constructor only a [CancellationTokenSource] should create a
   /// [CancellationToken].
   const CancellationToken._([CancellationTokenSource? source])
-      : _source = source;
+    : _source = source;
 
   /// Creates a [CancellationToken] that can be canceled.
   factory CancellationToken([bool? canceled]) {
@@ -59,8 +59,10 @@ class CancellationToken {
 
   /// Registers a callback that will be called when the [CancellationToken] is
   /// canceled.
-  CancellationTokenRegistration register(CallbackRegistration? callback,
-      [Object? state]) {
+  CancellationTokenRegistration register(
+    CallbackRegistration? callback, [
+    Object? state,
+  ]) {
     var source = _source;
 
     if (callback == null) {

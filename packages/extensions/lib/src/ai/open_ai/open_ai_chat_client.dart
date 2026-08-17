@@ -52,9 +52,9 @@ final class OpenAIChatClient implements ChatClient {
     String modelId,
     String apiKey, {
     OpenAIClientOptions? options,
-  })  : _modelId = modelId,
-        _apiKey = apiKey,
-        _options = options ?? OpenAIClientOptions() {
+  }) : _modelId = modelId,
+       _apiKey = apiKey,
+       _options = options ?? OpenAIClientOptions() {
     metadata = ChatClientMetadata(
       providerName: 'openai',
       providerUri: _options.endpoint,
@@ -91,13 +91,14 @@ final class OpenAIChatClient implements ChatClient {
     final owned = _options.httpClient == null;
 
     try {
-      final request = http.Request(
-        'POST',
-        Uri.parse('${_options.endpoint}/chat/completions'),
-      )
-        ..headers['Authorization'] = 'Bearer $_apiKey'
-        ..headers['Content-Type'] = 'application/json'
-        ..body = jsonEncode(body);
+      final request =
+          http.Request(
+              'POST',
+              Uri.parse('${_options.endpoint}/chat/completions'),
+            )
+            ..headers['Authorization'] = 'Bearer $_apiKey'
+            ..headers['Content-Type'] = 'application/json'
+            ..body = jsonEncode(body);
 
       final response = await client.send(request);
       if (response.statusCode != 200) {
@@ -170,8 +171,9 @@ final class OpenAIChatClient implements ChatClient {
         body['stop'] = options.stopSequences;
       }
       if (options.responseFormat != null) {
-        body['response_format'] =
-            _toOpenAIResponseFormat(options.responseFormat!);
+        body['response_format'] = _toOpenAIResponseFormat(
+          options.responseFormat!,
+        );
       }
     }
 
@@ -215,28 +217,25 @@ final class OpenAIChatClient implements ChatClient {
       final toolCalls = message.contents.whereType<FunctionCallContent>();
       if (toolCalls.isNotEmpty) {
         final calls = toolCalls
-            .map((c) => {
-                  'id': c.callId,
-                  'type': 'function',
-                  'function': {
-                    'name': c.name,
-                    'arguments':
-                        c.arguments != null ? jsonEncode(c.arguments) : '{}',
-                  },
-                })
+            .map(
+              (c) => {
+                'id': c.callId,
+                'type': 'function',
+                'function': {
+                  'name': c.name,
+                  'arguments': c.arguments != null
+                      ? jsonEncode(c.arguments)
+                      : '{}',
+                },
+              },
+            )
             .toList();
-        result.add({
-          'role': message.role.value,
-          'tool_calls': calls,
-        });
+        result.add({'role': message.role.value, 'tool_calls': calls});
         continue;
       }
 
       final text = message.text;
-      result.add({
-        'role': message.role.value,
-        'content': text,
-      });
+      result.add({'role': message.role.value, 'content': text});
     }
 
     return result;
@@ -423,9 +422,9 @@ final class OpenAIChatClient implements ChatClient {
   }
 
   ChatRole _parseRole(String role) => switch (role) {
-        'system' => ChatRole.system,
-        'assistant' => ChatRole.assistant,
-        'tool' => ChatRole.tool,
-        _ => ChatRole.user,
-      };
+    'system' => ChatRole.system,
+    'assistant' => ChatRole.assistant,
+    'tool' => ChatRole.tool,
+    _ => ChatRole.user,
+  };
 }

@@ -17,17 +17,16 @@ class ConfigureOptionsImageGenerator extends DelegatingImageGenerator {
 
   /// The callback that configures options before each request.
   final ImageGenerationOptions Function(ImageGenerationOptions options)
-      configure;
+  configure;
 
   @override
   Future<ImageGenerationResponse> generate({
     required ImageGenerationRequest request,
     ImageGenerationOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      super.generate(
-        request: request,
-        options: configure(options ?? ImageGenerationOptions()),
-        cancellationToken: cancellationToken,
-      );
+  }) => super.generate(
+    request: request,
+    options: configure(options ?? ImageGenerationOptions()),
+    cancellationToken: cancellationToken,
+  );
 }

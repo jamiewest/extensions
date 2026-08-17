@@ -17,10 +17,9 @@ class InMemoryDirectoryInfo implements DirectoryInfoBase {
   InMemoryDirectoryInfo(
     String path, {
     List<FileSystemInfoBase>? files,
-    DirectoryInfoBase? parent,
-  })  : _path = path,
-        _children = files ?? [],
-        _parent = parent;
+    this._parent,
+  }) : _path = path,
+       _children = files ?? [];
 
   /// Builds an in-memory directory tree rooted at [rootDir] from a flat
   /// list of file paths.
@@ -47,8 +46,9 @@ class InMemoryDirectoryInfo implements DirectoryInfoBase {
       var relativePath = '';
       for (var i = 0; i < parts.length - 1; i++) {
         final parent = directory;
-        relativePath =
-            relativePath.isEmpty ? parts[i] : '$relativePath/${parts[i]}';
+        relativePath = relativePath.isEmpty
+            ? parts[i]
+            : '$relativePath/${parts[i]}';
         directory = directories.putIfAbsent(relativePath, () {
           final child = InMemoryDirectoryInfo(
             p.join(parent.fullName, parts[i]),
@@ -105,9 +105,7 @@ class InMemoryFileInfo implements FileInfoBase {
   final DirectoryInfoBase? _parent;
 
   /// Creates an in-memory file with the specified path.
-  InMemoryFileInfo(String path, {DirectoryInfoBase? parent})
-      : _path = path,
-        _parent = parent;
+  InMemoryFileInfo(String path, {this._parent}) : _path = path;
 
   @override
   String get fullName => _path;

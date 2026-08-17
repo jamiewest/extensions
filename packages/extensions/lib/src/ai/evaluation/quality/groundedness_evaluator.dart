@@ -41,13 +41,15 @@ class GroundednessEvaluator extends QualityEvaluatorBase {
     ChatResponse modelResponse,
     List<EvaluationContext> additionalContext,
   ) {
-    final ctx =
-        additionalContext.whereType<GroundednessEvaluatorContext>().firstOrNull;
+    final ctx = additionalContext
+        .whereType<GroundednessEvaluatorContext>()
+        .firstOrNull;
     if (ctx == null) return null;
 
     final userRequest = messages.lastUserMessage?.text ?? '';
     final response = modelResponse.text;
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Groundedness** refers to the degree to which the response is based on the provided CONTEXT, without introducing information that is not supported by the context.
 

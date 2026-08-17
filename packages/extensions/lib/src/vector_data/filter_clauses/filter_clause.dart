@@ -8,8 +8,7 @@ import 'package:extensions/annotations.dart';
   name: 'FilterClause.cs',
   namespace: 'Microsoft.Extensions.VectorData',
   repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/FilterClauses/',
+  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/FilterClauses/',
 )
 abstract class FilterClause {
   /// Creates a [FilterClause].

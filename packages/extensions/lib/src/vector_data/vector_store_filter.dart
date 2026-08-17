@@ -25,8 +25,7 @@ sealed class VectorStoreFilter {
   static AnyTagEqualToVectorStoreFilter anyTagEqualTo(
     String fieldName,
     String value,
-  ) =>
-      AnyTagEqualToVectorStoreFilter(fieldName, value);
+  ) => AnyTagEqualToVectorStoreFilter(fieldName, value);
 
   /// Creates a filter that matches records satisfying all [filters].
   static AndVectorStoreFilter and(List<VectorStoreFilter> filters) =>

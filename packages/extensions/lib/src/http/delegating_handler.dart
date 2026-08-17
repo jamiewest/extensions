@@ -1,11 +1,12 @@
 import 'package:http/http.dart' as http;
+
 import '../system/exceptions/invalid_operation_exception.dart';
 import 'http_message_handler.dart';
 
 /// Base class for composing HTTP handlers into a pipeline.
 abstract class DelegatingHandler implements HttpMessageHandler {
   DelegatingHandler([HttpMessageHandler? innerHandler])
-      : _innerHandler = innerHandler;
+    : _innerHandler = innerHandler;
 
   HttpMessageHandler? _innerHandler;
   bool _operationStarted = false;
@@ -35,9 +36,7 @@ abstract class DelegatingHandler implements HttpMessageHandler {
 
   void _checkDisposedOrStarted() {
     if (_operationStarted) {
-      throw InvalidOperationException(
-        message: 'SR.net_http_operation_started',
-      );
+      throw InvalidOperationException(message: 'SR.net_http_operation_started');
     }
   }
 

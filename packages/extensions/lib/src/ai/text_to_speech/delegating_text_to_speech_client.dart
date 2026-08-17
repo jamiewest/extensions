@@ -30,24 +30,22 @@ class DelegatingTextToSpeechClient implements TextToSpeechClient {
     String text, {
     TextToSpeechOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getAudio(
-        text,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getAudio(
+    text,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   Stream<TextToSpeechResponseUpdate> getStreamingAudio(
     String text, {
     TextToSpeechOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      innerClient.getStreamingAudio(
-        text,
-        options: options,
-        cancellationToken: cancellationToken,
-      );
+  }) => innerClient.getStreamingAudio(
+    text,
+    options: options,
+    cancellationToken: cancellationToken,
+  );
 
   @override
   T? getService<T>({Object? key}) {

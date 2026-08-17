@@ -58,10 +58,8 @@ class CallSiteChain {
           serviceId.serviceType == implementationType) {
         builder.write(serviceId.toString());
       } else {
-        builder.write(
-          '''${serviceId.toString()}
-            (${implementationType.toString()})''',
-        );
+        builder.write('''${serviceId.toString()}
+            (${implementationType.toString()})''');
       }
 
       builder.write(' -> ');
@@ -72,10 +70,7 @@ class CallSiteChain {
 }
 
 class ChainItemInfo {
-  const ChainItemInfo(
-    this.order,
-    this.implementationType,
-  );
+  const ChainItemInfo(this.order, this.implementationType);
 
   final int order;
   final Type? implementationType;

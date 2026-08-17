@@ -65,10 +65,7 @@ class FunctionInvocationResult {
 /// response or the maximum number of iterations is reached.
 class FunctionInvokingChatClient extends DelegatingChatClient {
   /// Creates a new [FunctionInvokingChatClient].
-  FunctionInvokingChatClient(
-    super.innerClient, {
-    this.logger,
-  });
+  FunctionInvokingChatClient(super.innerClient, {this.logger});
 
   /// An optional logger for diagnostic output.
   final Logger? logger;
@@ -138,12 +135,14 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
       );
 
       // Check for function calls in the response
-      final lastMessage =
-          response.messages.isNotEmpty ? response.messages.last : null;
+      final lastMessage = response.messages.isNotEmpty
+          ? response.messages.last
+          : null;
       if (lastMessage == null) return response;
 
-      final functionCalls =
-          lastMessage.contents.whereType<FunctionCallContent>().toList();
+      final functionCalls = lastMessage.contents
+          .whereType<FunctionCallContent>()
+          .toList();
 
       if (functionCalls.isEmpty) return response;
 
@@ -163,8 +162,9 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
       );
 
       // Check for errors
-      final hasErrors =
-          results.any((r) => r.status == FunctionInvocationStatus.exception);
+      final hasErrors = results.any(
+        (r) => r.status == FunctionInvocationStatus.exception,
+      );
       if (hasErrors) {
         consecutiveErrors++;
         if (consecutiveErrors > maximumConsecutiveErrorsPerRequest) {
@@ -179,19 +179,24 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
 
       // Add tool results as a tool message
       final resultContents = results
-          .map((r) => FunctionResultContent(
-                callId: r.callContent.callId,
-                name: r.callContent.name,
-                result: r.result,
-                exception:
-                    r.exception is Exception ? r.exception as Exception : null,
-              ))
+          .map(
+            (r) => FunctionResultContent(
+              callId: r.callContent.callId,
+              name: r.callContent.name,
+              result: r.result,
+              exception: r.exception is Exception
+                  ? r.exception as Exception
+                  : null,
+            ),
+          )
           .toList();
 
-      messageList.add(ChatMessage(
-        role: ChatRole.tool,
-        contents: resultContents.cast<AIContent>(),
-      ));
+      messageList.add(
+        ChatMessage(
+          role: ChatRole.tool,
+          contents: resultContents.cast<AIContent>(),
+        ),
+      );
     }
   }
 
@@ -229,8 +234,9 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
           cancellationToken: cancellationToken,
         )) {
           updates.add(update);
-          functionCalls
-              .addAll(update.contents.whereType<FunctionCallContent>());
+          functionCalls.addAll(
+            update.contents.whereType<FunctionCallContent>(),
+          );
 
           // Only yield non-function-call content
           if (update.contents.whereType<FunctionCallContent>().isEmpty) {
@@ -252,10 +258,9 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
             assistantContents.add(content);
           }
         }
-        messageList.add(ChatMessage(
-          role: ChatRole.assistant,
-          contents: assistantContents,
-        ));
+        messageList.add(
+          ChatMessage(role: ChatRole.assistant, contents: assistantContents),
+        );
 
         // Invoke functions
         final results = await _invokeFunctions(
@@ -264,8 +269,9 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
           cancellationToken,
         );
 
-        final hasErrors =
-            results.any((r) => r.status == FunctionInvocationStatus.exception);
+        final hasErrors = results.any(
+          (r) => r.status == FunctionInvocationStatus.exception,
+        );
         if (hasErrors) {
           consecutiveErrors++;
           if (consecutiveErrors > maximumConsecutiveErrorsPerRequest) {
@@ -278,19 +284,23 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
         if (results.any((r) => r.terminate)) return;
 
         final resultContents = results
-            .map((r) => FunctionResultContent(
-                  callId: r.callContent.callId,
-                  result: r.result,
-                  exception: r.exception is Exception
-                      ? r.exception as Exception
-                      : null,
-                ))
+            .map(
+              (r) => FunctionResultContent(
+                callId: r.callContent.callId,
+                result: r.result,
+                exception: r.exception is Exception
+                    ? r.exception as Exception
+                    : null,
+              ),
+            )
             .toList();
 
-        messageList.add(ChatMessage(
-          role: ChatRole.tool,
-          contents: resultContents.cast<AIContent>(),
-        ));
+        messageList.add(
+          ChatMessage(
+            role: ChatRole.tool,
+            contents: resultContents.cast<AIContent>(),
+          ),
+        );
       }
     }
 
@@ -298,10 +308,10 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
   }
 
   void _logMaximumIterationsReached() => logger?.logWarning(
-        'Reached the maximum of $maximumIterationsPerRequest function '
-        'invocation iterations. Function tools will not be supplied for the '
-        'final request.',
-      );
+    'Reached the maximum of $maximumIterationsPerRequest function '
+    'invocation iterations. Function tools will not be supplied for the '
+    'final request.',
+  );
 
   /// Removes function declarations from [options] for the final iteration.
   ///
@@ -365,20 +375,19 @@ class FunctionInvokingChatClient extends DelegatingChatClient {
     List<FunctionCallContent> calls,
     List<AITool> tools,
     CancellationToken? cancellationToken,
-  ) =>
-      _processor.processFunctionCalls(
-        calls,
-        findTool: (name) {
-          for (final tool in tools) {
-            if (tool.name == name) {
-              return tool;
-            }
-          }
-          return null;
-        },
-        allowConcurrentInvocation: allowConcurrentInvocation,
-        includeDetailedErrors: includeDetailedErrors,
-        terminateOnUnknownCalls: terminateOnUnknownCalls,
-        cancellationToken: cancellationToken,
-      );
+  ) => _processor.processFunctionCalls(
+    calls,
+    findTool: (name) {
+      for (final tool in tools) {
+        if (tool.name == name) {
+          return tool;
+        }
+      }
+      return null;
+    },
+    allowConcurrentInvocation: allowConcurrentInvocation,
+    includeDetailedErrors: includeDetailedErrors,
+    terminateOnUnknownCalls: terminateOnUnknownCalls,
+    cancellationToken: cancellationToken,
+  );
 }

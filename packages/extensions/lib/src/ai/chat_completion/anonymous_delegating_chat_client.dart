@@ -19,13 +19,13 @@ typedef ChatClientResponseHandler = Future<ChatResponse> Function(
 );
 
 /// A function that handles a streaming chat response request.
-typedef ChatClientStreamingResponseHandler = Stream<ChatResponseUpdate>
-    Function(
-  Iterable<ChatMessage> messages,
-  ChatOptions? options,
-  ChatClient innerClient,
-  CancellationToken? cancellationToken,
-);
+typedef ChatClientStreamingResponseHandler =
+    Stream<ChatResponseUpdate> Function(
+      Iterable<ChatMessage> messages,
+      ChatOptions? options,
+      ChatClient innerClient,
+      CancellationToken? cancellationToken,
+    );
 
 /// A [DelegatingChatClient] that uses anonymous delegates to implement
 /// its functionality.

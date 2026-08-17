@@ -4,10 +4,7 @@ class CallSiteRuntimeResolver
     extends CallSiteVisitor<RuntimeResolverContext, Object?> {
   static CallSiteRuntimeResolver get instance => CallSiteRuntimeResolver();
 
-  Object? resolve(
-    ServiceCallSite callSite,
-    ServiceProviderEngineScope scope,
-  ) {
+  Object? resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope) {
     if (scope.isRootScope && callSite.value is Object) {
       if (callSite.value != null) {
         return callSite.value;
@@ -27,10 +24,7 @@ class CallSiteRuntimeResolver
   Object? visitDisposeCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
-  ) =>
-      argument.scope!.captureDisposable(
-        visitCallSiteMain(callSite, argument),
-      );
+  ) => argument.scope!.captureDisposable(visitCallSiteMain(callSite, argument));
 
   @override
   Object? visitRootCache(
@@ -46,12 +40,13 @@ class CallSiteRuntimeResolver
     final serviceProviderEngine = argument.scope!.rootProvider._root;
 
     final resolved = visitCallSiteMain(
-        callSite,
-        RuntimeResolverContext(
-          scope: serviceProviderEngine,
-          acquiredLocks: argument.acquiredLocks,
-          callSiteChain: argument.callSiteChain,
-        ));
+      callSite,
+      RuntimeResolverContext(
+        scope: serviceProviderEngine,
+        acquiredLocks: argument.acquiredLocks,
+        callSiteChain: argument.callSiteChain,
+      ),
+    );
 
     serviceProviderEngine.captureDisposable(resolved);
     callSite.value = resolved;
@@ -62,14 +57,9 @@ class CallSiteRuntimeResolver
   Object? visitScopeCache(
     ServiceCallSite callSite,
     RuntimeResolverContext argument,
-  ) =>
-      argument.scope!.isRootScope
-          ? visitRootCache(callSite, argument)
-          : _visitCache(
-              callSite,
-              argument,
-              argument.scope!,
-            );
+  ) => argument.scope!.isRootScope
+      ? visitRootCache(callSite, argument)
+      : _visitCache(callSite, argument, argument.scope!);
 
   Object? _visitCache(
     ServiceCallSite callSite,
@@ -84,12 +74,13 @@ class CallSiteRuntimeResolver
     }
 
     resolved = visitCallSiteMain(
-        callSite,
-        RuntimeResolverContext(
-          scope: serviceProviderEngine,
-          acquiredLocks: argument.acquiredLocks,
-          callSiteChain: argument.callSiteChain,
-        ));
+      callSite,
+      RuntimeResolverContext(
+        scope: serviceProviderEngine,
+        acquiredLocks: argument.acquiredLocks,
+        callSiteChain: argument.callSiteChain,
+      ),
+    );
     serviceProviderEngine.captureDisposable(resolved);
     resolvedServices[callSite.cache.key] = resolved;
     return resolved;
@@ -99,15 +90,13 @@ class CallSiteRuntimeResolver
   Object visitConstant(
     ConstantCallSite constantCallSite,
     RuntimeResolverContext argument,
-  ) =>
-      constantCallSite.defaultValue!;
+  ) => constantCallSite.defaultValue!;
 
   @override
   Object visitServiceProvider(
     ServiceProviderCallSite serviceProviderCallSite,
     RuntimeResolverContext argument,
-  ) =>
-      argument.scope!;
+  ) => argument.scope!;
 
   @override
   Object visitIterable(

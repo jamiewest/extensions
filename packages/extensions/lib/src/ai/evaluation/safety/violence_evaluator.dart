@@ -18,8 +18,8 @@ class ViolenceEvaluator extends ContentSafetyEvaluator {
 
   /// Creates a [ViolenceEvaluator].
   ViolenceEvaluator({required super.configuration})
-      : super(
-          annotationTask: 'content harm',
-          metricNames: const {'violence': violenceMetricName},
-        );
+    : super(
+        annotationTask: 'content harm',
+        metricNames: const {'violence': violenceMetricName},
+      );
 }

@@ -14,15 +14,12 @@ class ConfigurationRoot implements Configuration, Disposable {
 
   /// Initializes a Configuration root with a list of providers.
   ConfigurationRoot(List<ConfigurationProvider> providers)
-      : _providers = providers {
+    : _providers = providers {
     _changeTokenRegistrations = <Disposable>[];
     for (var provider in providers) {
       provider.load();
       _changeTokenRegistrations?.add(
-        ChangeToken.onChange(
-          () => provider.getReloadToken(),
-          _raiseChanged,
-        ),
+        ChangeToken.onChange(() => provider.getReloadToken(), _raiseChanged),
       );
     }
   }

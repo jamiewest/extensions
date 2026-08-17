@@ -19,10 +19,14 @@ void main() {
 
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
-      expect(xmlConfig.get('settings:data:DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
-      expect(xmlConfig.get('settings:Data:DEFAULTCONNECTION:PROVIDER'),
-          equals('SqlClient'));
+      expect(
+        xmlConfig.get('settings:data:DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
+      expect(
+        xmlConfig.get('settings:Data:DEFAULTCONNECTION:PROVIDER'),
+        equals('SqlClient'),
+      );
     });
 
     test('LoadXmlWithAttributes', () {
@@ -50,10 +54,14 @@ void main() {
 
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
-      expect(xmlConfig.get('settings:Data:DefaultConnection:ConnectionString'),
-          equals('TestConnectionString'));
-      expect(xmlConfig.get('settings:Data:DefaultConnection:Provider'),
-          equals('SqlClient'));
+      expect(
+        xmlConfig.get('settings:Data:DefaultConnection:ConnectionString'),
+        equals('TestConnectionString'),
+      );
+      expect(
+        xmlConfig.get('settings:Data:DefaultConnection:Provider'),
+        equals('SqlClient'),
+      );
     });
 
     test('LoadXmlWithLowercaseNameAttribute', () {
@@ -67,8 +75,10 @@ void main() {
 
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
-      expect(xmlConfig.get('settings:data:defaultconnection:connectionstring'),
-          equals('TestConnectionString'));
+      expect(
+        xmlConfig.get('settings:data:defaultconnection:connectionstring'),
+        equals('TestConnectionString'),
+      );
     });
 
     test('LoadXmlWithRepeatedElements', () {
@@ -146,8 +156,10 @@ void main() {
 
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
-      expect(xmlConfig.get('settings:Data:Content'),
-          equals('Text with <special> characters & symbols'));
+      expect(
+        xmlConfig.get('settings:Data:Content'),
+        equals('Text with <special> characters & symbols'),
+      );
     });
 
     test('LoadXmlWithComments', () {
@@ -242,12 +254,18 @@ void main() {
 
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
-      expect(xmlConfig.get('settings:Connections:Connection:0:Server:0'),
-          equals('Server1'));
-      expect(xmlConfig.get('settings:Connections:Connection:0:Server:1'),
-          equals('Server2'));
-      expect(xmlConfig.get('settings:Connections:Connection:1:Server'),
-          equals('Server3'));
+      expect(
+        xmlConfig.get('settings:Connections:Connection:0:Server:0'),
+        equals('Server1'),
+      );
+      expect(
+        xmlConfig.get('settings:Connections:Connection:0:Server:1'),
+        equals('Server2'),
+      );
+      expect(
+        xmlConfig.get('settings:Connections:Connection:1:Server'),
+        equals('Server3'),
+      );
     });
 
     test('LoadXmlWithComplexHierarchy', () {
@@ -268,14 +286,22 @@ void main() {
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
       expect(xmlConfig.get('settings:Environment'), equals('Production'));
-      expect(xmlConfig.get('settings:Database:Primary:Connection:Server'),
-          equals('localhost'));
-      expect(xmlConfig.get('settings:Database:Primary:Connection:Port'),
-          equals('5432'));
-      expect(xmlConfig.get('settings:Database:Primary:Credentials:Username'),
-          equals('admin'));
-      expect(xmlConfig.get('settings:Database:Primary:Credentials:Password'),
-          equals('secret'));
+      expect(
+        xmlConfig.get('settings:Database:Primary:Connection:Server'),
+        equals('localhost'),
+      );
+      expect(
+        xmlConfig.get('settings:Database:Primary:Connection:Port'),
+        equals('5432'),
+      );
+      expect(
+        xmlConfig.get('settings:Database:Primary:Credentials:Username'),
+        equals('admin'),
+      );
+      expect(
+        xmlConfig.get('settings:Database:Primary:Credentials:Password'),
+        equals('secret'),
+      );
     });
 
     test('LoadXmlWithEmptyAttributes', () {
@@ -320,7 +346,9 @@ void main() {
       final xmlConfig = XmlConfigurationProvider(xml)..load();
 
       expect(
-          xmlConfig.get('settings:Data:Key'), equals('Value with whitespace'));
+        xmlConfig.get('settings:Data:Key'),
+        equals('Value with whitespace'),
+      );
     });
 
     test('LoadXmlWithMultipleTextNodes', () {

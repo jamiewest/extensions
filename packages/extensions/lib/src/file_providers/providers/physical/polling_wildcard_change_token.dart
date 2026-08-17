@@ -27,10 +27,9 @@ class PollingWildcardChangeToken implements ChangeToken {
   PollingWildcardChangeToken(
     this._root,
     this._pattern, {
-    Duration pollingInterval = const Duration(seconds: 4),
-    CancellationTokenSource? cancellationTokenSource,
-  })  : _pollingInterval = pollingInterval,
-        _cancellationTokenSource = cancellationTokenSource {
+    this._pollingInterval = const Duration(seconds: 4),
+    this._cancellationTokenSource,
+  }) {
     _initializeState();
   }
 
@@ -57,8 +56,10 @@ class PollingWildcardChangeToken implements ChangeToken {
       for (final entity in entities) {
         if (entity is File) {
           try {
-            final relativePath =
-                context.relative(entity.path, from: rootDir.path);
+            final relativePath = context.relative(
+              entity.path,
+              from: rootDir.path,
+            );
 
             // Check if the file matches the glob pattern
             if (glob.matches(relativePath)) {
@@ -156,7 +157,8 @@ class PollingWildcardChangeToken implements ChangeToken {
     final currentState = _getCurrentState();
 
     // Check if the state has changed
-    final changed = _previousState != null &&
+    final changed =
+        _previousState != null &&
         _stateHasChanged(_previousState!, currentState);
 
     if (changed) {

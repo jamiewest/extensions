@@ -80,9 +80,9 @@ class FakeFileProvider implements FileProvider {
     Map<String, FileInfo>? files,
     Map<String, DirectoryContents>? directories,
     ChangeToken? changeToken,
-  })  : _files = files ?? <String, FileInfo>{},
-        _directories = directories ?? <String, DirectoryContents>{},
-        _changeToken = changeToken ?? FakeChangeToken();
+  }) : _files = files ?? <String, FileInfo>{},
+       _directories = directories ?? <String, DirectoryContents>{},
+       _changeToken = changeToken ?? FakeChangeToken();
 
   final Map<String, FileInfo> _files;
   final Map<String, DirectoryContents> _directories;
@@ -105,8 +105,9 @@ void main() {
     test('getFileInfo_uses_first_existing', () {
       var first = FakeFileInfo('a.txt');
       var provider1 = FakeFileProvider(files: {'/a.txt': first});
-      var provider2 =
-          FakeFileProvider(files: {'/a.txt': FakeFileInfo('a.txt')});
+      var provider2 = FakeFileProvider(
+        files: {'/a.txt': FakeFileInfo('a.txt')},
+      );
 
       var composite = CompositeFileProvider([provider1, provider2]);
 
@@ -118,19 +119,15 @@ void main() {
     test('getDirectoryContents_merges_and_deduplicates', () {
       var provider1 = FakeFileProvider(
         directories: {
-          '/dir': FakeDirectoryContents(
-            [FakeFileInfo('a.txt')],
-          )
+          '/dir': FakeDirectoryContents([FakeFileInfo('a.txt')]),
         },
       );
       var provider2 = FakeFileProvider(
         directories: {
-          '/dir': FakeDirectoryContents(
-            [
-              FakeFileInfo('a.txt'),
-              FakeFileInfo('b.txt'),
-            ],
-          )
+          '/dir': FakeDirectoryContents([
+            FakeFileInfo('a.txt'),
+            FakeFileInfo('b.txt'),
+          ]),
         },
       );
 
@@ -152,12 +149,9 @@ void main() {
       var compositeToken = composite.watch('*.txt');
 
       var fired = 0;
-      compositeToken.registerChangeCallback(
-        (_) {
-          fired++;
-        },
-        null,
-      );
+      compositeToken.registerChangeCallback((_) {
+        fired++;
+      }, null);
 
       token2.trigger();
 

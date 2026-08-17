@@ -62,32 +62,34 @@ void main() {
       await host.stop();
     });
 
-    test('background service fault triggers stop when behavior is stopHost',
-        () async {
-      final builder = Host.createApplicationBuilder();
-      builder.services
-        ..configure<HostOptions>(
-          HostOptions.new,
-          (o) => o.backgroundServiceExceptionBehavior =
-              BackgroundServiceExceptionBehavior.stopHost,
-        )
-        ..addHostedService<_FaultingService>((sp) => _FaultingService());
-      final host = builder.build();
+    test(
+      'background service fault triggers stop when behavior is stopHost',
+      () async {
+        final builder = Host.createApplicationBuilder();
+        builder.services
+          ..configure<HostOptions>(
+            HostOptions.new,
+            (o) => o.backgroundServiceExceptionBehavior =
+                BackgroundServiceExceptionBehavior.stopHost,
+          )
+          ..addHostedService<_FaultingService>((sp) => _FaultingService());
+        final host = builder.build();
 
-      final lifetime =
-          host.services.getRequiredService<HostApplicationLifetime>();
-      final stopping = Completer<void>();
-      lifetime.applicationStopping.register((_) {
-        if (!stopping.isCompleted) {
-          stopping.complete();
-        }
-      });
+        final lifetime = host.services
+            .getRequiredService<HostApplicationLifetime>();
+        final stopping = Completer<void>();
+        lifetime.applicationStopping.register((_) {
+          if (!stopping.isCompleted) {
+            stopping.complete();
+          }
+        });
 
-      await host.start();
+        await host.start();
 
-      await stopping.future;
-      expect(stopping.isCompleted, isTrue);
-    });
+        await stopping.future;
+        expect(stopping.isCompleted, isTrue);
+      },
+    );
   });
 }
 

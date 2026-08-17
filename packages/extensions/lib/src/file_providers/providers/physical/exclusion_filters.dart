@@ -16,6 +16,7 @@ enum ExclusionFilters {
   /// Exclude files and directories when the name begins with a period,
   /// or has hidden or system attributes.
   sensitive(0x0007);
+
   // dotPrefixed | hidden | system
 
   const ExclusionFilters(this.value);

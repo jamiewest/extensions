@@ -14,10 +14,7 @@ class SimpleWordTokenizer {
   };
 
   // Punctuation / symbols that should become separate tokens.
-  static final _punctuationPattern = RegExp(
-    r'([\p{P}\p{S}])',
-    unicode: true,
-  );
+  static final _punctuationPattern = RegExp(r'([\p{P}\p{S}])', unicode: true);
 
   /// Tokenizes [text] into a list of lower-cased word tokens.
   static List<String> wordTokenize(String text) {

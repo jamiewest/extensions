@@ -11,5 +11,5 @@ bool isNullOrWhitespace(String? value) {
 
 bool equals(String value1, String value2, {bool ignoreCase = true}) =>
     ignoreCase
-        ? value1.toLowerCase() == value2.toLowerCase()
-        : value1 == value2;
+    ? value1.toLowerCase() == value2.toLowerCase()
+    : value1 == value2;

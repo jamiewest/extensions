@@ -27,8 +27,7 @@ abstract final class FunctionInvocationLogger {
     Logger? logger,
     String methodName,
     String arguments,
-  ) =>
-      logger?.logTrace('Invoking $methodName($arguments).');
+  ) => logger?.logTrace('Invoking $methodName($arguments).');
 
   /// Logs the completion of a function invocation.
   static void invocationCompleted(
@@ -36,9 +35,7 @@ abstract final class FunctionInvocationLogger {
     String methodName,
     Duration duration,
   ) =>
-      logger?.logDebug(
-        '$methodName invocation completed. Duration: $duration',
-      );
+      logger?.logDebug('$methodName invocation completed. Duration: $duration');
 
   /// Logs the completion of a function invocation including its result.
   static void invocationCompletedSensitive(
@@ -46,11 +43,10 @@ abstract final class FunctionInvocationLogger {
     String methodName,
     Duration duration,
     String result,
-  ) =>
-      logger?.logTrace(
-        '$methodName invocation completed. Duration: $duration. '
-        'Result: $result',
-      );
+  ) => logger?.logTrace(
+    '$methodName invocation completed. Duration: $duration. '
+    'Result: $result',
+  );
 
   /// Logs the cancellation of a function invocation.
   static void invocationCanceled(Logger? logger, String methodName) =>
@@ -61,8 +57,7 @@ abstract final class FunctionInvocationLogger {
     Logger? logger,
     String methodName,
     Object error,
-  ) =>
-      logger?.logError('$methodName invocation failed.', error: error);
+  ) => logger?.logError('$methodName invocation failed.', error: error);
 
   /// Logs a function call that references an unknown tool.
   static void functionNotFound(Logger? logger, String functionName) =>
@@ -78,9 +73,8 @@ abstract final class FunctionInvocationLogger {
   static void functionRequestedTermination(
     Logger? logger,
     String functionName,
-  ) =>
-      logger?.logDebug(
-        "Function '$functionName' requested termination of the "
-        'processing loop.',
-      );
+  ) => logger?.logDebug(
+    "Function '$functionName' requested termination of the "
+    'processing loop.',
+  );
 }

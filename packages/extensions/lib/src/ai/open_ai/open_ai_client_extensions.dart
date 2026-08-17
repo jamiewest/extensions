@@ -72,9 +72,9 @@ extension OpenAIServiceCollectionExtensions on ServiceCollection {
     );
     final builder = EmbeddingGeneratorBuilder(inner);
     configure?.call(builder);
-    add(ServiceDescriptor.singleton<EmbeddingGenerator>(
-      (_) => builder.build(),
-    ));
+    add(
+      ServiceDescriptor.singleton<EmbeddingGenerator>((_) => builder.build()),
+    );
     add(ServiceDescriptor.singleton<OpenAIEmbeddingGenerator>((_) => inner));
     return this;
   }
@@ -106,9 +106,9 @@ extension OpenAIServiceCollectionExtensions on ServiceCollection {
     final inner = OpenAISpeechToTextClient(modelId, apiKey, options: options);
     final builder = SpeechToTextClientBuilder(inner);
     configure?.call(builder);
-    add(ServiceDescriptor.singleton<SpeechToTextClient>(
-      (_) => builder.build(),
-    ));
+    add(
+      ServiceDescriptor.singleton<SpeechToTextClient>((_) => builder.build()),
+    );
     add(ServiceDescriptor.singleton<OpenAISpeechToTextClient>((_) => inner));
     return this;
   }
@@ -124,9 +124,9 @@ extension OpenAIServiceCollectionExtensions on ServiceCollection {
     final inner = OpenAITextToSpeechClient(modelId, apiKey, options: options);
     final builder = TextToSpeechClientBuilder(inner);
     configure?.call(builder);
-    add(ServiceDescriptor.singleton<TextToSpeechClient>(
-      (_) => builder.build(),
-    ));
+    add(
+      ServiceDescriptor.singleton<TextToSpeechClient>((_) => builder.build()),
+    );
     add(ServiceDescriptor.singleton<OpenAITextToSpeechClient>((_) => inner));
     return this;
   }

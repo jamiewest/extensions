@@ -43,11 +43,13 @@ class IntentResolutionEvaluator extends QualityEvaluatorBase {
     final userRequest = messages.lastUserMessage?.text ?? '';
     final response = modelResponse.text;
 
+    final toolLines = ctx?.contents.map((c) => c.toString()).join('\n');
     final toolsSection = ctx != null && ctx.toolDefinitions.isNotEmpty
-        ? '\nAVAILABLE TOOLS:\n${ctx.contents.map((c) => c.toString()).join("\n")}'
+        ? '\nAVAILABLE TOOLS:\n$toolLines'
         : '';
 
-    final prompt = '''
+    final prompt =
+        '''
 # Definition
 **Intent Resolution** measures how accurately the AI identified the user's intent and produced a response that fulfills it.$toolsSection
 

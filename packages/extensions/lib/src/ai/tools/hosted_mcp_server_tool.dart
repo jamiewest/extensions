@@ -18,11 +18,10 @@ sealed class HostedMcpServerToolApprovalMode {
   static HostedMcpServerToolRequireSpecificApprovalMode requireSpecific({
     List<String>? allowedTools,
     List<String>? deniedTools,
-  }) =>
-      HostedMcpServerToolRequireSpecificApprovalMode(
-        allowedTools: allowedTools,
-        deniedTools: deniedTools,
-      );
+  }) => HostedMcpServerToolRequireSpecificApprovalMode(
+    allowedTools: allowedTools,
+    deniedTools: deniedTools,
+  );
 }
 
 /// Always require approval for MCP server tool calls.

@@ -14,8 +14,8 @@ class LiteralPathSegment implements IPathSegment {
 
   /// Creates a segment that matches [value] under [comparisonType].
   LiteralPathSegment(this.value, StringComparison comparisonType)
-      : _comparisonType = comparisonType,
-        _normalizedValue = stringComparisonKey(value, comparisonType);
+    : _comparisonType = comparisonType,
+      _normalizedValue = stringComparisonKey(value, comparisonType);
 
   @override
   bool get canProduceStem => false;

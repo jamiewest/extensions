@@ -41,9 +41,7 @@ extension NGramListExtensions<T> on List<T> {
   /// Creates all n-grams of size [n] from this token list.
   List<NGram<T>> createNGrams(int n) {
     if (n <= 0 || length < n) return [];
-    return [
-      for (var i = 0; i <= length - n; i++) NGram<T>(sublist(i, i + n)),
-    ];
+    return [for (var i = 0; i <= length - n; i++) NGram<T>(sublist(i, i + n))];
   }
 
   /// Creates a [MatchCounter] over all n-grams of size [n].

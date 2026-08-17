@@ -213,7 +213,9 @@ void main() {
         InputAudioBufferCommitRealtimeClientMessage()..messageId = 'c1',
       );
       expect(
-          session.lastSent, isA<InputAudioBufferCommitRealtimeClientMessage>());
+        session.lastSent,
+        isA<InputAudioBufferCommitRealtimeClientMessage>(),
+      );
 
       final received = await loggingSession.getStreamingResponse().toList();
       expect(received, hasLength(1));

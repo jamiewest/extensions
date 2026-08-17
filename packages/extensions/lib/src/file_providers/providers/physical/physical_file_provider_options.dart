@@ -50,12 +50,10 @@ class PhysicalFileProviderOptions {
     bool? usePollingFileWatcher,
     bool? useActivePolling,
     Duration? pollingInterval,
-  }) =>
-      PhysicalFileProviderOptions(
-        exclusionFilters: exclusionFilters ?? this.exclusionFilters,
-        usePollingFileWatcher:
-            usePollingFileWatcher ?? this.usePollingFileWatcher,
-        useActivePolling: useActivePolling ?? this.useActivePolling,
-        pollingInterval: pollingInterval ?? this.pollingInterval,
-      );
+  }) => PhysicalFileProviderOptions(
+    exclusionFilters: exclusionFilters ?? this.exclusionFilters,
+    usePollingFileWatcher: usePollingFileWatcher ?? this.usePollingFileWatcher,
+    useActivePolling: useActivePolling ?? this.useActivePolling,
+    pollingInterval: pollingInterval ?? this.pollingInterval,
+  );
 }

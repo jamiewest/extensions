@@ -35,16 +35,16 @@ class ChatResponse {
 
   /// Creates a [ChatResponse] with a single message.
   ChatResponse.fromMessage(ChatMessage message)
-      : messages = [message],
-        responseId = null,
-        conversationId = null,
-        modelId = null,
-        createdAt = null,
-        finishReason = null,
-        usage = null,
-        continuationToken = null,
-        rawRepresentation = null,
-        additionalProperties = null;
+    : messages = [message],
+      responseId = null,
+      conversationId = null,
+      modelId = null,
+      createdAt = null,
+      finishReason = null,
+      usage = null,
+      continuationToken = null,
+      rawRepresentation = null,
+      additionalProperties = null;
 
   /// The response messages.
   final List<ChatMessage> messages;

@@ -11,7 +11,7 @@ class DirectoryInfoWrapper implements DirectoryInfoBase {
 
   /// Initializes an instance of [DirectoryInfoWrapper].
   DirectoryInfoWrapper(Directory directoryInfo)
-      : _directoryInfo = directoryInfo;
+    : _directoryInfo = directoryInfo;
 
   @override
   Iterable<FileSystemInfoBase> enumerateFileSystemInfos() {

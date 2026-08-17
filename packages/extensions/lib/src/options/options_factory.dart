@@ -19,11 +19,11 @@ class OptionsFactory<TOptions> {
     Iterable<ConfigureOptions<TOptions>>? setups,
     Iterable<PostConfigureOptions<TOptions>>? postConfigureOptions,
     Iterable<ValidateOptions<TOptions>>? validations,
-  })  : _factory = factory,
-        _setups = setups ?? List<ConfigureOptions<TOptions>>.empty(),
-        _postConfigures = postConfigureOptions ??
-            List<PostConfigureOptions<TOptions>>.empty(),
-        _validations = validations ?? List<ValidateOptions<TOptions>>.empty();
+  }) : _factory = factory,
+       _setups = setups ?? List<ConfigureOptions<TOptions>>.empty(),
+       _postConfigures =
+           postConfigureOptions ?? List<PostConfigureOptions<TOptions>>.empty(),
+       _validations = validations ?? List<ValidateOptions<TOptions>>.empty();
 
   /// Returns a configured [TOptions] instance with the given [name].
   TOptions create(String name) {

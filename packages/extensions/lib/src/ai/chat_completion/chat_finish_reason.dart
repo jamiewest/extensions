@@ -25,8 +25,9 @@ class ChatFinishReason {
   static const ChatFinishReason toolCalls = ChatFinishReason('tool_calls');
 
   /// The response was filtered by a content filter.
-  static const ChatFinishReason contentFilter =
-      ChatFinishReason('content_filter');
+  static const ChatFinishReason contentFilter = ChatFinishReason(
+    'content_filter',
+  );
 
   @override
   bool operator ==(Object other) =>

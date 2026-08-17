@@ -2,7 +2,8 @@ import 'package:extensions/extensions.dart';
 
 /// Configures a [LoggingRealtimeClient] instance.
 typedef ConfigureLoggingRealtimeClient = void Function(
-    LoggingRealtimeClient client);
+  LoggingRealtimeClient client,
+);
 
 /// Provides extensions for adding a [LoggingRealtimeClient] to a pipeline.
 ///

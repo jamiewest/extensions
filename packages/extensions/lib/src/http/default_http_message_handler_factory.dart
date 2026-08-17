@@ -11,10 +11,7 @@ import 'http_message_handler_factory.dart';
 
 /// Builds message handlers for named HTTP clients.
 class DefaultHttpMessageHandlerFactory implements HttpMessageHandlerFactory {
-  DefaultHttpMessageHandlerFactory(
-    this._services,
-    this._optionsMonitor,
-  );
+  DefaultHttpMessageHandlerFactory(this._services, this._optionsMonitor);
 
   final ServiceProvider _services;
   final OptionsMonitor<HttpClientFactoryOptions> _optionsMonitor;
@@ -34,8 +31,9 @@ class DefaultHttpMessageHandlerFactory implements HttpMessageHandlerFactory {
     builder.primaryHandler ??= DefaultHttpClientHandler();
 
     // Apply filters using a chain of responsibility pattern
-    final filters =
-        _services.getServices<HttpMessageHandlerBuilderFilter>().toList();
+    final filters = _services
+        .getServices<HttpMessageHandlerBuilderFilter>()
+        .toList();
 
     // Build filter chain in reverse order
     var chain = (HttpMessageHandlerBuilder b) {

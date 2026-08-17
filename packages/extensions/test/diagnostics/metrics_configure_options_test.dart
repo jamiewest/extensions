@@ -8,21 +8,21 @@ import 'package:test/test.dart';
 void main() {
   group('MetricsConfigureOptions', () {
     test('loads rules from configuration sections', () {
-      final config = (ConfigurationBuilder()
-            ..addInMemoryCollection([
-              const MapEntry('EnabledMetrics:Default', 'true'),
-              const MapEntry('EnabledMetrics:MyMeter:MyInstrument', 'false'),
-              const MapEntry('EnabledMetrics:BadMeter', 'maybe'),
-              const MapEntry(
-                'ListenerA:EnabledGlobalMetrics:MyMeter',
-                'true',
-              ),
-              const MapEntry(
-                'ListenerA:EnabledLocalMetrics:MyMeter:Default',
-                'false',
-              ),
-            ]))
-          .build();
+      final config =
+          (ConfigurationBuilder()..addInMemoryCollection([
+                const MapEntry('EnabledMetrics:Default', 'true'),
+                const MapEntry('EnabledMetrics:MyMeter:MyInstrument', 'false'),
+                const MapEntry('EnabledMetrics:BadMeter', 'maybe'),
+                const MapEntry(
+                  'ListenerA:EnabledGlobalMetrics:MyMeter',
+                  'true',
+                ),
+                const MapEntry(
+                  'ListenerA:EnabledLocalMetrics:MyMeter:Default',
+                  'false',
+                ),
+              ]))
+              .build();
 
       final options = MetricsOptions();
       MetricsConfigureOptions(config).configure(options);
@@ -76,11 +76,11 @@ void main() {
     });
 
     test('ignores invalid boolean values', () {
-      final config = (ConfigurationBuilder()
-            ..addInMemoryCollection([
-              const MapEntry('EnabledMetrics:MyMeter', 'not-bool'),
-            ]))
-          .build();
+      final config =
+          (ConfigurationBuilder()..addInMemoryCollection([
+                const MapEntry('EnabledMetrics:MyMeter', 'not-bool'),
+              ]))
+              .build();
 
       final options = MetricsOptions();
       MetricsConfigureOptions(config).configure(options);

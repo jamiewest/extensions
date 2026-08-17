@@ -29,8 +29,7 @@ class _CountingChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) =>
-      const Stream<ChatResponseUpdate>.empty();
+  }) => const Stream<ChatResponseUpdate>.empty();
 
   @override
   T? getService<T>({Object? key}) => null;
@@ -82,15 +81,14 @@ class _ThrowingFunction extends AIFunction {
   Future<Object?> invokeCore(
     AIFunctionArguments arguments, {
     CancellationToken? cancellationToken,
-  }) async =>
-      throw error;
+  }) async => throw error;
 }
 
 /// Completes [started] on invocation, then waits for [release] before
 /// returning — used to prove two functions run concurrently.
 class _GatedFunction extends AIFunction {
   _GatedFunction(String name, {required this.started, required this.release})
-      : super(name: name);
+    : super(name: name);
 
   final Completer<void> started;
   final Future<void> release;
@@ -132,10 +130,9 @@ class _EndlessToolCallChatClient implements ChatClient {
     required Iterable<ChatMessage> messages,
     ChatOptions? options,
     CancellationToken? cancellationToken,
-  }) async =>
-      ChatResponse.fromMessage(
-        ChatMessage(role: ChatRole.assistant, contents: _nextCalls(options)),
-      );
+  }) async => ChatResponse.fromMessage(
+    ChatMessage(role: ChatRole.assistant, contents: _nextCalls(options)),
+  );
 
   @override
   Stream<ChatResponseUpdate> getStreamingResponse({
@@ -200,10 +197,7 @@ void main() {
 
       final responses = [
         ChatResponse.fromMessage(
-          ChatMessage(
-            role: ChatRole.assistant,
-            contents: [callContent],
-          ),
+          ChatMessage(role: ChatRole.assistant, contents: [callContent]),
         ),
         ChatResponse.fromMessage(
           ChatMessage.fromText(ChatRole.assistant, 'final'),
@@ -225,7 +219,9 @@ void main() {
       final secondCall = inner.calls[1];
       expect(secondCall, hasLength(3));
       expect(
-          secondCall[1].contents.whereType<FunctionCallContent>(), isNotEmpty);
+        secondCall[1].contents.whereType<FunctionCallContent>(),
+        isNotEmpty,
+      );
       expect(secondCall[2].role, ChatRole.tool);
       final result = secondCall[2].contents.single as FunctionResultContent;
       expect(result.callId, 'call-1');
@@ -241,10 +237,7 @@ void main() {
 
       final responses = [
         ChatResponse.fromMessage(
-          ChatMessage(
-            role: ChatRole.assistant,
-            contents: [callContent],
-          ),
+          ChatMessage(role: ChatRole.assistant, contents: [callContent]),
         ),
       ];
 
@@ -285,7 +278,9 @@ void main() {
       // Non-function tools survive, and the response is still returned.
       expect(inner.toolsPerCall.last, [isA<_DummyTool>()]);
       expect(
-          response.messages.last.contents.single, isA<FunctionCallContent>());
+        response.messages.last.contents.single,
+        isA<FunctionCallContent>(),
+      );
     });
 
     test('ends the stream at the iteration limit', () async {
@@ -328,10 +323,13 @@ void main() {
 
       final responses = [
         ChatResponse.fromMessage(
-          ChatMessage(role: ChatRole.assistant, contents: [
-            FunctionCallContent(callId: 'c1', name: 'first'),
-            FunctionCallContent(callId: 'c2', name: 'second'),
-          ]),
+          ChatMessage(
+            role: ChatRole.assistant,
+            contents: [
+              FunctionCallContent(callId: 'c1', name: 'first'),
+              FunctionCallContent(callId: 'c2', name: 'second'),
+            ],
+          ),
         ),
         ChatResponse.fromMessage(
           ChatMessage.fromText(ChatRole.assistant, 'final'),
@@ -361,17 +359,19 @@ void main() {
 
       expect(response.text, 'final');
       final toolMessage = inner.calls[1][2];
-      final results =
-          toolMessage.contents.whereType<FunctionResultContent>().toList();
+      final results = toolMessage.contents
+          .whereType<FunctionResultContent>()
+          .toList();
       expect(results.map((r) => r.result), ['first done', 'second done']);
     });
 
     test('includes error details in results when configured', () async {
       final responses = [
         ChatResponse.fromMessage(
-          ChatMessage(role: ChatRole.assistant, contents: [
-            FunctionCallContent(callId: 'c1', name: 'tool'),
-          ]),
+          ChatMessage(
+            role: ChatRole.assistant,
+            contents: [FunctionCallContent(callId: 'c1', name: 'tool')],
+          ),
         ),
         ChatResponse.fromMessage(
           ChatMessage.fromText(ChatRole.assistant, 'final'),
@@ -389,17 +389,19 @@ void main() {
       );
 
       final toolMessage = inner.calls[1][2];
-      final result =
-          toolMessage.contents.whereType<FunctionResultContent>().single;
+      final result = toolMessage.contents
+          .whereType<FunctionResultContent>()
+          .single;
       expect('${result.result}', contains('tool failed'));
     });
 
     test('reports declaration-only tools as not found', () async {
       final responses = [
         ChatResponse.fromMessage(
-          ChatMessage(role: ChatRole.assistant, contents: [
-            FunctionCallContent(callId: 'c1', name: 'tool'),
-          ]),
+          ChatMessage(
+            role: ChatRole.assistant,
+            contents: [FunctionCallContent(callId: 'c1', name: 'tool')],
+          ),
         ),
         ChatResponse.fromMessage(
           ChatMessage.fromText(ChatRole.assistant, 'final'),
@@ -417,8 +419,9 @@ void main() {
       expect(response.text, 'final');
       expect(invocable.lastArguments, isNull);
       final toolMessage = inner.calls[1][2];
-      final result =
-          toolMessage.contents.whereType<FunctionResultContent>().single;
+      final result = toolMessage.contents
+          .whereType<FunctionResultContent>()
+          .single;
       expect('${result.result}', contains('not found'));
     });
 
@@ -426,10 +429,13 @@ void main() {
       final invoked = _TestFunction('known');
       final responses = [
         ChatResponse.fromMessage(
-          ChatMessage(role: ChatRole.assistant, contents: [
-            FunctionCallContent(callId: 'c1', name: 'missing'),
-            FunctionCallContent(callId: 'c2', name: 'known'),
-          ]),
+          ChatMessage(
+            role: ChatRole.assistant,
+            contents: [
+              FunctionCallContent(callId: 'c1', name: 'missing'),
+              FunctionCallContent(callId: 'c2', name: 'known'),
+            ],
+          ),
         ),
       ];
       final inner = _CountingChatClient(responses: responses);

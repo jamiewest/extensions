@@ -19,10 +19,9 @@ class ServiceProviderEngineScope
 
   ServiceProviderEngineScope(
     DefaultServiceProvider provider, {
-    bool isRootScope = false,
-  })  : _resolvedServices = <ServiceCacheKey, Object?>{},
-        _rootProvider = provider,
-        _isRootScope = isRootScope;
+    this._isRootScope = false,
+  }) : _resolvedServices = <ServiceCacheKey, Object?>{},
+       _rootProvider = provider;
 
   Map<ServiceCacheKey, Object?> get resolvedServices => _resolvedServices;
 
@@ -37,7 +36,9 @@ class ServiceProviderEngineScope
     }
 
     return _rootProvider._getService(
-        ServiceIdentifier.fromServiceType(type), this);
+      ServiceIdentifier.fromServiceType(type),
+      this,
+    );
   }
 
   @override

@@ -110,27 +110,29 @@ class ChatOptions {
   ///
   /// [rawRepresentationFactory] is not cloned — the same reference is shared.
   ChatOptions clone() => ChatOptions(
-        conversationId: conversationId,
-        modelId: modelId,
-        temperature: temperature,
-        topP: topP,
-        topK: topK,
-        maxOutputTokens: maxOutputTokens,
-        seed: seed,
-        frequencyPenalty: frequencyPenalty,
-        presencePenalty: presencePenalty,
-        reasoning: reasoning?.clone(),
-        responseFormat: responseFormat,
-        stopSequences:
-            stopSequences != null ? List<String>.of(stopSequences!) : null,
-        instructions: instructions,
-        tools: tools != null ? List<AITool>.of(tools!) : null,
-        toolMode: toolMode,
-        allowMultipleToolCalls: allowMultipleToolCalls,
-        allowBackgroundResponses: allowBackgroundResponses,
-        continuationToken: continuationToken,
-        rawRepresentationFactory: rawRepresentationFactory,
-        additionalProperties:
-            additionalProperties != null ? Map.of(additionalProperties!) : null,
-      );
+    conversationId: conversationId,
+    modelId: modelId,
+    temperature: temperature,
+    topP: topP,
+    topK: topK,
+    maxOutputTokens: maxOutputTokens,
+    seed: seed,
+    frequencyPenalty: frequencyPenalty,
+    presencePenalty: presencePenalty,
+    reasoning: reasoning?.clone(),
+    responseFormat: responseFormat,
+    stopSequences: stopSequences != null
+        ? List<String>.of(stopSequences!)
+        : null,
+    instructions: instructions,
+    tools: tools != null ? List<AITool>.of(tools!) : null,
+    toolMode: toolMode,
+    allowMultipleToolCalls: allowMultipleToolCalls,
+    allowBackgroundResponses: allowBackgroundResponses,
+    continuationToken: continuationToken,
+    rawRepresentationFactory: rawRepresentationFactory,
+    additionalProperties: additionalProperties != null
+        ? Map.of(additionalProperties!)
+        : null,
+  );
 }
