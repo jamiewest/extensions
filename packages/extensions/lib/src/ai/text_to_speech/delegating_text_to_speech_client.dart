@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'text_to_speech_client.dart';
 import 'text_to_speech_options.dart';
@@ -12,12 +10,6 @@ import 'text_to_speech_response_update.dart';
 /// delegating others to the inner client.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'DelegatingTextToSpeechClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 class DelegatingTextToSpeechClient implements TextToSpeechClient {
   /// Creates a new [DelegatingTextToSpeechClient] wrapping [innerClient].
   DelegatingTextToSpeechClient(this.innerClient);

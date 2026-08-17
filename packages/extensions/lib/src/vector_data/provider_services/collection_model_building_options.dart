@@ -1,17 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 /// Options that control how a [CollectionModel] is built.
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'CollectionModelBuildingOptions.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 final class CollectionModelBuildingOptions {
   /// Creates a [CollectionModelBuildingOptions].
   const CollectionModelBuildingOptions({

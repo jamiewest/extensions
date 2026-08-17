@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'lifetime_tracking_http_message_handler.dart';
 
 /// Tracks an active message handler and its expiration for a named
@@ -11,12 +9,6 @@ import 'lifetime_tracking_http_message_handler.dart';
 ///
 /// Not exported from the `http` barrel; this mirrors the C# `internal`
 /// type.
-@Source(
-  name: 'ActiveHandlerTrackingEntry.cs',
-  namespace: 'Microsoft.Extensions.Http',
-  repository: 'dotnet/runtime',
-  path: 'src/libraries/Microsoft.Extensions.Http/src/',
-)
 class ActiveHandlerTrackingEntry {
   /// Creates a new [ActiveHandlerTrackingEntry].
   ActiveHandlerTrackingEntry({

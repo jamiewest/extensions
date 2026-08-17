@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../open_telemetry_consts.dart';
 import 'delegating_text_to_speech_client.dart';
@@ -10,12 +8,6 @@ import 'text_to_speech_response.dart';
 import 'text_to_speech_response_update.dart';
 
 /// A [DelegatingTextToSpeechClient] that records OpenTelemetry spans.
-@Source(
-  name: 'OpenTelemetryTextToSpeechClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/TextToSpeech/',
-)
 class OpenTelemetryTextToSpeechClient extends DelegatingTextToSpeechClient {
   /// Creates a new [OpenTelemetryTextToSpeechClient].
   OpenTelemetryTextToSpeechClient(

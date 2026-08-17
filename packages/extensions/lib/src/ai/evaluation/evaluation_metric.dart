@@ -1,16 +1,8 @@
-import 'package:extensions/annotations.dart';
-
 import 'evaluation_context.dart';
 import 'evaluation_diagnostic.dart';
 import 'evaluation_metric_interpretation.dart';
 
 /// Base class for all evaluation metric results.
-@Source(
-  name: 'EvaluationMetric.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation/',
-)
 class EvaluationMetric {
   /// Creates an [EvaluationMetric] with the given [name] and optional [reason].
   EvaluationMetric(this.name, {this.reason});

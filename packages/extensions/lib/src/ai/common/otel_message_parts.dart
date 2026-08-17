@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../functions/ai_function_declaration.dart';
 import '../tools/ai_tool.dart';
 
@@ -11,12 +9,6 @@ import '../tools/ai_tool.dart';
 /// assembly-internal visibility to split them across client files.
 ///
 /// Not exported from the `ai` barrel; this mirrors the C# `internal` types.
-@Source(
-  name: 'OtelMessageParts.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Common/',
-)
 class OtelMessage {
   /// Creates a new [OtelMessage].
   OtelMessage({this.role, this.name, this.finishReason});

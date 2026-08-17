@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../ai_content.dart';
 import '../text_content.dart';
 import '../usage_content.dart';
@@ -11,12 +9,6 @@ import 'speech_to_text_response_update.dart';
 /// [SpeechToTextResponse].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'SpeechToTextResponseUpdateExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/SpeechToText/',
-)
 extension SpeechToTextResponseUpdatesExtensions
     on Iterable<SpeechToTextResponseUpdate> {
   /// Combines the updates into a single [SpeechToTextResponse].

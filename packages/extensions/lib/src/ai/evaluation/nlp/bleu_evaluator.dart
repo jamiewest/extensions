@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
@@ -22,12 +20,6 @@ import 'common/smoothing_function.dart';
 /// The default pass/fail threshold is 0.5.
 ///
 /// Requires a [BLEUEvaluatorContext] in [additionalContext].
-@Source(
-  name: 'BLEUEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.NLP',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.NLP/',
-)
 class BLEUEvaluator implements Evaluator {
   /// The name of the [NumericMetric] returned by this evaluator.
   static const String bleuMetricName = 'BLEU';

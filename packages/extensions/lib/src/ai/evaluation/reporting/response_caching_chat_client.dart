@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/caching_chat_client.dart';
 import '../../chat_completion/chat_message.dart';
@@ -11,12 +9,6 @@ import 'response_cache.dart';
 
 /// A [CachingChatClient] that persists responses to a [ResponseCache] and
 /// records per-turn latency and usage in a [ChatDetails] object.
-@Source(
-  name: 'ResponseCachingChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting/',
-)
 class ResponseCachingChatClient extends CachingChatClient {
   /// Creates a [ResponseCachingChatClient].
   ResponseCachingChatClient(

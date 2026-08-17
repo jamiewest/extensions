@@ -1,15 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 import 'evaluation_metric.dart';
 
 /// A collection of [EvaluationMetric]s representing the result of an
 /// evaluation run.
-@Source(
-  name: 'EvaluationResult.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation/',
-)
 class EvaluationResult {
   /// Creates an [EvaluationResult] with the given [metrics] map, or an empty
   /// map if [metrics] is null.

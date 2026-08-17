@@ -1,14 +1,6 @@
-import 'package:extensions/annotations.dart';
-
 import 'evaluation_rating.dart';
 
 /// Specifies how an [EvaluationMetric]'s result should be interpreted.
-@Source(
-  name: 'EvaluationMetricInterpretation.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation/',
-)
 class EvaluationMetricInterpretation {
   /// Creates an [EvaluationMetricInterpretation].
   EvaluationMetricInterpretation({

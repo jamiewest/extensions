@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/exceptions/invalid_operation_exception.dart';
 import 'chat_response.dart';
 
@@ -16,12 +14,6 @@ typedef StructuredResultFromJson<T> = T Function(Object? json);
 ///
 /// Because the port performs no runtime reflection, deserialization is
 /// driven by the [StructuredResultFromJson] callback supplied at creation.
-@Source(
-  name: 'ChatResponse{T}.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
-)
 class StructuredChatResponse<T> extends ChatResponse {
   final StructuredResultFromJson<T> _fromJson;
   final bool _isWrappedInObject;

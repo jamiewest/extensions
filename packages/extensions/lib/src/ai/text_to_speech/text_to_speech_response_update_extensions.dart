@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:extensions/annotations.dart';
-
 import '../data_content.dart';
 import 'text_to_speech_response.dart';
 import 'text_to_speech_response_update.dart';
@@ -17,12 +15,6 @@ import 'text_to_speech_response_update.dart';
 /// chunk lacks bytes — a URI-only [DataContent] — the last chunk wins.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechResponseUpdateExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 extension TextToSpeechResponseUpdatesExtensions
     on Iterable<TextToSpeechResponseUpdate> {
   /// Combines the updates into a single [TextToSpeechResponse].

@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
 import '../../chat_completion/chat_role.dart';
@@ -14,12 +12,6 @@ import 'tool_call_accuracy_evaluator_context.dart';
 /// Returns a [NumericMetric] named `"ToolCallAccuracy"` scored 1–5 (fail
 /// below 3). Requires a [ToolCallAccuracyEvaluatorContext] and a
 /// [ChatConfiguration].
-@Source(
-  name: 'ToolCallAccuracyEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class ToolCallAccuracyEvaluator extends QualityEvaluatorBase {
   /// The name of the [NumericMetric] returned by this evaluator.
   static const String toolCallAccuracyMetricName = 'ToolCallAccuracy';

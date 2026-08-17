@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
@@ -19,12 +17,6 @@ import 'scenario_run_result.dart';
 /// Call [evaluate] once with the model response to score, then call [dispose]
 /// (or use a try/finally) to persist the [ScenarioRunResult] to the
 /// [EvaluationResultStore].
-@Source(
-  name: 'ScenarioRun.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting/',
-)
 class ScenarioRun {
   /// Creates a [ScenarioRun].
   ScenarioRun(

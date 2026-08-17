@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
 import 'package:http/http.dart' as http;
 
 import '../../system/threading/cancellation_token.dart';
@@ -18,12 +17,6 @@ import 'open_ai_client_options.dart';
 /// Works with any OpenAI-compatible endpoint.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'OpenAIImageGenerator.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.OpenAI/',
-)
 final class OpenAIImageGenerator implements ImageGenerator {
   /// Creates a new [OpenAIImageGenerator].
   OpenAIImageGenerator(

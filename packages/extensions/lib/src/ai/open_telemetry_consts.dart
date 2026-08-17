@@ -1,15 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 /// Semantic convention constants for AI telemetry spans and attributes.
 ///
 /// These values follow the OpenTelemetry Semantic Conventions for Generative
 /// AI systems. Wire these up to an actual OpenTelemetry SDK when available.
-@Source(
-  name: 'OpenTelemetryConsts.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/',
-)
 abstract final class OpenTelemetryConsts {
   // Span name templates
   static const String chatSpanName = 'gen_ai.chat';

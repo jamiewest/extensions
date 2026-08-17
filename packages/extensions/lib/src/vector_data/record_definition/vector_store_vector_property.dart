@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'vector_store_property.dart';
 
 /// Defines a vector property in a vector store record.
@@ -8,12 +6,6 @@ import 'vector_store_property.dart';
 /// Use [embeddingType] to indicate the Dart type of the embedding model input
 /// when auto-generation is configured (replaces the C# generic
 /// `VectorStoreVectorProperty<TInput>`).
-@Source(
-  name: 'VectorStoreVectorProperty.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
-)
 class VectorStoreVectorProperty extends VectorStoreProperty {
   /// Creates a [VectorStoreVectorProperty] for [propertyName].
   ///

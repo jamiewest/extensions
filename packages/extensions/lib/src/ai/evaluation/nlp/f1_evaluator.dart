@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
@@ -20,12 +18,6 @@ import 'f1_evaluator_context.dart';
 /// The default pass/fail threshold is 0.5.
 ///
 /// Requires an [F1EvaluatorContext] in [additionalContext].
-@Source(
-  name: 'F1Evaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.NLP',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.NLP/',
-)
 class F1Evaluator implements Evaluator {
   /// The name of the [NumericMetric] returned by this evaluator.
   static const String f1MetricName = 'F1';

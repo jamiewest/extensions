@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../ai/embeddings/embedding.dart';
 import '../../ai/embeddings/embedding_generator.dart';
 import '../../system/threading/cancellation_token.dart';
@@ -10,14 +8,6 @@ import 'property_model.dart';
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'VectorPropertyModel.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 class VectorPropertyModel extends PropertyModel {
   /// Creates a [VectorPropertyModel] with the given [modelName] and [type].
   VectorPropertyModel({

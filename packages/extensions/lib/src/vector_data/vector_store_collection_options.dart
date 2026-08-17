@@ -1,18 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import '../ai/embeddings/embedding_generator.dart';
 import 'record_definition/vector_store_collection_definition.dart';
 
 /// Base options for configuring a [VectorStoreCollection].
 ///
 /// Subclass this to add provider-specific options.
-@Source(
-  name: 'VectorStoreCollectionOptions.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class VectorStoreCollectionOptions {
   /// Creates a [VectorStoreCollectionOptions].
   VectorStoreCollectionOptions({this.definition, this.embeddingGenerator});

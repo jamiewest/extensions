@@ -1,16 +1,8 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
-
 /// The structured JSON response from [RelevanceTruthAndCompletenessEvaluator].
 ///
 /// Holds scores (1–5) and reasoning for all three evaluation dimensions.
-@Source(
-  name: 'RelevanceTruthAndCompletenessRating.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class RelevanceTruthAndCompletenessRating {
   /// Creates a [RelevanceTruthAndCompletenessRating].
   RelevanceTruthAndCompletenessRating({

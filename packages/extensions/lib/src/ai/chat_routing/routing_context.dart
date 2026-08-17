@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../chat_completion/chat_message.dart';
 import '../chat_completion/chat_options.dart';
 
@@ -17,12 +15,6 @@ import '../chat_completion/chat_options.dart';
 ///
 /// Upstream marks the ChatRouting family `[Experimental]`; the surface
 /// may change as upstream stabilizes.
-@Source(
-  name: 'RoutingContext.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatRouting/',
-)
 class RoutingContext {
   /// Creates a new [RoutingContext].
   RoutingContext(this.messages, ChatOptions? chatOptions)

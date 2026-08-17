@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:extensions/annotations.dart';
-
 import '../../logging/logger.dart';
 import '../../logging/logger_extensions.dart';
 import '../../system/threading/cancellation_token.dart';
@@ -33,13 +31,6 @@ import 'response_output_item_realtime_server_message.dart';
 /// the model stops requesting functions or a stop condition is met.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'FunctionInvokingRealtimeClientSession.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 class FunctionInvokingRealtimeClientSession implements RealtimeClientSession {
   /// Creates a new [FunctionInvokingRealtimeClientSession] wrapping
   /// [innerSession] and using [client] for configuration.

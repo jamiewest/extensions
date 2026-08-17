@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'delegating_embedding_generator.dart';
 import 'embedding_generation_options.dart';
@@ -19,12 +17,6 @@ typedef GenerateEmbeddingsHandler = Future<GeneratedEmbeddings> Function(
 /// callback rather than a subclass.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'AnonymousDelegatingEmbeddingGenerator.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Embeddings/',
-)
 class AnonymousDelegatingEmbeddingGenerator
     extends DelegatingEmbeddingGenerator {
   /// Creates a generator that routes [generateEmbeddings] through

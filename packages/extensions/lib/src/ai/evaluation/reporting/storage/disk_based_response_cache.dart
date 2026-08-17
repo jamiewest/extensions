@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:extensions/annotations.dart';
-
 import '../../../chat_completion/chat_message.dart';
 import '../../../chat_completion/chat_response.dart';
 import '../../../chat_completion/chat_role.dart';
@@ -13,12 +11,6 @@ import '../response_cache.dart';
 /// Each entry consists of two files:
 /// - `<hash>.json` — the serialized [ChatResponse]
 /// - `<hash>.expiry` — the expiry timestamp (ISO-8601)
-@Source(
-  name: 'DiskBasedResponseCache.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
-)
 class DiskBasedResponseCache implements ResponseCache {
   /// Creates a [DiskBasedResponseCache] under [cacheDir].
   ///

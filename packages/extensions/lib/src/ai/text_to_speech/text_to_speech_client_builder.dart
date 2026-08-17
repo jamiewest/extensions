@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../dependency_injection/service_provider.dart';
 import '../empty_service_provider.dart';
 import 'text_to_speech_client.dart';
@@ -17,12 +15,6 @@ typedef InnerTextToSpeechClientFactory = TextToSpeechClient Function(
 /// outermost wrapper.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechClientBuilder.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/TextToSpeech/',
-)
 class TextToSpeechClientBuilder {
   late final InnerTextToSpeechClientFactory _innerFactory;
   final List<

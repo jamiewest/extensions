@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/exceptions/invalid_operation_exception.dart';
 import '../../system/threading/cancellation_token.dart';
 import 'embedding.dart';
@@ -13,12 +11,6 @@ import 'embedding_generator.dart';
 /// rules and are not repeated here.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'EmbeddingGeneratorExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Embeddings/',
-)
 extension EmbeddingGeneratorExtensions on EmbeddingGenerator {
   /// Generates an embedding for the single [value].
   ///

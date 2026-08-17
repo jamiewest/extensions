@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../dependency_injection/service_provider.dart';
 import '../empty_service_provider.dart';
 import 'hosted_file_client.dart';
@@ -12,12 +10,6 @@ typedef InnerHostedFileClientFactory = HostedFileClient Function(
 /// Builds a pipeline of [HostedFileClient] middleware.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'HostedFileClientBuilder.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Files/',
-)
 class HostedFileClientBuilder {
   late final InnerHostedFileClientFactory _innerFactory;
   final List<

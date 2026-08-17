@@ -1,7 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../data_content.dart';
 import '../hosted_file_content.dart';
@@ -22,12 +20,6 @@ import 'hosted_file_client.dart';
 ///   this port.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'HostedFileClientExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Files/',
-)
 extension HostedFileClientExtensions on HostedFileClient {
   /// Uploads the bytes carried by [content].
   ///

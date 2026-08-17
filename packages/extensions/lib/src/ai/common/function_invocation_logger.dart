@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../logging/logger.dart';
 import '../../logging/logger_extensions.dart';
 
@@ -11,12 +9,6 @@ import '../../logging/logger_extensions.dart';
 /// type. The C# `[LoggerMessage]` source-generated methods collapse into
 /// plain static helpers here. Approval-flow messages are not ported
 /// because the approval flow itself is not yet ported.
-@Source(
-  name: 'FunctionInvocationLogger.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Common/',
-)
 abstract final class FunctionInvocationLogger {
   /// Logs the start of a function invocation.
   static void invoking(Logger? logger, String methodName) =>

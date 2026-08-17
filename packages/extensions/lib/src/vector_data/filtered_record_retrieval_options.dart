@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'vector_store_filter.dart';
 
 /// A clause that defines a single ordering direction for a field.
@@ -35,13 +33,6 @@ final class OrderByClause {
 /// filtering and ordering.
 ///
 /// Pass to [VectorStoreCollection.getFilteredAsync].
-@Source(
-  name: 'FilteredRecordRetrievalOptions.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class FilteredRecordRetrievalOptions<TRecord> {
   /// Creates a [FilteredRecordRetrievalOptions].
   FilteredRecordRetrievalOptions({

@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../hosted_file_content.dart';
 import 'delegating_hosted_file_client.dart';
@@ -10,12 +8,6 @@ import 'hosted_file_client.dart';
 /// A [DelegatingHostedFileClient] that logs file operations.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'LoggingHostedFileClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Files/',
-)
 class LoggingHostedFileClient extends DelegatingHostedFileClient {
   /// Creates a new [LoggingHostedFileClient].
   LoggingHostedFileClient(super.innerClient, {String? loggerName})

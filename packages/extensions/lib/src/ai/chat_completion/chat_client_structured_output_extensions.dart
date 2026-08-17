@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'chat_client.dart';
 import 'chat_message.dart';
@@ -18,12 +16,6 @@ import 'structured_chat_response.dart';
 /// [StructuredResultFromJson] callback that converts the decoded JSON into
 /// the result type (upstream derives both from `T` via
 /// `AIJsonUtilities`).
-@Source(
-  name: 'ChatClientStructuredOutputExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
-)
 extension ChatClientStructuredOutputExtensions on ChatClient {
   /// Sends chat messages, requesting a response matching [schema] and
   /// deserialized via [fromJson].

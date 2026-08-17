@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:extensions/annotations.dart';
-
 import '../../dependency_injection/service_provider.dart';
 import '../../system/threading/cancellation_token.dart';
 import '../empty_service_provider.dart';
@@ -45,13 +43,6 @@ typedef ChatClientSharedDelegate = Future<void> Function(
 /// [useShared], or [useDelegates] one or more times, then calling [build]
 /// to produce the final [ChatClient]. Middleware factories are applied in
 /// reverse order so that the first call adds the outermost wrapper.
-@Source(
-  name: 'ChatClientBuilder.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
-  commit: '1f2b533625b22f645708cd5b5aaa77a0f051ef81',
-)
 class ChatClientBuilder {
   late final InnerClientFactory _innerClientFactory;
 

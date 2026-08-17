@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../logging/log_level.dart';
 import '../../logging/logger.dart';
 import '../../system/exceptions/operation_cancelled_exception.dart';
@@ -27,12 +25,6 @@ typedef FunctionInvocationToolResolver = AITool? Function(String name);
 /// type. The upstream `ActivitySource` instrumentation is represented
 /// with `dart:developer` timeline spans (`execute_tool`), consistent
 /// with the spans-only OpenTelemetry decision for this port.
-@Source(
-  name: 'FunctionInvocationProcessor.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Common/',
-)
 final class FunctionInvocationProcessor {
   /// Creates a new [FunctionInvocationProcessor].
   FunctionInvocationProcessor({this.logger});

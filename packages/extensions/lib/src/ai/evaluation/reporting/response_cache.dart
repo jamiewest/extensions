@@ -1,14 +1,6 @@
-import 'package:extensions/annotations.dart';
-
 import '../../chat_completion/chat_response.dart';
 
 /// A key-value cache for [ChatResponse]s used during evaluation.
-@Source(
-  name: 'IDistributedCache.cs',
-  namespace: 'Microsoft.Extensions.Caching.Distributed',
-  repository: 'dotnet/runtime',
-  path: 'src/libraries/Microsoft.Extensions.Caching.Abstractions/',
-)
 abstract class ResponseCache {
   /// Returns the cached [ChatResponse] for [key], or `null` if not found or
   /// expired.

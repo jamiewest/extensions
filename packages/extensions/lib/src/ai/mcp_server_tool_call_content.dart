@@ -1,17 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import 'tool_call_content.dart';
 
 /// Represents a tool call request to an MCP server by a hosted service.
 ///
 /// This is informational only — it may appear as part of an approval request
 /// or as a record of which MCP server tool was invoked.
-@Source(
-  name: 'McpServerToolCallContent.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Contents/',
-)
 class McpServerToolCallContent extends ToolCallContent {
   /// Creates a new [McpServerToolCallContent].
   McpServerToolCallContent({

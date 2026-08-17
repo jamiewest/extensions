@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../chat_completion/chat_client.dart';
 
 /// Represents one client invocation attempt performed by a
@@ -18,12 +16,6 @@ import '../chat_completion/chat_client.dart';
 ///
 /// Upstream marks the ChatRouting family `[Experimental]`; the surface
 /// may change as upstream stabilizes.
-@Source(
-  name: 'FailoverChatClientAttempt.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatRouting/',
-)
 final class FailoverChatClientAttempt {
   /// Creates a new [FailoverChatClientAttempt].
   ///

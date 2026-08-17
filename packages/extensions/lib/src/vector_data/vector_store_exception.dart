@@ -1,13 +1,4 @@
-import 'package:extensions/annotations.dart';
-
 /// Represents an error that occurred while interacting with a vector store.
-@Source(
-  name: 'VectorStoreException.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class VectorStoreException implements Exception {
   /// Creates a [VectorStoreException].
   VectorStoreException([this.message]) : cause = null;

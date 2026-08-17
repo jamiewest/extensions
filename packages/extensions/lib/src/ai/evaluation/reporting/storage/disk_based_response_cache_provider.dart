@@ -1,19 +1,11 @@
 import 'dart:io';
 
-import 'package:extensions/annotations.dart';
-
 import '../../../../system/threading/cancellation_token.dart';
 import '../evaluation_response_cache_provider.dart';
 import '../response_cache.dart';
 import 'disk_based_response_cache.dart';
 
 /// An [EvaluationResponseCacheProvider] that stores response caches on disk.
-@Source(
-  name: 'DiskBasedResponseCacheProvider.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
-)
 class DiskBasedResponseCacheProvider
     implements EvaluationResponseCacheProvider {
   /// Creates a [DiskBasedResponseCacheProvider] rooted at [storageRootPath].

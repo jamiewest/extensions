@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../dependency_injection/service_collection.dart';
 import '../../dependency_injection/service_descriptor.dart';
 import '../chat_completion/chat_client.dart';
@@ -25,12 +23,6 @@ import 'open_ai_text_to_speech_client.dart';
 final Uri defaultOpenAIEndpoint = Uri.parse('https://api.openai.com/v1');
 
 /// Provides extension methods for building [OpenAIChatClient] pipelines.
-@Source(
-  name: 'OpenAIClientExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.OpenAI/',
-)
 extension OpenAIChatClientExtensions on OpenAIChatClient {
   /// Creates a [ChatClientBuilder] wrapping this client.
   ChatClientBuilder asBuilder() => ChatClientBuilder(this);

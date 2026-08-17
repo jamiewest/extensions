@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../common/telemetry_helpers.dart';
 import '../open_telemetry_consts.dart';
@@ -16,12 +14,6 @@ import 'speech_to_text_response_update.dart';
 /// methods.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'OpenTelemetrySpeechToTextClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/SpeechToText/',
-)
 class OpenTelemetrySpeechToTextClient extends DelegatingSpeechToTextClient {
   /// Creates a new [OpenTelemetrySpeechToTextClient].
   OpenTelemetrySpeechToTextClient(

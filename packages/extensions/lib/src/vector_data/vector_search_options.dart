@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'vector_store_filter.dart';
 
 /// Options for a vector similarity search.
@@ -17,13 +15,6 @@ import 'vector_store_filter.dart';
 ///   ),
 /// );
 /// ```
-@Source(
-  name: 'VectorSearchOptions.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class VectorSearchOptions<TRecord> {
   /// Creates a [VectorSearchOptions].
   VectorSearchOptions({

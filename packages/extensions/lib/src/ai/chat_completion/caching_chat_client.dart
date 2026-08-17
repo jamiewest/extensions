@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'chat_message.dart';
 import 'chat_options.dart';
@@ -13,13 +11,6 @@ import 'delegating_chat_client.dart';
 ///
 /// Subclasses provide the actual caching mechanism by implementing
 /// [getCachedResponse] and [setCachedResponse].
-@Source(
-  name: 'CachingChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
-  commit: 'b56aec451afe841d1865da4c9cb45fd5a379a519',
-)
 abstract class CachingChatClient extends DelegatingChatClient {
   /// Creates a new [CachingChatClient].
   CachingChatClient(super.innerClient);

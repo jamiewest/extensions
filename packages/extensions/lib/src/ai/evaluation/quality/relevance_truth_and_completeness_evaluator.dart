@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_options.dart';
@@ -20,12 +18,6 @@ import 'relevance_truth_and_completeness_rating.dart';
 ///
 /// Requires a [ChatConfiguration]; unlike other quality evaluators this one
 /// asks the model to respond with a JSON object rather than XML score tags.
-@Source(
-  name: 'RelevanceTruthAndCompletenessEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class RelevanceTruthAndCompletenessEvaluator implements Evaluator {
   /// The name of the Relevance [NumericMetric] returned by this evaluator.
   static const String relevanceMetricName = 'Relevance';
