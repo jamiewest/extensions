@@ -31,9 +31,8 @@ class LoggerProviderConfigurationFactoryImpl
   ///
   /// The [configurations] parameter contains all logging configuration sources
   /// that should be consulted when retrieving provider-specific configuration.
-  LoggerProviderConfigurationFactoryImpl(
-    Iterable<Configuration> configurations,
-  ) : _configurations = configurations
+  LoggerProviderConfigurationFactoryImpl(Iterable<Configuration> configurations)
+    : _configurations = configurations
           .map(_LoggingConfiguration.new)
           .toList(growable: false);
 
