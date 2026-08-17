@@ -80,7 +80,7 @@ reason whenever a port decision rules something out.
 | `CacheEntry.CacheEntryTokens` | caching | C# partial splitting `CacheEntry`'s token bookkeeping; the Dart `CacheEntry`/`MemoryCacheEntryOptions` carry `expirationTokens` + `postEvictionCallbacks` directly |
 | `Microsoft.Extensions.AI.Evaluation.Console` (whole library: `Program`, `Commands/`, its `Telemetry/` + `Utilities/` helpers) | ai (evaluation) | executable dotnet CLI tool, not library surface; a Dart equivalent would be a new `bin/` tool designed for pub, out of port scope. Ruled 2026-08-16 |
 | `Microsoft.Extensions.AI.Evaluation.Reporting.Azure` (whole library: `AzureStorage*` types) | ai (evaluation) | Azure Blob Storage bindings over the Azure.Storage .NET SDK; no allowlisted Azure Storage Dart package. Disk-based stores are ported. Ruled 2026-08-16 |
-| OpenAI .NET SDK adapter layer (all 15 unmatched `Microsoft.Extensions.AI.OpenAI` types: `OpenAIResponsesChatClient`, `OpenAIAssistantsChatClient`, `OpenAIRealtime*`, `OpenAIHostedFileClient`, `OpenAIFileDownloadStream`, `MicrosoftExtensionsAI*Extensions`, `OpenAIJsonContext`, `OpenAIRequestPolicies`, `RequestOptionsExtensions`, `ResponsesClientContinuationToken`) | ai (open_ai) | adapters over the official OpenAI .NET SDK; no allowlisted OpenAI Dart SDK to adapt — the Dart `open_ai/` is a hand-rolled minimal REST client instead. Ruled 2026-08-16 |
+| OpenAI .NET SDK adapter layer (all 15 unmatched `Microsoft.Extensions.AI.OpenAI` types: `OpenAIResponsesChatClient`, `OpenAIAssistantsChatClient`, `OpenAIRealtimeClient`, `OpenAIRealtimeClientSession`, `OpenAIRealtimeConversationClient`, `OpenAIHostedFileClient`, `OpenAIFileDownloadStream`, `MicrosoftExtensionsAIAssistantsExtensions`, `MicrosoftExtensionsAIChatExtensions`, `MicrosoftExtensionsAIRealtimeExtensions`, `MicrosoftExtensionsAIResponsesExtensions`, `OpenAIJsonContext`, `OpenAIRequestPolicies`, `RequestOptionsExtensions`, `ResponsesClientContinuationToken` — names spelled out so the audit's literal matcher filters them) | ai (open_ai) | adapters over the official OpenAI .NET SDK; no allowlisted OpenAI Dart SDK to adapt — the Dart `open_ai/` is a hand-rolled minimal REST client instead. Ruled 2026-08-16 |
 | `ChatMessageExtensions` (Evaluation core + internal Quality/Safety copies) | ai (evaluation) | collapsed into `QualityMessageListExtensions` (`quality/quality_evaluator_base.dart`) and `ChatMessageListExtensions` |
 | `EvaluatorExtensions` | ai (evaluation) | C# `EvaluateAsync` convenience overloads collapse into the single `Evaluator.evaluate(messages, modelResponse, …)`; callers pass `const []` |
 | `ScenarioRunExtensions` | ai (evaluation) | `EvaluateAsync` overloads collapse into the `ScenarioRun.evaluate` instance method |
@@ -93,15 +93,21 @@ reason whenever a port decision rules something out.
 | `Defaults` | ai (evaluation) | three constants inlined at use sites (`'Default'` execution name in `reporting_configuration.dart`, 14-day TTL in `disk_based_response_cache.dart`) |
 | `TimingHelper`, `TaskExtensions` | ai (evaluation) | `Stopwatch` / `Future.wait` at call sites — same rationale as `ValueStopwatch` |
 | `ContentSafetyChatClient`, `ContentSafetyChatOptions`, `ContentSafetyServiceConfigurationExtensions` | ai (evaluation) | the IChatClient facade over the safety service; unneeded — Dart safety evaluators call the service directly via the `ContentSafetyEvaluator` base class |
-| `ContentSafetyService` + payload family (`ContentSafetyServicePayload{Format,Strategy,Utilities}`) | ai (evaluation) | collapsed into the `ContentSafetyEvaluator` base + `ContentSafetyServiceConfiguration` (simplified single-payload client). Fidelity caveat: upstream's 565-line payload builder handles per-task/multimodal formats and LRO polling the Dart client does not — revisit if a safety task mis-serves (tracked in priorities) |
+| `ContentSafetyService` + payload family (`ContentSafetyServicePayloadFormat`, `ContentSafetyServicePayloadStrategy`, `ContentSafetyServicePayloadUtilities`) | ai (evaluation) | collapsed into the `ContentSafetyEvaluator` base + `ContentSafetyServiceConfiguration` (simplified single-payload client). Fidelity caveat: upstream's 565-line payload builder handles per-task/multimodal formats and LRO polling the Dart client does not — revisit if a safety task mis-serves (tracked in priorities) |
 | `TextToSpeechClientExtensions` | ai | only `getService` overloads; collapses into the interface method (same rule as `RealtimeClientExtensions`). Ruled 2026-08-16 |
 | `HostedFileDownloadStream` | ai | collapsed: `HostedFileClient.download` returns a plain `Stream<List<int>>` and the file's media type/name come from `getFile` (see `HostedFileClientExtensions.downloadAsDataContent`); `DownloadToAsync` is `dart:io`-bound and the AI abstractions stay io-free — callers pipe the stream. Ruled 2026-08-16 |
 | `AIJsonSchemaCreateContext`, `AIJsonSchemaCreateOptions` | ai | belong to the schema-*creation* side (`AIJsonUtilities.Schema.Create.cs`), which is N/A per the existing schema-creation row. Ruled 2026-08-16 |
 
 ## Open priorities
 
-Full-scope audit 2026-08-16 (previous: 2026-08-13). **No new upstream
-drift**: upstream counts are unchanged since 2026-08-13 (AI 254, evaluation
+Full-scope audit 2026-08-16, confirmed by a second same-day run after the
+scope rulings, the ai port batch, and the I-prefix cleanup landed. The
+confirmation run verified upstream file sets are *identical* (not just
+equal counts) to the morning fetch, and that the open set now reduces to
+exactly the items below: ai is down to the 3 AIJsonSchemaTransform types,
+evaluation to the 4 recorded gap clusters (11 types + 3 payload watch
+items), and diagnostics/http/globbing to zero. **No new upstream drift**:
+upstream counts are unchanged since 2026-08-13 (AI 254, evaluation
 137, OpenAI 21) and every unmatched type across all 15 scope rows was
 already an N/A entry or a known open item below. API surface sample
 (10 types: IChatClient, IEmbeddingGenerator, ILoggerFactory,
