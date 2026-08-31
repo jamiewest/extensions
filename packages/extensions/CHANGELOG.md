@@ -2,13 +2,14 @@
 
 * **`CacheEntry.size` is frozen once the entry is committed** (port of
   dotnet/runtime #132604). Setting `size` after the entry has been handed
-  to the cache throws `StateError`, and `setOptions` applies `size` first
-  so a rejected size leaves the other options untouched. Negative sizes
-  still fail as `ArgumentError` regardless of committed state.
-* Clarified `BackgroundServiceExceptionBehavior` and
-  `HostApplicationBuilder` documentation to match what `Host` actually
-  does on background-service failure (ports of dotnet/runtime #132833 and
-  #132508).
+  to the cache throws `StateError`, and `MemoryCache.set` applies `size`
+  before the other entry options so a rejected size leaves the rest
+  untouched. Negative sizes still fail as `ArgumentError` regardless of
+  committed state. This also fixes the cache's size accounting, which
+  could be skewed by mutating `size` after commit.
+* Clarified `BackgroundServiceExceptionBehavior` documentation to match
+  what `Host` actually does on background-service failure (port of
+  dotnet/runtime #132833).
 
 * **Breaking: `IConfiguration` is now `Configuration`.** The abstract type
   drops its C# `I` prefix per the repo naming rules; `IConfiguration`
