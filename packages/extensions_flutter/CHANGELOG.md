@@ -1,4 +1,7 @@
-## Unreleased
+## 0.6.0
+
+* The `extensions` constraint moves to `^0.8.0`, picking up the breaking
+  renames and the new AI surface from that release.
 
 * **Requires Dart 3.13 and Flutter 3.47.** The SDK constraint moves from
   `^3.10.1` to `^3.13.0`, and an explicit `flutter: ">=3.47.0"` constraint
