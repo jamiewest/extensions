@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/async_disposable.dart';
 import '../../system/threading/cancellation_token.dart';
 import 'realtime_client_message.dart';
@@ -12,13 +10,6 @@ import 'realtime_session_options.dart';
 /// real-time model.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'IRealtimeClientSession.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 abstract class RealtimeClientSession implements AsyncDisposable {
   /// The current session options.
   RealtimeSessionOptions? get options;

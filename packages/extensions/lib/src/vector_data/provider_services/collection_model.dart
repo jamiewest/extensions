@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../vector_search_options.dart';
 import 'data_property_model.dart';
 import 'key_property_model.dart';
@@ -13,14 +11,6 @@ import 'vector_property_model.dart';
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'CollectionModel.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 final class CollectionModel {
   final Object Function() _recordFactory;
   VectorPropertyModel? _singleVectorProperty;

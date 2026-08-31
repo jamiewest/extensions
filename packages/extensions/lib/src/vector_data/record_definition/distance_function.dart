@@ -1,13 +1,5 @@
-import 'package:extensions/annotations.dart';
-
 /// Defines the distance functions that can be used to measure similarity
 /// between vectors in a vector store.
-@Source(
-  name: 'DistanceFunction.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
-)
 abstract final class DistanceFunction {
   /// Measures the cosine of the angle between two vectors.
   ///

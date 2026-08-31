@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../chat_completion/chat_client.dart';
 import 'failover_chat_client.dart';
@@ -19,12 +17,6 @@ import 'routing_context.dart';
 ///
 /// Upstream marks the ChatRouting family `[Experimental]`; the surface
 /// may change as upstream stabilizes.
-@Source(
-  name: 'OrderedFailoverChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatRouting/',
-)
 final class OrderedFailoverChatClient extends FailoverChatClient {
   /// Creates a new [OrderedFailoverChatClient] over [clients], in
   /// fallback order.

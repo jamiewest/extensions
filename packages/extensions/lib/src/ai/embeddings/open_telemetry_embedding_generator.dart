@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../open_telemetry_consts.dart';
 import 'delegating_embedding_generator.dart';
@@ -9,12 +7,6 @@ import 'embedding_generation_options.dart';
 import 'generated_embeddings.dart';
 
 /// A [DelegatingEmbeddingGenerator] that records OpenTelemetry spans.
-@Source(
-  name: 'OpenTelemetryEmbeddingGenerator.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Embeddings/',
-)
 class OpenTelemetryEmbeddingGenerator extends DelegatingEmbeddingGenerator {
   /// Creates a new [OpenTelemetryEmbeddingGenerator].
   OpenTelemetryEmbeddingGenerator(

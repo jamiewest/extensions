@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../open_telemetry_consts.dart';
 import 'chat_message.dart';
@@ -15,12 +13,6 @@ import 'delegating_chat_client.dart';
 /// This implementation uses `dart:developer` timeline events. To connect it
 /// to a real OpenTelemetry SDK, subclass and override [onSpanStart] and
 /// [onSpanEnd].
-@Source(
-  name: 'OpenTelemetryChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
-)
 class OpenTelemetryChatClient extends DelegatingChatClient {
   /// Creates a new [OpenTelemetryChatClient].
   OpenTelemetryChatClient(super.innerClient, {this.modelId, this.system});

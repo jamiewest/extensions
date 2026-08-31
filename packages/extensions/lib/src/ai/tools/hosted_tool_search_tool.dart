@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'ai_tool.dart';
 
 /// A marker tool that enables on-demand tool discovery from a hosted service.
@@ -13,12 +11,6 @@ import 'ai_tool.dart';
 /// to restrict deferred loading to a specific subset.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'HostedToolSearchTool.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Tools/',
-)
 class HostedToolSearchTool extends AITool {
   /// Creates a new [HostedToolSearchTool].
   HostedToolSearchTool({

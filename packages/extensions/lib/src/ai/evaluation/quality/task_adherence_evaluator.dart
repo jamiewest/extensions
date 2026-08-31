@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
 import '../../chat_completion/chat_role.dart';
@@ -13,12 +11,6 @@ import 'task_adherence_evaluator_context.dart';
 /// Returns a [NumericMetric] named `"TaskAdherence"` scored 1–5 (fail below
 /// 3). Optionally requires a [TaskAdherenceEvaluatorContext] and a
 /// [ChatConfiguration].
-@Source(
-  name: 'TaskAdherenceEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class TaskAdherenceEvaluator extends QualityEvaluatorBase {
   /// The name of the [NumericMetric] returned by this evaluator.
   static const String taskAdherenceMetricName = 'TaskAdherence';

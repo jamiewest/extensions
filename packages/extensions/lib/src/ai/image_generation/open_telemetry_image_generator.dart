@@ -1,19 +1,11 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../open_telemetry_consts.dart';
 import 'delegating_image_generator.dart';
 import 'image_generator.dart';
 
 /// A [DelegatingImageGenerator] that records OpenTelemetry spans.
-@Source(
-  name: 'OpenTelemetryImageGenerator.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ImageGeneration/',
-)
 class OpenTelemetryImageGenerator extends DelegatingImageGenerator {
   /// Creates a new [OpenTelemetryImageGenerator].
   OpenTelemetryImageGenerator(

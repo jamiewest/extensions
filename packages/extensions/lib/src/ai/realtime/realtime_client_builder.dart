@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../dependency_injection/service_provider.dart';
 import '../empty_service_provider.dart';
 import 'realtime_client.dart';
@@ -29,13 +27,6 @@ typedef RealtimeClientFactoryWithServices = RealtimeClient Function(
 /// adds the outermost wrapper.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'RealtimeClientBuilder.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 class RealtimeClientBuilder {
   late final InnerRealtimeClientFactory _innerClientFactory;
 

@@ -1,14 +1,6 @@
-import 'package:extensions/annotations.dart';
-
 import 'evaluation_diagnostic_severity.dart';
 
 /// A diagnostic message associated with an [EvaluationMetric].
-@Source(
-  name: 'EvaluationDiagnostic.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation/',
-)
 class EvaluationDiagnostic {
   /// Creates an [EvaluationDiagnostic] with the given [severity] and [message].
   const EvaluationDiagnostic(this.severity, this.message);

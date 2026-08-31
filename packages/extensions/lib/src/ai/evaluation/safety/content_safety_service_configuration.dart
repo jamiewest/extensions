@@ -1,15 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 /// Configuration for connecting to the Azure AI Foundry Evaluation service.
 ///
 /// Supports both Hub-based projects (subscription + resource group + project
 /// name) and non-Hub-based Foundry projects (endpoint URI only).
-@Source(
-  name: 'ContentSafetyServiceConfiguration.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Safety',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Safety/',
-)
 class ContentSafetyServiceConfiguration {
   /// Creates a configuration for a Hub-based Azure AI Foundry project.
   const ContentSafetyServiceConfiguration.hubBased({

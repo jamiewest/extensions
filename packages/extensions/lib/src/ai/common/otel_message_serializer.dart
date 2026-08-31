@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
-
 import '../ai_content.dart';
 import '../chat_completion/chat_finish_reason.dart';
 import '../chat_completion/chat_message.dart';
@@ -35,12 +33,6 @@ import 'otel_message_parts.dart';
 ///
 /// Not exported from the `ai` barrel; this mirrors the C# `internal`
 /// type.
-@Source(
-  name: 'OtelMessageSerializer.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Common/',
-)
 abstract final class OtelMessageSerializer {
   /// Serializes [messages] to a JSON string in the OTel gen-ai
   /// message-parts shape.

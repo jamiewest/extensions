@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/disposable.dart';
 import '../../system/threading/cancellation_token.dart';
 import '../additional_properties_dictionary.dart';
@@ -8,12 +6,6 @@ import '../hosted_file_content.dart';
 /// Options for [HostedFileClient] requests.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'HostedFileClientOptions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Files/',
-)
 class HostedFileClientOptions {
   /// Creates a new [HostedFileClientOptions].
   const HostedFileClientOptions({this.additionalProperties});
@@ -25,12 +17,6 @@ class HostedFileClientOptions {
 /// Provides metadata about a [HostedFileClient].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'HostedFileClientMetadata.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Files/',
-)
 class HostedFileClientMetadata {
   /// Creates a new [HostedFileClientMetadata].
   const HostedFileClientMetadata({this.providerName, this.providerUri});
@@ -49,12 +35,6 @@ class HostedFileClientMetadata {
 /// using [HostedFileContent].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'IHostedFileClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Files/',
-)
 abstract class HostedFileClient implements Disposable {
   /// Uploads a file to the AI service.
   ///

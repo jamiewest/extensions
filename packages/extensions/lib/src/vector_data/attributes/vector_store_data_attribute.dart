@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 /// Marks a property on a record as a data field in a vector store collection.
 ///
 /// Example:
@@ -15,12 +13,6 @@ import 'package:extensions/annotations.dart';
 /// Since Dart has no built-in runtime reflection, annotations are intended for
 /// use with code generators or explicit [VectorStoreCollectionDefinition]
 /// construction.
-@Source(
-  name: 'VectorStoreDataAttribute.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/Attributes/',
-)
 final class VectorStoreDataAttribute {
   /// Creates a [VectorStoreDataAttribute].
   const VectorStoreDataAttribute({

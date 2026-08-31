@@ -1,13 +1,4 @@
-import 'package:extensions/annotations.dart';
-
 /// Metadata about a vector store instance.
-@Source(
-  name: 'VectorStoreMetadata.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class VectorStoreMetadata {
   /// Creates a [VectorStoreMetadata].
   const VectorStoreMetadata({this.vectorStoreSystemName, this.vectorStoreName});

@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../system/threading/cancellation_token.dart';
 import 'vector_search_options.dart';
 import 'vector_search_result.dart';
@@ -8,13 +6,6 @@ import 'vector_search_result.dart';
 ///
 /// Implemented by [VectorStoreCollection] and by any type that supports
 /// similarity search without the full collection management surface.
-@Source(
-  name: 'IVectorSearchable.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 abstract interface class VectorSearchable<TRecord> {
   /// Searches for records that are similar to [value].
   ///

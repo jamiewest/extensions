@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'active_handler_tracking_entry.dart';
 import 'lifetime_tracking_http_message_handler.dart';
 
@@ -12,12 +10,6 @@ import 'lifetime_tracking_http_message_handler.dart';
 ///
 /// Not exported from the `http` barrel; this mirrors the C# `internal`
 /// type.
-@Source(
-  name: 'ExpiredHandlerTrackingEntry.cs',
-  namespace: 'Microsoft.Extensions.Http',
-  repository: 'dotnet/runtime',
-  path: 'src/libraries/Microsoft.Extensions.Http/src/',
-)
 class ExpiredHandlerTrackingEntry {
   /// Creates a new [ExpiredHandlerTrackingEntry] from the active entry
   /// being rotated out.

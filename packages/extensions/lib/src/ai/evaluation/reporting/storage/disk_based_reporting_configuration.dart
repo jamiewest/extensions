@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:extensions/annotations.dart';
-
 import '../../chat_configuration.dart';
 import '../../evaluation_metric.dart';
 import '../../evaluation_metric_interpretation.dart';
@@ -11,12 +9,6 @@ import 'disk_based_response_cache_provider.dart';
 import 'disk_based_result_store.dart';
 
 /// Factory for a fully disk-backed [ReportingConfiguration].
-@Source(
-  name: 'DiskBasedReportingConfiguration.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
-)
 class DiskBasedReportingConfiguration {
   DiskBasedReportingConfiguration._();
 

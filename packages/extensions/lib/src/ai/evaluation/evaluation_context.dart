@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../ai_content.dart';
 import '../text_content.dart';
 
@@ -9,12 +7,6 @@ import '../text_content.dart';
 /// Subclasses are free to add domain-specific properties. However, the
 /// [contents] list should always represent all contextual information as
 /// [AIContent] objects so that it can be serialized when recording results.
-@Source(
-  name: 'EvaluationContext.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation/',
-)
 abstract class EvaluationContext {
   /// Creates an [EvaluationContext] with the given [name] and optional
   /// [contents].

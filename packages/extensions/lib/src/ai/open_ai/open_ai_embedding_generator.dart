@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
 import 'package:http/http.dart' as http;
 
 import '../../system/threading/cancellation_token.dart';
@@ -16,12 +15,6 @@ import 'open_ai_client_options.dart';
 /// An [EmbeddingGenerator] for the OpenAI embeddings API.
 ///
 /// Works with any OpenAI-compatible endpoint including LM Studio.
-@Source(
-  name: 'OpenAIEmbeddingGenerator.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.OpenAI/',
-)
 final class OpenAIEmbeddingGenerator implements EmbeddingGenerator {
   /// Creates a new [OpenAIEmbeddingGenerator].
   OpenAIEmbeddingGenerator(

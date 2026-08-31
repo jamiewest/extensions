@@ -1,13 +1,4 @@
-import 'package:extensions/annotations.dart';
-
 /// Options for retrieving records from a vector store collection by key.
-@Source(
-  name: 'RecordRetrievalOptions.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class RecordRetrievalOptions {
   /// Creates a [RecordRetrievalOptions].
   RecordRetrievalOptions({this.includeVectors = false});

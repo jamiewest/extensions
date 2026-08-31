@@ -1,17 +1,8 @@
-import 'package:extensions/annotations.dart';
-
 import 'vector_store_filter.dart';
 
 /// Options for a hybrid vector-and-keyword search.
 ///
 /// Pass to [KeywordHybridSearchable.hybridSearchAsync].
-@Source(
-  name: 'HybridSearchOptions.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 class HybridSearchOptions<TRecord> {
   /// Creates a [HybridSearchOptions].
   HybridSearchOptions({

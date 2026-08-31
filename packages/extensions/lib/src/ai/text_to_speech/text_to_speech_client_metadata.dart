@@ -1,14 +1,6 @@
-import 'package:extensions/annotations.dart';
-
 /// Provides metadata about a [TextToSpeechClient].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechClientMetadata.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 class TextToSpeechClientMetadata {
   /// Creates a new [TextToSpeechClientMetadata].
   const TextToSpeechClientMetadata({

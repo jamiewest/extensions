@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'chat_client.dart';
 import 'chat_message.dart';
@@ -32,13 +30,6 @@ typedef ChatClientStreamingResponseHandler =
 ///
 /// This makes it easy to create custom middleware without subclassing
 /// [DelegatingChatClient].
-@Source(
-  name: 'AnonymousDelegatingChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatCompletion/',
-  commit: 'b56aec451afe841d1865da4c9cb45fd5a379a519',
-)
 class AnonymousDelegatingChatClient extends DelegatingChatClient {
   /// Creates a new [AnonymousDelegatingChatClient].
   ///

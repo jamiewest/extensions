@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import 'content_safety_evaluator.dart';
 
 /// Evaluates AI responses for ungrounded protected-class attributes or
@@ -7,12 +5,6 @@ import 'content_safety_evaluator.dart';
 ///
 /// Returns a [NumericMetric] named `"UngroundedAttributes"` scored 0–7
 /// (fail above 0). Requires an [UngroundedAttributesEvaluatorContext].
-@Source(
-  name: 'UngroundedAttributesEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Safety',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Safety/',
-)
 class UngroundedAttributesEvaluator extends ContentSafetyEvaluator {
   /// The name of the [NumericMetric] returned by this evaluator.
   static const String ungroundedAttributesMetricName = 'UngroundedAttributes';

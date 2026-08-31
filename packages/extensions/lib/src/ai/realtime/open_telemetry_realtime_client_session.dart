@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../common/telemetry_helpers.dart';
 import '../open_telemetry_consts.dart';
@@ -17,12 +15,6 @@ import 'realtime_session_options.dart';
 /// and [getStreamingResponse].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'OpenTelemetryRealtimeClientSession.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Realtime/',
-)
 class OpenTelemetryRealtimeClientSession implements RealtimeClientSession {
   /// Creates a new [OpenTelemetryRealtimeClientSession] wrapping
   /// [innerSession].

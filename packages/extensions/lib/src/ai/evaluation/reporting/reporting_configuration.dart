@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/chat_client.dart';
 import '../chat_configuration.dart';
@@ -12,12 +10,6 @@ import 'scenario_run.dart';
 
 /// Bundles all configuration needed to create [ScenarioRun] instances for an
 /// evaluation batch.
-@Source(
-  name: 'ReportingConfiguration.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting/',
-)
 class ReportingConfiguration {
   /// Creates a [ReportingConfiguration].
   ///

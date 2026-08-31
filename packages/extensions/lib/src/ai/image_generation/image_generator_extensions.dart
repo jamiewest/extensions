@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../ai_content.dart';
 import '../data_content.dart';
@@ -12,12 +10,6 @@ import 'image_generator.dart';
 /// with an explicit `mediaType` and use [editImage] instead.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'ImageGeneratorExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Image/',
-)
 extension ImageGeneratorExtensions on ImageGenerator {
   /// Generates images from a text [prompt].
   Future<ImageGenerationResponse> generateImages(

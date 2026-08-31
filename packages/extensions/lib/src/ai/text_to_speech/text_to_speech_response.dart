@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../additional_properties_dictionary.dart';
 import '../data_content.dart';
 import '../usage_details.dart';
@@ -7,12 +5,6 @@ import '../usage_details.dart';
 /// The result of a text-to-speech request.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechResponse.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 class TextToSpeechResponse {
   /// Creates a new [TextToSpeechResponse].
   TextToSpeechResponse({

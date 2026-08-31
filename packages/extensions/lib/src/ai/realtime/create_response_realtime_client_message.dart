@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../additional_properties_dictionary.dart';
 import '../chat_completion/chat_tool_mode.dart';
 import '../tools/ai_tool.dart';
@@ -10,13 +8,6 @@ import 'realtime_conversation_item.dart';
 /// A client message that requests the model to create a response.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'CreateResponseRealtimeClientMessage.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 class CreateResponseRealtimeClientMessage extends RealtimeClientMessage {
   /// Creates a new [CreateResponseRealtimeClientMessage].
   CreateResponseRealtimeClientMessage({

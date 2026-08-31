@@ -1,16 +1,8 @@
-import 'package:extensions/annotations.dart';
-
 import '../../text_content.dart';
 import '../evaluation_context.dart';
 
 /// Context for [GroundednessProEvaluator]: the grounding information against
 /// which response fidelity is assessed.
-@Source(
-  name: 'GroundednessProEvaluatorContext.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Safety',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Safety/',
-)
 class GroundednessProEvaluatorContext extends EvaluationContext {
   /// Creates a [GroundednessProEvaluatorContext] from [groundingContext].
   GroundednessProEvaluatorContext(this.groundingContext)

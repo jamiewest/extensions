@@ -1,15 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import 'scenario_run_result.dart';
 
 /// Stores and retrieves [ScenarioRunResult]s from a backing store.
-@Source(
-  name: 'IEvaluationResultStore.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting/',
-)
 abstract class EvaluationResultStore {
   /// Returns [ScenarioRunResult]s, optionally filtered by [executionName],
   /// [scenarioName], and [iterationName].

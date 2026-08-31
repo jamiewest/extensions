@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../chat_completion/chat_message.dart';
 import '../chat_completion/chat_response.dart';
@@ -12,12 +10,6 @@ import 'evaluator.dart';
 
 /// An [Evaluator] that composes multiple [Evaluator]s and runs them
 /// concurrently.
-@Source(
-  name: 'CompositeEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation/',
-)
 class CompositeEvaluator implements Evaluator {
   /// Creates a [CompositeEvaluator] from the supplied [evaluators].
   CompositeEvaluator(List<Evaluator> evaluators)

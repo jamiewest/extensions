@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../system/threading/cancellation_token.dart';
 import 'hybrid_search_options.dart';
 import 'vector_search_result.dart';
@@ -9,13 +7,6 @@ import 'vector_search_result.dart';
 /// Hybrid search combines vector similarity with traditional keyword matching
 /// to improve recall for queries that have both semantic and lexical
 /// characteristics.
-@Source(
-  name: 'IKeywordHybridSearchable.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 abstract interface class KeywordHybridSearchable<TRecord> {
   /// Searches for records that are similar to [value] and match [keywords].
   ///

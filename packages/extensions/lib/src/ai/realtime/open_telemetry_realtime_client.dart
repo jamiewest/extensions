@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'delegating_realtime_client.dart';
 import 'open_telemetry_realtime_client_session.dart';
@@ -13,12 +11,6 @@ import 'realtime_session_options.dart';
 /// recorded too.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'OpenTelemetryRealtimeClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Realtime/',
-)
 class OpenTelemetryRealtimeClient extends DelegatingRealtimeClient {
   /// Creates a new [OpenTelemetryRealtimeClient].
   OpenTelemetryRealtimeClient(

@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/disposable.dart';
 import '../../system/threading/cancellation_token.dart';
 import 'text_to_speech_options.dart';
@@ -13,12 +11,6 @@ import 'text_to_speech_response_update.dart';
 /// implementations may mutate the options.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'ITextToSpeechClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 abstract class TextToSpeechClient implements Disposable {
   /// Synthesizes [text] into audio and returns the complete response.
   Future<TextToSpeechResponse> getAudio(

@@ -1,15 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 import '../../text_content.dart';
 import '../evaluation_context.dart';
 
 /// Context for [RetrievalEvaluator]: the retrieved context chunks to assess.
-@Source(
-  name: 'RetrievalEvaluatorContext.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class RetrievalEvaluatorContext extends EvaluationContext {
   /// Creates a [RetrievalEvaluatorContext] from [retrievedContextChunks].
   RetrievalEvaluatorContext({List<String>? retrievedContextChunks})

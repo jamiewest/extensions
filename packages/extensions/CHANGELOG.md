@@ -1,5 +1,9 @@
 ## Unreleased
 
+* **Breaking: the `annotations.dart` library is removed.** The `@Source`
+  annotation recorded upstream C# provenance on ported types; the feature
+  is abandoned, and all 215 annotations plus the library are gone.
+  Provenance tracking lives in the drift audit tooling instead.
 * **Breaking: `IConfiguration` is now `Configuration`.** The abstract type
   drops its C# `I` prefix per the repo naming rules; `IConfiguration`
   remains as a `@Deprecated` typedef for one release. The old

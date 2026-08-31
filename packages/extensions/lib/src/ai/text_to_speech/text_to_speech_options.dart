@@ -1,17 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import '../additional_properties_dictionary.dart';
 import 'text_to_speech_client.dart';
 
 /// Options for text-to-speech requests.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechOptions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 class TextToSpeechOptions {
   /// Creates a new [TextToSpeechOptions].
   TextToSpeechOptions({

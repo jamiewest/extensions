@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../logging/logger.dart';
 import '../../system/threading/cancellation_token.dart';
 import '../tools/ai_tool.dart';
@@ -20,13 +18,6 @@ import 'realtime_session_options.dart';
 /// [maximumIterationsPerRequest].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'FunctionInvokingRealtimeClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 class FunctionInvokingRealtimeClient extends DelegatingRealtimeClient {
   /// Creates a new [FunctionInvokingRealtimeClient].
   FunctionInvokingRealtimeClient(super.innerClient, {this.logger});

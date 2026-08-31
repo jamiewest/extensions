@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../common/telemetry_helpers.dart';
 import '../hosted_file_content.dart';
@@ -16,12 +14,6 @@ import 'hosted_file_client.dart';
 /// operations.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'OpenTelemetryHostedFileClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/Files/',
-)
 class OpenTelemetryHostedFileClient extends DelegatingHostedFileClient {
   /// Creates a new [OpenTelemetryHostedFileClient].
   OpenTelemetryHostedFileClient(

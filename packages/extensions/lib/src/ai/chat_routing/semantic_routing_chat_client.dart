@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../chat_completion/chat_client.dart';
 import '../chat_completion/chat_message.dart';
@@ -43,12 +41,6 @@ enum SemanticRoutingScoreAggregation {
 ///
 /// Upstream marks the ChatRouting family `[Experimental]`; the surface
 /// may change as upstream stabilizes.
-@Source(
-  name: 'SemanticRoutingChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatRouting/',
-)
 final class SemanticRoutingChatClient extends RoutingChatClient {
   /// Creates a new [SemanticRoutingChatClient].
   ///

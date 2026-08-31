@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../ai/embeddings/embedding.dart';
 import '../../ai/embeddings/embedding_generator.dart';
 import '../../system/threading/cancellation_token.dart';
@@ -14,14 +12,6 @@ import 'vector_property_model.dart';
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'EmbeddingGenerationDispatcher.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 abstract class EmbeddingGenerationDispatcher {
   /// Creates a dispatcher backed by the given [generateBatch] and
   /// [generateSingle] callbacks.

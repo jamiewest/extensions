@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../ai/embeddings/embedding_generator.dart';
 import '../record_definition/vector_store_collection_definition.dart';
 import '../record_definition/vector_store_data_property.dart';
@@ -24,14 +22,6 @@ import 'vector_property_model.dart';
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'CollectionModelBuilder.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 abstract class CollectionModelBuilder {
   /// Creates a [CollectionModelBuilder] with the given [options].
   CollectionModelBuilder(this.options);

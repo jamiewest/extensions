@@ -1,17 +1,9 @@
 import 'dart:convert';
 
-import 'package:extensions/annotations.dart';
-
 /// Provides internal helpers for implementing telemetry.
 ///
 /// Not exported from the `ai` barrel; this mirrors the C# `internal`
 /// type.
-@Source(
-  name: 'TelemetryHelpers.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/',
-)
 abstract final class TelemetryHelpers {
   /// Whether the OpenTelemetry clients enable their
   /// `enableSensitiveData` property by default.

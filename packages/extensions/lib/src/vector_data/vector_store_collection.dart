@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../system/disposable.dart';
 import '../system/threading/cancellation_token.dart';
 import 'filtered_record_retrieval_options.dart';
@@ -26,13 +24,6 @@ import 'vector_store_filter.dart';
 ///   .searchAsync(embedding, top: 5)
 ///   .toList();
 /// ```
-@Source(
-  name: 'VectorStoreCollection.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 abstract class VectorStoreCollection<TKey, TRecord>
     implements VectorSearchable<TRecord>, Disposable {
   /// The name of the collection.

@@ -1,19 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import 'property_model.dart';
 
 /// Represents a key property on a vector store record.
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'KeyPropertyModel.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 class KeyPropertyModel extends PropertyModel {
   /// Creates a [KeyPropertyModel] with the given [modelName] and [type].
   KeyPropertyModel({

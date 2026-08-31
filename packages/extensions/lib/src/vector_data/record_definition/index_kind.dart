@@ -1,12 +1,4 @@
-import 'package:extensions/annotations.dart';
-
 /// Defines the types of index that can be used to index vector data.
-@Source(
-  name: 'IndexKind.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/RecordDefinition/',
-)
 abstract final class IndexKind {
   /// Hierarchical Navigable Small World (HNSW) graph-based index.
   ///

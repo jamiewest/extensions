@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../additional_properties_dictionary.dart';
 import '../error_content.dart';
 import '../usage_details.dart';
@@ -10,13 +8,6 @@ import 'realtime_server_message.dart';
 /// A server message indicating that a response has been created or completed.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'ResponseCreatedRealtimeServerMessage.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 class ResponseCreatedRealtimeServerMessage extends RealtimeServerMessage {
   /// Creates a new [ResponseCreatedRealtimeServerMessage] with the given
   /// [type].

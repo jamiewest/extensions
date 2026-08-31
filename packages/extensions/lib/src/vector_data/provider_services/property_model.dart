@@ -1,17 +1,7 @@
-import 'package:extensions/annotations.dart';
-
 /// Represents a property on a vector store record.
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'PropertyModel.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 abstract class PropertyModel {
   /// Creates a [PropertyModel] with the given [modelName] and [type].
   PropertyModel({

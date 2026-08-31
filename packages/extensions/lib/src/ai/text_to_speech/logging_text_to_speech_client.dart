@@ -1,7 +1,5 @@
 import 'dart:developer' as developer;
 
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import 'delegating_text_to_speech_client.dart';
 import 'text_to_speech_options.dart';
@@ -11,12 +9,6 @@ import 'text_to_speech_response_update.dart';
 /// A [DelegatingTextToSpeechClient] that logs requests and responses.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'LoggingTextToSpeechClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/TextToSpeech/',
-)
 class LoggingTextToSpeechClient extends DelegatingTextToSpeechClient {
   /// Creates a new [LoggingTextToSpeechClient].
   LoggingTextToSpeechClient(super.innerClient, {String? loggerName})

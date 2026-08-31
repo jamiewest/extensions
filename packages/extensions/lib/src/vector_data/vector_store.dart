@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../system/disposable.dart';
 import '../system/threading/cancellation_token.dart';
 import 'record_definition/vector_store_collection_definition.dart';
@@ -22,13 +20,6 @@ import 'vector_store_collection.dart';
 ///   definition: hotelDefinition,
 /// );
 /// ```
-@Source(
-  name: 'VectorStore.cs',
-  namespace: 'Microsoft.Extensions.VectorData',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/VectorData/',
-)
 abstract class VectorStore implements Disposable {
   /// Gets a strongly-typed collection of records.
   ///

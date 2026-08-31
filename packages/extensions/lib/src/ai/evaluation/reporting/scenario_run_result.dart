@@ -1,17 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
 import '../evaluation_result.dart';
 import 'chat_details.dart';
 
 /// The persisted result of a single [ScenarioRun] evaluation.
-@Source(
-  name: 'ScenarioRunResult.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting/',
-)
 class ScenarioRunResult {
   /// Creates a [ScenarioRunResult].
   ScenarioRunResult({

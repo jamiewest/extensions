@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:extensions/annotations.dart';
-
 import '../../../chat_completion/chat_message.dart';
 import '../../../chat_completion/chat_response.dart';
 import '../../../chat_completion/chat_role.dart';
@@ -28,12 +26,6 @@ import '../scenario_run_result.dart';
 /// ```
 /// <storageRootPath>/results/<executionName>/<scenarioName>/<iterationName>.json
 /// ```
-@Source(
-  name: 'DiskBasedResultStore.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting.Storage',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting.Storage/',
-)
 class DiskBasedResultStore implements EvaluationResultStore {
   /// Creates a [DiskBasedResultStore] rooted at [storageRootPath].
   DiskBasedResultStore(String storageRootPath)

@@ -1,19 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import 'vector_property_model.dart';
 
 /// Error message factory for vector store provider implementations.
 ///
 /// This is a support type for provider implementors; application code should
 /// not reference it directly.
-@Source(
-  name: 'VectorDataStrings.cs',
-  namespace: 'Microsoft.Extensions.VectorData.ProviderServices',
-  repository: 'dotnet/extensions',
-  path:
-      'src/Libraries/Microsoft.Extensions.VectorData.Abstractions/'
-      'ProviderServices/',
-)
 abstract final class VectorDataStrings {
   /// Error for when the configured embedding type is not supported by the
   /// generator.

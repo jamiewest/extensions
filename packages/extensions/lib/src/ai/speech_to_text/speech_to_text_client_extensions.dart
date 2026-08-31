@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../data_content.dart';
 import 'speech_to_text_client.dart';
@@ -11,12 +9,6 @@ import 'speech_to_text_response_update.dart';
 /// [SpeechToTextClient.getService] per the porting rules.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'SpeechToTextClientExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/SpeechToText/',
-)
 extension SpeechToTextClientExtensions on SpeechToTextClient {
   /// Transcribes the audio carried by [audioSpeechContent].
   ///

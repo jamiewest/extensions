@@ -1,14 +1,6 @@
-import 'package:extensions/annotations.dart';
-
 import '../../usage_details.dart';
 
 /// Details for a single LLM chat conversation turn in a [ScenarioRun].
-@Source(
-  name: 'ChatTurnDetails.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Reporting',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Reporting/',
-)
 class ChatTurnDetails {
   /// Creates [ChatTurnDetails].
   ChatTurnDetails({

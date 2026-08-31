@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:extensions/annotations.dart';
-
 import '../../../system/threading/cancellation_token.dart';
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
@@ -20,12 +18,6 @@ import 'content_safety_service_configuration.dart';
 ///
 /// Subclasses specify the annotation task name and the mapping from service
 /// metric names to the [EvaluationMetric] names returned to callers.
-@Source(
-  name: 'ContentSafetyEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Safety',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Safety/',
-)
 abstract class ContentSafetyEvaluator implements Evaluator {
   /// Creates a [ContentSafetyEvaluator].
   ///

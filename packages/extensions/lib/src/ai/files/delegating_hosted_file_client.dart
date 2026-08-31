@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../system/threading/cancellation_token.dart';
 import '../hosted_file_content.dart';
 import 'hosted_file_client.dart';
@@ -10,12 +8,6 @@ import 'hosted_file_client.dart';
 /// delegating others.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'DelegatingHostedFileClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Files/',
-)
 class DelegatingHostedFileClient implements HostedFileClient {
   /// Creates a new [DelegatingHostedFileClient] wrapping [innerClient].
   DelegatingHostedFileClient(this.innerClient);

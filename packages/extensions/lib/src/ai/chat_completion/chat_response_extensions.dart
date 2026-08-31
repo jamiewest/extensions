@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../ai_content.dart';
 import 'chat_message.dart';
 import 'chat_response.dart';
@@ -8,12 +6,6 @@ import 'chat_role.dart';
 
 /// Provides extension methods for combining [ChatResponseUpdate] instances
 /// into a [ChatResponse].
-@Source(
-  name: 'ChatResponseExtensions.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/ChatCompletion/',
-)
 extension ChatResponseUpdatesExtensions on Iterable<ChatResponseUpdate> {
   /// Combines the updates into a single [ChatResponse].
   ChatResponse toChatResponse() {

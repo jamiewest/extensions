@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 import '../../chat_completion/chat_message.dart';
 import '../../chat_completion/chat_response.dart';
 import '../../chat_completion/chat_role.dart';
@@ -13,12 +11,6 @@ import 'quality_evaluator_base.dart';
 /// Returns a [NumericMetric] named `"Groundedness"` scored 1–5 (fail below 3).
 /// Requires a [GroundednessEvaluatorContext] in [additionalContext] and a
 /// [ChatConfiguration] with an AI model (GPT-4o recommended).
-@Source(
-  name: 'GroundednessEvaluator.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class GroundednessEvaluator extends QualityEvaluatorBase {
   /// The name of the [NumericMetric] returned by this evaluator.
   static const String groundednessMetricName = 'Groundedness';

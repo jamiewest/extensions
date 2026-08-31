@@ -1,17 +1,9 @@
-import 'package:extensions/annotations.dart';
-
 import '../additional_properties_dictionary.dart';
 import '../data_content.dart';
 
 /// The kind of a text-to-speech response update.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechResponseUpdateKind.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 class TextToSpeechResponseUpdateKind {
   /// Creates a new [TextToSpeechResponseUpdateKind].
   const TextToSpeechResponseUpdateKind(this.value);
@@ -54,12 +46,6 @@ class TextToSpeechResponseUpdateKind {
 /// A single streaming response chunk from a [TextToSpeechClient].
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'TextToSpeechResponseUpdate.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/TextToSpeech/',
-)
 class TextToSpeechResponseUpdate {
   /// Creates a new [TextToSpeechResponseUpdate].
   TextToSpeechResponseUpdate({

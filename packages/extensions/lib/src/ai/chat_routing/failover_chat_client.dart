@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:extensions/annotations.dart';
 import 'package:meta/meta.dart';
 
 import '../../system/threading/cancellation_token.dart';
@@ -32,12 +31,6 @@ import 'routing_context.dart';
 ///
 /// Upstream marks the ChatRouting family `[Experimental]`; the surface
 /// may change as upstream stabilizes.
-@Source(
-  name: 'FailoverChatClient.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI/ChatRouting/',
-)
 abstract class FailoverChatClient extends RoutingChatClient {
   /// Creates a new [FailoverChatClient].
   FailoverChatClient();

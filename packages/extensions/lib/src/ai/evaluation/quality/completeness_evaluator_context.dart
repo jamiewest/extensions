@@ -1,16 +1,8 @@
-import 'package:extensions/annotations.dart';
-
 import '../../text_content.dart';
 import '../evaluation_context.dart';
 
 /// Context for [CompletenessEvaluator]: the ground truth response against
 /// which completeness is measured.
-@Source(
-  name: 'CompletenessEvaluatorContext.cs',
-  namespace: 'Microsoft.Extensions.AI.Evaluation.Quality',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Evaluation.Quality/',
-)
 class CompletenessEvaluatorContext extends EvaluationContext {
   /// Creates a [CompletenessEvaluatorContext] from [groundTruth].
   CompletenessEvaluatorContext(this.groundTruth)

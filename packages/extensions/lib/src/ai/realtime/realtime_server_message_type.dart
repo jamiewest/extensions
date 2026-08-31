@@ -1,5 +1,3 @@
-import 'package:extensions/annotations.dart';
-
 /// Represents the type of a real-time server message.
 ///
 /// Used to identify the message type being received from the model.
@@ -14,13 +12,6 @@ import 'package:extensions/annotations.dart';
 /// generation.
 ///
 /// This is an experimental feature.
-@Source(
-  name: 'RealtimeServerMessageType.cs',
-  namespace: 'Microsoft.Extensions.AI',
-  repository: 'dotnet/extensions',
-  path: 'src/Libraries/Microsoft.Extensions.AI.Abstractions/Realtime/',
-  commit: '2e537166e4231e50cceb66832b9dfd1382e24d1b',
-)
 class RealtimeServerMessageType {
   /// Creates a new [RealtimeServerMessageType] with the given [value].
   const RealtimeServerMessageType(this.value);
