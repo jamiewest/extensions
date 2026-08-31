@@ -9,8 +9,8 @@ each run. Porting rules live in [porting.md](porting.md).
 The newest upstream commit (touching an in-scope path) that a drift run has
 reviewed, per upstream repo:
 
-`upstream-sync(dotnet/runtime): a3a0683d3fa4d8841a46cf2e27cc1a86fdb9e964 2026-08-13T16:10:15Z`
-`upstream-sync(dotnet/extensions): 7b76f096f9bc4cc254daec5ef5352941c9e07387 2026-08-14T16:25:19Z`
+`upstream-sync(dotnet/runtime): baeeb4650802dd265317fa17d9dbac83d1288958 2026-08-28T12:08:14Z`
+`upstream-sync(dotnet/extensions): cc597aa24bf108c38a6a59d09555765575d11cb3 2026-08-26T17:14:37Z`
 
 These lines are machine-read by `/drift` and by
 `.github/workflows/upstream-watch.yml` — keep the
@@ -18,6 +18,22 @@ These lines are machine-read by `/drift` and by
 commit's committer date, used as the `since` cursor for incremental checks).
 Every incremental drift run must advance the pin(s) it reviewed, in the same
 commit as any ported changes.
+
+### Incremental sync log
+
+**2026-08-31** (`/drift sync`, pins advanced from `a3a0683d` / `7b76f096`).
+Five new in-scope upstream commits reviewed; two ported, three skipped.
+
+| Upstream | Commit | Summary | Subsystem | Decision |
+|---|---|---|---|---|
+| dotnet/runtime | #132604 `714432e` | forbid cache entry size changes after it's disposed | caching | **ported** — `CacheEntryInternal.size` now throws `StateError` once committed; `MemoryCacheExtensions.set` applies `size` first; `ICacheEntry.Size` remarks ported; 6 tests mirrored from upstream `CapacityTests` |
+| dotnet/runtime | #132833 `baeeb46` | clarify `BackgroundServiceExceptionBehavior.StopHost` docs | hosting | **ported (adapted)** — remarks added to both enum values. Upstream's "stops *with an exception*" wording is deliberately not copied: the Dart `Host` does not re-surface the fault from `stop` (see priorities) |
+| dotnet/runtime | #132508 `ff6b0d1` | drop two "command line args" bullets from `HostApplicationBuilder()` remarks | hosting | **skip** — doc-only edit to a `<remarks>` bullet list the Dart `HostApplicationBuilder` factory dartdoc never carried; nothing to remove |
+| dotnet/extensions | #7718 `cc597aa` | validate path segments in Azure storage result store / response cache | ai (evaluation) | **skip (ledger)** — sources touched are all `Microsoft.Extensions.AI.Evaluation.Reporting.Azure`, N/A by library; the rest of the commit is tests. Prompted a re-read of the Dart disk stores, which corrected the `PathValidation` open item — the guard exists, it is just weaker than upstream's (see priorities) |
+| dotnet/extensions | #7705 `acb85d7` | update vulnerable npm dependencies (dompurify) | ai (evaluation) | **skip** — npm/JS assets of the `PublishAIEvaluationReport` HTML report frontend and `ProjectTemplates`; no C# library surface, and the Dart port has no `HtmlReportWriter` |
+
+No public API under `lib/src/ai/` changed, so the `jamiewest/agents` downstream
+is unaffected by this sync.
 
 ## Subsystem status
 
@@ -27,12 +43,12 @@ the most recent `/drift` run covering that subsystem.
 
 | Subsystem | Upstream repo | Upstream path | Dart folder (`packages/extensions/lib/src/`) | Status | Last audited |
 |---|---|---|---|---|---|
-| hosting | dotnet/runtime | `src/libraries/Microsoft.Extensions.Hosting/src/` | `hosting/` | ported; no gaps | 2026-08-16 |
+| hosting | dotnet/runtime | `src/libraries/Microsoft.Extensions.Hosting/src/` | `hosting/` | ported; background-service exception propagation from `stop` open (found 2026-08-31, see priorities) | 2026-08-31 |
 | dependency_injection | dotnet/runtime | `src/libraries/Microsoft.Extensions.DependencyInjection/src/` | `dependency_injection/` | ported; 4 portable call-site types open (see priorities) | 2026-08-16 |
 | logging | dotnet/runtime | `src/libraries/Microsoft.Extensions.Logging/src/` | `logging/` | ported; `LoggerFactory` `options`/`scopeProvider` ctor params open | 2026-08-16 |
 | configuration | dotnet/runtime | `src/libraries/Microsoft.Extensions.Configuration/src/` | `configuration/` | ported; ReferenceCountedProviders, `ConfigurationKeyComparer`, `ConfigurationSectionDebugView` open | 2026-08-16 |
 | options | dotnet/runtime | `src/libraries/Microsoft.Extensions.Options/src/` | `options/` | ported; async validation + `OptionsMonitorExtensions` open | 2026-08-16 |
-| caching | dotnet/runtime | `src/libraries/Microsoft.Extensions.Caching.Memory/src/` | `caching/` | ported; `MemoryCache.Count`/`Keys` + logger/meter ctor hooks open | 2026-08-16 |
+| caching | dotnet/runtime | `src/libraries/Microsoft.Extensions.Caching.Memory/src/` | `caching/` | ported; size-after-commit freeze ported 2026-08-31 (upstream #132604); `MemoryCache.Count`/`Keys` + logger/meter ctor hooks and the commit-without-value gate still open | 2026-08-31 |
 | http | dotnet/runtime | `src/libraries/Microsoft.Extensions.Http/src/` | `http/` | ported; DI-layer gap closed 2026-07-13 (tracking entries + timer cleanup, `addAsKeyed`, `configureAdditionalHttpMessageHandlers` ported; remainder collapsed/N/A — see tables) | 2026-08-16 |
 | primitives | dotnet/runtime | `src/libraries/Microsoft.Extensions.Primitives/src/` | `primitives/` | ported; StringSegment family (6 types) + async `ChangeToken.onChange` overloads open | 2026-08-16 |
 | file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-08-16 |
@@ -133,6 +149,35 @@ public constructor's `lifetime` + factory parameters. The audit ran at
 language version 3.13 (constraints raised 2026-08-16); either constructor
 form remains a correct port of a C# primary constructor.
 
+0. **New, found by the 2026-08-31 incremental sync** (small, both real) —
+   - **hosting: background-service exceptions are not re-surfaced from
+     `stop`.** Upstream `Host` collects faulting `BackgroundService`
+     exceptions in `_backgroundServiceExceptions`, awaits the fire-and-forget
+     monitoring tasks in `StopAsync`, and rethrows them (single exception
+     rethrown directly, several as an aggregate) so the process exits
+     non-zero. The Dart `Host._tryExecuteBackgroundService`
+     (`hosting/host.dart:174`) logs the fault and calls
+     `stopApplication()` only — `stop()` completes normally, so a faulted
+     background service is invisible to the caller and to the exit code.
+     Porting it means a `List<Exception>? _backgroundServiceExceptions`
+     field, tracking the `unawaited(...)` monitoring futures started at
+     `host.dart:148`, awaiting them in `stop()` under the shutdown timeout,
+     and merging into the existing `exceptions` list. This predates the pin;
+     it surfaced while porting upstream #132833's doc clarification, whose
+     "stops with an exception" wording is the behavior the Dart port lacks.
+     `background_service_exception_behavior.dart` currently documents the
+     Dart behavior honestly — update that dartdoc when the gap closes.
+   - **caching: an entry is committed even when no value was set.** Upstream
+     `CacheEntry.Dispose` calls `_cache.SetEntry(this)` only when
+     `_isValueSet`; the Dart `MemoryCacheImpl.createEntry` inserts the entry
+     into `_entries` immediately and `finalizeEntry` commits unconditionally,
+     so `createEntry(k)` followed by `commitToCache()` leaves a null-valued
+     entry in the cache (upstream leaves the cache empty). Noticed while
+     mirroring upstream's `SettingSizeAfterEntryIsDisposedWithoutValueThrows`
+     test, which asserts `cache.Count == 0`; the Dart mirror asserts only the
+     size freeze. Fixing it pairs naturally with the `MemoryCache.Count`
+     gap below.
+
 1. **Evaluation genuine gaps (scoped 2026-08-16; rulings recorded)** — the
    2026-08-13 "scope decision pending" item is resolved: `.Console`,
    `.Reporting.Azure`, and the OpenAI adapter layer are N/A by library, and
@@ -162,10 +207,22 @@ form remains a correct port of a C# primary constructor.
      `ScenarioRunResultExtensions.ContainsDiagnostics` — the metric-level
      halves exist in `evaluation_metric_extensions.dart`; the result-level
      loops do not. Small.
-   - **Disk-store hardening** (minor): `PathValidation`
-     (`EnsureWithinRoot` path-traversal guard — scenario names become
-     directory segments unguarded in the Dart disk stores) and
-     `IterationNameComparer` (natural ordering of iteration names).
+   - **Disk-store hardening**: `PathValidation` and `IterationNameComparer`
+     (natural ordering of iteration names). **Correction (2026-08-31):** the
+     earlier wording here — "scenario names become directory segments
+     unguarded in the Dart disk stores" — was wrong. `DiskBasedResultStore`
+     already guards all three segments (`executionName`, `scenarioName`,
+     `iterationName`) at every public entry point via its private
+     `_validateSegment`, and `DiskBasedResponseCache._filesFor`
+     percent-encodes the cache key. What is actually missing is the
+     *strength* of the guard: `_validateSegment` is a substring denylist
+     (`/`, `\`, `..`), whereas upstream `PathValidation.EnsureWithinRoot`
+     resolves the candidate path and asserts it stays under the root — the
+     containment check catches encodings and platform quirks a denylist
+     does not. Upstream #7718 (`cc597aa`, 2026-08-26) extended that guard to
+     the Azure result store and response cache, so upstream now applies it at
+     every store. Port `PathValidation` proper and swap `_validateSegment`
+     for it, adding a containment check to the response cache too.
    - Safety payload fidelity (watch item, no action): see the
      `ContentSafetyService` N/A row's caveat.
 

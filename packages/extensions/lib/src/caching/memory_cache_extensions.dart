@@ -24,13 +24,15 @@ extension MemoryCacheExtensions on MemoryCache {
     final entry = createEntry(key)..value = value;
 
     if (options != null) {
+      // Apply size first because an entry rejects it once committed. If that
+      // happens, none of the other options should have been changed.
       entry
+        ..size = options.size
         ..absoluteExpiration = options.absoluteExpiration
         ..absoluteExpirationRelativeToNow =
             options.absoluteExpirationRelativeToNow
         ..slidingExpiration = options.slidingExpiration
-        ..priority = options.priority
-        ..size = options.size;
+        ..priority = options.priority;
 
       if (options.hasExpirationTokens) {
         for (final token in options.expirationTokens) {

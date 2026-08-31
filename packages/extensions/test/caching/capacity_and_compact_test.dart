@@ -39,6 +39,102 @@ void main() {
           ..dispose();
       });
 
+      for (final sizeLimit in <int?>[null, 10]) {
+        test('Setting size after the entry is committed throws '
+            '(sizeLimit: $sizeLimit)', () {
+          final cache = MemoryCacheImpl(
+            MemoryCacheOptions(sizeLimit: sizeLimit),
+          );
+
+          final entry = cache.createEntry('key')
+            ..size = 5
+            ..value = 'value'
+            ..commitToCache();
+
+          expect(() => entry.size = 6, throwsStateError);
+          expect(() => entry.size = null, throwsStateError);
+          expect(entry.size, equals(5));
+
+          cache.dispose();
+        });
+      }
+
+      test('Setting size after commit validates the argument before state', () {
+        final cache = MemoryCacheImpl(MemoryCacheOptions(sizeLimit: 10));
+
+        final entry = cache.createEntry('key')
+          ..size = 5
+          ..value = 'value'
+          ..commitToCache();
+
+        // A negative size is reported as an argument problem, not a state one.
+        expect(() => entry.size = -1, throwsArgumentError);
+
+        cache.dispose();
+      });
+
+      test('Setting size after committing without a value throws', () {
+        final cache = MemoryCacheImpl(MemoryCacheOptions(sizeLimit: 10));
+
+        final entry = cache.createEntry('key')
+          ..size = 5
+          ..commitToCache();
+
+        expect(() => entry.size = 6, throwsStateError);
+
+        cache.dispose();
+      });
+
+      test('Setting size on an entry captured by getOrCreate throws', () {
+        final cache = MemoryCacheImpl(
+          MemoryCacheOptions(sizeLimit: 10, trackStatistics: true),
+        );
+
+        late final CacheEntry captured;
+        final value = cache.getOrCreate<String>('key', (entry) {
+          captured = entry;
+          entry.size = 4;
+          return 'value';
+        });
+
+        expect(value, equals('value'));
+        expect(() => captured.size = 2, throwsStateError);
+        expect(cache.getCurrentStatistics()?.currentEstimatedSize, equals(4));
+
+        cache.remove('key');
+        expect(cache.getCurrentStatistics()?.currentEstimatedSize, equals(0));
+
+        cache.dispose();
+      });
+
+      test('Setting size after commit does not skew the tracked size', () {
+        final cache = MemoryCacheImpl(
+          MemoryCacheOptions(sizeLimit: 10, trackStatistics: true),
+        );
+
+        final entry = cache.createEntry('key')
+          ..size = 4
+          ..value = 'value'
+          ..commitToCache();
+
+        expect(cache.getCurrentStatistics()?.currentEstimatedSize, equals(4));
+
+        expect(() => entry.size = 2, throwsStateError);
+        expect(cache.getCurrentStatistics()?.currentEstimatedSize, equals(4));
+
+        cache.remove('key');
+        expect(cache.getCurrentStatistics()?.currentEstimatedSize, equals(0));
+
+        // The accounting is not latched: an entry needing the whole limit is
+        // still admitted, which a skewed total would have compacted away.
+        cache.set('key2', 'value2', MemoryCacheEntryOptions()..size = 10);
+
+        expect(cache.get<String>('key2'), equals('value2'));
+        expect(cache.getCurrentStatistics()?.currentEstimatedSize, equals(10));
+
+        cache.dispose();
+      });
+
       test('Entries without size do not contribute to limit', () {
         final cache = MemoryCacheImpl(
           MemoryCacheOptions(sizeLimit: 100, trackStatistics: true),
