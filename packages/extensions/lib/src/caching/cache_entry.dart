@@ -43,6 +43,12 @@ abstract class CacheEntry {
   set priority(CacheItemPriority value);
 
   /// Gets or sets the size of the cache entry value.
+  ///
+  /// The size is used by [MemoryCache] implementations that enforce a size
+  /// limit, and is read both when the entry is added to the cache and when it
+  /// is removed from it. Implementations are therefore free to reject a change
+  /// made after the entry has been committed; the built-in cache throws a
+  /// [StateError] in that case.
   int? get size;
   set size(int? value);
 }

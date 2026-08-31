@@ -90,11 +90,19 @@ class CacheEntryInternal implements CacheEntry {
 
   @override
   set size(int? val) {
+    // A negative size is reported as an argument problem before the committed
+    // state is checked, so the two failures do not depend on ordering.
     if (val != null && val < 0) {
       throw ArgumentError.value(
         val,
         'size',
         'The size value must be non-negative.',
+      );
+    }
+    if (_isCommitted) {
+      throw StateError(
+        'The value of size cannot be changed after the cache entry has been '
+        'committed to the cache. Set size before committing the entry.',
       );
     }
     _size = val;
@@ -107,6 +115,9 @@ class CacheEntryInternal implements CacheEntry {
   @override
   List<PostEvictionCallbackRegistration> get postEvictionCallbacks =>
       _postEvictionCallbacks ??= <PostEvictionCallbackRegistration>[];
+
+  /// Whether [commit] has run, freezing the entry against [size] changes.
+  bool get isCommitted => _isCommitted;
 
   DateTime get lastAccessed => _lastAccessed ?? clock.now();
 
