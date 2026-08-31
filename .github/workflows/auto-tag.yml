@@ -1,0 +1,61 @@
+# Turns a version bump on main into a release, automatically:
+# when packages/*/pubspec.yaml carries a version pub.dev doesn't have yet,
+# this pushes the matching release tag (extensions-v<version> /
+# extensions_flutter-v<version>), which fires publish.yml to do the publish.
+#
+# Requires a RELEASE_PAT repo secret (fine-grained PAT with contents:write
+# on this repo). A tag pushed with the default GITHUB_TOKEN would NOT
+# trigger publish.yml — that is a GitHub Actions rule, not a choice here.
+# Without the secret, this workflow just reports the pending release and
+# the tag must be pushed by hand.
+
+name: Auto-tag releases
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'packages/extensions/pubspec.yaml'
+      - 'packages/extensions_flutter/pubspec.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tag unpublished versions
+        env:
+          RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+        run: |
+          # Core package first: extensions_flutter depends on extensions.
+          for PKG in extensions extensions_flutter; do
+            VERSION=$(grep '^version:' "packages/$PKG/pubspec.yaml" | awk '{print $2}')
+            [ -n "$VERSION" ] || { echo "::warning::no version in packages/$PKG/pubspec.yaml"; continue; }
+            TAG="$PKG-v$VERSION"
+
+            PUB_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://pub.dev/api/packages/$PKG/versions/$VERSION")
+            if [ "$PUB_STATUS" = "200" ]; then
+              echo "$PKG $VERSION is already on pub.dev — nothing to do"
+              continue
+            fi
+
+            if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+              echo "$TAG already exists — publish should already be running or done"
+              continue
+            fi
+
+            if [ -z "$RELEASE_PAT" ]; then
+              echo "::warning::$PKG $VERSION is unpublished but RELEASE_PAT is not set." \
+                   "Push the tag by hand: git tag $TAG && git push origin $TAG"
+              continue
+            fi
+
+            git tag "$TAG"
+            git push "https://x-access-token:${RELEASE_PAT}@github.com/${GITHUB_REPOSITORY}.git" "$TAG"
+            echo "pushed $TAG — publish.yml takes it from here"
+          done

@@ -1,0 +1,62 @@
+# Publishes a package to pub.dev when its release tag is pushed:
+#   extensions-v0.7.2          -> packages/extensions
+#   extensions_flutter-v0.5.3  -> packages/extensions_flutter
+#
+# Uses pub.dev automated publishing (GitHub OIDC — no secrets). One-time
+# setup per package on pub.dev (Admin tab -> Automated publishing):
+#   repository: jamiewest/extensions
+#   tag pattern: extensions-v{{version}}         (extensions)
+#   tag pattern: extensions_flutter-v{{version}} (extensions_flutter)
+#
+# Tags are normally pushed automatically by auto-tag.yml when a version bump
+# lands on main; pushing a tag by hand works the same way. When both packages
+# bump, extensions publishes first (extensions_flutter depends on it) — if
+# the flutter publish races ahead and fails on the unpublished dep, re-run it.
+
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - 'extensions-v[0-9]+.[0-9]+.[0-9]+*'
+      - 'extensions_flutter-v[0-9]+.[0-9]+.[0-9]+*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # required for pub.dev OIDC token exchange
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve package and version from tag
+        id: pkg
+        run: |
+          TAG="$GITHUB_REF_NAME"
+          PKG="${TAG%-v*}"
+          VERSION="${TAG##*-v}"
+          case "$PKG" in
+            extensions|extensions_flutter) ;;
+            *) echo "::error::unknown package prefix in tag $TAG"; exit 1 ;;
+          esac
+          echo "dir=packages/$PKG" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tag matches pubspec version
+        run: |
+          PUBSPEC_VERSION=$(grep '^version:' "${{ steps.pkg.outputs.dir }}/pubspec.yaml" | awk '{print $2}')
+          if [ "$PUBSPEC_VERSION" != "${{ steps.pkg.outputs.version }}" ]; then
+            echo "::error::tag says ${{ steps.pkg.outputs.version }} but pubspec.yaml says $PUBSPEC_VERSION"
+            exit 1
+          fi
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Publish
+        working-directory: ${{ steps.pkg.outputs.dir }}
+        run: |
+          flutter pub get
+          dart pub publish --force
