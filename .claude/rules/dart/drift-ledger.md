@@ -4,6 +4,21 @@ Checked-in state of the C# → Dart port audit. The `/drift` command reads this
 file to filter intentional divergences out of its report and updates it after
 each run. Porting rules live in [porting.md](porting.md).
 
+## Upstream sync state
+
+The newest upstream commit (touching an in-scope path) that a drift run has
+reviewed, per upstream repo:
+
+`upstream-sync(dotnet/runtime): a3a0683d3fa4d8841a46cf2e27cc1a86fdb9e964 2026-08-13T16:10:15Z`
+`upstream-sync(dotnet/extensions): 7b76f096f9bc4cc254daec5ef5352941c9e07387 2026-08-14T16:25:19Z`
+
+These lines are machine-read by `/drift` and by
+`.github/workflows/upstream-watch.yml` — keep the
+`upstream-sync(<repo>): <sha> <ISO date>` format intact (the date is the pin
+commit's committer date, used as the `since` cursor for incremental checks).
+Every incremental drift run must advance the pin(s) it reviewed, in the same
+commit as any ported changes.
+
 ## Subsystem status
 
 Upstream paths verified 2026-07-06 (Contents API) and 2026-08-16 (git trees

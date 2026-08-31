@@ -1,6 +1,6 @@
 ---
 description: Check for drift between upstream C# Microsoft.Extensions.* and this Dart port. Use when asked to check drift, port sync, upstream changes, or implementation gaps.
-argument-hint: [hosting|dependency_injection|logging|configuration|options|caching|http|primitives|file_providers|file_system_globbing|ai|diagnostics|vector_data|runtime|extensions-repo|all] (default: all)
+argument-hint: [sync | full | hosting|dependency_injection|logging|configuration|options|caching|http|primitives|file_providers|file_system_globbing|ai|diagnostics|vector_data|runtime|extensions-repo|all] (default: incremental review since last sync)
 allowed-tools: [Read, Bash, WebFetch, Glob, Grep, Edit, Write]
 ---
 
@@ -14,9 +14,19 @@ Two companion files under `.claude/rules/dart/` are part of this workflow:
 
 - `porting.md` — the C# → Dart porting rules (consult it when reporting how a
   gap should be closed).
-- `drift-ledger.md` — checked-in audit state: per-subsystem status, the list
-  of types intentionally not ported, and open priorities. You MUST read it in
-  Step 2.5 and update it in Step 8.
+- `drift-ledger.md` — checked-in audit state: the **upstream sync pins**
+  (`upstream-sync(<repo>): <sha> <ISO date>` lines), per-subsystem status, the
+  list of types intentionally not ported, and open priorities. You MUST read
+  it before anything else, and update it at the end of every run.
+
+## Modes
+
+| Invocation | What it does |
+|---|---|
+| `/drift` | **Incremental review** — list and classify upstream commits since the sync pins, across both upstream repos. Report only; no code changes. |
+| `/drift sync` | Incremental review, then **port the applicable changes**, advance the pins, and prepare a branch + PR. |
+| `/drift full` or `/drift all` | Exhaustive structural audit (every subsystem) — the pre-incremental behavior (Step 1 onward). |
+| `/drift <subsystem>` / `runtime` / `extensions-repo` | Exhaustive audit scoped per the table below. |
 
 ## Namespace scope
 
@@ -66,6 +76,86 @@ All paths in this table were verified against the GitHub Contents API on
 > Note: `packages/extensions/lib/src/system/` holds local Dart utility types
 > (disposables, threading, string helpers) with no direct upstream counterpart.
 > Skip it.
+
+---
+
+# Incremental mode (`/drift`, `/drift sync`)
+
+## Step I1 — Collect upstream commits since the pins
+
+Read both `upstream-sync(...)` pins from `drift-ledger.md`. Then:
+
+**dotnet/extensions** (one query — `src/Libraries` covers every in-scope row):
+
+```bash
+curl -s "https://api.github.com/repos/dotnet/extensions/commits?path=src/Libraries&since=<extensions pin date>&per_page=100"
+```
+
+**dotnet/runtime** (one query per in-scope path — the commits API takes a
+single `path`; loop the 11 dotnet/runtime rows in the table above, then
+dedupe by SHA):
+
+```bash
+curl -s "https://api.github.com/repos/dotnet/runtime/commits?path=<C# source path>&since=<runtime pin date>&per_page=100"
+```
+
+Drop the pin commits themselves from each result (`since` is inclusive).
+If both lists are empty, report "in sync as of <pin dates>" and stop.
+
+## Step I2 — Classify each commit
+
+For each new commit, fetch its file list
+(`https://api.github.com/repos/<repo>/commits/<sha>` includes per-file paths
+and patches) and keep only files under in-scope paths. Classify:
+
+- **Out of scope** — only touches tests/csproj/build files, or libraries the
+  ledger rules N/A (`.Console`, `.Reporting.Azure`, `AI.OpenAI`). One line,
+  move on.
+- **Applicable** — read the patch (fetch full files via the raw URL when the
+  patch lacks context) and the corresponding Dart code, then decide:
+  - **port** — behavior/API change the Dart port should mirror,
+  - **already covered** — the port already behaves this way (say why),
+  - **skip (ledger)** — covered by the ledger's N/A table or an open-priority
+    scope decision (count as suppressed),
+  - **skip (propose)** — you judge it not applicable per `porting.md` (e.g.
+    .NET-only machinery); needs a new ledger N/A entry recording that.
+
+## Step I3 — Report (both incremental modes)
+
+Produce a table per upstream repo: PR#/sha, date, one-line summary,
+subsystem, classification, and for "port" items a one-line sketch of the
+Dart change. Then totals and the suppressed count. In plain `/drift` mode,
+stop here — do not edit code (advancing the pins alone is allowed when
+everything was out of scope, but say you did).
+
+## Step I4 — Sync (only `/drift sync`)
+
+1. Work on a branch (`drift/sync-<YYYY-MM-DD>`), never directly on `main`
+   (in an environment that already put you on a work branch, use that).
+2. Port each "port" item per `porting.md`. Add or extend tests mirroring
+   upstream's where they exist.
+3. Record every "skip (propose)" decision in the ledger's N/A table, and
+   update subsystem status rows the sync touched.
+4. Advance both `upstream-sync(...)` pins to the newest commit reviewed per
+   repo — even when everything was skipped, so the next run starts here.
+5. Verify:
+   ```bash
+   cd packages/extensions && dart pub get && dart analyze && dart test
+   cd ../extensions_flutter && flutter pub get && flutter analyze && flutter test
+   ```
+6. **Downstream ripple:** `package:extensions` is consumed by
+   `jamiewest/agents` (which ports the agent-framework built on
+   Microsoft.Extensions.AI upstream). If the sync changes public API —
+   especially under `lib/src/ai/` — check the sibling checkout
+   `~/Developer/agents` (`cd packages/agents && dart analyze` with a path
+   override to this repo) when available; otherwise state the unverified
+   ripple in the PR body. CI's downstream-canary job also checks this.
+7. Commit with a body itemizing each ported upstream PR# and each recorded
+   skip, push the branch, and open a PR with `gh pr create`. Do not merge it.
+
+---
+
+# Full audit mode (`/drift full`, `/drift <subsystem>`)
 
 ## Step 1 — Discover C# source structure via targeted Contents API calls
 
@@ -367,6 +457,9 @@ the next run starts from accurate state:
    it to the **Intentionally not ported** table with a one-line reason.
 3. Rewrite the **Open priorities** list to match the report's "Top 3
    actions" plus any remaining known items, most impactful first.
+4. A full audit that leaves a subsystem gap-free may also advance the
+   `upstream-sync(...)` pin for that subsystem's repo, if the whole repo
+   scope was covered.
 
 Do not delete N/A entries or unrelated subsystem rows; this file is
 cumulative state shared across sessions.

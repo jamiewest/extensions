@@ -1,0 +1,175 @@
+# Watches dotnet/runtime and dotnet/extensions for new in-scope commits
+# beyond the `upstream-sync(<repo>): <sha> <date>` pins in
+# .claude/rules/dart/drift-ledger.md.
+#
+# - Always: opens/updates a tracking issue when there is new drift, closes it
+#   when the repo is back in sync. Costs nothing, needs no secrets.
+# - Optionally: if an ANTHROPIC_API_KEY repo secret exists, runs `/drift sync`
+#   via claude-code-action and opens a PR with the ported changes.
+#   Note: PRs opened with the default GITHUB_TOKEN do not trigger the CI
+#   workflow; add a classic PAT as DRIFT_PAT if you want checks on drift PRs.
+
+name: Upstream drift watch
+
+on:
+  schedule:
+    - cron: '43 13 * * 1'  # Mondays 13:43 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    outputs:
+      count: ${{ steps.drift.outputs.count }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect new upstream commits
+        id: drift
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, re, subprocess
+
+          LEDGER = ".claude/rules/dart/drift-ledger.md"
+          RUNTIME_PATHS = [
+              "src/libraries/Microsoft.Extensions.Hosting/src",
+              "src/libraries/Microsoft.Extensions.DependencyInjection/src",
+              "src/libraries/Microsoft.Extensions.Logging/src",
+              "src/libraries/Microsoft.Extensions.Configuration/src",
+              "src/libraries/Microsoft.Extensions.Options/src",
+              "src/libraries/Microsoft.Extensions.Caching.Memory/src",
+              "src/libraries/Microsoft.Extensions.Http/src",
+              "src/libraries/Microsoft.Extensions.Primitives/src",
+              "src/libraries/Microsoft.Extensions.FileProviders.Physical/src",
+              "src/libraries/Microsoft.Extensions.FileSystemGlobbing/src",
+              "src/libraries/Microsoft.Extensions.Diagnostics/src",
+          ]
+
+          pins = {repo: (sha, date) for repo, sha, date in re.findall(
+              r"upstream-sync\(([^)]+)\): ([0-9a-f]{40}) ([^\s`]+)", open(LEDGER).read())}
+          missing = {"dotnet/runtime", "dotnet/extensions"} - pins.keys()
+          if missing:
+              raise SystemExit(f"::error::missing upstream-sync pin(s) in {LEDGER}: {missing}")
+
+          def commits(repo, path, since):
+              out = subprocess.run(
+                  ["gh", "api",
+                   f"repos/{repo}/commits?path={path}&since={since}&per_page=100"],
+                  capture_output=True, text=True, check=True).stdout
+              return json.loads(out)
+
+          new = {}  # sha -> (repo, commit)
+          for repo, paths in [("dotnet/extensions", ["src/Libraries"]),
+                              ("dotnet/runtime", RUNTIME_PATHS)]:
+              pin_sha, pin_date = pins[repo]
+              for p in paths:
+                  for c in commits(repo, p, pin_date):
+                      if c["sha"] != pin_sha:
+                          new[c["sha"]] = (repo, c)
+
+          rows = sorted(new.values(),
+                        key=lambda rc: rc[1]["commit"]["committer"]["date"],
+                        reverse=True)
+          lines = []
+          for repo, c in rows:
+              sha, date = c["sha"], c["commit"]["committer"]["date"][:10]
+              title = c["commit"]["message"].splitlines()[0]
+              lines.append(f"- **{repo}** [`{sha[:10]}`](https://github.com/{repo}/commit/{sha}) {date} — {title}")
+
+          with open("body.md", "w") as f:
+              f.write("Upstream commits since the last sync (pins in "
+                      "`.claude/rules/dart/drift-ledger.md`):\n\n")
+              f.write("\n".join(lines) + "\n\n")
+              f.write("To resolve: run `/drift sync` in a Claude Code session on this "
+                      "repo, review the PR it opens, and merge. The sync must advance "
+                      "the `upstream-sync(...)` pins, which closes this issue on the "
+                      "next run.\n\nHeads-up: `dotnet/extensions` AI changes may also "
+                      "ripple into the downstream `jamiewest/agents` port.\n")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"count={len(rows)}\n")
+          EOF
+
+      - name: Open or update tracking issue
+        if: steps.drift.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COUNT: ${{ steps.drift.outputs.count }}
+        run: |
+          TITLE="Upstream drift: $COUNT new in-scope commit(s) since last sync"
+          EXISTING=$(gh issue list --state open --search "Upstream drift in:title" \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue edit "$EXISTING" --title "$TITLE" --body-file body.md
+          else
+            gh issue create --title "$TITLE" --body-file body.md
+          fi
+
+      - name: Close tracking issue if in sync
+        if: steps.drift.outputs.count == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          EXISTING=$(gh issue list --state open --search "Upstream drift in:title" \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh issue close "$EXISTING" \
+              --comment "Back in sync — the upstream-sync pins now cover all in-scope commits."
+          fi
+
+  # Optional autonomous sync: skipped cleanly unless the ANTHROPIC_API_KEY
+  # secret is configured. Runs /drift sync (see .claude/commands/drift.md),
+  # which ports applicable changes, advances the pins, and opens a PR.
+  sync:
+    needs: detect
+    if: needs.detect.outputs.count != '0'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Check for API key
+        id: key
+        env:
+          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -n "$KEY" ]; then echo "have=true" >> "$GITHUB_OUTPUT"; else echo "have=false" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/checkout@v4
+        if: steps.key.outputs.have == 'true'
+        with:
+          fetch-depth: 0
+
+      - uses: subosito/flutter-action@v2
+        if: steps.key.outputs.have == 'true'
+        with:
+          channel: stable
+          cache: true
+
+      - name: Run drift sync
+        if: steps.key.outputs.have == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ github.token }}
+          prompt: |
+            Run the /drift sync procedure from .claude/commands/drift.md.
+            Work on a branch named drift/sync-<today's date>, verify with
+            dart analyze + dart test in packages/extensions and flutter
+            analyze + flutter test in packages/extensions_flutter, then push
+            the branch and open a PR against main with gh. Do NOT merge the
+            PR. If a drift/sync PR is already open, update that branch
+            instead of opening a second PR. If every new upstream commit is
+            out of scope, still open a PR that only advances the
+            upstream-sync pins and records the skip decisions in the ledger.
+            If the sync changes public API under lib/src/ai/, say so
+            prominently in the PR body — jamiewest/agents consumes it.
+          claude_args: |
+            --allowedTools "Bash,Read,Write,Edit,Glob,Grep,WebFetch"

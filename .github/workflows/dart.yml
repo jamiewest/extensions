@@ -83,3 +83,47 @@ jobs:
           name: Flutter Tests
           path: test-results-flutter.json
           reporter: flutter-json
+
+  # Canary: does this change break the downstream jamiewest/agents port,
+  # which consumes package:extensions (notably lib/src/ai/)? Analyzes agents
+  # against THIS checkout via a path override, so breaks surface here —
+  # before a release forces agents to discover them on a version bump.
+  # Make it informational instead of blocking with `continue-on-error: true`.
+  downstream-agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: extensions
+
+      - uses: actions/checkout@v4
+        with:
+          repository: jamiewest/agents
+          path: agents
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Override agents' extensions dependency with this checkout
+        run: |
+          cat > agents/pubspec_overrides.yaml <<EOF
+          dependency_overrides:
+            extensions:
+              path: ../extensions/packages/extensions
+            extensions_flutter:
+              path: ../extensions/packages/extensions_flutter
+          EOF
+
+      - name: Analyze agents against this extensions checkout
+        working-directory: agents/packages/agents
+        run: |
+          dart pub get
+          dart analyze
+
+      - name: Analyze agents_flutter against this extensions checkout
+        working-directory: agents/packages/agents_flutter
+        run: |
+          flutter pub get
+          flutter analyze
