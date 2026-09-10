@@ -118,24 +118,49 @@ extension NumericMetricInterpretationExtensions on NumericMetric {
 
   /// Interprets a 1–5 score (quality evaluators like Coherence, Fluency).
   ///
-  /// Scores below 3 are considered failures.
+  /// Scores below 4.0 are considered failures. The interpretation fails closed:
+  /// a metric with no score at all (which is what happens when the judge's
+  /// reply cannot be parsed) and a score outside the 1–5 scale the ratings
+  /// cover are both reported as failures, so a pipeline that gates on
+  /// [EvaluationMetricInterpretation.failed] never treats an unscored metric
+  /// as a pass.
   EvaluationMetricInterpretation interpretScore() {
     final v = value;
+    final rating = v == null
+        ? EvaluationRating.inconclusive
+        : switch (v) {
+            > 5.0 => EvaluationRating.inconclusive,
+            > 4.0 => EvaluationRating.exceptional,
+            > 3.0 => EvaluationRating.good,
+            > 2.0 => EvaluationRating.average,
+            > 1.0 => EvaluationRating.poor,
+            > 0.0 => EvaluationRating.unacceptable,
+            _ => EvaluationRating.inconclusive,
+          };
+
+    const minimumPassingScore = 4.0;
     if (v == null) {
       return EvaluationMetricInterpretation(
-        rating: EvaluationRating.inconclusive,
+        rating: rating,
+        failed: true,
+        reason: '$name has no score.',
       );
     }
-    final rating = v >= 5
-        ? EvaluationRating.exceptional
-        : v >= 4
-        ? EvaluationRating.good
-        : v >= 3
-        ? EvaluationRating.average
-        : v >= 2
-        ? EvaluationRating.poor
-        : EvaluationRating.unacceptable;
-    return EvaluationMetricInterpretation(rating: rating, failed: v < 3);
+    if (v < minimumPassingScore) {
+      return EvaluationMetricInterpretation(
+        rating: rating,
+        failed: true,
+        reason: '$name is less than $minimumPassingScore.',
+      );
+    }
+    if (rating == EvaluationRating.inconclusive) {
+      return EvaluationMetricInterpretation(
+        rating: rating,
+        failed: true,
+        reason: '$name is outside the valid range.',
+      );
+    }
+    return EvaluationMetricInterpretation(rating: rating);
   }
 
   /// Interprets a 0–7 severity scale used by content safety evaluators.

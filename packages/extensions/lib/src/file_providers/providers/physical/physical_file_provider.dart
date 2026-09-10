@@ -30,7 +30,8 @@ class PhysicalFileProvider implements FileProvider, Disposable {
   /// Creates a new instance of [PhysicalFileProvider] at the given
   /// root directory.
   ///
-  /// The [root] path must be an absolute path for [fileSystem].
+  /// The [root] path must be an absolute path for [fileSystem]. The directory
+  /// isn't required to exist.
   factory PhysicalFileProvider(
     String root, {
     FileSystem? fileSystem,
@@ -155,6 +156,12 @@ class PhysicalFileProvider implements FileProvider, Disposable {
     }
   }
 
+  /// Creates a [ChangeToken] for the specified [filter].
+  ///
+  /// [filter] is a globbing pattern used to determine what files or
+  /// directories to monitor. Examples: `**/*.dart`, `*.*`, and
+  /// `subDirectory/**/*.json`. The files or directories aren't required to
+  /// exist when this method is called.
   @override
   ChangeToken watch(String filter) => _watcher.createFileChangeToken(filter);
 

@@ -38,7 +38,14 @@ class PollingWildcardChangeToken implements ChangeToken {
     _lastCheckedTime = clock.now();
   }
 
-  Map<String, _FileState> _getCurrentState() {
+  /// Scans the root directory for files matching the pattern.
+  ///
+  /// Returns `null` when the directory could not be scanned — for example
+  /// because a network share went down or the directory became inaccessible.
+  /// Callers treat that as "no change" and keep the last successful scan as
+  /// the baseline, so a change made during the outage is still detected once
+  /// the file system recovers.
+  Map<String, _FileState>? _getCurrentState() {
     final state = <String, _FileState>{};
 
     try {
@@ -77,7 +84,9 @@ class PollingWildcardChangeToken implements ChangeToken {
         }
       }
     } catch (e) {
-      // If we can't list files, return empty state
+      // The directory couldn't be scanned. Report no change rather than an
+      // empty state, which would compare as "everything was removed".
+      return null;
     }
 
     return state;
@@ -106,13 +115,20 @@ class PollingWildcardChangeToken implements ChangeToken {
 
     final currentState = _getCurrentState();
 
-    // Check if the state has changed
-    if (_previousState == null) {
-      _hasChanged = currentState.isNotEmpty;
-    } else {
-      // Check for added, removed, or modified files
-      _hasChanged = _stateHasChanged(_previousState!, currentState);
+    if (currentState == null) {
+      // Transient file system failure: retry on the next poll.
+      return false;
     }
+
+    if (_previousState == null) {
+      // No baseline yet, because the initial scan failed. Adopt this scan as
+      // the baseline instead of reporting a change that never happened.
+      _previousState = currentState;
+      return false;
+    }
+
+    // Check for added, removed, or modified files
+    _hasChanged = _stateHasChanged(_previousState!, currentState);
 
     if (_hasChanged) {
       _previousState = currentState;
@@ -156,12 +172,19 @@ class PollingWildcardChangeToken implements ChangeToken {
 
     final currentState = _getCurrentState();
 
-    // Check if the state has changed
-    final changed =
-        _previousState != null &&
-        _stateHasChanged(_previousState!, currentState);
+    if (currentState == null) {
+      // Transient file system failure: retry on the next poll.
+      return;
+    }
 
-    if (changed) {
+    if (_previousState == null) {
+      // No baseline yet, because the initial scan failed.
+      _previousState = currentState;
+      return;
+    }
+
+    // Check if the state has changed
+    if (_stateHasChanged(_previousState!, currentState)) {
       _hasChanged = true;
       _previousState = currentState;
       _invokeCallbacks();

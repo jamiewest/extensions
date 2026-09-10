@@ -3,10 +3,46 @@ import 'dart:io' as io;
 import 'package:extensions/file_providers.dart';
 import 'package:extensions/system.dart' hide equals;
 import 'package:file/local.dart';
+import 'package:file/memory.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
 Directory _localDir(String path) => const LocalFileSystem().directory(path);
+
+/// A directory whose recursive listing can be made to fail on demand, standing
+/// in for a network share that goes down or a directory that becomes
+/// inaccessible.
+class _FaultyDirectory implements Directory {
+  _FaultyDirectory(this._delegate);
+
+  final Directory _delegate;
+
+  /// When true, [listSync] throws instead of enumerating.
+  bool failScans = false;
+
+  @override
+  List<FileSystemEntity> listSync({
+    bool recursive = false,
+    bool followLinks = true,
+  }) {
+    if (failScans) {
+      throw const FileSystemException('Simulated file system failure');
+    }
+    return _delegate.listSync(recursive: recursive, followLinks: followLinks);
+  }
+
+  @override
+  bool existsSync() => _delegate.existsSync();
+
+  @override
+  String get path => _delegate.path;
+
+  @override
+  FileSystem get fileSystem => _delegate.fileSystem;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
 void main() {
   late io.Directory tempDir;
@@ -734,6 +770,84 @@ void main() {
 
       expect(token.hasChanged, isTrue);
       expect(fired, isTrue);
+
+      token.dispose();
+    });
+
+    test('reports no change while the directory cannot be scanned', () async {
+      final fs = MemoryFileSystem();
+      fs.directory('/root').createSync(recursive: true);
+      fs.file('/root/a.txt').writeAsStringSync('a');
+      final root = _FaultyDirectory(fs.directory('/root'));
+
+      final token = PollingWildcardChangeToken(
+        root,
+        '*.txt',
+        pollingInterval: const Duration(milliseconds: 50),
+      );
+
+      root.failScans = true;
+
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      expect(token.hasChanged, isFalse);
+
+      token.dispose();
+    });
+
+    test('detects a change made during an outage once it recovers', () async {
+      final fs = MemoryFileSystem();
+      fs.directory('/root').createSync(recursive: true);
+      fs.file('/root/a.txt').writeAsStringSync('a');
+      final root = _FaultyDirectory(fs.directory('/root'));
+
+      final token = PollingWildcardChangeToken(
+        root,
+        '*.txt',
+        pollingInterval: const Duration(milliseconds: 50),
+      );
+
+      root.failScans = true;
+      fs.file('/root/b.txt').writeAsStringSync('b');
+
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      expect(token.hasChanged, isFalse);
+
+      root.failScans = false;
+
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      expect(token.hasChanged, isTrue);
+
+      token.dispose();
+    });
+
+    test('does not report a change after an initial failed scan', () async {
+      final fs = MemoryFileSystem();
+      fs.directory('/root').createSync(recursive: true);
+      fs.file('/root/a.txt').writeAsStringSync('a');
+      final root = _FaultyDirectory(fs.directory('/root'))..failScans = true;
+
+      // The scan performed by the constructor fails, so there is no baseline.
+      final token = PollingWildcardChangeToken(
+        root,
+        '*.txt',
+        pollingInterval: const Duration(milliseconds: 50),
+      );
+
+      root.failScans = false;
+
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      // The first successful scan becomes the baseline rather than a change.
+      expect(token.hasChanged, isFalse);
+
+      fs.file('/root/b.txt').writeAsStringSync('b');
+
+      await Future<void>.delayed(const Duration(milliseconds: 60));
+
+      expect(token.hasChanged, isTrue);
 
       token.dispose();
     });

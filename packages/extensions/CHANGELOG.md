@@ -1,3 +1,33 @@
+## 0.8.1
+
+* **Quality metric interpretation now fails closed** (port of
+  dotnet/extensions #7735). `NumericMetric.interpretScore()` marked a metric
+  as failed only when its value parsed below the passing score, so a metric
+  with no value at all — which is what happens when the judge model's reply
+  cannot be parsed — took the not-failed branch. A pipeline gating on
+  `EvaluationMetricInterpretation.failed` therefore treated a metric that was
+  never scored as a pass. Metrics with no value, and values outside the 1–5
+  scale the ratings cover, are now reported as failures with a reason.
+  Porting the fix also corrected pre-existing drift in the same method: the
+  rating bands and the minimum passing score now match upstream exactly
+  (`> 5.0` and `<= 0.0` are inconclusive; `(4,5]` exceptional, `(3,4]` good,
+  `(2,3]` average, `(1,2]` poor, `(0,1]` unacceptable; the minimum passing
+  score is 4.0, not 3). Scores between 3 and 4 that previously passed now
+  fail, and scores that sat on a band boundary may be rated one band higher.
+* **Polling change tokens survive transient file system errors** (port of
+  dotnet/runtime #132617). A failed directory scan in
+  `PollingWildcardChangeToken` produced an empty state that compared as
+  "everything was removed", firing a spurious change notification whenever a
+  network share went down; it now reports no change and keeps the last
+  successful scan as the baseline, so a change made during the outage is
+  still detected once the file system recovers. A scan that fails before any
+  baseline exists no longer causes a false notification on the first
+  successful scan. `PollingFileChangeToken` likewise treats a failed metadata
+  read as no change instead of reporting the file as changed.
+* Documented that `PhysicalFileProvider`'s root directory and the files or
+  directories matched by `watch` aren't required to exist (port of
+  dotnet/runtime #133013).
+
 ## 0.8.0
 
 * **`CacheEntry.size` is frozen once the entry is committed** (port of
