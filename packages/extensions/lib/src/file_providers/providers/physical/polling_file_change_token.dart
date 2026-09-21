@@ -82,8 +82,8 @@ class PollingFileChangeToken implements ChangeToken {
         _previousWriteTime = null;
       }
     } catch (e) {
-      // If we can't access the file, consider it changed
-      _hasChanged = true;
+      // Treat a transient file system failure as no change and retry on the
+      // next poll, keeping the last observed write time as the baseline.
     }
 
     return _hasChanged;
@@ -114,8 +114,8 @@ class PollingFileChangeToken implements ChangeToken {
         _previousWriteTime = null;
       }
     } catch (e) {
-      // If we can't access the file, consider it changed
-      _hasChanged = true;
+      // Treat a transient file system failure as no change and retry on the
+      // next poll, keeping the last observed write time as the baseline.
     }
 
     if (_hasChanged) {

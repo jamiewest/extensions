@@ -30,7 +30,8 @@ class PhysicalFilesWatcher implements Disposable {
   /// Creates a new [PhysicalFilesWatcher] for the specified root directory.
   ///
   /// [fileSystem] - The filesystem backing the watched root.
-  /// [root] - The root directory to watch.
+  /// [root] - The root directory to watch. The directory isn't required to
+  /// exist.
   /// [useEventBasedWatcher] - If true, subscribes to filesystem events (when
   /// the platform supports them); otherwise polls on each token's interval.
   /// [_pollingInterval] - The interval at which polling tokens check for
@@ -53,6 +54,9 @@ class PhysicalFilesWatcher implements Disposable {
   /// - A specific file path (e.g., "appsettings.json")
   /// - A glob pattern (e.g., "**/*.json", "config/*.xml")
   /// - A directory path (e.g., "logs/")
+  ///
+  /// The files or directories aren't required to exist when this method is
+  /// called.
   ChangeToken createFileChangeToken(String filter) {
     if (filter.isEmpty) {
       return NullChangeToken();
