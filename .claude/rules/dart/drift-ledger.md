@@ -9,8 +9,8 @@ each run. Porting rules live in [porting.md](porting.md).
 The newest upstream commit (touching an in-scope path) that a drift run has
 reviewed, per upstream repo:
 
-`upstream-sync(dotnet/runtime): 6fa6b312059df1391964394cde231c78b8c6b0db 2026-09-04T18:26:59Z`
-`upstream-sync(dotnet/extensions): 47b6b06c811fbdb57250d4126f386cfde3f6e8b2 2026-09-03T12:05:51Z`
+`upstream-sync(dotnet/runtime): d13c2266aee45eac7f683e780fc7063d2063f825 2026-09-11T09:36:24Z`
+`upstream-sync(dotnet/extensions): d2364e510a46e730a50d672ed1d770de3c46a757 2026-09-11T17:16:45Z`
 
 These lines are machine-read by `/drift` and by
 `.github/workflows/upstream-watch.yml` — keep the
@@ -20,6 +20,32 @@ Every incremental drift run must advance the pin(s) it reviewed, in the same
 commit as any ported changes.
 
 ### Incremental sync log
+
+**2026-09-21b** (residue sweep, pins advanced from `6fa6b31` / `47b6b06`).
+Two `/drift sync` runs overlapped: the 2026-09-07 run below stalled mid-session
+and landed as #8 at 16:02Z today, while the scheduled 2026-09-21 run opened #9
+at 12:24Z off the pre-merge `main`. #9 re-ported the same three commits, so it
+was closed as superseded and only what #8 lacked was carried over here (#10,
+unrelated, hardened the release workflow the same day).
+
+| Upstream | Commit | Summary | Subsystem | Decision |
+|---|---|---|---|---|
+| dotnet/runtime | #133494 `d13c226` | reduce allocations in Microsoft.Extensions.Configuration | configuration | **skip (propose)** — `List` capacity hints and a collection-expression rewrite across `ConfigurationBuilder`, `ConfigurationManager` and `ReferenceCountedProvidersManager`; no behavior change, and Dart's growable `List` has no capacity-preallocating counterpart. New N/A entry covers this recurring class of edit. (`ReferenceCountedProvidersManager` is unported anyway — a known open gap) |
+| dotnet/extensions | #7749 `d2364e5` | fix duplicate separator in HTTP logging | — | **out of scope** — `Microsoft.Extensions.Http.Diagnostics`, which no scope row covers: the `http` row maps to dotnet/runtime's `Microsoft.Extensions.Http` |
+| dotnet/extensions | #7738 `c74cd51` | fix context and metric interpretation visualization | ai (evaluation) | **skip** — entirely the `TypeScript/` frontend of the HTML report; no C# library surface, and the Dart port has no `HtmlReportWriter` (same rationale as #7705, #7732) |
+
+Also carried over from #9, against `lib/src/ai/`: quality evaluators now set
+`interpretation` unconditionally. #8 ported `interpretScore`'s fail-closed
+behavior but left `quality_evaluator_base.dart` assigning the interpretation
+only in the parse-success branch, so an unparseable judge reply still left
+`interpretation == null` — the exact case upstream #7735 exists to fix.
+
+**Newer than this pin, deliberately not reviewed here** (they landed after
+#9's run and belong to the next increment): dotnet/extensions `e77687c`
+(#7766, tokenizer punctuation/number tokens) and `561bdf7` (#7768, GLEU
+scored against the best matching reference). Both touch
+`AI.Evaluation.NLP`, which **is** ported — treat them as the next run's
+first items.
 
 **2026-09-07** (`/drift sync`, pins advanced from `baeeb465` / `cc597aa2`).
 Nine new in-scope upstream commits reviewed; three ported, six skipped.
@@ -156,6 +182,7 @@ reason whenever a port decision rules something out.
 | `TextToSpeechClientExtensions` | ai | only `getService` overloads; collapses into the interface method (same rule as `RealtimeClientExtensions`). Ruled 2026-08-16 |
 | `HostedFileDownloadStream` | ai | collapsed: `HostedFileClient.download` returns a plain `Stream<List<int>>` and the file's media type/name come from `getFile` (see `HostedFileClientExtensions.downloadAsDataContent`); `DownloadToAsync` is `dart:io`-bound and the AI abstractions stay io-free — callers pipe the stream. Ruled 2026-08-16 |
 | `AIJsonSchemaCreateContext`, `AIJsonSchemaCreateOptions` | ai | belong to the schema-*creation* side (`AIJsonUtilities.Schema.Create.cs`), which is N/A per the existing schema-creation row. Ruled 2026-08-16 |
+| .NET allocation-tuning edits (`List<T>` capacity hints, collection expressions, `foreach`→indexer rewrites) | all | a recurring class of upstream micro-optimization with no behavior change; Dart's growable `List` has no capacity-preallocating counterpart worth mirroring. Covers dotnet/runtime #133494; apply to future commits of the same shape. Ruled 2026-09-21 |
 
 ## Open priorities
 
@@ -177,7 +204,30 @@ public constructor's `lifetime` + factory parameters. The audit ran at
 language version 3.13 (constraints raised 2026-08-16); either constructor
 form remains a correct port of a C# primary constructor.
 
-0. **New, found by the 2026-08-31 incremental sync** (small, both real) —
+0. **New, found by the 2026-09-21 residue sweep** (one item, real) —
+   - **evaluation: `RelevanceTruthAndCompletenessEvaluator` returns early on
+     an inconclusive rating, so it still does not fail closed.** With
+     `interpretScore` fixed (#7735) and `quality_evaluator_base` now
+     interpreting unconditionally, this is the *only* remaining evaluator
+     path that can leave a metric unfailed. On a rating that is null or
+     inconclusive it adds an error diagnostic to each of the three metrics
+     and `return`s
+     (`quality/relevance_truth_and_completeness_evaluator.dart:106`), so
+     relevance, truth and completeness end up with no value **and** no
+     interpretation — a caller gating on
+     `EvaluationMetricInterpretation.failed` reads `interpretation == null`,
+     not a failure. Upstream instead falls through to `UpdateResult()` in
+     every branch (`RelevanceTruthAndCompletenessEvaluator.cs:330`),
+     assigning `RelevanceTruthAndCompletenessRating.Inconclusive`'s values
+     and calling `InterpretScore()`.
+     Closing it means restructuring the method so the update always runs;
+     the one decision to make first is whether to mirror upstream's
+     sentinel values or leave `value` null and rely on the "has no score."
+     branch. Verified against the Dart source 2026-09-21; recorded rather
+     than guessed at because it is a larger change than the commit that
+     surfaced it.
+
+0a. **Found by the 2026-08-31 incremental sync** (small, both real) —
    - **hosting: background-service exceptions are not re-surfaced from
      `stop`.** Upstream `Host` collects faulting `BackgroundService`
      exceptions in `_backgroundServiceExceptions`, awaits the fire-and-forget

@@ -63,6 +63,19 @@ class PollingFileChangeToken implements ChangeToken {
 
     _lastCheckedTime = now;
 
+    _refreshWriteTime();
+
+    return _hasChanged;
+  }
+
+  /// Re-reads the file's last write time and records a change if it moved.
+  ///
+  /// A transient file system failure — the file briefly locked, a network
+  /// share going down, the path becoming inaccessible — leaves the recorded
+  /// write time untouched and reports no change, so the token is polled
+  /// again once the file system recovers instead of firing a spurious
+  /// notification.
+  void _refreshWriteTime() {
     try {
       if (_file.existsSync()) {
         final currentWriteTime = _file.lastModifiedSync();
@@ -82,11 +95,9 @@ class PollingFileChangeToken implements ChangeToken {
         _previousWriteTime = null;
       }
     } catch (e) {
-      // Treat a transient file system failure as no change and retry on the
-      // next poll, keeping the last observed write time as the baseline.
+      // Transient failure: keep the last observed write time as the
+      // baseline and retry on the next poll.
     }
-
-    return _hasChanged;
   }
 
   void _checkForChanges() {
@@ -95,28 +106,7 @@ class PollingFileChangeToken implements ChangeToken {
       return;
     }
 
-    try {
-      if (_file.existsSync()) {
-        final currentWriteTime = _file.lastModifiedSync();
-
-        if (_previousWriteTime == null) {
-          // File was created
-          _hasChanged = true;
-          _previousWriteTime = currentWriteTime;
-        } else if (currentWriteTime != _previousWriteTime) {
-          // File was modified
-          _hasChanged = true;
-          _previousWriteTime = currentWriteTime;
-        }
-      } else if (_previousWriteTime != null) {
-        // File was deleted
-        _hasChanged = true;
-        _previousWriteTime = null;
-      }
-    } catch (e) {
-      // Treat a transient file system failure as no change and retry on the
-      // next poll, keeping the last observed write time as the baseline.
-    }
+    _refreshWriteTime();
 
     if (_hasChanged) {
       _invokeCallbacks();
