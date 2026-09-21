@@ -7,6 +7,15 @@
 # on this repo). A tag pushed with the default GITHUB_TOKEN would NOT
 # trigger publish.yml — that is a GitHub Actions rule, not a choice here.
 #
+# The checkout below MUST keep persist-credentials: false. With the default
+# (true), actions/checkout writes the GITHUB_TOKEN into an
+# `http.https://github.com/.extraheader` git config, and that header wins
+# over credentials embedded in a push URL — so `git push https://…${PAT}@…`
+# authenticates as github-actions[bot] instead of as the PAT and fails with
+# "Permission to jamiewest/extensions.git denied to github-actions[bot]".
+# The job keeps contents: read on purpose: GITHUB_TOKEN should have no write
+# access here, because only a PAT-pushed tag triggers publish.yml.
+#
 # Without the secret this job FAILS, on purpose. It used to emit a
 # ::warning:: and exit 0, which meant a release could silently not happen
 # while the run showed green — 0.8.0 sat unpublished for three weeks that
@@ -28,16 +37,28 @@ permissions:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    # Generous, because a release may wait on a dependency's publish below.
+    timeout-minutes: 45
     steps:
+      # persist-credentials: false is load-bearing — see the header.
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Tag unpublished versions
         env:
           RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
+          # How long to wait for a dependency's publish to reach pub.dev
+          # before giving up. Overridable so the wait can be exercised.
+          PUBLISH_WAIT_SECONDS: ${{ vars.PUBLISH_WAIT_SECONDS || 1200 }}
         run: |
           # Packages whose release could not be tagged, reported together at
           # the end so one missing secret doesn't hide the second package.
           BLOCKED=""
+
+          # Set to the extensions version that is not on pub.dev yet, so the
+          # dependent package can wait for it before being tagged.
+          CORE_PENDING=""
 
           # Core package first: extensions_flutter depends on extensions.
           for PKG in extensions extensions_flutter; do
@@ -51,6 +72,12 @@ jobs:
               continue
             fi
 
+            # Not on pub.dev. If this is the core package, the dependent one
+            # must wait for it, whether we tag it below or its tag already
+            # exists with a publish still in flight.
+            [ "$PKG" = "extensions" ] && CORE_PENDING="$VERSION"
+
+            # Anonymous read; this repository is public.
             if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
               echo "$TAG already exists — publish should already be running or done"
               continue
@@ -60,6 +87,34 @@ jobs:
               echo "::error::$PKG $VERSION is unpublished and RELEASE_PAT is not set, so $TAG cannot be pushed."
               BLOCKED="$BLOCKED $TAG"
               continue
+            fi
+
+            # extensions_flutter depends on extensions, so publishing it
+            # before that dependency is on pub.dev fails resolution. Both
+            # tags used to be pushed back to back, leaving the two publish
+            # runs to race. Wait for the dependency instead.
+            if [ "$PKG" = "extensions_flutter" ] && [ -n "$CORE_PENDING" ]; then
+              echo "waiting for extensions $CORE_PENDING to reach pub.dev before pushing $TAG"
+              DEADLINE=$(( $(date +%s) + PUBLISH_WAIT_SECONDS ))
+              until [ "$(curl -s -o /dev/null -w '%{http_code}' \
+                          "https://pub.dev/api/packages/extensions/versions/$CORE_PENDING")" = "200" ]; do
+                if [ "$(date +%s)" -ge "$DEADLINE" ]; then
+                  {
+                    echo "## Release partly blocked"
+                    echo
+                    echo "\`extensions $CORE_PENDING\` did not reach pub.dev within" \
+                         "$PUBLISH_WAIT_SECONDS seconds, so \`$TAG\` was not pushed."
+                    echo
+                    echo "Check the publish run for \`extensions-v$CORE_PENDING\`. Once that" \
+                         "version is live, re-run this workflow — it skips whatever already" \
+                         "published and will push \`$TAG\` then."
+                  } >> "$GITHUB_STEP_SUMMARY"
+                  echo "::error::extensions $CORE_PENDING did not reach pub.dev in time; $TAG was not pushed. See the job summary."
+                  exit 1
+                fi
+                sleep 15
+              done
+              echo "extensions $CORE_PENDING is on pub.dev"
             fi
 
             git tag "$TAG"
