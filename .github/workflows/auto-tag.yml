@@ -6,8 +6,11 @@
 # Requires a RELEASE_PAT repo secret (fine-grained PAT with contents:write
 # on this repo). A tag pushed with the default GITHUB_TOKEN would NOT
 # trigger publish.yml — that is a GitHub Actions rule, not a choice here.
-# Without the secret, this workflow just reports the pending release and
-# the tag must be pushed by hand.
+#
+# Without the secret this job FAILS, on purpose. It used to emit a
+# ::warning:: and exit 0, which meant a release could silently not happen
+# while the run showed green — 0.8.0 sat unpublished for three weeks that
+# way. A red run is the only signal anyone actually notices.
 
 name: Auto-tag releases
 
@@ -32,6 +35,10 @@ jobs:
         env:
           RELEASE_PAT: ${{ secrets.RELEASE_PAT }}
         run: |
+          # Packages whose release could not be tagged, reported together at
+          # the end so one missing secret doesn't hide the second package.
+          BLOCKED=""
+
           # Core package first: extensions_flutter depends on extensions.
           for PKG in extensions extensions_flutter; do
             VERSION=$(grep '^version:' "packages/$PKG/pubspec.yaml" | awk '{print $2}')
@@ -50,8 +57,8 @@ jobs:
             fi
 
             if [ -z "$RELEASE_PAT" ]; then
-              echo "::warning::$PKG $VERSION is unpublished but RELEASE_PAT is not set." \
-                   "Push the tag by hand: git tag $TAG && git push origin $TAG"
+              echo "::error::$PKG $VERSION is unpublished and RELEASE_PAT is not set, so $TAG cannot be pushed."
+              BLOCKED="$BLOCKED $TAG"
               continue
             fi
 
@@ -59,3 +66,28 @@ jobs:
             git push "https://x-access-token:${RELEASE_PAT}@github.com/${GITHUB_REPOSITORY}.git" "$TAG"
             echo "pushed $TAG — publish.yml takes it from here"
           done
+
+          if [ -n "$BLOCKED" ]; then
+            {
+              echo "## Release blocked"
+              echo
+              echo "These versions are not on pub.dev and could not be tagged," \
+                   "because the \`RELEASE_PAT\` repo secret is not set:"
+              echo
+              for TAG in $BLOCKED; do echo "- \`$TAG\`"; done
+              echo
+              echo "Fix it one of two ways:"
+              echo
+              echo "1. Add a \`RELEASE_PAT\` secret (fine-grained PAT, \`contents: write\`" \
+                   "on this repo) and re-run this workflow. It is idempotent — versions" \
+                   "already on pub.dev are skipped."
+              echo "2. Push the tags by hand, core package first:"
+              echo
+              echo '```'
+              for TAG in $BLOCKED; do echo "git tag $TAG && git push origin $TAG"; done
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+
+            echo "::error::Release blocked: RELEASE_PAT is not set. See the job summary for the fix."
+            exit 1
+          fi
