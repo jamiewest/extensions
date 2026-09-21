@@ -35,11 +35,43 @@ class PollingFileChangeToken implements ChangeToken {
       if (_file.existsSync()) {
         _previousWriteTime = _file.lastModifiedSync();
       }
-    } catch (e) {
-      // File may not exist or be accessible
+    } on FileSystemException {
+      // Transient file system failure; the next poll retries.
       _previousWriteTime = null;
     }
     _lastCheckedTime = clock.now();
+  }
+
+  /// Re-reads the file's last write time and records a change if it moved.
+  ///
+  /// A transient file system failure (the file is briefly locked, a network
+  /// share went down, the path became inaccessible) leaves the recorded
+  /// state untouched and reports no change, so the token is polled again
+  /// after the file system recovers rather than firing a spurious
+  /// notification.
+  void _refreshWriteTime() {
+    try {
+      if (_file.existsSync()) {
+        final currentWriteTime = _file.lastModifiedSync();
+
+        if (_previousWriteTime == null) {
+          // File was created
+          _hasChanged = true;
+          _previousWriteTime = currentWriteTime;
+        } else if (currentWriteTime != _previousWriteTime) {
+          // File was modified
+          _hasChanged = true;
+          _previousWriteTime = currentWriteTime;
+        }
+      } else if (_previousWriteTime != null) {
+        // File was deleted
+        _hasChanged = true;
+        _previousWriteTime = null;
+      }
+    } on FileSystemException {
+      // Treat a transient file system failure as no change and retry on the
+      // next poll.
+    }
   }
 
   @override
@@ -63,28 +95,7 @@ class PollingFileChangeToken implements ChangeToken {
 
     _lastCheckedTime = now;
 
-    try {
-      if (_file.existsSync()) {
-        final currentWriteTime = _file.lastModifiedSync();
-
-        if (_previousWriteTime == null) {
-          // File was created
-          _hasChanged = true;
-          _previousWriteTime = currentWriteTime;
-        } else if (currentWriteTime != _previousWriteTime) {
-          // File was modified
-          _hasChanged = true;
-          _previousWriteTime = currentWriteTime;
-        }
-      } else if (_previousWriteTime != null) {
-        // File was deleted
-        _hasChanged = true;
-        _previousWriteTime = null;
-      }
-    } catch (e) {
-      // If we can't access the file, consider it changed
-      _hasChanged = true;
-    }
+    _refreshWriteTime();
 
     return _hasChanged;
   }
@@ -95,28 +106,7 @@ class PollingFileChangeToken implements ChangeToken {
       return;
     }
 
-    try {
-      if (_file.existsSync()) {
-        final currentWriteTime = _file.lastModifiedSync();
-
-        if (_previousWriteTime == null) {
-          // File was created
-          _hasChanged = true;
-          _previousWriteTime = currentWriteTime;
-        } else if (currentWriteTime != _previousWriteTime) {
-          // File was modified
-          _hasChanged = true;
-          _previousWriteTime = currentWriteTime;
-        }
-      } else if (_previousWriteTime != null) {
-        // File was deleted
-        _hasChanged = true;
-        _previousWriteTime = null;
-      }
-    } catch (e) {
-      // If we can't access the file, consider it changed
-      _hasChanged = true;
-    }
+    _refreshWriteTime();
 
     if (_hasChanged) {
       _invokeCallbacks();

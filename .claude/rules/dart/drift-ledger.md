@@ -9,8 +9,8 @@ each run. Porting rules live in [porting.md](porting.md).
 The newest upstream commit (touching an in-scope path) that a drift run has
 reviewed, per upstream repo:
 
-`upstream-sync(dotnet/runtime): baeeb4650802dd265317fa17d9dbac83d1288958 2026-08-28T12:08:14Z`
-`upstream-sync(dotnet/extensions): cc597aa24bf108c38a6a59d09555765575d11cb3 2026-08-26T17:14:37Z`
+`upstream-sync(dotnet/runtime): d13c2266aee45eac7f683e780fc7063d2063f825 2026-09-11T09:36:24Z`
+`upstream-sync(dotnet/extensions): d2364e510a46e730a50d672ed1d770de3c46a757 2026-09-11T17:16:45Z`
 
 These lines are machine-read by `/drift` and by
 `.github/workflows/upstream-watch.yml` — keep the
@@ -20,6 +20,26 @@ Every incremental drift run must advance the pin(s) it reviewed, in the same
 commit as any ported changes.
 
 ### Incremental sync log
+
+**2026-09-21** (`/drift sync`, pins advanced from `baeeb465` / `cc597aa2`).
+Twelve new in-scope upstream commits reviewed (5 runtime, 7 extensions);
+three ported, nine skipped.
+
+| Upstream | Commit | Summary | Subsystem | Decision |
+|---|---|---|---|---|
+| dotnet/runtime | #132617 `910c55a` | handle transient file system errors during active polling | file_providers | **ported** — `PollingWildcardChangeToken._getCurrentState` now returns `null` on a failed scan instead of an empty map (the empty map compared as "every file removed" and fired a spurious change); a failed scan reports no change and retries, and the first completed scan is the baseline (upstream's `_previousHash is not null` guard). `PollingFileChangeToken` no longer treats an unreadable file as changed. 5 tests added |
+| dotnet/runtime | #133013 `39b12a6` | document that `PhysicalFilesWatcher` can watch paths that don't exist | file_providers | **ported (doc)** — "isn't required to exist" added to the `PhysicalFileProvider` factory, `PhysicalFileProvider.watch` (which had no dartdoc at all), the `PhysicalFilesWatcher` constructor and `createFileChangeToken` |
+| dotnet/extensions | #7735 `47b6b06` | fail closed when a quality metric has no valid score | ai (evaluation) | **ported (widened)** — `NumericMetric.interpretScore` fails closed for a null score and for a score outside the rating range. The new `rating is Inconclusive` branch is only reachable with upstream's rating bands, so the bands and the 4.0 pass threshold were aligned too (the Dart port had drifted to `>= 5/4/3/2` with a 3.0 threshold). `quality_evaluator_base` now interprets unconditionally, per upstream's evaluators. 23 tests mirrored from upstream `EvaluationMetricExtensionsTests` |
+| dotnet/runtime | #131931 `6fa6b31` | linked cache entry thread safety fix | caching | **skip (propose)** — `Interlocked`/`Volatile`/`Thread.MemoryBarrier` machinery plus a copy-on-write `ExpirationTokensList`; a Dart isolate is single-threaded, so there is no race to fix. New N/A entry recorded. No behavior change outside the concurrency guarantees (the `_isValueSet` commit gate is untouched — see priorities) |
+| dotnet/runtime | #133151 `4878f22` | fix MemoryCache OTEL size units and tag name | caching | **skip (ledger)** — edits the `Meter` callbacks' unit/tag strings; the Dart `caching` publishes no metrics at all (the `meterFactory` ctor hook is a known open gap), so there is nothing to rename |
+| dotnet/runtime | #133494 `d13c226` | reduce allocations in Microsoft.Extensions.Configuration | configuration | **skip (propose)** — `List` capacity hints and a collection-expression rewrite; no behavior change, and Dart's `List` has no capacity-preallocating counterpart worth mirroring. The third file, `ReferenceCountedProvidersManager`, is unported (a known open gap) |
+| dotnet/extensions | #7749 `d2364e5` | fix duplicate separator in HTTP logging | — | **out of scope** — `Microsoft.Extensions.Http.Diagnostics`, which no scope row covers (the `http` row maps to dotnet/runtime's `Microsoft.Extensions.Http`) |
+| dotnet/extensions | #7738 `c74cd51` | fix context and metric interpretation visualization | ai (evaluation) | **skip** — entirely the `TypeScript/` frontend of the HTML report; no C# library surface, and the Dart port has no `HtmlReportWriter` (same rationale as #7705) |
+| dotnet/extensions | #7732 `c4e8764` | update brace-expansion to patched versions | ai (evaluation) | **skip** — npm `package-lock.json` of the same frontend |
+| dotnet/extensions | #7724 `d0caf64`, #7726 `b4b46cc`, #7727 `2a8df4c` | remove OpenAI Assistants support; bump the OpenAI package to 2.13.0; avoid null implicit conversions for image options | ai (open_ai) | **skip (ledger)** — all three touch only `Microsoft.Extensions.AI.OpenAI`, N/A by library. Note for future runs: #7724 **deletes** `OpenAIAssistantsChatClient` and `MicrosoftExtensionsAIAssistantsExtensions` upstream, two of the 15 names spelled out in that N/A row; the row is left intact so the matcher keeps suppressing them |
+
+Public API under `lib/src/ai/` **did** change (`NumericMetric.interpretScore`
+semantics), so the `jamiewest/agents` downstream is affected — see the PR body.
 
 **2026-08-31** (`/drift sync`, pins advanced from `a3a0683d` / `7b76f096`).
 Five new in-scope upstream commits reviewed; two ported, three skipped.
@@ -46,18 +66,18 @@ the most recent `/drift` run covering that subsystem.
 | hosting | dotnet/runtime | `src/libraries/Microsoft.Extensions.Hosting/src/` | `hosting/` | ported; background-service exception propagation from `stop` open (found 2026-08-31, see priorities) | 2026-08-31 |
 | dependency_injection | dotnet/runtime | `src/libraries/Microsoft.Extensions.DependencyInjection/src/` | `dependency_injection/` | ported; 4 portable call-site types open (see priorities) | 2026-08-16 |
 | logging | dotnet/runtime | `src/libraries/Microsoft.Extensions.Logging/src/` | `logging/` | ported; `LoggerFactory` `options`/`scopeProvider` ctor params open | 2026-08-16 |
-| configuration | dotnet/runtime | `src/libraries/Microsoft.Extensions.Configuration/src/` | `configuration/` | ported; ReferenceCountedProviders, `ConfigurationKeyComparer`, `ConfigurationSectionDebugView` open | 2026-08-16 |
+| configuration | dotnet/runtime | `src/libraries/Microsoft.Extensions.Configuration/src/` | `configuration/` | ported; ReferenceCountedProviders, `ConfigurationKeyComparer`, `ConfigurationSectionDebugView` open | 2026-09-21 |
 | options | dotnet/runtime | `src/libraries/Microsoft.Extensions.Options/src/` | `options/` | ported; async validation + `OptionsMonitorExtensions` open | 2026-08-16 |
-| caching | dotnet/runtime | `src/libraries/Microsoft.Extensions.Caching.Memory/src/` | `caching/` | ported; size-after-commit freeze ported 2026-08-31 (upstream #132604); `MemoryCache.Count`/`Keys` + logger/meter ctor hooks and the commit-without-value gate still open | 2026-08-31 |
+| caching | dotnet/runtime | `src/libraries/Microsoft.Extensions.Caching.Memory/src/` | `caching/` | ported; size-after-commit freeze ported 2026-08-31 (upstream #132604); `MemoryCache.Count`/`Keys` + logger/meter ctor hooks and the commit-without-value gate still open. Upstream's linked-entry thread-safety work (#131931) is N/A — single-threaded isolate | 2026-09-21 |
 | http | dotnet/runtime | `src/libraries/Microsoft.Extensions.Http/src/` | `http/` | ported; DI-layer gap closed 2026-07-13 (tracking entries + timer cleanup, `addAsKeyed`, `configureAdditionalHttpMessageHandlers` ported; remainder collapsed/N/A — see tables) | 2026-08-16 |
 | primitives | dotnet/runtime | `src/libraries/Microsoft.Extensions.Primitives/src/` | `primitives/` | ported; StringSegment family (6 types) + async `ChangeToken.onChange` overloads open | 2026-08-16 |
-| file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-08-16 |
+| file_providers | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileProviders.Physical/src/` | `file_providers/` | ported; transient-FS-error polling fix + watch-path docs ported 2026-09-21 (upstream #132617, #133013); internal `Clock`/`IClock`/`FileSystemInfoHelper` not mirrored (minor) | 2026-09-21 |
 | file_system_globbing | dotnet/runtime | `src/libraries/Microsoft.Extensions.FileSystemGlobbing/src/` | `file_system_globbing/` | fully ported incl. `Internal/` (2026-07-04) | 2026-08-16 |
 | diagnostics | dotnet/runtime | `src/libraries/Microsoft.Extensions.Diagnostics/src/` | `diagnostics/` | metrics ported; `Tracing/` ruled N/A 2026-07-13 (would require an Activity mini-port) | 2026-08-16 |
 | ai | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Abstractions/` + `src/Libraries/Microsoft.Extensions.AI/` | `ai/` | ported (220/254 upstream files; rest N/A or open); `ChatRouting/` family (6 types, upstream `[Experimental]`), the `UsageDetails`/`AIFunction`/`ChatResponseExtensions` member gaps, and the `Common/` invocation processor+logger all closed 2026-08-04; OTel spans-only | 2026-08-16 |
 | ai (realtime) | dotnet/extensions | inside the AI libraries above (ref commit `2e537166`) | `ai/realtime/` | P1–P5 done (P5 OpenTelemetry ported 2026-07-13, spans-only via `dart:developer` Timeline); no new gaps 2026-08-04 | 2026-08-16 |
 | vector_data | dotnet/extensions | `src/Libraries/Microsoft.Extensions.VectorData.Abstractions/` | `vector_data/` | ported incl. `provider_services/` core; `ProviderServices/Filter/` trio open | 2026-08-16 |
-| ai (evaluation) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Evaluation{,.NLP,.Quality,.Reporting,.Safety,.Console,.Reporting.Azure}/` | `ai/evaluation/` | **scoped 2026-08-16** — every previously-unmatched type ruled: `.Console` + `.Reporting.Azure` N/A by library, ~20 types N/A by collapse (see table), 4 genuine gap clusters open (report pipeline, IntentResolutionRating protocol, result-level helpers, disk-store hardening — see priorities) | 2026-08-16 |
+| ai (evaluation) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.Evaluation{,.NLP,.Quality,.Reporting,.Safety,.Console,.Reporting.Azure}/` | `ai/evaluation/` | **scoped 2026-08-16** — every previously-unmatched type ruled: `.Console` + `.Reporting.Azure` N/A by library, ~20 types N/A by collapse (see table), 4 genuine gap clusters open (report pipeline, IntentResolutionRating protocol, result-level helpers, disk-store hardening — see priorities). Quality metric interpretation aligned with upstream 2026-09-21 (#7735: fail-closed + corrected rating bands/threshold) | 2026-09-21 |
 | ai (open_ai) | dotnet/extensions | `src/Libraries/Microsoft.Extensions.AI.OpenAI/` | `ai/open_ai/` | **scoped 2026-08-16** — ruled N/A by library: upstream is adapters over the official OpenAI .NET SDK, and no allowlisted OpenAI Dart SDK exists to adapt. The Dart `open_ai/` is a deliberate hand-rolled minimal client. Revisit only if an allowlisted OpenAI Dart SDK appears | 2026-08-16 |
 
 `lib/src/system/` is local Dart utility code with no upstream counterpart —
@@ -109,6 +129,7 @@ reason whenever a port decision rules something out.
 | `HttpClientBuilderExtensions`, `HttpClientBuilderExtensions.Logging` | http | C# static extension classes over `IHttpClientBuilder`; collapsed into instance methods on the Dart `HttpClientBuilder` (`configureHttpClient`, `addHttpMessageHandler`, `redactLoggedHeaders`, `setHandlerLifetime`, `addAsKeyed`, …). Verified member-for-member 2026-08-13 |
 | `NamedAsyncValidateOptionsFilter` | options | async sibling of `NamedValidateOptionsFilter`; both drive the C# options source generator, and there is no codegen in the Dart port |
 | `CacheEntry.CacheEntryTokens` | caching | C# partial splitting `CacheEntry`'s token bookkeeping; the Dart `CacheEntry`/`MemoryCacheEntryOptions` carry `expirationTokens` + `postEvictionCallbacks` directly |
+| `CacheEntry.ExpirationTokensList` | caching | copy-on-write list added by upstream #131931 so a linked entry's token list can be read concurrently while its creator mutates it (`Interlocked`/`Volatile`/`Thread.MemoryBarrier`). A Dart isolate is single-threaded — there is no race, and the Dart `CacheEntry` holds a plain `List<ChangeToken>`. Ruled 2026-09-21 |
 | `Microsoft.Extensions.AI.Evaluation.Console` (whole library: `Program`, `Commands/`, its `Telemetry/` + `Utilities/` helpers) | ai (evaluation) | executable dotnet CLI tool, not library surface; a Dart equivalent would be a new `bin/` tool designed for pub, out of port scope. Ruled 2026-08-16 |
 | `Microsoft.Extensions.AI.Evaluation.Reporting.Azure` (whole library: `AzureStorage*` types) | ai (evaluation) | Azure Blob Storage bindings over the Azure.Storage .NET SDK; no allowlisted Azure Storage Dart package. Disk-based stores are ported. Ruled 2026-08-16 |
 | OpenAI .NET SDK adapter layer (all 15 unmatched `Microsoft.Extensions.AI.OpenAI` types: `OpenAIResponsesChatClient`, `OpenAIAssistantsChatClient`, `OpenAIRealtimeClient`, `OpenAIRealtimeClientSession`, `OpenAIRealtimeConversationClient`, `OpenAIHostedFileClient`, `OpenAIFileDownloadStream`, `MicrosoftExtensionsAIAssistantsExtensions`, `MicrosoftExtensionsAIChatExtensions`, `MicrosoftExtensionsAIRealtimeExtensions`, `MicrosoftExtensionsAIResponsesExtensions`, `OpenAIJsonContext`, `OpenAIRequestPolicies`, `RequestOptionsExtensions`, `ResponsesClientContinuationToken` — names spelled out so the audit's literal matcher filters them) | ai (open_ai) | adapters over the official OpenAI .NET SDK; no allowlisted OpenAI Dart SDK to adapt — the Dart `open_ai/` is a hand-rolled minimal REST client instead. Ruled 2026-08-16 |
@@ -128,6 +149,7 @@ reason whenever a port decision rules something out.
 | `TextToSpeechClientExtensions` | ai | only `getService` overloads; collapses into the interface method (same rule as `RealtimeClientExtensions`). Ruled 2026-08-16 |
 | `HostedFileDownloadStream` | ai | collapsed: `HostedFileClient.download` returns a plain `Stream<List<int>>` and the file's media type/name come from `getFile` (see `HostedFileClientExtensions.downloadAsDataContent`); `DownloadToAsync` is `dart:io`-bound and the AI abstractions stay io-free — callers pipe the stream. Ruled 2026-08-16 |
 | `AIJsonSchemaCreateContext`, `AIJsonSchemaCreateOptions` | ai | belong to the schema-*creation* side (`AIJsonUtilities.Schema.Create.cs`), which is N/A per the existing schema-creation row. Ruled 2026-08-16 |
+| .NET allocation-tuning edits (`List<T>` capacity hints, collection expressions) | configuration, all | recurring upstream micro-optimizations with no behavior change; Dart's growable `List` has no capacity-preallocating counterpart worth mirroring. Covers dotnet/runtime #133494. Ruled 2026-09-21 |
 
 ## Open priorities
 
@@ -149,7 +171,30 @@ public constructor's `lifetime` + factory parameters. The audit ran at
 language version 3.13 (constraints raised 2026-08-16); either constructor
 form remains a correct port of a C# primary constructor.
 
-0. **New, found by the 2026-08-31 incremental sync** (small, both real) —
+0. **New, found by the 2026-09-21 incremental sync** (one item, deferred
+   deliberately) —
+   - **evaluation: `RelevanceTruthAndCompletenessEvaluator` returns early on
+     an inconclusive rating.** While porting #7735 (fail-closed metric
+     interpretation), the Dart RTC evaluator was found to diverge
+     structurally from upstream: on a rating that is null or inconclusive it
+     adds an error diagnostic to each metric and `return`s
+     (`relevance_truth_and_completeness_evaluator.dart:106`), so relevance,
+     truth and completeness are left with no value *and* no interpretation.
+     Upstream instead falls through to `UpdateResult()` in every branch
+     (`RelevanceTruthAndCompletenessEvaluator.cs:330`), assigning
+     `RelevanceTruthAndCompletenessRating.Inconclusive`'s values and calling
+     `InterpretScore()`, so the metrics carry a *failed* interpretation.
+     With #7735 ported, upstream now fails closed there and the Dart port
+     still does not — a caller gating on `failed` sees `interpretation ==
+     null` rather than a failure. Closing it means restructuring the
+     evaluator to always run the update, which is a larger change than the
+     upstream commit under review, so it is recorded here rather than
+     guessed at. The equivalent one-line fix *was* applied to
+     `quality_evaluator_base.dart`, where upstream's shape
+     (`_ = TryParse…; metric.Interpretation = metric.InterpretScore();`) is
+     unambiguous.
+
+0b. **Found by the 2026-08-31 incremental sync** (small, both real) —
    - **hosting: background-service exceptions are not re-surfaced from
      `stop`.** Upstream `Host` collects faulting `BackgroundService`
      exceptions in `_backgroundServiceExceptions`, awaits the fire-and-forget

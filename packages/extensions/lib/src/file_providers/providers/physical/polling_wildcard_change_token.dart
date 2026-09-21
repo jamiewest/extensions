@@ -38,7 +38,14 @@ class PollingWildcardChangeToken implements ChangeToken {
     _lastCheckedTime = clock.now();
   }
 
-  Map<String, _FileState> _getCurrentState() {
+  /// Scans the root directory for files matching the pattern.
+  ///
+  /// Returns `null` when the scan could not be completed — for example
+  /// because the root directory became inaccessible or a network share went
+  /// down. Callers treat a failed scan as "no change" and retry on the next
+  /// poll, rather than mistaking an unreadable directory for one whose files
+  /// were all removed.
+  Map<String, _FileState>? _getCurrentState() {
     final state = <String, _FileState>{};
 
     try {
@@ -55,29 +62,28 @@ class PollingWildcardChangeToken implements ChangeToken {
 
       for (final entity in entities) {
         if (entity is File) {
-          try {
-            final relativePath = context.relative(
-              entity.path,
-              from: rootDir.path,
-            );
+          final relativePath = context.relative(
+            entity.path,
+            from: rootDir.path,
+          );
 
-            // Check if the file matches the glob pattern
-            if (glob.matches(relativePath)) {
-              try {
-                final modified = entity.lastModifiedSync();
-                final length = entity.lengthSync();
-                state[relativePath] = _FileState(modified, length);
-              } catch (e) {
-                // Skip files we can't access
-              }
-            }
-          } catch (e) {
-            // Skip files we can't access
+          // Check if the file matches the glob pattern
+          if (glob.matches(relativePath)) {
+            final modified = entity.lastModifiedSync();
+            final length = entity.lengthSync();
+            state[relativePath] = _FileState(modified, length);
           }
         }
       }
+    } on FileSystemException {
+      // The directory couldn't be scanned, for example because a network
+      // share went down or the directory became inaccessible. Report no
+      // change and try again on the next poll.
+      return null;
     } catch (e) {
-      // If we can't list files, return empty state
+      // Any other scan failure is reported the same way, so that a pattern
+      // that cannot be evaluated never fires a spurious change.
+      return null;
     }
 
     return state;
@@ -105,14 +111,20 @@ class PollingWildcardChangeToken implements ChangeToken {
     _lastCheckedTime = now;
 
     final currentState = _getCurrentState();
-
-    // Check if the state has changed
-    if (_previousState == null) {
-      _hasChanged = currentState.isNotEmpty;
-    } else {
-      // Check for added, removed, or modified files
-      _hasChanged = _stateHasChanged(_previousState!, currentState);
+    if (currentState == null) {
+      // Transient failure: report no change and retry on the next poll.
+      return false;
     }
+
+    if (_previousState == null) {
+      // No scan has completed yet, so there is nothing to compare against.
+      // This one becomes the baseline.
+      _previousState = currentState;
+      return false;
+    }
+
+    // Check for added, removed, or modified files
+    _hasChanged = _stateHasChanged(_previousState!, currentState);
 
     if (_hasChanged) {
       _previousState = currentState;
@@ -155,11 +167,19 @@ class PollingWildcardChangeToken implements ChangeToken {
     }
 
     final currentState = _getCurrentState();
+    if (currentState == null) {
+      // Transient failure: report no change and retry on the next poll.
+      return;
+    }
+
+    if (_previousState == null) {
+      // First completed scan establishes the baseline.
+      _previousState = currentState;
+      return;
+    }
 
     // Check if the state has changed
-    final changed =
-        _previousState != null &&
-        _stateHasChanged(_previousState!, currentState);
+    final changed = _stateHasChanged(_previousState!, currentState);
 
     if (changed) {
       _hasChanged = true;

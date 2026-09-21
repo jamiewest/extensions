@@ -79,9 +79,12 @@ abstract class QualityEvaluatorBase implements Evaluator {
           'Could not parse a score from the evaluation response.',
         ),
       );
-    } else {
-      metric.interpretation = metric.interpretScore();
     }
+
+    // Interpret unconditionally: a metric left unscored by a failed parse
+    // must still carry a (failed) interpretation, so that callers gating on
+    // `failed` do not read it as a pass.
+    metric.interpretation = metric.interpretScore();
     return result;
   }
 

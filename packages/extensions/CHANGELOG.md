@@ -1,3 +1,34 @@
+## 0.8.1
+
+* **Quality evaluation metrics now fail closed** (port of dotnet/extensions
+  #7735). `NumericMetric.interpretScore` previously marked a metric failed
+  only when its value parsed to a number below the pass threshold: a metric
+  with no value at all — what happens when the judge model's reply cannot be
+  parsed — and a value outside the 1–5 scale both took the not-failed
+  branch, so a pipeline gating on `EvaluationMetricInterpretation.failed`
+  read a metric that was never scored as a pass. Both are now reported as
+  failures with a reason. The quality evaluators also set `interpretation`
+  unconditionally, matching upstream, so a metric left unscored by a failed
+  parse still carries a failed interpretation instead of none.
+  * Aligning with upstream also corrects the rating bands and the pass
+    threshold, which had drifted: ratings are now `(4,5] exceptional`,
+    `(3,4] good`, `(2,3] average`, `(1,2] poor`, `(0,1] unacceptable` and
+    inconclusive outside that range, and the minimum passing score is 4.0
+    (it was 3.0). **Scores in [3.0, 4.0) that previously passed now fail.**
+* **Polling file-change tokens survive transient file system failures**
+  (port of dotnet/runtime #132617). `PollingWildcardChangeToken` treated a
+  directory scan that threw — a network share going down, a directory
+  briefly becoming inaccessible — as an empty scan, which compared against
+  the previous state as "every file was removed" and fired a spurious change
+  notification. A failed scan is now reported as no change and retried on
+  the next poll, and the first scan that completes establishes the baseline
+  rather than counting pre-existing files as additions.
+  `PollingFileChangeToken` likewise treated an unreadable file as changed;
+  it now leaves its recorded state untouched and retries.
+* Documented that `PhysicalFileProvider`'s root directory, and the files or
+  directories a `watch` filter matches, aren't required to exist when the
+  provider is created or `watch` is called (port of dotnet/runtime #133013).
+
 ## 0.8.0
 
 * **`CacheEntry.size` is frozen once the entry is committed** (port of
