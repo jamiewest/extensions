@@ -62,15 +62,66 @@ void main() {
       expect(interpretation.failed, isFalse);
     });
 
-    test('rates the bands the way the upstream scale does', () {
-      EvaluationRating ratingFor(double value) =>
-          NumericMetric('Coherence', value: value).interpretScore().rating;
+    test('fails a score that is not a number', () {
+      final metric = NumericMetric('Coherence', value: double.nan);
 
-      expect(ratingFor(4.5), EvaluationRating.exceptional);
-      expect(ratingFor(3.5), EvaluationRating.good);
-      expect(ratingFor(2.5), EvaluationRating.average);
-      expect(ratingFor(1.5), EvaluationRating.poor);
-      expect(ratingFor(0.5), EvaluationRating.unacceptable);
+      final interpretation = metric.interpretScore();
+
+      expect(interpretation.rating, EvaluationRating.inconclusive);
+      expect(interpretation.failed, isTrue);
+      expect(interpretation.reason, 'Coherence is outside the valid range.');
+    });
+
+    test('rates every band the way the upstream scale does', () {
+      // Upstream bands: (4,5] exceptional, (3,4] good, (2,3] average,
+      // (1,2] poor, (0,1] unacceptable, inconclusive outside that range.
+      const cases = <(double, EvaluationRating)>[
+        (5.5, EvaluationRating.inconclusive),
+        (5.0, EvaluationRating.exceptional),
+        (4.5, EvaluationRating.exceptional),
+        (4.0, EvaluationRating.good),
+        (3.5, EvaluationRating.good),
+        (3.0, EvaluationRating.average),
+        (2.5, EvaluationRating.average),
+        (2.0, EvaluationRating.poor),
+        (1.5, EvaluationRating.poor),
+        (1.0, EvaluationRating.unacceptable),
+        (0.5, EvaluationRating.unacceptable),
+        (0.0, EvaluationRating.inconclusive),
+        (-1.0, EvaluationRating.inconclusive),
+      ];
+
+      for (final (value, expected) in cases) {
+        expect(
+          NumericMetric('Coherence', value: value).interpretScore().rating,
+          expected,
+          reason: '$value should be rated ${expected.name}',
+        );
+      }
+    });
+
+    test('fails every score below the minimum passing score', () {
+      for (final value in [-1.0, 0.0, 1.0, 2.0, 3.0, 3.9]) {
+        expect(
+          NumericMetric('Coherence', value: value).interpretScore().failed,
+          isTrue,
+          reason: '$value should fail',
+        );
+      }
+    });
+  });
+
+  group('QualityEvaluatorBase interpretation wiring', () {
+    test('an unscored metric carries a failed interpretation', () {
+      // Mirrors what the quality evaluators do when the judge's reply
+      // cannot be parsed: the metric keeps no value, but must still be
+      // interpreted, or a caller gating on `failed` reads null as a pass.
+      final metric = NumericMetric('Coherence');
+
+      metric.interpretation = metric.interpretScore();
+
+      expect(metric.interpretation!.failed, isTrue);
+      expect(metric.interpretation!.rating, EvaluationRating.inconclusive);
     });
   });
 }

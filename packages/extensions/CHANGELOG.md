@@ -14,6 +14,13 @@
   `(2,3]` average, `(1,2]` poor, `(0,1]` unacceptable; the minimum passing
   score is 4.0, not 3). Scores between 3 and 4 that previously passed now
   fail, and scores that sat on a band boundary may be rated one band higher.
+  The quality evaluators now set `interpretation` **unconditionally**, so a
+  metric left unscored because the judge's reply could not be parsed carries
+  a failed interpretation instead of none. Without this the fail-closed
+  behavior above never reached the case it exists for: a caller gating on
+  `EvaluationMetricInterpretation.failed` saw a null interpretation, not a
+  failure. (`RelevanceTruthAndCompletenessEvaluator` still returns early on
+  an inconclusive rating and is tracked as a known gap.)
 * **Polling change tokens survive transient file system errors** (port of
   dotnet/runtime #132617). A failed directory scan in
   `PollingWildcardChangeToken` produced an empty state that compared as
