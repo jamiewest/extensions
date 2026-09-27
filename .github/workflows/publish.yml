@@ -7,11 +7,23 @@
 #   repository: jamiewest/extensions
 #   tag pattern: extensions-v{{version}}         (extensions)
 #   tag pattern: extensions_flutter-v{{version}} (extensions_flutter)
+#   require GitHub Actions environment: pub.dev  (both)
+#
+# The environment name must match the `environment:` on the job below, or
+# pub.dev refuses the token ("running in environment 'null'"). GitHub creates
+# the pub.dev environment on the first run that names it. If you add
+# deployment rules to it, allow the release tags: a "protected branches only"
+# rule refuses every tag-triggered run.
 #
 # Tags are normally pushed automatically by auto-tag.yml when a version bump
 # lands on main; pushing a tag by hand works the same way. When both packages
-# bump, extensions publishes first (extensions_flutter depends on it) — if
-# the flutter publish races ahead and fails on the unpublished dep, re-run it.
+# bump, auto-tag.yml pushes the extensions_flutter tag only once extensions is
+# live on pub.dev, since extensions_flutter depends on it.
+#
+# A tag-triggered run uses this file as of the TAGGED commit. "Re-run failed
+# jobs" therefore picks up a fix made on pub.dev, but not a fix to this
+# workflow: for that, delete the tag and re-run auto-tag.yml, which re-creates
+# it at the current main.
 
 name: Publish to pub.dev
 
@@ -25,6 +37,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Must match "Require GitHub Actions environment" on pub.dev — see header.
+    environment: pub.dev
     permissions:
       id-token: write  # required for pub.dev OIDC token exchange
     steps:
